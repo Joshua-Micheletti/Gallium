@@ -38,11 +38,11 @@ void updateEntity(Entity* entity) {
 	}
 
 	else if (entity->getName().compare("light") == 0) {
-		angle += 0.01f;
+		angle += 0.001f;
 
 		// angle = 90.0f;
 
-		glPointSize(100);
+		glPointSize(30);
 
 		lightPos.x = dist * cos(angle);
 		lightPos.z = dist * sin(angle);
@@ -318,392 +318,6 @@ void handleEvents(sf::RenderWindow* window) {
 	}
 }
 
-void createCube(std::vector<float>* array, std::vector<glm::vec3> faces) {
-	array->push_back(faces[0].x);
-	array->push_back(faces[0].y);
-	array->push_back(faces[0].z);
-	array->push_back(faces[1].x);
-	array->push_back(faces[1].y);
-	array->push_back(faces[1].z);
-
-	array->push_back(faces[1].x);
-	array->push_back(faces[1].y);
-	array->push_back(faces[1].z);
-	array->push_back(faces[2].x);
-	array->push_back(faces[2].y);
-	array->push_back(faces[2].z);
-
-	array->push_back(faces[2].x);
-	array->push_back(faces[2].y);
-	array->push_back(faces[2].z);
-	array->push_back(faces[3].x);
-	array->push_back(faces[3].y);
-	array->push_back(faces[3].z);
-
-	array->push_back(faces[3].x);
-	array->push_back(faces[3].y);
-	array->push_back(faces[3].z);
-	array->push_back(faces[0].x);
-	array->push_back(faces[0].y);
-	array->push_back(faces[0].z);
-
-	array->push_back(faces[0].x);
-	array->push_back(faces[0].y);
-	array->push_back(faces[0].z);
-	array->push_back(faces[5].x);
-	array->push_back(faces[5].y);
-	array->push_back(faces[5].z);
-
-	array->push_back(faces[1].x);
-	array->push_back(faces[1].y);
-	array->push_back(faces[1].z);
-	array->push_back(faces[6].x);
-	array->push_back(faces[6].y);
-	array->push_back(faces[6].z);
-
-	array->push_back(faces[2].x);
-	array->push_back(faces[2].y);
-	array->push_back(faces[2].z);
-	array->push_back(faces[7].x);
-	array->push_back(faces[7].y);
-	array->push_back(faces[7].z);
-
-	array->push_back(faces[3].x);
-	array->push_back(faces[3].y);
-	array->push_back(faces[3].z);
-	array->push_back(faces[4].x);
-	array->push_back(faces[4].y);
-	array->push_back(faces[4].z);
-
-	array->push_back(faces[5].x);
-	array->push_back(faces[5].y);
-	array->push_back(faces[5].z);
-	array->push_back(faces[4].x);
-	array->push_back(faces[4].y);
-	array->push_back(faces[4].z);
-
-	array->push_back(faces[4].x);
-	array->push_back(faces[4].y);
-	array->push_back(faces[4].z);
-	array->push_back(faces[7].x);
-	array->push_back(faces[7].y);
-	array->push_back(faces[7].z);
-
-	array->push_back(faces[7].x);
-	array->push_back(faces[7].y);
-	array->push_back(faces[7].z);
-	array->push_back(faces[6].x);
-	array->push_back(faces[6].y);
-	array->push_back(faces[6].z);
-
-	array->push_back(faces[6].x);
-	array->push_back(faces[6].y);
-	array->push_back(faces[6].z);
-	array->push_back(faces[5].x);
-	array->push_back(faces[5].y);
-	array->push_back(faces[5].z);
-}
-
-void createSphere(glm::vec3 center, float dist, int sides, std::vector<float>* data) {
-
-	double pi = 3.1415926535897;
-
-	glm::vec3 tmp;
-
-	glm::vec3 tmp2;
-
-	tmp = glm::vec3(dist, 0, 0) + center;
-
-	for (float i = 0; i < 2 * pi; i += (2 * pi) / (float)sides) {
-		tmp2.x = dist * cos(i);
-		tmp2.y = dist * sin(i);
-		tmp2.z = 0;
-
-		data->push_back(tmp.x);
-		data->push_back(tmp.y);
-		data->push_back(tmp.z);
-
-		tmp = tmp2 + center;
-
-		data->push_back(tmp.x);
-		data->push_back(tmp.y);
-		data->push_back(tmp.z);
-	}
-
-	data->push_back(tmp.x);
-	data->push_back(tmp.y);
-	data->push_back(tmp.z);
-
-	tmp = glm::vec3(dist, 0, 0) + center;
-
-	data->push_back(tmp.x);
-	data->push_back(tmp.y);
-	data->push_back(tmp.z);
-
-
-
-	tmp = glm::vec3(0, 0, dist) + center;
-
-	for (float i = 0; i < 2 * pi; i += (2 * pi) / (float)sides) {
-		tmp2.x = 0;
-		tmp2.y = dist * sin(i);
-		tmp2.z = dist * cos(i);
-
-		data->push_back(tmp.x);
-		data->push_back(tmp.y);
-		data->push_back(tmp.z);
-
-		tmp = tmp2 + center;
-
-		data->push_back(tmp.x);
-		data->push_back(tmp.y);
-		data->push_back(tmp.z);
-	}
-
-	data->push_back(tmp.x);
-	data->push_back(tmp.y);
-	data->push_back(tmp.z);
-
-	tmp = glm::vec3(0, 0, dist) + center;
-
-	data->push_back(tmp.x);
-	data->push_back(tmp.y);
-	data->push_back(tmp.z);
-
-
-
-	tmp = glm::vec3(0, 0, dist) + center;
-
-	for (float i = 0; i < 2 * pi; i += (2 * pi) / (float)sides) {
-		tmp2.x = dist * sin(i);
-		tmp2.y = 0;
-		tmp2.z = dist * cos(i);
-
-		data->push_back(tmp.x);
-		data->push_back(tmp.y);
-		data->push_back(tmp.z);
-
-		tmp = tmp2 + center;
-
-		data->push_back(tmp.x);
-		data->push_back(tmp.y);
-		data->push_back(tmp.z);
-	}
-
-	data->push_back(tmp.x);
-	data->push_back(tmp.y);
-	data->push_back(tmp.z);
-
-	tmp = glm::vec3(0, 0, dist) + center;
-
-	data->push_back(tmp.x);
-	data->push_back(tmp.y);
-	data->push_back(tmp.z);
-}
-
-void drawBoundingBox(bounds_t bounds, unsigned int tmpBuffer, std::vector<Shader> shaderBuffer, glm::vec3 color) {
-	std::vector<float> data;
-	std::vector<glm::vec3> faces;
-	faces.push_back(bounds.a);
-	faces.push_back(bounds.b);
-	faces.push_back(bounds.c);
-	faces.push_back(bounds.d);
-	faces.push_back(bounds.e);
-	faces.push_back(bounds.f);
-	faces.push_back(bounds.g);
-	faces.push_back(bounds.h);
-	createCube(&data, faces);
-
-	glBindBuffer(GL_ARRAY_BUFFER, tmpBuffer);
-	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
-
-	glUseProgram(shaderBuffer[1].getID());
-
-	glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[0].id, 1, GL_FALSE, &(glm::mat4(1.0f)[0][0]));
-	glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[1].id, 1, GL_FALSE, &(camera.getViewMatrix()[0][0]));
-	glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[2].id, 1, GL_FALSE, &(Projection[0][0]));
-	glUniform3f(shaderBuffer[1].getUniformBuffer()[3].id, color.x, color.y, color.z);
-
-	glEnableVertexAttribArray(0);
-	// glBindBuffer(GL_ARRAY_BUFFER, tmpBuffer2);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	glDrawArrays(GL_LINES, 0, data.size());
-
-	glDisableVertexAttribArray(0);
-}
-
-void drawBoundingSphere(float radius, glm::vec3 center, unsigned int tmpBuffer, std::vector<Shader> shaderBuffer, glm::vec3 color) {
-	std::vector<float> data;
-
-	createSphere(center, radius, 30, &data);
-
-	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
-
-	glUseProgram(shaderBuffer[1].getID());
-
-	glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[0].id, 1, GL_FALSE, &(glm::mat4(1.0f)[0][0]));
-	glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[1].id, 1, GL_FALSE, &(camera.getViewMatrix()[0][0]));
-	glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[2].id, 1, GL_FALSE, &(Projection[0][0]));
-	glUniform3f(shaderBuffer[1].getUniformBuffer()[3].id, color.x, color.y, color.z);
-
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	glDrawArrays(GL_LINES, 0, data.size());
-
-	glDisableVertexAttribArray(0);
-}
-
-void displayBoundingBox(sf::RenderWindow* window, sf::Text* bb, std::vector<Entity*> entityBuffer, std::vector<Shader> shaderBuffer, unsigned int tmpBuffer) {
-
-	sf::FloatRect bbBounds;
-
-	for (int i = 0; i < entityBuffer.size(); i++) {
-		if (drawOBB) {
-			drawBoundingBox(entityBuffer[i]->getObjectBoundingBox(true), tmpBuffer, shaderBuffer, glm::vec3(1, 0, 0));
-			window->pushGLStates();
-			bb->setString("Object Bounding Box");
-			bbBounds = bb->getLocalBounds();
-			bb->setOrigin(bbBounds.left + bbBounds.width / 2, bbBounds.top + bbBounds.height / 2);
-			bb->setFillColor(sf::Color(255, 0, 0));
-			bb->setPosition((window->getSize().x / 8) * 1 - (window->getSize().x / 8) / 2, window->getSize().y - 20);
-			window->draw(*bb);
-			window->popGLStates();
-		}
-
-		if (drawAABB1) {
-			drawBoundingBox(entityBuffer[i]->getExternalAxisAlignedBoundingBox(true), tmpBuffer, shaderBuffer, glm::vec3(0, 1, 0));
-			window->pushGLStates();
-			bb->setString("External Axis Aligned Bounding Box");
-			bbBounds = bb->getLocalBounds();
-			bb->setOrigin(bbBounds.left + bbBounds.width / 2, bbBounds.top + bbBounds.height / 2);
-			bb->setFillColor(sf::Color(0, 255, 0));
-			bb->setPosition((window->getSize().x / 8) * 2 - (window->getSize().x / 8) / 2, window->getSize().y - 20);
-			window->draw(*bb);
-			window->popGLStates();
-		}
-
-		if (drawAABB2) {
-			drawBoundingBox(entityBuffer[i]->getInternalAxisAlignedBoundingBox(true), tmpBuffer, shaderBuffer, glm::vec3(0, 0, 1));
-			window->pushGLStates();
-			bb->setString("Internal AABB");
-			bbBounds = bb->getLocalBounds();
-			bb->setOrigin(bbBounds.left + bbBounds.width / 2, bbBounds.top + bbBounds.height / 2);
-			bb->setFillColor(sf::Color(0, 0, 255));
-			bb->setPosition((window->getSize().x / 8) * 3 - (window->getSize().x / 8) / 2, window->getSize().y - 20);
-			window->draw(*bb);
-			window->popGLStates();
-		}
-
-		if (drawAABB3) {
-			bounds_t internalWorldBounds;
-			internalWorldBounds = entityBuffer[i]->getInternalAxisAlignedBoundingBox(true);
-
-			bounds_t worldBounds;
-			worldBounds = entityBuffer[i]->getExternalAxisAlignedBoundingBox(true);
-
-			std::vector<float> data5;
-
-			glm::vec3 a2 = glm::vec3((worldBounds.a.x + internalWorldBounds.a.x) / 2, (worldBounds.a.y + internalWorldBounds.a.y) / 2, (worldBounds.a.z + internalWorldBounds.a.z) / 2);
-			glm::vec3 b2 = glm::vec3((worldBounds.b.x + internalWorldBounds.b.x) / 2, (worldBounds.b.y + internalWorldBounds.b.y) / 2, (worldBounds.b.z + internalWorldBounds.b.z) / 2);
-			glm::vec3 c2 = glm::vec3((worldBounds.c.x + internalWorldBounds.c.x) / 2, (worldBounds.c.y + internalWorldBounds.c.y) / 2, (worldBounds.c.z + internalWorldBounds.c.z) / 2);
-			glm::vec3 d2 = glm::vec3((worldBounds.d.x + internalWorldBounds.d.x) / 2, (worldBounds.d.y + internalWorldBounds.d.y) / 2, (worldBounds.d.z + internalWorldBounds.d.z) / 2);
-			glm::vec3 e2 = glm::vec3((worldBounds.e.x + internalWorldBounds.e.x) / 2, (worldBounds.e.y + internalWorldBounds.e.y) / 2, (worldBounds.e.z + internalWorldBounds.e.z) / 2);
-			glm::vec3 f2 = glm::vec3((worldBounds.f.x + internalWorldBounds.f.x) / 2, (worldBounds.f.y + internalWorldBounds.f.y) / 2, (worldBounds.f.z + internalWorldBounds.f.z) / 2);
-			glm::vec3 g2 = glm::vec3((worldBounds.g.x + internalWorldBounds.g.x) / 2, (worldBounds.g.y + internalWorldBounds.g.y) / 2, (worldBounds.g.z + internalWorldBounds.g.z) / 2);
-			glm::vec3 h2 = glm::vec3((worldBounds.h.x + internalWorldBounds.h.x) / 2, (worldBounds.h.y + internalWorldBounds.h.y) / 2, (worldBounds.h.z + internalWorldBounds.h.z) / 2);
-
-			std::vector<glm::vec3> faces4;
-			faces4.push_back(a2);
-			faces4.push_back(b2);
-			faces4.push_back(c2);
-			faces4.push_back(d2);
-			faces4.push_back(e2);
-			faces4.push_back(f2);
-			faces4.push_back(g2);
-			faces4.push_back(h2);
-			createCube(&data5, faces4);
-
-			glBufferData(GL_ARRAY_BUFFER, data5.size() * sizeof(float), &data5[0], GL_STATIC_DRAW);
-
-			glUseProgram(shaderBuffer[1].getID());
-
-			glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[0].id, 1, GL_FALSE, &(glm::mat4(1.0f)[0][0]));
-			glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[1].id, 1, GL_FALSE, &(camera.getViewMatrix()[0][0]));
-			glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[2].id, 1, GL_FALSE, &(Projection[0][0]));
-			glUniform3f(shaderBuffer[1].getUniformBuffer()[3].id, 0, 1, 1);
-
-			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-			glPointSize(10.0f);
-
-			glDrawArrays(GL_LINES, 0, data5.size());
-
-			glDisableVertexAttribArray(0);
-
-			window->pushGLStates();
-			bb->setString("Average AABB");
-			bbBounds = bb->getLocalBounds();
-			bb->setOrigin(bbBounds.left + bbBounds.width / 2, bbBounds.top + bbBounds.height / 2);
-			bb->setFillColor(sf::Color(0, 255, 255));
-			bb->setPosition((window->getSize().x / 8) * 4 - (window->getSize().x / 8) / 2, window->getSize().y - 20);
-			window->draw(*bb);
-			window->popGLStates();
-		}
-
-		if (drawAABB4) {
-			drawBoundingBox(entityBuffer[i]->getAxisAlignedBoundingBox(true), tmpBuffer, shaderBuffer, glm::vec3(1, 0, 1));
-			window->pushGLStates();
-			bb->setString("True AABB");
-			bbBounds = bb->getLocalBounds();
-			bb->setOrigin(bbBounds.left + bbBounds.width / 2, bbBounds.top + bbBounds.height / 2);
-			bb->setFillColor(sf::Color(255, 0, 255));
-			bb->setPosition((window->getSize().x / 8) * 5 - (window->getSize().x / 8) / 2, window->getSize().y - 20);
-			window->draw(*bb);
-			window->popGLStates();
-		}
-
-		if (drawBS) {
-			drawBoundingSphere(entityBuffer[i]->getInternalBoundingSphere(false), entityBuffer[i]->getWorldPosition(), tmpBuffer, shaderBuffer, glm::vec3(1, 1, 0));
-			window->pushGLStates();
-			bb->setString("Internal Bounding Sphere");
-			bbBounds = bb->getLocalBounds();
-			bb->setOrigin(bbBounds.left + bbBounds.width / 2, bbBounds.top + bbBounds.height / 2);
-			bb->setFillColor(sf::Color(255, 255, 0));
-			bb->setPosition((window->getSize().x / 8) * 6 - (window->getSize().x / 8) / 2, window->getSize().y - 20);
-			window->draw(*bb);
-			window->popGLStates();
-		}
-
-		if (drawBS2) {
-			drawBoundingSphere(entityBuffer[i]->getExternalBoundingSphere(false), entityBuffer[i]->getWorldPosition(), tmpBuffer, shaderBuffer, glm::vec3(1, 0.5, 0));
-			window->pushGLStates();
-			bb->setString("External Bounding Sphere");
-			bbBounds = bb->getLocalBounds();
-			bb->setOrigin(bbBounds.left + bbBounds.width / 2, bbBounds.top + bbBounds.height / 2);
-			bb->setFillColor(sf::Color(255, 127, 0));
-			bb->setPosition((window->getSize().x / 8) * 7 - (window->getSize().x / 8) / 2, window->getSize().y - 20);
-			window->draw(*bb);
-			window->popGLStates();
-		}
-
-		if (drawBS3) {
-			drawBoundingSphere(entityBuffer[i]->getBoundingSphere(false), entityBuffer[i]->getWorldPosition(), tmpBuffer, shaderBuffer, glm::vec3(0.5, 1, 0));
-			window->pushGLStates();
-			bb->setString("True Bounding Sphere");
-			bbBounds = bb->getLocalBounds();
-			bb->setOrigin(bbBounds.left + bbBounds.width / 2, bbBounds.top + bbBounds.height / 2);
-			bb->setFillColor(sf::Color(127, 255, 0));
-			bb->setPosition((window->getSize().x / 8) * 8 - (window->getSize().x / 8) / 2, window->getSize().y - 20);
-			window->draw(*bb);
-			window->popGLStates();
-		}
-	}
-}
-
 
 /*  ___________________________________________________________________________________________________________________________________________________________________________ */
 /* |                                                                          MAIN                                                                                            | */
@@ -711,6 +325,7 @@ void displayBoundingBox(sf::RenderWindow* window, sf::Text* bb, std::vector<Enti
 
 int main(void) {
 	sf::RenderWindow* window = setup();
+	Renderer renderer;
 	UI interface(window);
 
 	sf::Clock clock;
@@ -720,11 +335,7 @@ int main(void) {
 
 	camera.mainCamera = true;
 
-	// SFML elements initialization
-
 	sf::Mouse::setPosition(center);
-
-	setupRender();
 
 	/*  ___________________________________________________________________________________________________________________________________________________________________________ */
 	/* |                                                                          LOOP                                                                                            | */
@@ -733,7 +344,6 @@ int main(void) {
 	while (window->isOpen()) {
 		/* Event Handling */
 		/* ----------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-
 		sf::Event event;
 
 		while (window->pollEvent(event)) {
@@ -752,27 +362,9 @@ int main(void) {
 			time += tick;
 		}
 
-		/* OpenGL */
-		/* ----------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+		renderer.render();
 
-		render();
-
-		// displayBoundingBox(window, &bb, entityBuffer, shaderBuffer, tmpBuffer);
-		drawBoundingSphere(0, glm::vec3(0, 0, 0), tmpBuffer, shaderBuffer, glm::vec3(1, 1, 1));
-
-		/* SFML */
-		/* ----------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-		window->pushGLStates();
-		window->resetGLStates();
-
-		if (displayInfo) {
-			interface.drawDebugInfo();
-			interface.drawFPS();
-			//displayFPS(window, &fps, &fpsClock);
-		}
-
-		interface.drawCrosshair();
-		window->popGLStates();
+		interface.drawInfo();
 
 		window->display();	
 	}

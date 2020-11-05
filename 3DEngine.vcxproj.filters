@@ -30,13 +30,13 @@
     <ClCompile Include="Source\Libs\shader.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Libs\render.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Libs\init.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
     <ClCompile Include="Source\Libs\ui.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Libs\renderer.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,13 +53,13 @@
     <ClInclude Include="Source\Libs\shader.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Libs\render.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Libs\init.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="Source\Libs\ui.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Libs\renderer.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

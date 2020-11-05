@@ -155,7 +155,7 @@
     <ClCompile Include="Source\Libs\camera.cpp" />
     <ClCompile Include="Source\Libs\entity.cpp" />
     <ClCompile Include="Source\Libs\init.cpp" />
-    <ClCompile Include="Source\Libs\render.cpp" />
+    <ClCompile Include="Source\Libs\renderer.cpp" />
     <ClCompile Include="Source\Libs\shader.cpp" />
     <ClCompile Include="Source\Libs\ui.cpp" />
     <ClCompile Include="Source\Main.cpp" />
@@ -166,7 +166,7 @@
     <ClInclude Include="Source\Libs\ui.h" />
     <ClInclude Include="Source\Libs\init.h" />
     <ClInclude Include="Source\Libs\lib.h" />
-    <ClInclude Include="Source\Libs\render.h" />
+    <ClInclude Include="Source\Libs\renderer.h" />
     <ClInclude Include="Source\Libs\shader.h" />
   </ItemGroup>
   <ItemGroup>

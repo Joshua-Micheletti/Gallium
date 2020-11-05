@@ -9,8 +9,8 @@
 #include "camera.h"
 #include "init.h"
 
-unsigned int screenWidth = 1280;
-unsigned int screenHeight = 720;
+unsigned int screenWidth = 1920;
+unsigned int screenHeight = 1080;
 
 glm::mat4 Projection;
 glm::mat4 Projection2;
@@ -33,8 +33,6 @@ bool drawBS3;
 sf::Vector2i center;
 
 int defaultCamera;
-
-int res;
 
 std::vector<Entity *> entityBuffer;
 std::vector<Shader> shaderBuffer;
@@ -61,9 +59,9 @@ sf::RenderWindow* initSFML_OpenGL(string name, int AA, bool VSync) {
 
 	sf::RenderWindow* window;
 	// fullscreen
-	// window = new sf::RenderWindow(sf::VideoMode::getFullscreenModes()[0], name, sf::Style::None, settings);
+	window = new sf::RenderWindow(sf::VideoMode::getFullscreenModes()[0], name, sf::Style::None, settings);
 	// windowed
-	window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight, 32), name, sf::Style::Close, settings);
+	//window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight, 32), name, sf::Style::Close, settings);
 
 	if (!gladLoadGL()) {
 		printf("COULD NOT INITALIZE OPENGL CONTEXT\n");
@@ -256,7 +254,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 
 	light->setElements(GL_POINTS);
 
-	monkey->move(glm::vec3(10.0f, 0.0f, 0.0f), camera.getViewMatrix());
+	monkey->move(glm::vec3(0.0f, 0.0f, 10.0f), camera.getViewMatrix());
 	// box->move(glm::vec3(-20.0f, 0.0f, 5.0f), camera.getViewMatrix());
 	// box->rotate(0.0f, 180.0f, 180.0f);
 	// box->scale(0.1f);
@@ -270,7 +268,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	// man->move(man->getWorldPosition() - man->getExternalAxisAlignedBoundingBox(true).minY, camera.getViewMatrix());
 	walnut->move(walnut->getWorldPosition() - walnut->getExternalAxisAlignedBoundingBox(true).minY, camera.getViewMatrix());
 	// box->move(glm::vec3(0.0f, box->getBoundingSphere(true), 0.0f), camera.getViewMatrix());
-	monkey->move(monkey->getWorldPosition() - monkey->getExternalAxisAlignedBoundingBox(true).minY, camera.getViewMatrix());
+	//monkey->move(monkey->getWorldPosition() - monkey->getExternalAxisAlignedBoundingBox(true).minY, camera.getViewMatrix());
 	jacket->move(jacket->getWorldPosition() - jacket->getExternalAxisAlignedBoundingBox(true).minY, camera.getViewMatrix());
 	man3->move(glm::vec3(12.0f, 0.0f, 0.0f), camera.getViewMatrix());
 	light->move(glm::vec3(60.0f, 10.0f, 0.0f), camera.getViewMatrix());
@@ -295,19 +293,19 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	entityBuffer->push_back(skybox);
 	entityBuffer->push_back(axis);
 	entityBuffer->push_back(light);
-	// entityBuffer->push_back(box);
+	//entityBuffer->push_back(box);
 	entityBuffer->push_back(walnut);
 	entityBuffer->push_back(monkey);
 	entityBuffer->push_back(man);
-	// entityBuffer->push_back(man2);
+	//entityBuffer->push_back(man2);
 	entityBuffer->push_back(man3);
 	entityBuffer->push_back(jacket);
-	// entityBuffer->push_back(map);
-	// entityBuffer->push_back(plane);
+	//entityBuffer->push_back(map);
+	//entityBuffer->push_back(plane);
 }
 
 sf::RenderWindow* setup() {
-	sf::RenderWindow* window = initSFML_OpenGL("3D-Engine", 16, true);
+	sf::RenderWindow* window = initSFML_OpenGL("3D-Engine", 0, false);
 	Projection = glm::perspective(glm::radians(45.0f), (float)window->getSize().x / (float)window->getSize().y, 0.1f, 10000.0f);
 	Projection2 = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10000.0f);
 	world_model = glm::mat4(1.0f);
@@ -316,7 +314,6 @@ sf::RenderWindow* setup() {
 
 	sf::Vector2i tmpCenter(window->getPosition().x + window->getSize().x / 2, window->getPosition().y + window->getSize().y / 2);
 	center = tmpCenter;
-	printf("(%f, %f) \n", center.x, center.y);
 
 	displayInfo = true;
 	drawOBB = false;
@@ -338,8 +335,6 @@ sf::RenderWindow* setup() {
 	loadShaders(&shaderBuffer);
 
 	loadEntities(&entityBuffer);
-
-	res = 4096;
 
 	return(window);
 }

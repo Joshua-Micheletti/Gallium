@@ -82,9 +82,6 @@ extern sf::Vector2i center;
 
 extern int defaultCamera;
 
-// extern unsigned int cubemap;
-extern int res;
-
 extern std::vector<Entity *> entityBuffer;
 extern std::vector<Shader> shaderBuffer;
 extern std::vector<Camera *> cameraBuffer;
