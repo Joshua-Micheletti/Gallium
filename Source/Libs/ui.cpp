@@ -76,7 +76,7 @@ std::string UI::floatToString(float number, int precision) {
 }
 
 void UI::updateFPS() {
-	fps.setString(floatToString(1000.0f / fpsTime.asMilliseconds(), 0));
+	fps.setString(floatToString(1.0f / fpsTime.asSeconds(), 0));
 	frameTime.setString(floatToString(fpsTime.asMicroseconds() / 1000.0f, 2));
 
 	sf::FloatRect fpsBounds = fps.getLocalBounds();

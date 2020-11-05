@@ -119,7 +119,8 @@ void Renderer::renderEntities() {
 }
 
 void Renderer::setupRender() {
-	reflectionRes = 256;
+	reflectionRes = 1024;
+
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
@@ -317,7 +318,9 @@ void Renderer::render() {
 
 	glBindTexture(GL_TEXTURE_2D, texture);
 
-	renderReflectionCubemap();
+	if (doReflection) {
+		renderReflectionCubemap();
+	}
 
 	glViewport(0, 0, screenWidth, screenHeight);
 	glBindFramebuffer(GL_FRAMEBUFFER, imageframebuffer);

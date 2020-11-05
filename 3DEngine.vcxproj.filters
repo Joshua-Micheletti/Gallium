@@ -39,6 +39,9 @@
     <ClCompile Include="Source\Libs\renderer.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Libs\eventHandler.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Libs\lib.h">
@@ -60,6 +63,9 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="Source\Libs\renderer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Libs\eventHandler.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

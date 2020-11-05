@@ -29,6 +29,7 @@ bool drawAABB4;
 bool drawBS;
 bool drawBS2;
 bool drawBS3;
+bool doReflection;
 
 sf::Vector2i center;
 
@@ -281,12 +282,13 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	jacket->loadTexture("../Textures/black leather jacket/Main Texture/[Albedo].jpg");
 
 	std::vector<std::string> faces;
-	faces.push_back("../Textures/Skybox/sea/right.png"); //right
-	faces.push_back("../Textures/Skybox/sea/left.png");  //left
-	faces.push_back("../Textures/Skybox/sea/top.png");   //top
-	faces.push_back("../Textures/Skybox/sea/bottom.png");//bottom
-	faces.push_back("../Textures/Skybox/sea/front.png"); //front
-	faces.push_back("../Textures/Skybox/sea/back.png");  //back
+	std::string directory = "Epic_BlueSunset";
+	faces.push_back("../Textures/Skybox/" + directory + "/right.png"); //right
+	faces.push_back("../Textures/Skybox/" + directory + "/left.png");  //left
+	faces.push_back("../Textures/Skybox/" + directory + "/top.png");   //top
+	faces.push_back("../Textures/Skybox/" + directory + "/bottom.png");//bottom
+	faces.push_back("../Textures/Skybox/" + directory + "/front.png"); //front
+	faces.push_back("../Textures/Skybox/" + directory + "/back.png");  //back
 
 	skybox->loadCubemap(faces);
 
@@ -299,7 +301,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	entityBuffer->push_back(man);
 	//entityBuffer->push_back(man2);
 	entityBuffer->push_back(man3);
-	entityBuffer->push_back(jacket);
+	//entityBuffer->push_back(jacket);
 	//entityBuffer->push_back(map);
 	//entityBuffer->push_back(plane);
 }
@@ -324,6 +326,7 @@ sf::RenderWindow* setup() {
 	drawBS = false;
 	drawBS2 = false;
 	drawBS3 = false;
+	doReflection = true;
 
 	defaultCamera = 0;
 

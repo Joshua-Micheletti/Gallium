@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Libs\eventHandler.cpp" />
     <ClCompile Include="ExtLibs\GLAD\src\glad.c" />
     <ClCompile Include="Source\Libs\camera.cpp" />
     <ClCompile Include="Source\Libs\entity.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="Source\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Libs\eventHandler.h" />
     <ClInclude Include="Source\Libs\camera.h" />
     <ClInclude Include="Source\Libs\entity.h" />
     <ClInclude Include="Source\Libs\ui.h" />

@@ -77,6 +77,7 @@ extern bool drawAABB4;
 extern bool drawBS;
 extern bool drawBS2;
 extern bool drawBS3;
+extern bool doReflection;
 
 extern sf::Vector2i center;
 
