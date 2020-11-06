@@ -30,7 +30,7 @@ class Renderer {
 		void renderReflectionCubemap();
 		void renderScreen();
 		void resetRender();
-		void renderEntities();
+		void renderEntities(bool);
 		void attachUniforms(Entity *, std::vector<uniform_t>);
 		void linkLayouts(Entity*, std::vector<char *>);
 

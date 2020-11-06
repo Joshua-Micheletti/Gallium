@@ -10,7 +10,6 @@
 
 using namespace std;
 
-
 typedef struct {
   glm::vec3 minX,
             maxX,
@@ -74,6 +73,7 @@ class Entity {
     float maxDistInt;
     float maxDistExt;
     float maxDist;
+    bool toReflect;
 
   public:
     // get methods
@@ -102,6 +102,7 @@ class Entity {
     float getInternalBoundingSphere(bool);
     float getExternalBoundingSphere(bool);
     float getBoundingSphere(bool);
+    bool getToReflect();
 
     // set methods
     void load3DModel(string);
@@ -118,6 +119,8 @@ class Entity {
     void setElements(GLenum);
     void setTextureType(GLenum);
     void setTexture(unsigned int);
+
+    void setToReflect(bool);
 
   
   private:

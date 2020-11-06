@@ -76,50 +76,93 @@ void Renderer::linkLayouts(Entity* entity, std::vector<char*> layoutBuffer) {
 	}
 }
 
-void Renderer::renderEntities() {
+void Renderer::renderEntities(bool reflection) {
 	for (int i = 0; i < entityBuffer.size(); i++) {
-		// glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
+		if (reflection) {
+			if (entityBuffer[i]->getToReflect() == true) {
+				// glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
 
-		if (entityBuffer[i]->getName().compare("skybox") == 0) {
-			glDepthMask(GL_FALSE);
+				if (entityBuffer[i]->getName().compare("skybox") == 0) {
+					glDepthMask(GL_FALSE);
+				}
+
+				glUseProgram(shaderBuffer[entityBuffer[i]->getShader()].getID());
+
+				attachUniforms(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getUniformBuffer());
+
+				linkLayouts(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getLayoutBuffer());
+
+				if (entityBuffer[i]->getTexture() != 0) {
+					glBindTexture(entityBuffer[i]->getTextureType(), entityBuffer[i]->getTexture());
+				}
+
+				switch (renderMode) {
+				case wireframe:
+					glDrawArrays(GL_LINES, 0, entityBuffer[i]->getVertices().size());
+					break;
+
+				case vertices:
+					glPointSize(2.0f);
+					glDrawArrays(GL_POINTS, 0, entityBuffer[i]->getVertices().size());
+					break;
+
+				default:
+					glDrawArrays(entityBuffer[i]->getElements(), 0, entityBuffer[i]->getVertices().size());
+
+				}
+
+				glDepthMask(GL_TRUE);
+				glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
+
+				glDisableVertexAttribArray(0);
+				glDisableVertexAttribArray(1);
+				glDisableVertexAttribArray(2);
+			}
 		}
+		else {
+			// glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
 
-		glUseProgram(shaderBuffer[entityBuffer[i]->getShader()].getID());
+			if (entityBuffer[i]->getName().compare("skybox") == 0) {
+				glDepthMask(GL_FALSE);
+			}
 
-		attachUniforms(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getUniformBuffer());
+			glUseProgram(shaderBuffer[entityBuffer[i]->getShader()].getID());
 
-		linkLayouts(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getLayoutBuffer());
+			attachUniforms(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getUniformBuffer());
 
-		if (entityBuffer[i]->getTexture() != 0) {
-			glBindTexture(entityBuffer[i]->getTextureType(), entityBuffer[i]->getTexture());
+			linkLayouts(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getLayoutBuffer());
+
+			if (entityBuffer[i]->getTexture() != 0) {
+				glBindTexture(entityBuffer[i]->getTextureType(), entityBuffer[i]->getTexture());
+			}
+
+			switch (renderMode) {
+			case wireframe:
+				glDrawArrays(GL_LINES, 0, entityBuffer[i]->getVertices().size());
+				break;
+
+			case vertices:
+				glPointSize(2.0f);
+				glDrawArrays(GL_POINTS, 0, entityBuffer[i]->getVertices().size());
+				break;
+
+			default:
+				glDrawArrays(entityBuffer[i]->getElements(), 0, entityBuffer[i]->getVertices().size());
+
+			}
+
+			glDepthMask(GL_TRUE);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
+
+			glDisableVertexAttribArray(0);
+			glDisableVertexAttribArray(1);
+			glDisableVertexAttribArray(2);
 		}
-
-		switch (renderMode) {
-		case wireframe:
-			glDrawArrays(GL_LINES, 0, entityBuffer[i]->getVertices().size());
-			break;
-
-		case vertices:
-			glPointSize(2.0f);
-			glDrawArrays(GL_POINTS, 0, entityBuffer[i]->getVertices().size());
-			break;
-
-		default:
-			glDrawArrays(entityBuffer[i]->getElements(), 0, entityBuffer[i]->getVertices().size());
-
-		}
-
-		glDepthMask(GL_TRUE);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
-
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-		glDisableVertexAttribArray(2);
 	}
 }
 
 void Renderer::setupRender() {
-	reflectionRes = 1024;
+	reflectionRes = 4096;
 
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glEnable(GL_CULL_FACE);
@@ -260,27 +303,27 @@ void Renderer::renderReflectionCubemap() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X, cubemap, 0);
 	camera2.setOrientation(glm::vec3(0.0, 0.0, 0.0));
-	renderEntities();
+	renderEntities(true);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, cubemap, 0);
 	camera2.setOrientation(glm::vec3(0.0, 180.0, 0.0));
-	renderEntities();
+	renderEntities(true);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, cubemap, 0);
 	camera2.setOrientation(glm::vec3(0.0, -90.0, 90.0));
-	renderEntities();
+	renderEntities(true);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, cubemap, 0);
 	camera2.setOrientation(glm::vec3(0.0, -90.0, -90.0));
-	renderEntities();
+	renderEntities(true);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_Z, cubemap, 0);
 	camera2.setOrientation(glm::vec3(0.0, 90.0, 0.0));
-	renderEntities();
+	renderEntities(true);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, cubemap, 0);
 	camera2.setOrientation(glm::vec3(0.0, 270.0, 0.0));
-	renderEntities();
+	renderEntities(true);
 	glClear(GL_DEPTH_BUFFER_BIT);
 }
 
@@ -327,7 +370,7 @@ void Renderer::render() {
 
 	defaultCamera = 0;
 
-	renderEntities();
+	renderEntities(false);
 
 	displayBoundingBox();
 
@@ -556,7 +599,7 @@ void Renderer::drawBoundingSphere(float radius, glm::vec3 center, glm::vec3 colo
 	std::vector<float> data;
 
 	createSphere(center, radius, 100, &data);
-
+	glBindBuffer(GL_ARRAY_BUFFER, tmpBuffer);
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
 
 	glUseProgram(shaderBuffer[1].getID());
@@ -617,7 +660,7 @@ void Renderer::displayBoundingBox() {
 			faces4.push_back(g2);
 			faces4.push_back(h2);
 			createCube(&data5, faces4);
-
+			glBindBuffer(GL_ARRAY_BUFFER, tmpBuffer);
 			glBufferData(GL_ARRAY_BUFFER, data5.size() * sizeof(float), &data5[0], GL_STATIC_DRAW);
 
 			glUseProgram(shaderBuffer[1].getID());

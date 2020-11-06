@@ -15,7 +15,7 @@ float map(float value, float min1, float max1, float min2, float max2) {
 }
 
 void main() {
-  vec3 lightColor = vec3(1.0, 0.0, 0.0);
+  vec3 lightColor = vec3(1.0, 1.0, 1.0);
   float ambientStrength = 0.2;
 
   vec3 ambient = ambientStrength * lightColor;

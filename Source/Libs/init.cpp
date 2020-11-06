@@ -176,6 +176,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	Entity* map = new Entity("map");
 	Entity* plane = new Entity("plane");
 	Entity* jacket = new Entity("jacket");
+	Entity* manaya = new Entity("manaya");
 
 	createAxis(axis);
 	std::vector<float> vex;
@@ -192,6 +193,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	map->load3DModel("../Models/dust2_.obj");
 	plane->load3DModel("../Models/plane.obj");
 	jacket->load3DModel("../Models/blj.obj");
+	manaya->load3DModel("../Models/manaya6.obj");
 
 	std::vector<float> skyboxVertices = {
 		// positions
@@ -249,9 +251,14 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	man2->setShader(7);
 	man3->setShader(10);
 	skybox->setShader(6);
-	map->setShader(10);
+	map->setShader(8);
 	plane->setShader(3);
 	jacket->setShader(4);
+	manaya->setShader(7);
+
+	manaya->setToReflect(false);
+	monkey->setToReflect(false);
+	map->setToReflect(false);
 
 	light->setElements(GL_POINTS);
 
@@ -276,13 +283,16 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	walnut->move(glm::vec3(-10.0f, 0.0f, 0.0f), camera.getViewMatrix());
 	plane->scale(50.0f);
 	jacket->move(glm::vec3(0.0f, 0.0f, 50.0f), camera.getViewMatrix());
+	manaya->scale(0.01f);
+	manaya->move(glm::vec3(0.0f, 0.0f, 3.0f), camera.getViewMatrix());
+	manaya->rotate(0, 270, 0);
 
 	// box->loadTexture("Textures/DefaultMaterial_Base_Color.png");
 	box->loadTexture("../Textures/fi_uv_4096__display_grid_8x8_32x32_128x128_by_fisholith-d786zt5.png");
 	jacket->loadTexture("../Textures/black leather jacket/Main Texture/[Albedo].jpg");
 
 	std::vector<std::string> faces;
-	std::string directory = "Epic_BlueSunset";
+	std::string directory = "space_anotherplanet";
 	faces.push_back("../Textures/Skybox/" + directory + "/right.png"); //right
 	faces.push_back("../Textures/Skybox/" + directory + "/left.png");  //left
 	faces.push_back("../Textures/Skybox/" + directory + "/top.png");   //top
@@ -298,12 +308,13 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	//entityBuffer->push_back(box);
 	entityBuffer->push_back(walnut);
 	entityBuffer->push_back(monkey);
-	entityBuffer->push_back(man);
+	//entityBuffer->push_back(man);
 	//entityBuffer->push_back(man2);
 	entityBuffer->push_back(man3);
 	//entityBuffer->push_back(jacket);
 	//entityBuffer->push_back(map);
 	//entityBuffer->push_back(plane);
+	entityBuffer->push_back(manaya);
 }
 
 sf::RenderWindow* setup() {

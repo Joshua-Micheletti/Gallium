@@ -30,6 +30,7 @@ Entity::Entity(string name) {
 	this->maxDistExt = 0;
 	this->maxDistInt = 0;
 	this->maxDist = 0;
+	this->toReflect = true;
 
 	if (this->getName().compare("axis") == 0) {
 		this->elements = GL_LINES;
@@ -898,4 +899,13 @@ void Entity::createBuffer(std::vector<float> data, unsigned int* buffer) {
 	glGenBuffers(1, buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, (*buffer));
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
+}
+
+
+void Entity::setToReflect(bool reflection) {
+	this->toReflect = reflection;
+}
+
+bool Entity::getToReflect() {
+	return(this->toReflect);
 }
