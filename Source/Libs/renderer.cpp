@@ -274,7 +274,7 @@ void Renderer::setupRender() {
 	glBufferData(GL_ARRAY_BUFFER, uv.size() * sizeof(float), &uv[0], GL_STATIC_DRAW);
 
 	screenShader = new Shader((char*)"screen shader");
-	screenShader->loadShader((char*)"../Shader/screen/vertex.c", (char*)"../Shader/screen/fragment.c");
+	screenShader->loadShader((char*)"../Shader/screen/screen.vert", (char*)"../Shader/screen/screen.frag");
 }
 
 void Renderer::resetRender() {

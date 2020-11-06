@@ -100,7 +100,7 @@ void loadShaders(std::vector<Shader>* shaderBuffer) {
 	shader5.loadShader((char*)"../Shader/lightingTex/lightVertexTexture.c", (char*)"../Shader/lightingTex/lightFragmentTexture.c");
 	shader6.loadShader((char*)"../Shader/lightSource/lightSourceVertex.c", (char*)"../Shader/lightSource/lightSourceFragment.c");
 	shader7.loadShader((char*)"../Shader/skybox/vertex.c", (char*)"../Shader/skybox/fragment.c");
-	shader8.loadShader((char*)"../Shader/reflection/vertex.c", (char*)"../Shader/reflection/fragment.c");
+	shader8.loadShader((char*)"../Shader/reflection/vertex.vert", (char*)"../Shader/reflection/fragment.frag");
 	shader9.loadShader((char*)"../Shader/refraction/glass/vertex.c", (char*)"../Shader/refraction/glass/fragment.c");
 	shader10.loadShader((char*)"../Shader/refraction/diamond/vertex.c", (char*)"../Shader/refraction/diamond/fragment.c");
 	shader11.loadShader((char*)"../Shader/toon/vertex.c", (char*)"../Shader/toon/fragment.c");
@@ -292,7 +292,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	jacket->loadTexture("../Textures/black leather jacket/Main Texture/[Albedo].jpg");
 
 	std::vector<std::string> faces;
-	std::string directory = "space_anotherplanet";
+	std::string directory = "Epic_BlueSunset";
 	faces.push_back("../Textures/Skybox/" + directory + "/right.png"); //right
 	faces.push_back("../Textures/Skybox/" + directory + "/left.png");  //left
 	faces.push_back("../Textures/Skybox/" + directory + "/top.png");   //top
