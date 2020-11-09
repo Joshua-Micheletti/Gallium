@@ -54,7 +54,7 @@ void createGaussianKernel(inout float kernel[size * size]) {
 
 void main() {
     // normal colors
-//    FragColor = vec4(texture(screenTexture, TexCoords).xyz, 1.0);
+    FragColor = vec4(texture(screenTexture, TexCoords).xyz, 1.0);
 
     // inverted colors
 //    FragColor = vec4(vec3(1.0 - texture(screenTexture, TexCoords)), 1.0);
@@ -171,7 +171,7 @@ void main() {
 //    );
 
     float kernel[size * size];
-//
+////
     for (int i = 0; i < size * size; i++) {
         kernel[i] = 0;
     }
@@ -199,5 +199,5 @@ void main() {
     for(int i = 0; i < size * size; i++)
         col += sampleTex[i] * kernel[i];
     
-    FragColor = vec4(col, 1.0);
+//    FragColor = vec4(col, 1.0);
 }

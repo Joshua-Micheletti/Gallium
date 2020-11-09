@@ -92,4 +92,6 @@ extern Entity *light;
 
 extern sf::RenderWindow *setup();
 
+extern GLenum glCheckError_(const char*, int);
+
 #endif

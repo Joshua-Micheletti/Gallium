@@ -2,26 +2,27 @@
 #include "entity.h"
 #include "shader.h"
 
-extern unsigned int tmpBuffer;
-
-
+// class for rendering entities using shaders (mainly openGL)
 class Renderer {
 	public:
+		// constructor method
 		Renderer();
+		// method for rendering
 		void render();
+		// method to setup the rendering (called by the constructor)
 		void setupRender();
 
 	private:
 		unsigned int tmpBuffer;
 		unsigned int cubemap;
 		unsigned int texture;
-		unsigned int renderBuffer;
-		unsigned int image;
-		unsigned int renderBuffer2;
+		unsigned int reflectionRBO;
+		unsigned int screenTexture;
+		unsigned int screenRBO;
 		unsigned int screenBuffer;
 		unsigned int uvBuffer;
-		GLuint frameBuffer;
-		GLuint imageframebuffer;
+		GLuint reflectionFBO;
+		GLuint screenFBO;
 		Shader* screenShader;
 		std::vector<float> square;
 		std::vector<float> data1;

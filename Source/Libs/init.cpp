@@ -4,6 +4,8 @@
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
 #include <vector>
+#include <stdlib.h>
+#include <iostream>
 #include "entity.h"
 #include "shader.h"
 #include "camera.h"
@@ -308,13 +310,13 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	//entityBuffer->push_back(box);
 	entityBuffer->push_back(walnut);
 	entityBuffer->push_back(monkey);
-	//entityBuffer->push_back(man);
+	entityBuffer->push_back(man);
 	//entityBuffer->push_back(man2);
 	entityBuffer->push_back(man3);
-	//entityBuffer->push_back(jacket);
+	entityBuffer->push_back(jacket);
 	//entityBuffer->push_back(map);
 	//entityBuffer->push_back(plane);
-	entityBuffer->push_back(manaya);
+	//entityBuffer->push_back(manaya);
 }
 
 sf::RenderWindow* setup() {
@@ -352,3 +354,24 @@ sf::RenderWindow* setup() {
 
 	return(window);
 }
+
+GLenum glCheckError_(const char* file, int line) {
+	GLenum errorCode;
+	while ((errorCode = glGetError()) != GL_NO_ERROR)
+	{
+		std::string error;
+		switch (errorCode)
+		{
+		case GL_INVALID_ENUM:                  error = "INVALID_ENUM"; break;
+		case GL_INVALID_VALUE:                 error = "INVALID_VALUE"; break;
+		case GL_INVALID_OPERATION:             error = "INVALID_OPERATION"; break;
+		case GL_STACK_OVERFLOW:                error = "STACK_OVERFLOW"; break;
+		case GL_STACK_UNDERFLOW:               error = "STACK_UNDERFLOW"; break;
+		case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
+		case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
+		}
+		std::cout << error << " | " << file << " (" << line << ")" << std::endl;
+	}
+	return errorCode;
+}
+#define glCheckError() glCheckError_(__FILE__, __LINE__) 

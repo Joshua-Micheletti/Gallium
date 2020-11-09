@@ -162,69 +162,128 @@ void Renderer::renderEntities(bool reflection) {
 }
 
 void Renderer::setupRender() {
-	reflectionRes = 4096;
-
+	// sets the color to clear the color buffer with
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
+	// enable multisampling
+	glEnable(GL_MULTISAMPLE);
+
+	// enables back-face culling:
+	// polygons aren't rendered if the vertices that define the triangle are seen clockwise or counterclockwise,
+	// a face with vertices indexed in the opposite order suggest that it's being viewed from the other side,
+	// which is usually the inside of the model, which doesn't need to be rendered
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
-	glGenBuffers(1, &tmpBuffer);
+	// generate 1 generic buffer and assigns its ID to the variable tmpBuffer
+	glGenBuffers(1, &this->tmpBuffer);
 
-	frameBuffer = 0;
-	glGenFramebuffers(1, &frameBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 
-	glGenTextures(1, &cubemap);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
+	/*--------------------------------------------------------------------------*/
+	/*                             REFLECTION SETUP                             */
+	/*--------------------------------------------------------------------------*/
+
+	// defines the resolution of the reflection cubemap
+	this->reflectionRes = 4096;
+
+	// generate the framebuffer that is gonna store the view from the reflection camera
+	glGenFramebuffers(1, &this->reflectionFBO);
+	// bind the newly generated framebuffer to the default framebuffer, both in read and write
+	glBindFramebuffer(GL_FRAMEBUFFER, this->reflectionFBO);
+
+	/* ACTIVE FRAMEBUFFER: reflectionFBO */
+
+	// generate a generic texture for the cubemap reflection
+	glGenTextures(1, &this->cubemap);
+	// actually creates and binds the cubemap placeholder to the actual cubemap
+	glBindTexture(GL_TEXTURE_CUBE_MAP, this->cubemap);
+
+	/* ACTIVE TEXTURE: cubemap */
+
+	// cycle through the faces of the cubemap
 	for (int i = 0; i < 6; i++) {
-		unsigned int* data;
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, reflectionRes, reflectionRes, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		// generate an empty (NULL) texture at the target (active texture @ GL_TEXTURE_CUBE_MAP_POSITIVE_X ... GL_TEXTURE_CUBE_MAP_NEGATIVE_Z)
+		// with no mipmap level, RGB color internal format, reflectionRex x reflectionRes for the resolution, no border, RGB color format,
+		// UNSIGNED_BYTE pixel data format
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, this->reflectionRes, this->reflectionRes, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	}
+
+	// set texture parameters (GL_TEXTURE_CUBE_MAP = target (in this case it refers to cubemap))
+	// set the texture display filter when switching mipmaps (needs more testing and studying)
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// set the texture display filter when switching mipmaps (needs more testing and studying)
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	// set the texture to shrink or stretch to the edge of the texture space in the S, T and R axis
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// generates one render buffer to attach to the framebuffer to store the image data (more optimized than textures for targets)
+	glGenRenderbuffers(1, &this->reflectionRBO);
+	// bind renderBuffer to the default GL_RENDERBUFFER
+	glBindRenderbuffer(GL_RENDERBUFFER, this->reflectionRBO);
 
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP, cubemap, 0);
+	/* ACTIVE RENDERBUFFER: reflectionRBO */
 
-	glGenRenderbuffers(1, &renderBuffer);
-	glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
-	glEnable(GL_MULTISAMPLE);
+	// define render buffer multisample (needs more study)
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 8, GL_DEPTH24_STENCIL8, this->reflectionRes, this->reflectionRes);
+	// attach renderBuffer to the current framebuffer (frameBuffer)
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, this->reflectionRBO);
 
-	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 8, GL_DEPTH24_STENCIL8, reflectionRes, reflectionRes);
-
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderBuffer);
-
+	// set back the renderbuffer to the default renderbuffer
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
+	/* ACTIVE RENDERBUFFER: Default */
+
+	// check if the framebuffer is complete (has all the needed buffers attached to it)
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
 
-	glGenTextures(1, &image);
-	glBindTexture(GL_TEXTURE_2D, image);
+
+	/*-------------------------------------------------------------------------------*/
+	/*                             POST PROCESSING SETUP                             */
+	/*-------------------------------------------------------------------------------*/
+
+	// create an empty texture object for screenTexture, this texture will be bound to the screenFBO
+	// and will store the screen view image
+	glGenTextures(1, &this->screenTexture);
+	// bind the screenTexture texture as the main texture
+	glBindTexture(GL_TEXTURE_2D, this->screenTexture);
+
+	/* ACTIVE TEXTURE: screenTexture */
+
+	// create the actual texture for image with res: screenWidth x screenHeight
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexImage2DMultisample(GL_TEXTURE_2D, 16, GL_RGB, screenWidth, screenHeight, GL_TRUE);
+	// set the texture filters for mipmaps
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	imageframebuffer = 0;
-	glGenFramebuffers(1, &imageframebuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, imageframebuffer);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, image, 0);
+	// create the screenFBO (used for rendering the screen view to a texture)
+	glGenFramebuffers(1, &this->screenFBO);
+	// bind the screenFBO to be the default FBO
+	glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
 
-	glGenRenderbuffers(1, &renderBuffer2);
-	glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer2);
+	/* ACTIVE FRAMEBUFFER: screenFBO */
+
+	// attach the screenTexture to the screenFBO, so that the stuff rendered on the screenFBO can be saved to the screenTexture
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->screenTexture, 0);
+
+	// create a renderbuffer (for the screenFBO)
+	glGenRenderbuffers(1, &this->screenRBO);
+	// bind the screenRBO as default renderbuffer
+	glBindRenderbuffer(GL_RENDERBUFFER, this->screenRBO);
+
+	/* ACTIVE RENDERBUFFER: screenRBO */
+
+	// define render buffer multisample (needs more study)
 	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 8, GL_DEPTH24_STENCIL8, screenWidth, screenHeight);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderBuffer2);
+	// set the screenRBO to be the screenFBO buffer
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, this->screenRBO);
 
+	// reset the current RBO to be the default RBO
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	/* ACTIVE RENDERBUFFER: Default */
 
 	square.push_back(-1.0f);
 	square.push_back(1.0f);
@@ -297,7 +356,7 @@ void Renderer::resetRender() {
 
 void Renderer::renderReflectionCubemap() {
 	defaultCamera = 1;
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, reflectionFBO);
 	glViewport(0, 0, reflectionRes, reflectionRes);
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -345,7 +404,7 @@ void Renderer::renderScreen() {
 	glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-	glBindTexture(GL_TEXTURE_2D, image);
+	glBindTexture(GL_TEXTURE_2D, this->screenTexture);
 
 	glDrawArrays(GL_TRIANGLES, 0, square.size());
 
@@ -354,9 +413,13 @@ void Renderer::renderScreen() {
 	glBindBuffer(GL_ARRAY_BUFFER, tmpBuffer);
 }
 
+// rendering method
 void Renderer::render() {
+	// clear the color and depth buffers before drawing again
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// enable depth testing (draw a fragment only if there's nothing in front of it)
 	glEnable(GL_DEPTH_TEST);
+
 	glActiveTexture(GL_TEXTURE0);
 
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -366,7 +429,7 @@ void Renderer::render() {
 	}
 
 	glViewport(0, 0, screenWidth, screenHeight);
-	glBindFramebuffer(GL_FRAMEBUFFER, imageframebuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
 
 	defaultCamera = 0;
 
@@ -374,6 +437,7 @@ void Renderer::render() {
 
 	displayBoundingBox();
 
+	glClear(GL_DEPTH_BUFFER_BIT);
 	renderScreen();
 
 	resetRender();

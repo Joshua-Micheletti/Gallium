@@ -16,8 +16,6 @@ EventHandler::EventHandler(sf::RenderWindow *window) {
 
 	dist = 100.0f;
 	angle = 0.0f;
-
-	lightPos = glm::vec3(60.0, 10.0, 60.0);
 }
 
 void EventHandler::handleWindowEvents() {
@@ -334,16 +332,9 @@ void EventHandler::updateEntities() {
 		else if (entity->getName().compare("light") == 0) {
 			angle += 0.001f;
 
-			// angle = 90.0f;
-
 			glPointSize(30);
 
-			lightPos.x = dist * cos(angle);
-			lightPos.z = dist * sin(angle);
-			// lightPos.y += 0.1;
-
-			light->placeAt(glm::vec3(lightPos.x, lightPos.y, lightPos.z), camera.getViewMatrix());
-			// light->placeAt(camera.getPosition(), camera.getViewMatrix());
+			light->placeAt(glm::vec3(dist * cos(angle), 10.0, dist * sin(angle)), camera.getViewMatrix());
 		}
 
 		else if (entity->getName().compare("man2") == 0) {
@@ -352,6 +343,10 @@ void EventHandler::updateEntities() {
 
 		else if (entity->getName().compare("man3") == 0) {
 			entity->rotate(0.0f, 0.2f, 0.0f);
+		}
+
+		else if (entity->getName().compare("manaya") == 0) {
+			entity->rotate(0.1f, 0.0f, 0.0f);
 		}
 	}
 }

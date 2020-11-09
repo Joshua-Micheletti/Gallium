@@ -170,6 +170,7 @@ void UI::drawBoundingBoxText() {
 	}
 }
 
+// utility method for converting a float number to a string with a desired decimal precision
 std::string UI::floatToString(float number, int precision) {
 	std::stringstream stream;
 	stream << std::fixed << std::setprecision(precision) << number;
