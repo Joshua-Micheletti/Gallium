@@ -261,6 +261,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	manaya->setToReflect(false);
 	monkey->setToReflect(false);
 	map->setToReflect(false);
+	man->setToReflect(false);
 
 	light->setElements(GL_POINTS);
 
@@ -320,7 +321,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 }
 
 sf::RenderWindow* setup() {
-	sf::RenderWindow* window = initSFML_OpenGL("3D-Engine", 0, false);
+	sf::RenderWindow* window = initSFML_OpenGL("3D-Engine", 0, true);
 	Projection = glm::perspective(glm::radians(45.0f), (float)window->getSize().x / (float)window->getSize().y, 0.1f, 10000.0f);
 	Projection2 = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10000.0f);
 	world_model = glm::mat4(1.0f);

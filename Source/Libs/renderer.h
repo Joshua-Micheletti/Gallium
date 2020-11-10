@@ -9,25 +9,25 @@ class Renderer {
 		Renderer();
 		// method for rendering
 		void render();
-		// method to setup the rendering (called by the constructor)
-		void setupRender();
 
 	private:
 		unsigned int tmpBuffer;
-		unsigned int cubemap;
-		unsigned int texture;
+		//unsigned int texture;
+
+		unsigned int reflectionFBO;
 		unsigned int reflectionRBO;
-		unsigned int screenTexture;
-		unsigned int screenRBO;
-		unsigned int screenBuffer;
-		unsigned int uvBuffer;
-		GLuint reflectionFBO;
-		GLuint screenFBO;
-		Shader* screenShader;
-		std::vector<float> square;
-		std::vector<float> data1;
+		unsigned int reflectionCubemap;
 		int reflectionRes;
 
+		unsigned int screenFBO;
+		unsigned int screenTexture;
+		unsigned int screenRBO;
+		unsigned int screenVBO;
+		unsigned int screenUVVBO;
+		Shader* screenShader;
+
+		std::vector<float> data1;
+		
 		void renderReflectionCubemap();
 		void renderScreen();
 		void resetRender();
