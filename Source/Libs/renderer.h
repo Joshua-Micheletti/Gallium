@@ -12,7 +12,6 @@ class Renderer {
 
 	private:
 		unsigned int tmpBuffer;
-		//unsigned int texture;
 
 		unsigned int reflectionFBO;
 		unsigned int reflectionRBO;

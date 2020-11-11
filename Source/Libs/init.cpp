@@ -249,7 +249,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	box->setShader(0);
 	walnut->setShader(10);
 	monkey->setShader(8);
-	man->setShader(7);
+	man->setShader(8);
 	man2->setShader(7);
 	man3->setShader(10);
 	skybox->setShader(6);
@@ -321,7 +321,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 }
 
 sf::RenderWindow* setup() {
-	sf::RenderWindow* window = initSFML_OpenGL("3D-Engine", 0, true);
+	sf::RenderWindow* window = initSFML_OpenGL("3D-Engine", 0, false);
 	Projection = glm::perspective(glm::radians(45.0f), (float)window->getSize().x / (float)window->getSize().y, 0.1f, 10000.0f);
 	Projection2 = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10000.0f);
 	world_model = glm::mat4(1.0f);

@@ -11,7 +11,6 @@
 #include "init.h"
 #include <iostream>
 #include <string>
-using namespace std;
 
 // constructor method, sets up the renderer (reflection and post processing)
 Renderer::Renderer() {
@@ -212,47 +211,245 @@ void Renderer::render() {
 	// check if the program should render the reflection cubemap
 	if (doReflection) {
 		// render the reflection cubemap
-		renderReflectionCubemap();
+		this->renderReflectionCubemap();
 	}
 
-	// reset the viewport
-	glViewport(0, 0, screenWidth, screenHeight);
 	// set the active frame buffer to the screenFBO
 	glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
 
 	/* ACTIVE FRAMEBUFFER: screenFBO */
 
-	// set the render camera to the default camera
-	defaultCamera = 0;
-
 	// render all entities
-	renderEntities(false);
+	this->renderEntities(false);
 
 	// draw the bounding box for each entity
-	displayBoundingBox();
-
-	// clear the framebuffer depth buffer
-	glClear(GL_DEPTH_BUFFER_BIT);
+	this->displayBoundingBox();
 
 	// render the screen (post processing)
-	renderScreen();
+	this->renderScreen();
 
 	// reset the renderer for the next render
-	resetRender();
+	this->resetRender();
 }
 
 
+// render the cubemap view from the reflection camera to later calculate reflections on
+void Renderer::renderReflectionCubemap() {
+	// set the current camera to the camera inside the reflective object
+	defaultCamera = 1;
+
+	/* ACTIVE CAMERA: camera2 */
+
+	// set the reflectionFBO as the current framebuffer to render on
+	glBindFramebuffer(GL_FRAMEBUFFER, reflectionFBO);
+
+	/* ACTIVE FRAMEBUFFER: reflectionFBO */
+
+	// set the viewport to fit the reflection texture resolution
+	glViewport(0, 0, reflectionRes, reflectionRes);
+
+	// clear the color and depth buffers from the reflectionFBO
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// FRONT
+	// attach the positive X texture of the reflectionCubemap to the color buffer of the reflectionFBO
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X, this->reflectionCubemap, 0);
+	// turn the camera to face the right direction
+	camera2.setOrientation(glm::vec3(0.0, 0.0, 0.0));
+	// render all entities except for the ones that shouldn't be rendered in the reflection
+	this->renderEntities(true);
+	// clear the depth buffers from the reflectionFBO
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	// BACK
+	// attach the negative X texture of the reflectionCubemap to the color buffer of the reflectionFBO
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, this->reflectionCubemap, 0);
+	// turn the camera to face the right direction
+	camera2.setOrientation(glm::vec3(0.0, 180.0, 0.0));
+	// render all entities except for the ones that shouldn't be rendered in the reflection
+	this->renderEntities(true);
+	// clear the depth buffers from the reflectionFBO
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	// TOP
+	// attach the positive Y texture of the reflectionCubemap to the color buffer of the reflectionFBO
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, this->reflectionCubemap, 0);
+	// turn the camera to face the right direction
+	camera2.setOrientation(glm::vec3(0.0, -90.0, 90.0));
+	// render all entities except for the ones that shouldn't be rendered in the reflection
+	this->renderEntities(true);
+	// clear the depth buffers from the reflectionFBO
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	// BOTTOM
+	// attach the negative Y texture of the reflectionCubemap to the color buffer of the reflectionFBO
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, this->reflectionCubemap, 0);
+	// turn the camera to face the right direction
+	camera2.setOrientation(glm::vec3(0.0, -90.0, -90.0));
+	// render all entities except for the ones that shouldn't be rendered in the reflection
+	this->renderEntities(true);
+	// clear the depth buffers from the reflectionFBO
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	// RIGHT
+	// attach the positive Z texture of the reflectionCubemap to the color buffer of the reflectionFBO
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_Z, this->reflectionCubemap, 0);
+	// turn the camera to face the right direction
+	camera2.setOrientation(glm::vec3(0.0, 90.0, 0.0));
+	// render all entities except for the ones that shouldn't be rendered in the reflection
+	this->renderEntities(true);
+	// clear the depth buffers from the reflectionFBO
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	// LEFT
+	// attach the negative Z texture of the reflectionCubemap to the color buffer of the reflectionFBO
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, this->reflectionCubemap, 0);
+	// turn the camera to face the right direction
+	camera2.setOrientation(glm::vec3(0.0, 270.0, 0.0));
+	// render all entities except for the ones that shouldn't be rendered in the reflection
+	this->renderEntities(true);
+	// clear the depth buffers from the reflectionFBO
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	// reset the viewport
+	glViewport(0, 0, screenWidth, screenHeight);
+
+	// set the render camera to the default camera
+	defaultCamera = 0;
+
+	/* ACTIVE CAMERA: camera1 */
+}
+
+// render all entities with their corresponding shader (forward rendering)
+void Renderer::renderEntities(bool reflection) {
+	// cycle through all the entities
+	for (int i = 0; i < entityBuffer.size(); i++) {
+		// if it's rendering entities to be displayed in the reflection:
+		if (reflection) {
+			// check what entities are supposed to be rendered in the reflection
+			if (entityBuffer[i]->getToReflect() == true) {
+				// if it's rendering the skybox
+				if (entityBuffer[i]->getName().compare("skybox") == 0) {
+					// disable the depth mask (the rendering won't write into the depth buffer)
+					glDepthMask(GL_FALSE);
+				}
+
+				// installs the shader to render the entity (it gets the shader from the entity)
+				glUseProgram(shaderBuffer[entityBuffer[i]->getShader()].getID());
+
+				// pass the values for the shader uniforms.
+				// shader uniforms are global variables for shaders that can be set by the user.
+				// uniforms are global to all shaders, so they don't need to be set by every shader call if the value doesn't change
+				// for example matrices for 3D rendering usually don't change between shaders (some optimization is possible)
+				this->attachUniforms(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getUniformBuffer());
+
+				// link the layouts to the data origin.
+				// layouts define where the data for a certain variable comes from
+				this->linkLayouts(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getLayoutBuffer());
+
+				// if the entity has a texture attached to it
+				if (entityBuffer[i]->getTexture() != 0) {
+					// bind it as the current active texture
+					glBindTexture(entityBuffer[i]->getTextureType(), entityBuffer[i]->getTexture());
+				}
+
+				// check which mode things should be rendered as
+				// if we're rendering the skybox, always render as triangles (weird results if you render with different primitives)
+				if (entityBuffer[i]->getName().compare("skybox") == 0) {
+					// render the skybox
+					glDrawArrays(GL_TRIANGLES, 0, entityBuffer[i]->getVertices().size());
+					// re-enable the depth mask (now rendering also affects the depth buffer as well)
+					glDepthMask(GL_TRUE);
+				}
+
+				else {
+					switch (renderMode) {
+						// draw lines
+					case wireframe:
+						glDrawArrays(GL_LINES, 0, entityBuffer[i]->getVertices().size());
+						break;
+
+						// draw points
+					case vertices:
+						glPointSize(2.0f);
+						glDrawArrays(GL_POINTS, 0, entityBuffer[i]->getVertices().size());
+						break;
+
+						// draw in the element's primitive (mainly triangles)
+					default:
+						glDrawArrays(entityBuffer[i]->getElements(), 0, entityBuffer[i]->getVertices().size());
+					}
+				}
+
+				
+				glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
+			}
+		}
+
+		else {
+			if (entityBuffer[i]->getName().compare("skybox") == 0) {
+				glDepthMask(GL_FALSE);
+			}
+
+			glUseProgram(shaderBuffer[entityBuffer[i]->getShader()].getID());
+
+			attachUniforms(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getUniformBuffer());
+
+			linkLayouts(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getLayoutBuffer());
+
+			if (entityBuffer[i]->getTexture() != 0) {
+				glBindTexture(entityBuffer[i]->getTextureType(), entityBuffer[i]->getTexture());
+			}
+
+			// check which mode things should be rendered as
+			if (entityBuffer[i]->getName().compare("skybox") == 0) {
+				// render the skybox
+				glDrawArrays(GL_TRIANGLES, 0, entityBuffer[i]->getVertices().size());
+				// re-enable the depth mask (now rendering also affects the depth buffer as well)
+				glDepthMask(GL_TRUE);
+			}
+
+			else {
+				switch (renderMode) {
+				case wireframe:
+					glDrawArrays(GL_LINES, 0, entityBuffer[i]->getVertices().size());
+					break;
+
+				case vertices:
+					glPointSize(2.0f);
+					glDrawArrays(GL_POINTS, 0, entityBuffer[i]->getVertices().size());
+					break;
+
+				default:
+					glDrawArrays(entityBuffer[i]->getElements(), 0, entityBuffer[i]->getVertices().size());
+
+				}
+
+				
+				glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
+			}
+		}
+	}
+}
+
+// pass the correct values to the corresponding uniforms in the shader
 void Renderer::attachUniforms(Entity* entity, std::vector<uniform_t> uniformBuffer) {
+	// cycle through the uniformBuffer of the shader
 	for (int i = 0; i < uniformBuffer.size(); i++) {
+		// if the uniform is "modelMatrix", set it to the entity modelMatrix
 		if (strcmp(uniformBuffer[i].name, "modelMatrix") == 0) {
 			glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(entity->getModelMatrix()[0][0]));
 		}
 
+		// if the uniform is "viewMatrix", set it to the camera viewMatrix
 		else if (strcmp(uniformBuffer[i].name, "viewMatrix") == 0) {
+			// if the entity we're rendering is the skybox, 
 			if (entity->getName().compare("skybox") == 0) {
-				glm::mat4 view = glm::mat4(glm::mat3(cameraBuffer[defaultCamera]->getViewMatrix()));
-				glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(view[0][0]));
+				// this process removes all the translations from the camera, this way camera movement is not taken into account
+				glm::mat4 staticCameraView = glm::mat4(glm::mat3(cameraBuffer[defaultCamera]->getViewMatrix()));
+				glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(staticCameraView[0][0]));
 			}
+			// otherwise pass the camera view matrix, including all translations
 			else {
 				glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(cameraBuffer[defaultCamera]->getViewMatrix()[0][0]));
 			}
@@ -272,118 +469,50 @@ void Renderer::attachUniforms(Entity* entity, std::vector<uniform_t> uniformBuff
 	}
 }
 
+// link layouts to the data origin (mainly VAO)
 void Renderer::linkLayouts(Entity* entity, std::vector<char*> layoutBuffer) {
+	// cycle all the layouts in the layout buffer of the shader
 	for (int i = 0; i < layoutBuffer.size(); i++) {
+		// if the layout is named "vertex" (contains the entity vertices that make the geometry of the entity)
 		if (strcmp(layoutBuffer[i], "vertex") == 0) {
+			// enable the VAO in position 0
 			glEnableVertexAttribArray(0);
+			// bind the geometry VBO of the entity
 			glBindBuffer(GL_ARRAY_BUFFER, entity->getVertexBuffer());
+			// setup the VAO to reference the VBO (needs more study)
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 		}
-
-		if (strcmp(layoutBuffer[i], "uv") == 0) {
+		// if the layout is named "uv" (contains the UV coordinates to map the texture to the geometry)
+		else if (strcmp(layoutBuffer[i], "uv") == 0) {
+			// enable the VAO in position 1
 			glEnableVertexAttribArray(1);
+			// bind the UV VBO of the entity
 			glBindBuffer(GL_ARRAY_BUFFER, entity->getTexBuffer());
+			// setup the VAO to reference the VBO (needs more study)
 			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 		}
-
-		if (strcmp(layoutBuffer[i], "color") == 0) {
+		// if the layout is named "color" (contains the color vectors that make the entity color)
+		else if (strcmp(layoutBuffer[i], "color") == 0) {
+			// enable the VAO in position 1
 			glEnableVertexAttribArray(1);
+			// bind the color VBO of the entity
 			glBindBuffer(GL_ARRAY_BUFFER, entity->getTexBuffer());
+			// setup the VAO to reference the VBO (needs more study)
 			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 		}
-
-		if (strcmp(layoutBuffer[i], "normal") == 0) {
+		// if the layout is named "normal" (contains the normals to the vertices, used for light calculation)
+		else if (strcmp(layoutBuffer[i], "normal") == 0) {
+			// enable the VAO in position 1
 			glEnableVertexAttribArray(2);
+			// bind the normal VBO of the entity
 			glBindBuffer(GL_ARRAY_BUFFER, entity->getNormalBuffer());
+			// setup the VAO to reference the VBO (needs more study)
 			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 		}
 	}
 }
 
-void Renderer::renderEntities(bool reflection) {
-	for (int i = 0; i < entityBuffer.size(); i++) {
-		if (reflection) {
-			if (entityBuffer[i]->getToReflect() == true) {
-				// glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
 
-				if (entityBuffer[i]->getName().compare("skybox") == 0) {
-					glDepthMask(GL_FALSE);
-				}
-
-				glUseProgram(shaderBuffer[entityBuffer[i]->getShader()].getID());
-
-				attachUniforms(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getUniformBuffer());
-
-				linkLayouts(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getLayoutBuffer());
-
-				if (entityBuffer[i]->getTexture() != 0) {
-					glBindTexture(entityBuffer[i]->getTextureType(), entityBuffer[i]->getTexture());
-				}
-
-				switch (renderMode) {
-				case wireframe:
-					glDrawArrays(GL_LINES, 0, entityBuffer[i]->getVertices().size());
-					break;
-
-				case vertices:
-					glPointSize(2.0f);
-					glDrawArrays(GL_POINTS, 0, entityBuffer[i]->getVertices().size());
-					break;
-
-				default:
-					glDrawArrays(entityBuffer[i]->getElements(), 0, entityBuffer[i]->getVertices().size());
-
-				}
-
-				glDepthMask(GL_TRUE);
-				glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
-
-				glDisableVertexAttribArray(0);
-				glDisableVertexAttribArray(1);
-				glDisableVertexAttribArray(2);
-			}
-		}
-		else {
-			// glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
-
-			if (entityBuffer[i]->getName().compare("skybox") == 0) {
-				glDepthMask(GL_FALSE);
-			}
-
-			glUseProgram(shaderBuffer[entityBuffer[i]->getShader()].getID());
-
-			attachUniforms(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getUniformBuffer());
-
-			linkLayouts(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getLayoutBuffer());
-
-			if (entityBuffer[i]->getTexture() != 0) {
-				glBindTexture(entityBuffer[i]->getTextureType(), entityBuffer[i]->getTexture());
-			}
-
-			switch (renderMode) {
-			case wireframe:
-				glDrawArrays(GL_LINES, 0, entityBuffer[i]->getVertices().size());
-				break;
-
-			case vertices:
-				glPointSize(2.0f);
-				glDrawArrays(GL_POINTS, 0, entityBuffer[i]->getVertices().size());
-				break;
-
-			default:
-				glDrawArrays(entityBuffer[i]->getElements(), 0, entityBuffer[i]->getVertices().size());
-
-			}
-
-			glDepthMask(GL_TRUE);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
-
-			glDisableVertexAttribArray(0);
-			glDisableVertexAttribArray(1);
-			glDisableVertexAttribArray(2);
-		}
-	}
-}
 
 void Renderer::resetRender() {
 	glBufferData(GL_ARRAY_BUFFER, data1.size() * sizeof(float), &data1[0], GL_STATIC_DRAW);
@@ -401,38 +530,6 @@ void Renderer::resetRender() {
 	glDrawArrays(GL_LINES, 0, data1.size());
 
 	glDisableVertexAttribArray(0);
-}
-
-void Renderer::renderReflectionCubemap() {
-	defaultCamera = 1;
-	glBindFramebuffer(GL_FRAMEBUFFER, reflectionFBO);
-	glViewport(0, 0, reflectionRes, reflectionRes);
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X, this->reflectionCubemap, 0);
-	camera2.setOrientation(glm::vec3(0.0, 0.0, 0.0));
-	renderEntities(true);
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, this->reflectionCubemap, 0);
-	camera2.setOrientation(glm::vec3(0.0, 180.0, 0.0));
-	renderEntities(true);
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, this->reflectionCubemap, 0);
-	camera2.setOrientation(glm::vec3(0.0, -90.0, 90.0));
-	renderEntities(true);
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, this->reflectionCubemap, 0);
-	camera2.setOrientation(glm::vec3(0.0, -90.0, -90.0));
-	renderEntities(true);
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_Z, this->reflectionCubemap, 0);
-	camera2.setOrientation(glm::vec3(0.0, 90.0, 0.0));
-	renderEntities(true);
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, this->reflectionCubemap, 0);
-	camera2.setOrientation(glm::vec3(0.0, 270.0, 0.0));
-	renderEntities(true);
-	glClear(GL_DEPTH_BUFFER_BIT);
 }
 
 void Renderer::renderScreen() {
@@ -461,9 +558,6 @@ void Renderer::renderScreen() {
 
 	glBindBuffer(GL_ARRAY_BUFFER, tmpBuffer);
 }
-
-// rendering method
-
 
 
 void Renderer::createCube(std::vector<float>* array, std::vector<glm::vec3> faces) {
