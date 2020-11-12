@@ -251,65 +251,29 @@ void Renderer::renderReflectionCubemap() {
 	// clear the color and depth buffers from the reflectionFBO
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// FRONT
-	// attach the positive X texture of the reflectionCubemap to the color buffer of the reflectionFBO
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X, this->reflectionCubemap, 0);
-	// turn the camera to face the right direction
-	camera2.setOrientation(glm::vec3(0.0, 0.0, 0.0));
-	// render all entities except for the ones that shouldn't be rendered in the reflection
-	this->renderEntities(true);
-	// clear the depth buffers from the reflectionFBO
-	glClear(GL_DEPTH_BUFFER_BIT);
+	// cycle all the faces of the cubemap
+	for (int i = 0; i < 6; i++) {
+		// attach the positive X texture of the reflectionCubemap to the color buffer of the reflectionFBO
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, this->reflectionCubemap, 0);
+		// aim the camera to face the correct direction
+		if (i == 0)      // FRONT
+			camera2.setOrientation(glm::vec3(0.0, 0.0, 0.0));
+		else if (i == 1) // BACK
+			camera2.setOrientation(glm::vec3(0.0, 180.0, 0.0));
+		else if (i == 2) // TOP
+			camera2.setOrientation(glm::vec3(0.0, -90.0, 90.0));
+		else if (i == 3) // BOTTOM
+			camera2.setOrientation(glm::vec3(0.0, -90.0, -90.0));
+		else if (i == 4) // RIGHT
+			camera2.setOrientation(glm::vec3(0.0, 90.0, 0.0));
+		else             // LEFT
+			camera2.setOrientation(glm::vec3(0.0, 270.0, 0.0));
 
-	// BACK
-	// attach the negative X texture of the reflectionCubemap to the color buffer of the reflectionFBO
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, this->reflectionCubemap, 0);
-	// turn the camera to face the right direction
-	camera2.setOrientation(glm::vec3(0.0, 180.0, 0.0));
-	// render all entities except for the ones that shouldn't be rendered in the reflection
-	this->renderEntities(true);
-	// clear the depth buffers from the reflectionFBO
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-	// TOP
-	// attach the positive Y texture of the reflectionCubemap to the color buffer of the reflectionFBO
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, this->reflectionCubemap, 0);
-	// turn the camera to face the right direction
-	camera2.setOrientation(glm::vec3(0.0, -90.0, 90.0));
-	// render all entities except for the ones that shouldn't be rendered in the reflection
-	this->renderEntities(true);
-	// clear the depth buffers from the reflectionFBO
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-	// BOTTOM
-	// attach the negative Y texture of the reflectionCubemap to the color buffer of the reflectionFBO
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, this->reflectionCubemap, 0);
-	// turn the camera to face the right direction
-	camera2.setOrientation(glm::vec3(0.0, -90.0, -90.0));
-	// render all entities except for the ones that shouldn't be rendered in the reflection
-	this->renderEntities(true);
-	// clear the depth buffers from the reflectionFBO
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-	// RIGHT
-	// attach the positive Z texture of the reflectionCubemap to the color buffer of the reflectionFBO
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_Z, this->reflectionCubemap, 0);
-	// turn the camera to face the right direction
-	camera2.setOrientation(glm::vec3(0.0, 90.0, 0.0));
-	// render all entities except for the ones that shouldn't be rendered in the reflection
-	this->renderEntities(true);
-	// clear the depth buffers from the reflectionFBO
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-	// LEFT
-	// attach the negative Z texture of the reflectionCubemap to the color buffer of the reflectionFBO
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, this->reflectionCubemap, 0);
-	// turn the camera to face the right direction
-	camera2.setOrientation(glm::vec3(0.0, 270.0, 0.0));
-	// render all entities except for the ones that shouldn't be rendered in the reflection
-	this->renderEntities(true);
-	// clear the depth buffers from the reflectionFBO
-	glClear(GL_DEPTH_BUFFER_BIT);
+		// render all entities except for the ones that shouldn't be rendered in the reflection
+		this->renderEntities(true);
+		// clear the depth buffers from the reflectionFBO
+		glClear(GL_DEPTH_BUFFER_BIT);
+	}
 
 	// reset the viewport
 	glViewport(0, 0, screenWidth, screenHeight);
@@ -380,9 +344,6 @@ void Renderer::renderEntities(bool reflection) {
 						glDrawArrays(entityBuffer[i]->getElements(), 0, entityBuffer[i]->getVertices().size());
 					}
 				}
-
-				
-				glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
 			}
 		}
 
@@ -399,6 +360,10 @@ void Renderer::renderEntities(bool reflection) {
 
 			if (entityBuffer[i]->getTexture() != 0) {
 				glBindTexture(entityBuffer[i]->getTextureType(), entityBuffer[i]->getTexture());
+			}
+
+			if (entityBuffer[i]->getName().compare("man") == 0 || entityBuffer[i]->getName().compare("monkey") == 0) {
+				glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
 			}
 
 			// check which mode things should be rendered as
@@ -423,13 +388,42 @@ void Renderer::renderEntities(bool reflection) {
 				default:
 					glDrawArrays(entityBuffer[i]->getElements(), 0, entityBuffer[i]->getVertices().size());
 
-				}
-
-				
-				glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
+				}				
 			}
 		}
+
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
 	}
+}
+
+// render the screen texture applying post processing shaders
+void Renderer::renderScreen() {
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
+	// clear all relevant buffers
+	glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glUseProgram(screenShader->getID());
+
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, this->screenVBO);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, this->screenUVVBO);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+	glBindTexture(GL_TEXTURE_2D, this->screenTexture);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glEnable(GL_DEPTH_TEST);
+
+	glBindBuffer(GL_ARRAY_BUFFER, tmpBuffer);
 }
 
 // pass the correct values to the corresponding uniforms in the shader
@@ -455,14 +449,17 @@ void Renderer::attachUniforms(Entity* entity, std::vector<uniform_t> uniformBuff
 			}
 		}
 
+		// if the uniform is "projectionMatrix", set it to the main camera projection matrix in the projectionBuffer
 		else if (strcmp(uniformBuffer[i].name, "projectionMatrix") == 0) {
 			glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(projectionBuffer[defaultCamera][0][0]));
 		}
 
+		// if the uniform is "lightPosition", pass the light position (x, y, z)
 		else if (strcmp(uniformBuffer[i].name, "lightPosition") == 0) {
 			glUniform3f(uniformBuffer[i].id, light->getWorldPosition().x, light->getWorldPosition().y, light->getWorldPosition().z);
 		}
 
+		// if the uniform is "eyePosition", pass the camera position (x, y, z)
 		else if (strcmp(uniformBuffer[i].name, "eyePosition") == 0) {
 			glUniform3f(uniformBuffer[i].id, cameraBuffer[defaultCamera]->getPosition().x, cameraBuffer[defaultCamera]->getPosition().y, cameraBuffer[defaultCamera]->getPosition().z);
 		}
@@ -513,7 +510,6 @@ void Renderer::linkLayouts(Entity* entity, std::vector<char*> layoutBuffer) {
 }
 
 
-
 void Renderer::resetRender() {
 	glBufferData(GL_ARRAY_BUFFER, data1.size() * sizeof(float), &data1[0], GL_STATIC_DRAW);
 
@@ -532,32 +528,7 @@ void Renderer::resetRender() {
 	glDisableVertexAttribArray(0);
 }
 
-void Renderer::renderScreen() {
-	glClear(GL_DEPTH_BUFFER_BIT);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
-	// clear all relevant buffers
-	glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	glUseProgram(screenShader->getID());
-
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, this->screenVBO);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, this->screenUVVBO);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	glBindTexture(GL_TEXTURE_2D, this->screenTexture);
-
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-
-	glEnable(GL_DEPTH_TEST);
-
-	glBindBuffer(GL_ARRAY_BUFFER, tmpBuffer);
-}
 
 
 void Renderer::createCube(std::vector<float>* array, std::vector<glm::vec3> faces) {

@@ -10,7 +10,7 @@ int main(void) {
 		eventHandler.routine();
 		renderer.render();
 		interface.drawInfo();
-		window->display();	
+		window->display();
 	}
 
 	return(0);

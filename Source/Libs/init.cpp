@@ -179,6 +179,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	Entity* plane = new Entity("plane");
 	Entity* jacket = new Entity("jacket");
 	Entity* manaya = new Entity("manaya");
+	Entity* genshinEnemy = new Entity("genshinEnemy");
 
 	createAxis(axis);
 	std::vector<float> vex;
@@ -196,6 +197,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	plane->load3DModel("../Models/plane.obj");
 	jacket->load3DModel("../Models/blj.obj");
 	manaya->load3DModel("../Models/manaya6.obj");
+	genshinEnemy->load3DModel("../Models/genshinEnemy.obj");
 
 	std::vector<float> skyboxVertices = {
 		// positions
@@ -249,19 +251,21 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	box->setShader(0);
 	walnut->setShader(10);
 	monkey->setShader(8);
-	man->setShader(8);
+	man->setShader(7);
 	man2->setShader(7);
-	man3->setShader(10);
+	man3->setShader(9);
 	skybox->setShader(6);
-	map->setShader(8);
+	map->setShader(3);
 	plane->setShader(3);
 	jacket->setShader(4);
 	manaya->setShader(7);
+	genshinEnemy->setShader(8);
 
-	manaya->setToReflect(false);
-	monkey->setToReflect(false);
-	map->setToReflect(false);
+	//manaya->setToReflect(false);
+	//monkey->setToReflect(false);
+	//map->setToReflect(false);
 	man->setToReflect(false);
+	//genshinEnemy->setToReflect(false);
 
 	light->setElements(GL_POINTS);
 
@@ -287,8 +291,11 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	plane->scale(50.0f);
 	jacket->move(glm::vec3(0.0f, 0.0f, 50.0f), camera.getViewMatrix());
 	manaya->scale(0.01f);
-	manaya->move(glm::vec3(0.0f, 0.0f, 3.0f), camera.getViewMatrix());
+	manaya->move(glm::vec3(0.0f, 20.0f, 3.0f), camera.getViewMatrix());
 	manaya->rotate(0, 270, 0);
+	map->move(glm::vec3(0.0f, -20.0f, 0.0f), camera.getViewMatrix());
+	box->move(glm::vec3(0.0f, -5.0f, -10.0f), camera.getViewMatrix());
+	genshinEnemy->move(glm::vec3(0.0f, -5.0f, 0.0f), camera.getViewMatrix());
 
 	// box->loadTexture("Textures/DefaultMaterial_Base_Color.png");
 	box->loadTexture("../Textures/fi_uv_4096__display_grid_8x8_32x32_128x128_by_fisholith-d786zt5.png");
@@ -308,16 +315,17 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	entityBuffer->push_back(skybox);
 	entityBuffer->push_back(axis);
 	entityBuffer->push_back(light);
-	//entityBuffer->push_back(box);
+	entityBuffer->push_back(box);
 	entityBuffer->push_back(walnut);
 	entityBuffer->push_back(monkey);
 	entityBuffer->push_back(man);
-	//entityBuffer->push_back(man2);
+	entityBuffer->push_back(man2);
 	entityBuffer->push_back(man3);
 	entityBuffer->push_back(jacket);
-	//entityBuffer->push_back(map);
+	entityBuffer->push_back(map);
 	//entityBuffer->push_back(plane);
-	//entityBuffer->push_back(manaya);
+	entityBuffer->push_back(manaya);
+	entityBuffer->push_back(genshinEnemy);
 }
 
 sf::RenderWindow* setup() {

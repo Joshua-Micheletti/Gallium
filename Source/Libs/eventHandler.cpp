@@ -4,6 +4,8 @@
 #include "entity.h"
 #include <glm\glm.hpp>
 #include <SFML\Graphics.hpp>
+#include <imgui.h>
+#include <imgui-SFML.h>
 
 EventHandler::EventHandler(sf::RenderWindow *window) {
 	EventHandler::window = window;
@@ -20,6 +22,7 @@ EventHandler::EventHandler(sf::RenderWindow *window) {
 
 void EventHandler::handleWindowEvents() {
 	while (window->pollEvent(windowEvent)) {
+		ImGui::SFML::ProcessEvent(windowEvent);
 		if (windowEvent.type == sf::Event::Closed) {
 			window->close();
 		}

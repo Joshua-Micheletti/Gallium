@@ -34,13 +34,23 @@ class UI {
 		sf::Time tick;
 		// clock to measure update time for the UI
 		sf::Clock clock;
-		
+
+		sf::Clock deltaClock;
+
+		sf::Color bgColor;
+
+		float* color;
+
+		char* windowTitle;
+
 		// fetch data from entities, format it and save it into this->debug
 		void updateDebugInfo();
 		// pass the elapsed time to the fps text
 		void updateFPS();
 		// check the displayed bounding boxes and shows the corresponding texts through boundingBoxText
 		void drawBoundingBoxText();
+
+		void drawImGui();
 		// method to turn a float into a string with a desired decimal precision
 		std::string floatToString(float, int);
 		

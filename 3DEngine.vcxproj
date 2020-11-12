@@ -90,7 +90,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)ExtLibs\stb-master;$(SolutionDir)ExtLibs\glm;$(SolutionDir)ExtLibs\GLAD\include;$(SolutionDir)ExtLibs\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ExtLibs\imgui;$(SolutionDir)ExtLibs\stb-master;$(SolutionDir)ExtLibs\glm;$(SolutionDir)ExtLibs\GLAD\include;$(SolutionDir)ExtLibs\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -111,7 +111,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <AdditionalIncludeDirectories>$(SolutionDir)ExtLibs\stb-master;$(SolutionDir)ExtLibs\SFML-2.5.1\include;$(SolutionDir)ExtLibs\glm;$(SolutionDir)ExtLibs\GLAD\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ExtLibs\imgui;$(SolutionDir)ExtLibs\stb-master;$(SolutionDir)ExtLibs\SFML-2.5.1\include;$(SolutionDir)ExtLibs\glm;$(SolutionDir)ExtLibs\GLAD\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,10 +151,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Libs\eventHandler.cpp" />
+    <ClCompile Include="ExtLibs\imgui\imgui-SFML.cpp" />
+    <ClCompile Include="ExtLibs\imgui\imgui.cpp" />
+    <ClCompile Include="ExtLibs\imgui\imgui_demo.cpp" />
+    <ClCompile Include="ExtLibs\imgui\imgui_draw.cpp" />
+    <ClCompile Include="ExtLibs\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="ExtLibs\imgui\imgui_widgets.cpp" />
     <ClCompile Include="ExtLibs\GLAD\src\glad.c" />
     <ClCompile Include="Source\Libs\camera.cpp" />
     <ClCompile Include="Source\Libs\entity.cpp" />
+    <ClCompile Include="Source\Libs\eventHandler.cpp" />
     <ClCompile Include="Source\Libs\init.cpp" />
     <ClCompile Include="Source\Libs\renderer.cpp" />
     <ClCompile Include="Source\Libs\shader.cpp" />
@@ -162,14 +168,24 @@
     <ClCompile Include="Source\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Libs\eventHandler.h" />
+    <ClInclude Include="ExtLibs\imgui\imconfig-SFML.h" />
+    <ClInclude Include="ExtLibs\imgui\imconfig.h" />
+    <ClInclude Include="ExtLibs\imgui\imgui-SFML.h" />
+    <ClInclude Include="ExtLibs\imgui\imgui-SFML_export.h" />
+    <ClInclude Include="ExtLibs\imgui\imgui.h" />
+    <ClInclude Include="ExtLibs\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="ExtLibs\imgui\imgui_internal.h" />
+    <ClInclude Include="ExtLibs\imgui\imstb_rectpack.h" />
+    <ClInclude Include="ExtLibs\imgui\imstb_textedit.h" />
+    <ClInclude Include="ExtLibs\imgui\imstb_truetype.h" />
     <ClInclude Include="Source\Libs\camera.h" />
     <ClInclude Include="Source\Libs\entity.h" />
-    <ClInclude Include="Source\Libs\ui.h" />
+    <ClInclude Include="Source\Libs\eventHandler.h" />
     <ClInclude Include="Source\Libs\init.h" />
     <ClInclude Include="Source\Libs\lib.h" />
     <ClInclude Include="Source\Libs\renderer.h" />
     <ClInclude Include="Source\Libs\shader.h" />
+    <ClInclude Include="Source\Libs\ui.h" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="Fonts\Arial.ttf" />

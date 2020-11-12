@@ -7,11 +7,19 @@
 #include <math.h>
 #include <sstream>
 #include <iomanip>
+#include "imgui.h"
+#include "imgui-SFML.h"
 
 // initialize the fields and formats the texts styles
 UI::UI(sf::RenderWindow *window) {
 	// get the window reference
 	this->window = window;
+
+	char _windowTitle[255] = "ImGui + SFML = <3";
+	this->windowTitle = _windowTitle;
+
+	float acolor[3] = { 0.f, 0.f, 0.f };
+	color = acolor;
 
 	// setup the update clock
 	this->tick = sf::milliseconds(1000 / 10);
@@ -60,6 +68,8 @@ UI::UI(sf::RenderWindow *window) {
 	this->crosshair.setPosition(screenWidth / 2, screenHeight / 2);
 	this->crosshair.setOutlineThickness(1);
 	this->crosshair.setOutlineColor(sf::Color::Black);
+
+	ImGui::SFML::Init(*this->window);
 }
 
 // cycles all the entities retrieving the data for each, saves it into a string and sets the string to the info text
@@ -170,6 +180,40 @@ void UI::drawBoundingBoxText() {
 	}
 }
 
+void UI::drawImGui() {
+	window->pushGLStates();
+	window->resetGLStates();
+	ImGui::SFML::Update(*window, deltaClock.restart());
+	ImGui::Begin("Sample window"); // begin window
+
+									   // Background color edit
+	//if (ImGui::ColorEdit3("Background color", color)) {
+	//	// this code gets called if color value changes, so
+	//	// the background color is upgraded automatically!
+	//	bgColor.r = static_cast<sf::Uint8>(color[0] * 255.f);
+	//	bgColor.g = static_cast<sf::Uint8>(color[1] * 255.f);
+	//	bgColor.b = static_cast<sf::Uint8>(color[2] * 255.f);
+	//}
+
+	char windowTitle[255] = "ImGui + SFML = <3";
+	// Window title text edit
+	ImGui::InputText("Window title", windowTitle, 255);
+
+
+
+	if (ImGui::Button("Update window title")) {
+		// this code gets if user clicks on the button
+		// yes, you could have written if(ImGui::InputText(...))
+		// but I do this to show how buttons work :)
+		window->setTitle(windowTitle);
+	}
+	ImGui::End(); // end window
+
+	ImGui::SFML::Render(*window);
+	window->popGLStates();
+}
+
+
 // utility method for converting a float number to a string with a desired decimal precision
 std::string UI::floatToString(float number, int precision) {
 	std::stringstream stream;
@@ -206,5 +250,7 @@ void UI::drawInfo() {
 	this->window->draw(this->crosshair);
 
 	this->window->popGLStates();
+
+	this->drawImGui();
 }
 
