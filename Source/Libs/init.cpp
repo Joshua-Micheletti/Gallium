@@ -11,8 +11,8 @@
 #include "camera.h"
 #include "init.h"
 
-unsigned int screenWidth = 1920;
-unsigned int screenHeight = 1080;
+unsigned int screenWidth = 1280;
+unsigned int screenHeight = 720;
 
 glm::mat4 Projection;
 glm::mat4 Projection2;
@@ -62,9 +62,9 @@ sf::RenderWindow* initSFML_OpenGL(string name, int AA, bool VSync) {
 
 	sf::RenderWindow* window;
 	// fullscreen
-	window = new sf::RenderWindow(sf::VideoMode::getFullscreenModes()[0], name, sf::Style::None, settings);
+	//window = new sf::RenderWindow(sf::VideoMode::getFullscreenModes()[0], name, sf::Style::None, settings);
 	// windowed
-	//window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight, 32), name, sf::Style::Close, settings);
+	window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight, 32), name, sf::Style::Close, settings);
 
 	if (!gladLoadGL()) {
 		printf("COULD NOT INITALIZE OPENGL CONTEXT\n");
@@ -253,7 +253,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	monkey->setShader(8);
 	man->setShader(7);
 	man2->setShader(7);
-	man3->setShader(9);
+	man3->setShader(10);
 	skybox->setShader(6);
 	map->setShader(3);
 	plane->setShader(3);

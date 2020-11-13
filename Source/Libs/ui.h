@@ -1,17 +1,25 @@
 #include <SFML/Graphics.hpp>
 #include <string>
+#include "imgui.h"
+#include "imgui-SFML.h"
+#include "renderer.h"
+#include "eventHandler.h"
 
 // class that shows onscreen informations
 class UI {
 	public:
 		// constructor method which takes the window reference
-		UI(sf::RenderWindow *);
+		UI(sf::RenderWindow *, Renderer, EventHandler *);
 		// method to draw the information on the screen
 		void drawInfo();
 		
 	private:
 		// window reference
 		sf::RenderWindow* window;
+		// renderer reference
+		Renderer renderer;
+		// event handler reference
+		EventHandler *eventHandler;
 		// text containing entity information
 		sf::Text debug;
 		// text containing fps (frame/s)
@@ -43,12 +51,25 @@ class UI {
 
 		char* windowTitle;
 
+		bool showMetricsWindow;
+		bool showUserGuide;
+		bool showAboutWindow;
+		bool showDemoWindow;
+		bool showFPS;
+		bool pauseFlag;
+
+		ImVec2 menuBarSize;
+
 		// fetch data from entities, format it and save it into this->debug
 		void updateDebugInfo();
 		// pass the elapsed time to the fps text
 		void updateFPS();
 		// check the displayed bounding boxes and shows the corresponding texts through boundingBoxText
 		void drawBoundingBoxText();
+
+		void drawMenuBar();
+
+		void drawFPSWindow();
 
 		void drawImGui();
 		// method to turn a float into a string with a desired decimal precision

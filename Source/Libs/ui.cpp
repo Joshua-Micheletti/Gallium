@@ -9,11 +9,16 @@
 #include <iomanip>
 #include "imgui.h"
 #include "imgui-SFML.h"
+#include "renderer.h"
+#include "eventHandler.h"
+
 
 // initialize the fields and formats the texts styles
-UI::UI(sf::RenderWindow *window) {
+UI::UI(sf::RenderWindow *window, Renderer renderer, EventHandler *eventHandler) {
 	// get the window reference
 	this->window = window;
+	this->renderer = renderer;
+	this->eventHandler = eventHandler;
 
 	char _windowTitle[255] = "ImGui + SFML = <3";
 	this->windowTitle = _windowTitle;
@@ -69,7 +74,20 @@ UI::UI(sf::RenderWindow *window) {
 	this->crosshair.setOutlineThickness(1);
 	this->crosshair.setOutlineColor(sf::Color::Black);
 
+	this->showMetricsWindow = false;
+	this->showUserGuide = false;
+	this->showAboutWindow = false;
+	this->showDemoWindow = false;
+	this->showFPS = true;
+	this->pauseFlag = false;
+
 	ImGui::SFML::Init(*this->window);
+
+	ImGuiIO& io = ImGui::GetIO();
+
+	io.FontDefault = io.Fonts->AddFontFromFileTTF("../Fonts/OpenSans/OpenSans-Regular.ttf", 18.0f);
+
+	ImGui::SFML::UpdateFontTexture();
 }
 
 // cycles all the entities retrieving the data for each, saves it into a string and sets the string to the info text
@@ -180,37 +198,130 @@ void UI::drawBoundingBoxText() {
 	}
 }
 
-void UI::drawImGui() {
-	window->pushGLStates();
-	window->resetGLStates();
-	ImGui::SFML::Update(*window, deltaClock.restart());
-	ImGui::Begin("Sample window"); // begin window
 
-									   // Background color edit
-	//if (ImGui::ColorEdit3("Background color", color)) {
-	//	// this code gets called if color value changes, so
-	//	// the background color is upgraded automatically!
-	//	bgColor.r = static_cast<sf::Uint8>(color[0] * 255.f);
-	//	bgColor.g = static_cast<sf::Uint8>(color[1] * 255.f);
-	//	bgColor.b = static_cast<sf::Uint8>(color[2] * 255.f);
-	//}
+void UI::drawFPSWindow() {
+	static ImGuiWindowFlags FPSwindowFlags = ImGuiWindowFlags_NoMove |
+		ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_NoSavedSettings |
+		ImGuiWindowFlags_NoTitleBar;
 
-	char windowTitle[255] = "ImGui + SFML = <3";
-	// Window title text edit
-	ImGui::InputText("Window title", windowTitle, 255);
+	if (this->showFPS == true) {
+		ImGui::Begin("Frame Rate", &this->showFPS, FPSwindowFlags);
 
+		static float fps[90] = {};
+		static float frameTime[90] = {};
+		static int values_offset = 0;
+		static double refresh_time = 0.0;
 
+		if (refresh_time == 0) {
+			refresh_time = ImGui::GetTime();
+		}
 
-	if (ImGui::Button("Update window title")) {
-		// this code gets if user clicks on the button
-		// yes, you could have written if(ImGui::InputText(...))
-		// but I do this to show how buttons work :)
-		window->setTitle(windowTitle);
+		while (refresh_time < ImGui::GetTime()) {
+			fps[values_offset] = 1.0f / this->fpsTime.asSeconds();
+			frameTime[values_offset] = this->fpsTime.asMicroseconds() / 1000.0f;
+			values_offset = (values_offset + 1) % IM_ARRAYSIZE(fps);
+			refresh_time += 1.0f / 10.0f;
+		}
+
+		char overlay[32];
+		sprintf(overlay, "FPS %.0f", fps[(values_offset - 1) % IM_ARRAYSIZE(fps)]);
+
+		ImGui::PushItemWidth(-1);
+		ImGui::PlotLines("###fpsGraph", fps, IM_ARRAYSIZE(fps), values_offset, overlay, 0.0f, 300.0f, ImVec2(0, 40.0f));
+		ImGui::PopItemWidth();
+
+		sprintf(overlay, "Frame Time %.3f", frameTime[(values_offset - 1) % IM_ARRAYSIZE(frameTime)]);
+
+		ImGui::PushItemWidth(-1);
+		ImGui::PlotLines("###frameTimeGraph", frameTime, IM_ARRAYSIZE(frameTime), values_offset, overlay, 0.0f, 60.0f, ImVec2(0, 40.0f));
+		ImGui::PopItemWidth();
+
+		ImGui::SetWindowSize(ImVec2(200.0f, 0.0f));
+		ImGui::SetWindowPos(ImVec2(screenWidth - ImGui::GetWindowSize().x, 0 + this->menuBarSize.y));
+
+		static ImGuiStyle& style = ImGui::GetStyle();
+
+		style.WindowRounding = 0;
+		style.WindowBorderSize = 0;
+
+		ImGui::End();
 	}
-	ImGui::End(); // end window
+}
 
-	ImGui::SFML::Render(*window);
-	window->popGLStates();
+void UI::drawMenuBar() {
+	if (ImGui::BeginMainMenuBar()) {
+		if (ImGui::BeginMenu("File")) {
+			if (ImGui::MenuItem("Close", "ALT + F4")) {
+				this->window->close();
+			}
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Edit")) {
+			if (ImGui::MenuItem("Pause", NULL, &this->pauseFlag));
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("View")) {
+			if (ImGui::MenuItem("FPS", NULL, &this->showFPS));
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("ImGui")) {
+			if (ImGui::MenuItem("Metrics Window", NULL, &this->showMetricsWindow));
+
+			if (ImGui::MenuItem("User Guide", NULL, &this->showUserGuide));
+
+			if (ImGui::MenuItem("About Window", NULL, &this->showAboutWindow));
+
+			if (ImGui::MenuItem("Demo", NULL, &this->showDemoWindow));
+
+			ImGui::EndMenu();
+		}
+
+		this->menuBarSize = ImGui::GetWindowSize();
+
+		ImGui::EndMainMenuBar();
+	}
+
+	if (this->showMetricsWindow == true) {
+		ImGui::ShowMetricsWindow(&this->showMetricsWindow);
+	}
+
+	if (this->showUserGuide == true) {
+		ImGui::ShowUserGuide();
+	}
+
+	if (this->showAboutWindow == true) {
+		ImGui::ShowAboutWindow(&this->showAboutWindow);
+	}
+
+	if (this->showDemoWindow == true) {
+		ImGui::ShowDemoWindow(&this->showAboutWindow);
+	}
+
+	if (this->pauseFlag == true) {
+		this->eventHandler->setUpdateFlag(false);
+	}
+	else {
+		this->eventHandler->setUpdateFlag(true);
+	}
+}
+
+void UI::drawImGui() {
+	this->window->pushGLStates();
+	this->window->resetGLStates();
+	ImGui::SFML::Update(*this->window, this->deltaClock.restart());
+
+	this->drawMenuBar();
+
+	this->drawFPSWindow();
+
+	ImGui::SFML::Render(*this->window);
+	this->window->popGLStates();
 }
 
 
@@ -240,17 +351,21 @@ void UI::drawInfo() {
 
 	this->fpsClock.restart().asSeconds();
 	
-	if (displayInfo) {
+	//printf("%f\n", this->fpsTime.asMicroseconds());
+
+	/*if (displayInfo) {
 		this->window->draw(this->debug);
 		this->window->draw(this->fps);
 		this->window->draw(this->frameTime);
 		this->drawBoundingBoxText();
-	}
+	}*/
 
 	this->window->draw(this->crosshair);
 
 	this->window->popGLStates();
 
-	this->drawImGui();
+	if (displayInfo) {
+		this->drawImGui();
+	}
 }
 

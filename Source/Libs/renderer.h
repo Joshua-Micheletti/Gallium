@@ -1,3 +1,5 @@
+#ifndef __RENDERER__
+#define __RENDERER__
 #include <vector>
 #include "entity.h"
 #include "shader.h"
@@ -40,3 +42,4 @@ class Renderer {
 		void createCube(std::vector<float>*, std::vector<glm::vec3>);
 		void createSphere(glm::vec3, float, int, std::vector<float>*);
 };
+#endif

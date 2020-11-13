@@ -9,7 +9,7 @@
 
 EventHandler::EventHandler(sf::RenderWindow *window) {
 	EventHandler::window = window;
-
+	this->update = true;
 	tick = sf::milliseconds(1000 / 300);
 	time = clock.getElapsedTime();
 
@@ -33,57 +33,59 @@ void EventHandler::handleUserEvents() {
 	float cameraSpeed = 0.02f;
 	float sensitivity = 0.08f;
 
-	// camera moovement
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-		cameraSpeed *= 3;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-			camera.setPosition(camera.getPosition() - glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
+	if (freeMouse == false) {
+		// camera moovement
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+			cameraSpeed *= 3;
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+				camera.setPosition(camera.getPosition() - glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
+			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+				camera.setPosition(camera.getPosition() + glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
+			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+				camera.setPosition(camera.getPosition() + camera.getOrientationCartesian() * cameraSpeed);
+			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+				camera.setPosition(camera.getPosition() - camera.getOrientationCartesian() * cameraSpeed);
+			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+				camera.setPosition(camera.getPosition() + camera.getUp() * cameraSpeed);
+			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+				camera.setPosition(camera.getPosition() - camera.getUp() * cameraSpeed);
+			}
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-			camera.setPosition(camera.getPosition() + glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
-		}
+		else {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+				camera.setPosition(camera.getPosition() - glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
+			}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-			camera.setPosition(camera.getPosition() + camera.getOrientationCartesian() * cameraSpeed);
-		}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+				camera.setPosition(camera.getPosition() + glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
+			}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-			camera.setPosition(camera.getPosition() - camera.getOrientationCartesian() * cameraSpeed);
-		}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+				camera.setPosition(camera.getPosition() + camera.getOrientationCartesian() * cameraSpeed);
+			}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-			camera.setPosition(camera.getPosition() + camera.getUp() * cameraSpeed);
-		}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+				camera.setPosition(camera.getPosition() - camera.getOrientationCartesian() * cameraSpeed);
+			}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
-			camera.setPosition(camera.getPosition() - camera.getUp() * cameraSpeed);
-		}
-	}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+				camera.setPosition(camera.getPosition() + camera.getUp() * cameraSpeed);
+			}
 
-	else {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-			camera.setPosition(camera.getPosition() - glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
-		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-			camera.setPosition(camera.getPosition() + glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
-		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-			camera.setPosition(camera.getPosition() + camera.getOrientationCartesian() * cameraSpeed);
-		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-			camera.setPosition(camera.getPosition() - camera.getOrientationCartesian() * cameraSpeed);
-		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-			camera.setPosition(camera.getPosition() + camera.getUp() * cameraSpeed);
-		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
-			camera.setPosition(camera.getPosition() - camera.getUp() * cameraSpeed);
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+				camera.setPosition(camera.getPosition() - camera.getUp() * cameraSpeed);
+			}
 		}
 	}
 
@@ -120,155 +122,173 @@ void EventHandler::handleUserEvents() {
 		press.backslash = false;
 	}
 
-	// "L" toggle wireframe
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::L) && !press.L) {
-		press.L = true;
+	if (freeMouse == false) {
+		// "L" toggle wireframe
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::L) && !press.L) {
+			press.L = true;
 
-		if (renderMode == wireframe) {
-			renderMode = base;
+			if (renderMode == wireframe) {
+				renderMode = base;
+			}
+			else {
+				renderMode = wireframe;
+			}
 		}
-		else {
-			renderMode = wireframe;
+		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
+			press.L = false;
 		}
-	}
-	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
-		press.L = false;
-	}
 
-	// "P" toggle points
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::P) && !press.P) {
-		press.P = true;
+		// "P" toggle points
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::P) && !press.P) {
+			press.P = true;
 
-		if (renderMode == vertices) {
-			renderMode = base;
+			if (renderMode == vertices) {
+				renderMode = base;
+			}
+			else {
+				renderMode = vertices;
+			}
 		}
-		else {
-			renderMode = vertices;
+		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
+			press.P = false;
 		}
-	}
-	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
-		press.P = false;
-	}
 
-	// "Z" toggle OBB
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && !press.Z) {
-		press.Z = true;
+		// "Z" toggle OBB
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && !press.Z) {
+			press.Z = true;
 
-		if (drawOBB == true) {
-			drawOBB = false;
+			if (drawOBB == true) {
+				drawOBB = false;
+			}
+			else {
+				drawOBB = true;
+			}
 		}
-		else {
-			drawOBB = true;
+		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+			press.Z = false;
 		}
-	}
-	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-		press.Z = false;
-	}
 
-	// "X" toggle AABB (small)
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::X) && !press.X) {
-		press.X = true;
+		// "X" toggle AABB (small)
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::X) && !press.X) {
+			press.X = true;
 
-		if (drawAABB1 == true) {
-			drawAABB1 = false;
+			if (drawAABB1 == true) {
+				drawAABB1 = false;
+			}
+			else {
+				drawAABB1 = true;
+			}
 		}
-		else {
-			drawAABB1 = true;
+		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
+			press.X = false;
 		}
-	}
-	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
-		press.X = false;
-	}
 
-	// "C" toggle AABB (large)
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::C) && !press.C) {
-		press.C = true;
+		// "C" toggle AABB (large)
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::C) && !press.C) {
+			press.C = true;
 
-		if (drawAABB2 == true) {
-			drawAABB2 = false;
+			if (drawAABB2 == true) {
+				drawAABB2 = false;
+			}
+			else {
+				drawAABB2 = true;
+			}
 		}
-		else {
-			drawAABB2 = true;
+		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+			press.C = false;
 		}
-	}
-	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
-		press.C = false;
-	}
 
-	// "V" toggle AABB (average)
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::V) && !press.V) {
-		press.V = true;
+		// "V" toggle AABB (average)
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::V) && !press.V) {
+			press.V = true;
 
-		if (drawAABB3 == true) {
-			drawAABB3 = false;
+			if (drawAABB3 == true) {
+				drawAABB3 = false;
+			}
+			else {
+				drawAABB3 = true;
+			}
 		}
-		else {
-			drawAABB3 = true;
+		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::V)) {
+			press.V = false;
 		}
-	}
-	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::V)) {
-		press.V = false;
-	}
 
-	// "B" toggle AABB (exact)
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::B) && !press.B) {
-		press.B = true;
+		// "B" toggle AABB (exact)
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::B) && !press.B) {
+			press.B = true;
 
-		if (drawAABB4 == true) {
-			drawAABB4 = false;
+			if (drawAABB4 == true) {
+				drawAABB4 = false;
+			}
+			else {
+				drawAABB4 = true;
+			}
 		}
-		else {
-			drawAABB4 = true;
+		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
+			press.B = false;
 		}
-	}
-	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
-		press.B = false;
-	}
 
-	// "N" toggle bounding sphere (small)
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::N) && !press.N) {
-		press.N = true;
+		// "N" toggle bounding sphere (small)
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::N) && !press.N) {
+			press.N = true;
 
-		if (drawBS == true) {
-			drawBS = false;
+			if (drawBS == true) {
+				drawBS = false;
+			}
+			else {
+				drawBS = true;
+			}
 		}
-		else {
-			drawBS = true;
+		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::N)) {
+			press.N = false;
 		}
-	}
-	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::N)) {
-		press.N = false;
-	}
 
-	// "M" toggle bounding sphere (large)
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && !press.M) {
-		press.M = true;
+		// "M" toggle bounding sphere (large)
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && !press.M) {
+			press.M = true;
 
-		if (drawBS2 == true) {
-			drawBS2 = false;
+			if (drawBS2 == true) {
+				drawBS2 = false;
+			}
+			else {
+				drawBS2 = true;
+			}
 		}
-		else {
-			drawBS2 = true;
+		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
+			press.M = false;
 		}
-	}
-	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
-		press.M = false;
-	}
 
-	// "K" toggle bounding sphere (average)
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::K) && !press.K) {
-		press.K = true;
+		// "K" toggle bounding sphere (average)
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::K) && !press.K) {
+			press.K = true;
 
-		if (drawBS3 == true) {
-			drawBS3 = false;
+			if (drawBS3 == true) {
+				drawBS3 = false;
+			}
+			else {
+				drawBS3 = true;
+			}
 		}
-		else {
-			drawBS3 = true;
+		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
+			press.K = false;
+		}
+
+		// "J" toggle real time reflection
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::J) && !press.J) {
+			press.J = true;
+
+			if (doReflection == true) {
+				doReflection = false;
+			}
+			else {
+				doReflection = true;
+			}
+		}
+		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
+			press.J = false;
 		}
 	}
-	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
-		press.K = false;
-	}
+	
 
 	// "LAlt" toggle free mouse
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt) && !press.LAlt) {
@@ -283,20 +303,6 @@ void EventHandler::handleUserEvents() {
 	}
 	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)) {
 		press.LAlt = false;
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::J) && !press.J) {
-		press.J = true;
-
-		if (doReflection == true) {
-			doReflection = false;
-		}
-		else {
-			doReflection = true;
-		}
-	}
-	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
-		press.J = false;
 	}
 }
 
@@ -359,7 +365,18 @@ void EventHandler::routine() {
 
 	while (time.asMilliseconds() + tick.asMilliseconds() < clock.getElapsedTime().asMilliseconds()) {
 		handleUserEvents();
-		updateEntities();
+
+		if (this->update == true) {
+			updateEntities();
+		}
 		time += tick;
 	}
+}
+
+void EventHandler::setUpdateFlag(bool value) {
+	this->update = value;
+}
+
+bool EventHandler::getUpdateFlag() {
+	return(this->update);
 }

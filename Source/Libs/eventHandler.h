@@ -1,3 +1,5 @@
+#ifndef __EVENTHANDLER__
+#define __EVENTHANDLER__
 #include <SFML\Graphics.hpp>
 #include <glm\glm.hpp>
 
@@ -7,6 +9,9 @@ class EventHandler
 	public:
 		// constructor method (sets the reference to the window)
 		EventHandler(sf::RenderWindow *);
+
+		bool getUpdateFlag();
+		void setUpdateFlag(bool);
 		// calls all the event polling and management functions
 		void routine();
 
@@ -27,7 +32,9 @@ class EventHandler
 		float dist;
 		float angle;
 
+		bool update;
 
+		
 		// method for handling keyboard events
 		void handleUserEvents();
 		// method for handling window events
@@ -35,4 +42,4 @@ class EventHandler
 		// method for updating entities
 		void updateEntities();
 };
-
+#endif

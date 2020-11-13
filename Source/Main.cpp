@@ -4,7 +4,7 @@ int main(void) {
 	sf::RenderWindow* window = setup();
 	Renderer renderer;
 	EventHandler eventHandler(window);
-	UI interface(window);
+	UI interface(window, renderer, &eventHandler);
 
 	while (window->isOpen()) {
 		eventHandler.routine();
