@@ -153,87 +153,6 @@ void UI::setupImGuiStyle() {
 	colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 }
 
-
-
-// checks which bounding boxes are being displayed and sets up the text accordingly and draws them
-//void UI::drawBoundingBoxText() {
-//	sf::FloatRect bbBounds;
-//
-//	if (drawOBB) {
-//		this->boundingBoxText.setString("Object Bounding Box");
-//		bbBounds = this->boundingBoxText.getLocalBounds();
-//		this->boundingBoxText.setOrigin(bbBounds.left + bbBounds.width / 2, bbBounds.top + bbBounds.height / 2);
-//		this->boundingBoxText.setFillColor(sf::Color(255, 0, 0));
-//		this->boundingBoxText.setPosition((this->window->getSize().x / 8) * 1 - (this->window->getSize().x / 8) / 2, this->window->getSize().y - 20);
-//		this->window->draw(this->boundingBoxText);
-//	}
-//
-//	if (drawAABB1) {
-//		this->boundingBoxText.setString("External AABB");
-//		bbBounds = this->boundingBoxText.getLocalBounds();
-//		this->boundingBoxText.setOrigin(bbBounds.left + bbBounds.width / 2, bbBounds.top + bbBounds.height / 2);
-//		this->boundingBoxText.setFillColor(sf::Color(0, 255, 0));
-//		this->boundingBoxText.setPosition((this->window->getSize().x / 8) * 2 - (this->window->getSize().x / 8) / 2, this->window->getSize().y - 20);
-//		this->window->draw(this->boundingBoxText);
-//	}
-//
-//	if (drawAABB2) {
-//		this->boundingBoxText.setString("Internal AABB");
-//		bbBounds = this->boundingBoxText.getLocalBounds();
-//		this->boundingBoxText.setOrigin(bbBounds.left + bbBounds.width / 2, bbBounds.top + bbBounds.height / 2);
-//		this->boundingBoxText.setFillColor(sf::Color(0, 0, 255));
-//		this->boundingBoxText.setPosition((this->window->getSize().x / 8) * 3 - (this->window->getSize().x / 8) / 2, this->window->getSize().y - 20);
-//		this->window->draw(this->boundingBoxText);
-//	}
-//
-//	if (drawAABB3) {
-//		this->boundingBoxText.setString("Average AABB");
-//		bbBounds = this->boundingBoxText.getLocalBounds();
-//		this->boundingBoxText.setOrigin(bbBounds.left + bbBounds.width / 2, bbBounds.top + bbBounds.height / 2);
-//		this->boundingBoxText.setFillColor(sf::Color(0, 255, 255));
-//		this->boundingBoxText.setPosition((this->window->getSize().x / 8) * 4 - (this->window->getSize().x / 8) / 2, this->window->getSize().y - 20);
-//		this->window->draw(this->boundingBoxText);
-//	}
-//
-//	if (drawAABB4) {
-//		this->boundingBoxText.setString("True AABB");
-//		bbBounds = this->boundingBoxText.getLocalBounds();
-//		this->boundingBoxText.setOrigin(bbBounds.left + bbBounds.width / 2, bbBounds.top + bbBounds.height / 2);
-//		this->boundingBoxText.setFillColor(sf::Color(255, 0, 255));
-//		this->boundingBoxText.setPosition((this->window->getSize().x / 8) * 5 - (this->window->getSize().x / 8) / 2, this->window->getSize().y - 20);
-//		this->window->draw(this->boundingBoxText);
-//	}
-//
-//	if (drawBS) {
-//		this->boundingBoxText.setString("Internal BS");
-//		bbBounds = this->boundingBoxText.getLocalBounds();
-//		this->boundingBoxText.setOrigin(bbBounds.left + bbBounds.width / 2, bbBounds.top + bbBounds.height / 2);
-//		this->boundingBoxText.setFillColor(sf::Color(255, 255, 0));
-//		this->boundingBoxText.setPosition((this->window->getSize().x / 8) * 6 - (this->window->getSize().x / 8) / 2, this->window->getSize().y - 20);
-//		this->window->draw(this->boundingBoxText);
-//	}
-//
-//	if (drawBS2) {
-//		this->boundingBoxText.setString("External BS");
-//		bbBounds = this->boundingBoxText.getLocalBounds();
-//		this->boundingBoxText.setOrigin(bbBounds.left + bbBounds.width / 2, bbBounds.top + bbBounds.height / 2);
-//		this->boundingBoxText.setFillColor(sf::Color(255, 127, 0));
-//		this->boundingBoxText.setPosition((this->window->getSize().x / 8) * 7 - (this->window->getSize().x / 8) / 2, this->window->getSize().y - 20);
-//		this->window->draw(this->boundingBoxText);
-//	}
-//
-//	if (drawBS3) {
-//		this->boundingBoxText.setString("True BS");
-//		bbBounds = this->boundingBoxText.getLocalBounds();
-//		this->boundingBoxText.setOrigin(bbBounds.left + bbBounds.width / 2, bbBounds.top + bbBounds.height / 2);
-//		this->boundingBoxText.setFillColor(sf::Color(127, 255, 0));
-//		this->boundingBoxText.setPosition((this->window->getSize().x / 8) * 8 - (this->window->getSize().x / 8) / 2, this->window->getSize().y - 20);
-//		this->window->draw(this->boundingBoxText);
-//	}
-//}
-
-
-
 void UI::drawLeftColumn() {
 	static ImGuiWindowFlags leftColumnWindowFlags = ImGuiWindowFlags_NoMove |
 		//ImGuiWindowFlags_NoResize |
@@ -311,15 +230,25 @@ void UI::drawMenuBar() {
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
 			if (ImGui::MenuItem("Close", "ALT + F4")) {
-				//this->window->close();
+				glfwSetWindowShouldClose(this->window, GL_TRUE);
 			}
 			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("Edit")) {
+			bool tmp = vsync;
 			if (ImGui::MenuItem("Pause", NULL, &this->pauseFlag));
 			if (ImGui::MenuItem("Render Real Time Reflections", NULL, &doReflection));
-			if (ImGui::MenuItem("VSync", NULL, &vsync));
+			if (ImGui::MenuItem("VSync", NULL, &vsync)) {
+				if (tmp != vsync) {
+					if (vsync == true) {
+						glfwSwapInterval(1);
+					}
+					else {
+						glfwSwapInterval(0);
+					}
+				}
+			}
 			if (ImGui::MenuItem("Fullscreen", NULL, &fullscreen)) {
 				/*sf::RenderWindow *newWindow = initSFML_OpenGL("test", 8);
 				this->window->close();
@@ -391,9 +320,6 @@ void UI::drawMenuBar() {
 }
 
 void UI::drawImGui() {
-	//this->window->pushGLStates();
-	//this->window->resetGLStates();
-	//ImGui::SFML::Update(*this->window, this->deltaClock.restart());
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
@@ -408,8 +334,6 @@ void UI::drawImGui() {
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	//ImGui::SFML::Render(*this->window);
-	//this->window->popGLStates();
 }
 
 

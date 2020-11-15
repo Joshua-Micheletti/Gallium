@@ -228,6 +228,11 @@ void Renderer::render() {
 	// render the screen (post processing)
 	this->renderScreen();
 
+	if (updateResolution) {
+		this->resizeScreen();
+		updateResolution = false;
+	}
+	
 	// reset the renderer for the next render
 	this->resetRender();
 }
@@ -527,6 +532,50 @@ void Renderer::resetRender() {
 	glDisableVertexAttribArray(0);
 }
 
+void Renderer::resizeScreen() {
+	// create an empty texture object for screenTexture, this texture will be bound to the screenFBO
+	// and will store the screen view image
+	glGenTextures(1, &this->screenTexture);
+	// bind the screenTexture texture as the main texture
+	glBindTexture(GL_TEXTURE_2D, this->screenTexture);
+
+	/* ACTIVE TEXTURE: screenTexture */
+
+	// create the actual texture for image with res: screenWidth x screenHeight
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	// set the texture filters for mipmaps
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// create the screenFBO (used for rendering the screen view to a texture)
+	glGenFramebuffers(1, &this->screenFBO);
+	// bind the screenFBO to be the default FBO
+	glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
+
+	/* ACTIVE FRAMEBUFFER: screenFBO */
+
+	// attach the screenTexture to the screenFBO, so that the stuff rendered on the screenFBO can be saved to the screenTexture
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->screenTexture, 0);
+
+	// create a renderbuffer (for the screenFBO)
+	glGenRenderbuffers(1, &this->screenRBO);
+	// bind the screenRBO as default renderbuffer
+	glBindRenderbuffer(GL_RENDERBUFFER, this->screenRBO);
+
+	/* ACTIVE RENDERBUFFER: screenRBO */
+
+	// define render buffer multisample (needs more study)
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 8, GL_DEPTH24_STENCIL8, screenWidth, screenHeight);
+	// set the screenRBO to be the screenFBO buffer
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, this->screenRBO);
+
+	// reset the current RBO to be the default RBO
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	glViewport(0, 0, screenWidth, screenHeight);
+
+	projectionBuffer[0] = glm::perspective(glm::radians(45.0f), (float)screenWidth / (float)screenHeight, 0.1f, 10000.0f);
+}
 
 
 
@@ -733,7 +782,7 @@ void Renderer::drawBoundingBox(bounds_t bounds, glm::vec3 color) {
 
 	glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[0].id, 1, GL_FALSE, &(glm::mat4(1.0f)[0][0]));
 	glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[1].id, 1, GL_FALSE, &(camera.getViewMatrix()[0][0]));
-	glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[2].id, 1, GL_FALSE, &(Projection[0][0]));
+	glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[2].id, 1, GL_FALSE, &(projectionBuffer[0][0][0]));
 	glUniform3f(shaderBuffer[1].getUniformBuffer()[3].id, color.x, color.y, color.z);
 
 	glEnableVertexAttribArray(0);

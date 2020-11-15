@@ -5,10 +5,101 @@
 #include <glm\glm.hpp>
 #include <SFML\Graphics.hpp>
 #include "GLFW/glfw3.h"
-//#include <imgui.h>
-//#include <imgui-SFML.h>
 
-void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	if (key == GLFW_KEY_W) {
+		if (action == GLFW_PRESS) {
+			press.W = true;
+		}
+		else if (action == GLFW_RELEASE) {
+			press.W = false;
+		}
+	}
+
+	if (key == GLFW_KEY_A) {
+		if (action == GLFW_PRESS) {
+			press.A = true;
+		}
+		else if (action == GLFW_RELEASE) {
+			press.A = false;
+		}
+	}
+
+	if (key == GLFW_KEY_S) {
+		if (action == GLFW_PRESS) {
+			press.S = true;
+		}
+		else if (action == GLFW_RELEASE) {
+			press.S = false;
+		}
+	}
+
+	if (key == GLFW_KEY_D) {
+		if (action == GLFW_PRESS) {
+			press.D = true;
+		}
+		else if (action == GLFW_RELEASE) {
+			press.D = false;
+		}
+	}
+
+	if (key == GLFW_KEY_LEFT_SHIFT) {
+		if (action == GLFW_PRESS) {
+			press.LSHIFT = true;
+		}
+		else if (action == GLFW_RELEASE) {
+			press.LSHIFT = false;
+		}
+	}
+
+	if (key == GLFW_KEY_SPACE) {
+		if (action == GLFW_PRESS) {
+			press.SPACE = true;
+		}
+		else if (action == GLFW_RELEASE) {
+			press.SPACE = false;
+		}
+	}
+
+	if (key == GLFW_KEY_LEFT_CONTROL) {
+		if (action == GLFW_PRESS) {
+			press.LCTRL = true;
+		}
+		else if (action == GLFW_RELEASE) {
+			press.LCTRL = false;
+		}
+	}
+
+	if (key == 96 && action == GLFW_PRESS && press.backslash == false) {
+		press.backslash = true;
+
+		if (displayInfo == true) {
+			displayInfo = false;
+		}
+		else {
+			displayInfo = true;
+		}
+	}
+	else if (key == 96 && action == GLFW_RELEASE) {
+		press.backslash = false;
+	}
+
+	if (key == GLFW_KEY_LEFT_ALT && action == GLFW_PRESS && press.LALT == false) {
+		press.LALT = true;
+
+		if (freeMouse == true) {
+			freeMouse = false;
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		}
+		else {
+			freeMouse = true;
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
+	}
+	else if (key == GLFW_KEY_LEFT_ALT && action == GLFW_RELEASE) {
+		press.LALT = false;
+	}
+}
 
 EventHandler::EventHandler(GLFWwindow* window) {
 	this->window = window;
@@ -24,366 +115,6 @@ EventHandler::EventHandler(GLFWwindow* window) {
 	dist = 100.0f;
 	angle = 0.0f;
 }
-
-void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	/*printf("%d\n", key);*/
-	float cameraSpeed = 0.2f;
-	float sensitivity = 0.08f;
-
-	/*if (key == GLFW_KEY_LEFT_SHIFT) {
-		if (action == GLFW_PRESS) {
-			cameraSpeed *= 3;
-		}
-	}*/
-
-	if (key == GLFW_KEY_W) {
-		if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-			camera.setPosition(camera.getPosition() + camera.getOrientationCartesian() * cameraSpeed);
-		}
-	}
-
-	//if (freeMouse == false) {
-	//	// camera moovement
-	//	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-	//		cameraSpeed *= 3;
-	//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-	//			camera.setPosition(camera.getPosition() - glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
-	//		}
-	//	
-	//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-	//			camera.setPosition(camera.getPosition() + glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
-	//		}
-	//	
-	//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-	//			camera.setPosition(camera.getPosition() + camera.getOrientationCartesian() * cameraSpeed);
-	//		}
-	//	
-	//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-	//			camera.setPosition(camera.getPosition() - camera.getOrientationCartesian() * cameraSpeed);
-	//		}
-	//	
-	//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-	//			camera.setPosition(camera.getPosition() + camera.getUp() * cameraSpeed);
-	//		}
-	//	
-	//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
-	//			camera.setPosition(camera.getPosition() - camera.getUp() * cameraSpeed);
-	//		}
-	//	}
-	//	
-	//	else {
-	//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-	//			camera.setPosition(camera.getPosition() - glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
-	//		}
-	//	
-	//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-	//			camera.setPosition(camera.getPosition() + glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
-	//		}
-	//	
-	//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-	//			camera.setPosition(camera.getPosition() + camera.getOrientationCartesian() * cameraSpeed);
-	//		}
-	//	
-	//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-	//			camera.setPosition(camera.getPosition() - camera.getOrientationCartesian() * cameraSpeed);
-	//		}
-	//	
-	//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-	//			camera.setPosition(camera.getPosition() + camera.getUp() * cameraSpeed);
-	//		}
-	//	
-	//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
-	//			camera.setPosition(camera.getPosition() - camera.getUp() * cameraSpeed);
-	//		}
-	//	}
-	//}
-}
-
-void EventHandler::handleWindowEvents() {
-	//while (window->pollEvent(windowEvent)) {
-	//	//ImGui::SFML::ProcessEvent(windowEvent);
-	//}
-	
-
-	//this->window->setVerticalSyncEnabled(vsync);
-}
-
-//void EventHandler::handleUserEvents() {
-//	float cameraSpeed = 0.02f;
-//	float sensitivity = 0.08f;
-//
-//	if (freeMouse == false) {
-//		// camera moovement
-//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-//			cameraSpeed *= 3;
-//			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-//				camera.setPosition(camera.getPosition() - glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
-//			}
-//
-//			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-//				camera.setPosition(camera.getPosition() + glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
-//			}
-//
-//			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-//				camera.setPosition(camera.getPosition() + camera.getOrientationCartesian() * cameraSpeed);
-//			}
-//
-//			if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-//				camera.setPosition(camera.getPosition() - camera.getOrientationCartesian() * cameraSpeed);
-//			}
-//
-//			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-//				camera.setPosition(camera.getPosition() + camera.getUp() * cameraSpeed);
-//			}
-//
-//			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
-//				camera.setPosition(camera.getPosition() - camera.getUp() * cameraSpeed);
-//			}
-//		}
-//
-//		else {
-//			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-//				camera.setPosition(camera.getPosition() - glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
-//			}
-//
-//			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-//				camera.setPosition(camera.getPosition() + glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
-//			}
-//
-//			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-//				camera.setPosition(camera.getPosition() + camera.getOrientationCartesian() * cameraSpeed);
-//			}
-//
-//			if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-//				camera.setPosition(camera.getPosition() - camera.getOrientationCartesian() * cameraSpeed);
-//			}
-//
-//			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-//				camera.setPosition(camera.getPosition() + camera.getUp() * cameraSpeed);
-//			}
-//
-//			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
-//				camera.setPosition(camera.getPosition() - camera.getUp() * cameraSpeed);
-//			}
-//		}
-//	}
-//
-//	// look movement
-//	if (freeMouse == false) {
-//		float offX = sf::Mouse::getPosition().x - center.x;
-//		float offY = center.y - sf::Mouse::getPosition().y;
-//
-//		camera.setOrientation(glm::vec3(camera.getOrientation().x, camera.getOrientation().y + offX * sensitivity, camera.getOrientation().z + offY * sensitivity));
-//
-//		sf::Mouse::setPosition(center);
-//
-//		window->setMouseCursorVisible(false);
-//	}
-//	else {
-//		window->setMouseCursorVisible(true);
-//	}
-//
-//
-//	// shortcuts:
-//
-//	// "\" toggle debug info
-//	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Backslash) && !press.backslash) {
-//		press.backslash = true;
-//
-//		if (displayInfo == true) {
-//			displayInfo = false;
-//		}
-//		else {
-//			displayInfo = true;
-//		}
-//	}
-//	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Backslash)) {
-//		press.backslash = false;
-//	}
-//
-//	if (freeMouse == false) {
-//		// "L" toggle wireframe
-//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::L) && !press.L) {
-//			press.L = true;
-//
-//			if (renderMode == wireframe) {
-//				renderMode = base;
-//			}
-//			else {
-//				renderMode = wireframe;
-//			}
-//		}
-//		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
-//			press.L = false;
-//		}
-//
-//		// "P" toggle points
-//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::P) && !press.P) {
-//			press.P = true;
-//
-//			if (renderMode == vertices) {
-//				renderMode = base;
-//			}
-//			else {
-//				renderMode = vertices;
-//			}
-//		}
-//		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
-//			press.P = false;
-//		}
-//
-//		// "Z" toggle OBB
-//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && !press.Z) {
-//			press.Z = true;
-//
-//			if (drawOBB == true) {
-//				drawOBB = false;
-//			}
-//			else {
-//				drawOBB = true;
-//			}
-//		}
-//		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-//			press.Z = false;
-//		}
-//
-//		// "X" toggle AABB (small)
-//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::X) && !press.X) {
-//			press.X = true;
-//
-//			if (drawAABB1 == true) {
-//				drawAABB1 = false;
-//			}
-//			else {
-//				drawAABB1 = true;
-//			}
-//		}
-//		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
-//			press.X = false;
-//		}
-//
-//		// "C" toggle AABB (large)
-//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::C) && !press.C) {
-//			press.C = true;
-//
-//			if (drawAABB2 == true) {
-//				drawAABB2 = false;
-//			}
-//			else {
-//				drawAABB2 = true;
-//			}
-//		}
-//		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
-//			press.C = false;
-//		}
-//
-//		// "V" toggle AABB (average)
-//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::V) && !press.V) {
-//			press.V = true;
-//
-//			if (drawAABB3 == true) {
-//				drawAABB3 = false;
-//			}
-//			else {
-//				drawAABB3 = true;
-//			}
-//		}
-//		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::V)) {
-//			press.V = false;
-//		}
-//
-//		// "B" toggle AABB (exact)
-//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::B) && !press.B) {
-//			press.B = true;
-//
-//			if (drawAABB4 == true) {
-//				drawAABB4 = false;
-//			}
-//			else {
-//				drawAABB4 = true;
-//			}
-//		}
-//		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
-//			press.B = false;
-//		}
-//
-//		// "N" toggle bounding sphere (small)
-//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::N) && !press.N) {
-//			press.N = true;
-//
-//			if (drawBS == true) {
-//				drawBS = false;
-//			}
-//			else {
-//				drawBS = true;
-//			}
-//		}
-//		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::N)) {
-//			press.N = false;
-//		}
-//
-//		// "M" toggle bounding sphere (large)
-//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && !press.M) {
-//			press.M = true;
-//
-//			if (drawBS2 == true) {
-//				drawBS2 = false;
-//			}
-//			else {
-//				drawBS2 = true;
-//			}
-//		}
-//		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
-//			press.M = false;
-//		}
-//
-//		// "K" toggle bounding sphere (average)
-//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::K) && !press.K) {
-//			press.K = true;
-//
-//			if (drawBS3 == true) {
-//				drawBS3 = false;
-//			}
-//			else {
-//				drawBS3 = true;
-//			}
-//		}
-//		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
-//			press.K = false;
-//		}
-//
-//		// "J" toggle real time reflection
-//		if (sf::Keyboard::isKeyPressed(sf::Keyboard::J) && !press.J) {
-//			press.J = true;
-//
-//			if (doReflection == true) {
-//				doReflection = false;
-//			}
-//			else {
-//				doReflection = true;
-//			}
-//		}
-//		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
-//			press.J = false;
-//		}
-//	}
-//
-//
-//	// "LAlt" toggle free mouse
-//	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt) && !press.LAlt) {
-//		press.LAlt = true;
-//
-//		if (freeMouse == true) {
-//			freeMouse = false;
-//		}
-//		else {
-//			freeMouse = true;
-//		}
-//	}
-//	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)) {
-//		press.LAlt = false;
-//	}
-//}
 
 void EventHandler::updateEntities() {
 	for (int i = 0; i < entityBuffer.size(); i++) {
@@ -439,16 +170,60 @@ void EventHandler::updateEntities() {
 	}
 }
 
-//void EventHandler::handleUserEvents() {
-//	
-//}
+void EventHandler::handleUserEvents() {
+	float cameraSpeed = 0.02f;
+	float sensitivity = 0.08f;
+
+	// look movement
+	if (freeMouse == false) {
+		double xpos;
+		double ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+
+		float offX = xpos - (screenWidth / 2);
+		float offY = (screenHeight / 2) - ypos;
+
+		camera.setOrientation(glm::vec3(camera.getOrientation().x, camera.getOrientation().y + offX * sensitivity, camera.getOrientation().z + offY * sensitivity));
+
+		/*sf::Mouse::setPosition(center);*/
+		glfwSetCursorPos(this->window, screenWidth / 2, screenHeight / 2);
+
+		//window->setMouseCursorVisible(false);
+	}
+
+	if (press.LSHIFT == true) {
+		cameraSpeed *= 3;
+	}
+
+	if (press.W == true) {
+		camera.setPosition(camera.getPosition() + camera.getOrientationCartesian() * cameraSpeed);
+	}
+
+	if (press.S == true) {
+		camera.setPosition(camera.getPosition() - camera.getOrientationCartesian() * cameraSpeed);
+	}
+
+	if (press.A == true) {
+		camera.setPosition(camera.getPosition() - glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
+	}
+			
+	if (press.D == true) {
+		camera.setPosition(camera.getPosition() + glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
+	}
+
+	if (press.SPACE == true) {
+		camera.setPosition(camera.getPosition() + camera.getUp() * cameraSpeed);
+	}
+		
+	if (press.LCTRL == true) {
+		camera.setPosition(camera.getPosition() - camera.getUp() * cameraSpeed);
+	}
+}
+
 
 void EventHandler::routine() {
-	handleWindowEvents();
-
 	while (time.asMilliseconds() + tick.asMilliseconds() < clock.getElapsedTime().asMilliseconds()) {
-		//handleUserEvents();
-		//glfwPollEvents();
+		handleUserEvents();
 
 		if (this->update == true) {
 			updateEntities();

@@ -10,6 +10,8 @@
 #include <stb_image.h>
 #include <iostream>
 #include <string>
+#include <SFML/Graphics.hpp>
+
 using namespace std;
 //
 /* CONSTRUCTOR */

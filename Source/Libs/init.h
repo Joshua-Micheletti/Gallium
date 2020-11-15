@@ -40,7 +40,10 @@ typedef struct buttons{
   bool X = false;
   bool Y = false;
   bool Z = false;
-  bool LAlt = false;
+  bool LALT = false;
+  bool LSHIFT = false;
+  bool SPACE = false;
+  bool LCTRL = false;
 } buttons_t;
 
 typedef enum {
@@ -78,6 +81,7 @@ extern bool drawBS;
 extern bool drawBS2;
 extern bool drawBS3;
 extern bool doReflection;
+extern bool updateResolution;
 
 ////extern sf::Vector2i center;
 

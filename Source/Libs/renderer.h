@@ -11,6 +11,7 @@ class Renderer {
 		Renderer();
 		// method for rendering
 		void render();
+		
 
 	private:
 		unsigned int tmpBuffer;
@@ -32,6 +33,8 @@ class Renderer {
 		void renderReflectionCubemap();
 		void renderScreen();
 		void resetRender();
+		// method for updating the render resolution
+		void resizeScreen();
 		void renderEntities(bool);
 		void attachUniforms(Entity *, std::vector<uniform_t>);
 		void linkLayouts(Entity*, std::vector<char *>);

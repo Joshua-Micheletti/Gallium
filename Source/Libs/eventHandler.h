@@ -3,6 +3,7 @@
 #include <SFML\Graphics.hpp>
 #include "GLFW/glfw3.h"
 #include <glm\glm.hpp>
+#include "init.h"
 
 // class for handling keyboard, window and entity events
 class EventHandler

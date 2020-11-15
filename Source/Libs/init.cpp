@@ -13,7 +13,7 @@
 
 unsigned int screenWidth = 1280;
 unsigned int screenHeight = 720;
-bool vsync = false;
+bool vsync = true;
 bool fullscreen = false;
 
 glm::mat4 Projection;
@@ -35,7 +35,7 @@ bool drawBS2;
 bool drawBS3;
 bool doReflection;
 
-////sf::Vector2i center;
+bool updateResolution;
 
 int defaultCamera;
 
@@ -54,16 +54,28 @@ Camera camera2(glm::vec3(0.0f, 0.0f, 0.0f),
 
 Entity* light = new Entity("light");
 
+void resizeCallback(GLFWwindow* window, int x, int y) {
+	int width;
+	int height;
+	glfwGetFramebufferSize(window, &width, &height);
+	glViewport(0, 0, width, height);
+
+	screenWidth = width;
+	screenHeight = height;
+	updateResolution = true;
+}
+
 GLFWwindow* initGLFW_OpenGL(std::string name, int AA) {
+	glfwInit();
+
 	GLFWwindow* window;
 	window = glfwCreateWindow(screenWidth, screenHeight, "3DEngine", NULL, NULL);
 	
 	glfwMakeContextCurrent(window);
-
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	gladLoadGL();
 
-	//glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LESS);
+	glfwSetWindowSizeCallback(window, resizeCallback);
 
 	return(window);
 }
@@ -315,7 +327,6 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 }
 
 GLFWwindow* setup() {
-	glfwInit();
 	GLFWwindow* window = initGLFW_OpenGL("3DEngine", 0);
 
 	Projection = glm::perspective(glm::radians(45.0f), (float)screenWidth / (float)screenHeight, 0.1f, 10000.0f);
@@ -323,9 +334,6 @@ GLFWwindow* setup() {
 	world_model = glm::mat4(1.0f);
 
 	renderMode = base;
-
-	//sf::Vector2i tmpCenter(window->getPosition().x + window->getSize().x / 2, window->getPosition().y + window->getSize().y / 2);
-	//center = tmpCenter;
 
 	displayInfo = true;
 	drawOBB = false;
@@ -337,6 +345,7 @@ GLFWwindow* setup() {
 	drawBS2 = false;
 	drawBS3 = false;
 	doReflection = true;
+	updateResolution = false;
 
 	defaultCamera = 0;
 

@@ -146,58 +146,58 @@ void main() {
 //        vec2( offset, -offset)  // bottom-right    
 //    );
 
-    int middle = int(size / 2);
-    vec2 offsets[size * size];
-    int index = 0;
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            offsets[index] = vec2(-middle * offset + offset * j, -middle * offset + offset * i);
-            index++;
-        }
-    }
-
-//    float kernel[9] = float[](
-//        1.0/16.0, 2.0/16.0, 1.0/16.0,
-//        2.0/16.0, 4.0/16.0, 2.0/16.0,
-//        1.0/16.0, 2.0/16.0, 1.0/16.0
-//    );
-
-//    float kernel[25] = float[](
-//        1/273.0,  4/273.0,  7/273.0,  4/273.0, 1/273.0,
-//        4/273.0, 16/273.0, 26/273.0, 16/273.0, 4/273.0,
-//        7/273.0, 26/273.0, 41/273.0, 26/273.0, 7/273.0,
-//        4/273.0, 16/273.0, 26/273.0, 16/273.0, 4/273.0,
-//        1/273.0,  4/273.0,  7/273.0,  4/273.0, 1/273.0
-//    );
-
-    float kernel[size * size];
-////
-    for (int i = 0; i < size * size; i++) {
-        kernel[i] = 0;
-    }
+//    int middle = int(size / 2);
+//    vec2 offsets[size * size];
+//    int index = 0;
+//    for (int i = 0; i < size; i++) {
+//        for (int j = 0; j < size; j++) {
+//            offsets[index] = vec2(-middle * offset + offset * j, -middle * offset + offset * i);
+//            index++;
+//        }
+//    }
 //
-    createGaussianKernel(kernel);
-
-//    float kernel[9] = float[](
-//        2,   2, 2,
-//        2, -15, 2,
-//        2,   2, 2
-//    );
-
-//    float kernel[9] = float[](
-//        1, 1, 1,
-//        1, -8, 1,
-//        1, 1, 1
-//    );
-    
-    vec3 sampleTex[size * size];
-    for(int i = 0; i < size * size; i++) {
-        sampleTex[i] = vec3(texture(screenTexture, TexCoords.st + offsets[i]));
-    }
-
-    vec3 col = vec3(0.0);
-    for(int i = 0; i < size * size; i++)
-        col += sampleTex[i] * kernel[i];
+////    float kernel[9] = float[](
+////        1.0/16.0, 2.0/16.0, 1.0/16.0,
+////        2.0/16.0, 4.0/16.0, 2.0/16.0,
+////        1.0/16.0, 2.0/16.0, 1.0/16.0
+////    );
+//
+////    float kernel[25] = float[](
+////        1/273.0,  4/273.0,  7/273.0,  4/273.0, 1/273.0,
+////        4/273.0, 16/273.0, 26/273.0, 16/273.0, 4/273.0,
+////        7/273.0, 26/273.0, 41/273.0, 26/273.0, 7/273.0,
+////        4/273.0, 16/273.0, 26/273.0, 16/273.0, 4/273.0,
+////        1/273.0,  4/273.0,  7/273.0,  4/273.0, 1/273.0
+////    );
+//
+//    float kernel[size * size];
+//////
+//    for (int i = 0; i < size * size; i++) {
+//        kernel[i] = 0;
+//    }
+////
+//    createGaussianKernel(kernel);
+//
+////    float kernel[9] = float[](
+////        2,   2, 2,
+////        2, -15, 2,
+////        2,   2, 2
+////    );
+//
+////    float kernel[9] = float[](
+////        1, 1, 1,
+////        1, -8, 1,
+////        1, 1, 1
+////    );
+//    
+//    vec3 sampleTex[size * size];
+//    for(int i = 0; i < size * size; i++) {
+//        sampleTex[i] = vec3(texture(screenTexture, TexCoords.st + offsets[i]));
+//    }
+//
+//    vec3 col = vec3(0.0);
+//    for(int i = 0; i < size * size; i++)
+//        col += sampleTex[i] * kernel[i];
     
 //    FragColor = vec4(col, 1.0);
 }
