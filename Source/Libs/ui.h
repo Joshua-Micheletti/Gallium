@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include "imgui.h"
-#include "imgui-SFML.h"
+//#include "imgui-SFML.h"
 #include "renderer.h"
 #include "eventHandler.h"
 
@@ -9,15 +9,17 @@
 class UI {
 	public:
 		// constructor method which takes the window reference
-		UI(sf::RenderWindow *, Renderer, EventHandler *);
+		UI(GLFWwindow *, Renderer *, EventHandler *);
 		// method to draw the information on the screen
 		void drawInfo();
+
+		void setReferenceWindow(GLFWwindow*);
 		
 	private:
 		// window reference
-		sf::RenderWindow* window;
+		GLFWwindow* window;
 		// renderer reference
-		Renderer renderer;
+		Renderer *renderer;
 		// event handler reference
 		EventHandler *eventHandler;
 		// text containing entity information
@@ -57,6 +59,7 @@ class UI {
 		bool showDemoWindow;
 		bool showFPS;
 		bool pauseFlag;
+		bool showLeftColumn;
 
 		ImVec2 menuBarSize;
 
@@ -67,12 +70,15 @@ class UI {
 		// check the displayed bounding boxes and shows the corresponding texts through boundingBoxText
 		void drawBoundingBoxText();
 
+		void setupImGuiStyle();
+
 		void drawMenuBar();
 
 		void drawFPSWindow();
 
+		void drawLeftColumn();
+
 		void drawImGui();
 		// method to turn a float into a string with a desired decimal precision
 		std::string floatToString(float, int);
-		
 };

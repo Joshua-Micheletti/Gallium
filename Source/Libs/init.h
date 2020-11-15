@@ -1,17 +1,16 @@
 #ifndef __INIT__
 #define __INIT__
 
-#include <glad\glad.h>
-#include <SFML\Graphics.hpp>
+//#include <SFML\Graphics.hpp>
+#include "GLFW\glfw3.h"
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
-#include <glad\glad.h>
+//#include <glad\glad.h>
 #include <vector>
 #include "entity.h"
 #include "shader.h"
 #include "camera.h"
-
 
 typedef struct buttons{
   bool backslash = false;
@@ -50,12 +49,13 @@ typedef enum {
   vertices
 } renderMode_t;
 
-
-// global variables
-extern sf::RenderWindow *window;
+//// global variables
+////extern GLFWwindow *window;
 
 extern unsigned int screenWidth;
 extern unsigned int screenHeight;
+extern bool vsync;
+extern bool fullscreen;
 
 extern glm::mat4 Projection;
 extern glm::mat4 Projection2;
@@ -79,7 +79,7 @@ extern bool drawBS2;
 extern bool drawBS3;
 extern bool doReflection;
 
-extern sf::Vector2i center;
+////extern sf::Vector2i center;
 
 extern int defaultCamera;
 
@@ -90,8 +90,9 @@ extern std::vector<glm::mat4> projectionBuffer;
 
 extern Entity *light;
 
-extern sf::RenderWindow *setup();
+extern GLFWwindow *setup();
+extern GLFWwindow *initGLFW_OpenGL(std::string, int);
 
-extern GLenum glCheckError_(const char*, int);
+//extern GLenum glCheckError_(const char*, int);
 
 #endif

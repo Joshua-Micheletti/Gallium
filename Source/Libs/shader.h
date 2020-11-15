@@ -38,7 +38,7 @@ class Shader {
 		std::vector<char*> layoutBuffer;
 		
 		// method for compiling shader code
-		unsigned int compileShader(const char*, const char*);
+		unsigned int compileShader(char*, char*);
 		// method for reading the shader code and finding uniforms and layouts, to store them in the relative shaders
 		void findUniformAndLayouts(char*);
 };

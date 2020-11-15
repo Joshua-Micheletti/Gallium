@@ -1,5 +1,5 @@
-#include <glad\glad.h>
-#include <SFML/Graphics.hpp>
+//#include <glad\glad.h>
+//#include <SFML/Graphics.hpp>
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
@@ -13,6 +13,8 @@
 
 unsigned int screenWidth = 1280;
 unsigned int screenHeight = 720;
+bool vsync = false;
+bool fullscreen = false;
 
 glm::mat4 Projection;
 glm::mat4 Projection2;
@@ -33,51 +35,35 @@ bool drawBS2;
 bool drawBS3;
 bool doReflection;
 
-sf::Vector2i center;
+////sf::Vector2i center;
 
 int defaultCamera;
 
-std::vector<Entity *> entityBuffer;
+std::vector<Entity*> entityBuffer;
 std::vector<Shader> shaderBuffer;
-std::vector<Camera *> cameraBuffer;
+std::vector<Camera*> cameraBuffer;
 std::vector<glm::mat4> projectionBuffer;
 
 Camera camera(glm::vec3(30.0f, 30.0f, 30.0f),   // position
-              glm::vec3(0.0f, 225.0f, -35.0f),  // direction
-              glm::vec3(0.0f, 1.0f, 0.0f));     // up;
+	glm::vec3(0.0f, 225.0f, -35.0f),  // direction
+	glm::vec3(0.0f, 1.0f, 0.0f));     // up;
 
 Camera camera2(glm::vec3(0.0f, 0.0f, 0.0f),
-               glm::vec3(0.0f, 0.0f, 0.0f),
-               glm::vec3(0.0f, -1.0f, 0.0f));
+	glm::vec3(0.0f, 0.0f, 0.0f),
+	glm::vec3(0.0f, -1.0f, 0.0f));
 
-Entity *light = new Entity("light");
+Entity* light = new Entity("light");
 
-sf::RenderWindow* initSFML_OpenGL(string name, int AA, bool VSync) {
-	sf::ContextSettings settings;
-	settings.antialiasingLevel = AA;
-	settings.majorVersion = 4;
-	settings.minorVersion = 6;
-	settings.depthBits = 24;
-	settings.stencilBits = 8;
+GLFWwindow* initGLFW_OpenGL(std::string name, int AA) {
+	GLFWwindow* window;
+	window = glfwCreateWindow(screenWidth, screenHeight, "3DEngine", NULL, NULL);
+	
+	glfwMakeContextCurrent(window);
 
-	sf::RenderWindow* window;
-	// fullscreen
-	//window = new sf::RenderWindow(sf::VideoMode::getFullscreenModes()[0], name, sf::Style::None, settings);
-	// windowed
-	window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight, 32), name, sf::Style::Close, settings);
+	gladLoadGL();
 
-	if (!gladLoadGL()) {
-		printf("COULD NOT INITALIZE OPENGL CONTEXT\n");
-	}
-
-	window->setActive(true);
-	window->setMouseCursorVisible(false);
-
-	if (VSync)
-		window->setVerticalSyncEnabled(true);
-
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
+	//glEnable(GL_DEPTH_TEST);
+	//glDepthFunc(GL_LESS);
 
 	return(window);
 }
@@ -328,16 +314,18 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	entityBuffer->push_back(genshinEnemy);
 }
 
-sf::RenderWindow* setup() {
-	sf::RenderWindow* window = initSFML_OpenGL("3D-Engine", 0, false);
-	Projection = glm::perspective(glm::radians(45.0f), (float)window->getSize().x / (float)window->getSize().y, 0.1f, 10000.0f);
+GLFWwindow* setup() {
+	glfwInit();
+	GLFWwindow* window = initGLFW_OpenGL("3DEngine", 0);
+
+	Projection = glm::perspective(glm::radians(45.0f), (float)screenWidth / (float)screenHeight, 0.1f, 10000.0f);
 	Projection2 = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10000.0f);
 	world_model = glm::mat4(1.0f);
 
 	renderMode = base;
 
-	sf::Vector2i tmpCenter(window->getPosition().x + window->getSize().x / 2, window->getPosition().y + window->getSize().y / 2);
-	center = tmpCenter;
+	//sf::Vector2i tmpCenter(window->getPosition().x + window->getSize().x / 2, window->getPosition().y + window->getSize().y / 2);
+	//center = tmpCenter;
 
 	displayInfo = true;
 	drawOBB = false;
@@ -358,29 +346,29 @@ sf::RenderWindow* setup() {
 	projectionBuffer.push_back(Projection2);
 
 	loadShaders(&shaderBuffer);
-
+	
 	loadEntities(&entityBuffer);
 
 	return(window);
 }
 
-GLenum glCheckError_(const char* file, int line) {
-	GLenum errorCode;
-	while ((errorCode = glGetError()) != GL_NO_ERROR)
-	{
-		std::string error;
-		switch (errorCode)
-		{
-		case GL_INVALID_ENUM:                  error = "INVALID_ENUM"; break;
-		case GL_INVALID_VALUE:                 error = "INVALID_VALUE"; break;
-		case GL_INVALID_OPERATION:             error = "INVALID_OPERATION"; break;
-		case GL_STACK_OVERFLOW:                error = "STACK_OVERFLOW"; break;
-		case GL_STACK_UNDERFLOW:               error = "STACK_UNDERFLOW"; break;
-		case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
-		case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
-		}
-		std::cout << error << " | " << file << " (" << line << ")" << std::endl;
-	}
-	return errorCode;
-}
-#define glCheckError() glCheckError_(__FILE__, __LINE__) 
+//GLenum glCheckError_(const char* file, int line) {
+//	GLenum errorCode;
+//	while ((errorCode = glGetError()) != GL_NO_ERROR)
+//	{
+//		std::string error;
+//		switch (errorCode)
+//		{
+//		case GL_INVALID_ENUM:                  error = "INVALID_ENUM"; break;
+//		case GL_INVALID_VALUE:                 error = "INVALID_VALUE"; break;
+//		case GL_INVALID_OPERATION:             error = "INVALID_OPERATION"; break;
+//		case GL_STACK_OVERFLOW:                error = "STACK_OVERFLOW"; break;
+//		case GL_STACK_UNDERFLOW:               error = "STACK_UNDERFLOW"; break;
+//		case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
+//		case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
+//		}
+//		std::cout << error << " | " << file << " (" << line << ")" << std::endl;
+//	}
+//	return errorCode;
+//}
+//#define glCheckError() glCheckError_(__FILE__, __LINE__) 

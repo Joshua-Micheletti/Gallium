@@ -21,6 +21,27 @@
     <ClCompile Include="ExtLibs\GLAD\src\glad.c">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Libs\init.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Libs\camera.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Libs\entity.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Libs\shader.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Libs\renderer.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Libs\eventHandler.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Libs\ui.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
     <ClCompile Include="ExtLibs\imgui\imgui.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
@@ -39,29 +60,44 @@
     <ClCompile Include="ExtLibs\imgui\imgui-SFML.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Libs\ui.cpp">
+    <ClCompile Include="ExtLibs\imgui\main.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Libs\init.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Libs\camera.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Libs\entity.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Libs\eventHandler.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Libs\renderer.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Libs\shader.cpp">
+    <ClCompile Include="ExtLibs\imgui\imgui_impl_glfw.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ExtLibs\imgui\imconfig-SFML.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtLibs\imgui\imgui-SFML_export.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Libs\lib.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Libs\init.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Libs\camera.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Libs\entity.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Libs\shader.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Libs\renderer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Libs\eventHandler.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Libs\ui.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
     <ClInclude Include="ExtLibs\imgui\imconfig.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
@@ -74,6 +110,9 @@
     <ClInclude Include="ExtLibs\imgui\imgui_internal.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="ExtLibs\imgui\imgui-SFML.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
     <ClInclude Include="ExtLibs\imgui\imstb_rectpack.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
@@ -83,37 +122,7 @@
     <ClInclude Include="ExtLibs\imgui\imstb_truetype.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="ExtLibs\imgui\imconfig-SFML.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="ExtLibs\imgui\imgui-SFML.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="ExtLibs\imgui\imgui-SFML_export.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Libs\lib.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Libs\ui.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Libs\init.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Libs\camera.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Libs\entity.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Libs\eventHandler.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Libs\renderer.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Libs\shader.h">
+    <ClInclude Include="ExtLibs\imgui\imgui_impl_glfw.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

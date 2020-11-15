@@ -1,4 +1,4 @@
-#include <glad\glad.h>
+#include "glad\glad.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,7 +34,7 @@ void Shader::loadShader(char* vertex, char* fragment) {
 	findUniformAndLayouts(vertex);
 }
 
-unsigned int Shader::compileShader(const char* vertex_file_path, const char* fragment_file_path) {
+unsigned int Shader::compileShader(char* vertex_file_path, char* fragment_file_path) {
 	// Create the shaders
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -120,6 +120,7 @@ unsigned int Shader::compileShader(const char* vertex_file_path, const char* fra
 	glDeleteShader(FragmentShaderID);
 
 	return ProgramID;
+	//return(0);
 }
 
 void Shader::findUniformAndLayouts(char* shader) {

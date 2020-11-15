@@ -232,7 +232,6 @@ void Renderer::render() {
 	this->resetRender();
 }
 
-
 // render the cubemap view from the reflection camera to later calculate reflections on
 void Renderer::renderReflectionCubemap() {
 	// set the current camera to the camera inside the reflective object

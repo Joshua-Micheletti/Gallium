@@ -1,16 +1,17 @@
 #include "Libs/lib.h"
 
 int main(void) {
-	sf::RenderWindow* window = setup();
+	GLFWwindow* window = setup();
 	Renderer renderer;
 	EventHandler eventHandler(window);
-	UI interface(window, renderer, &eventHandler);
+	UI interface(window, &renderer, &eventHandler);
 
-	while (window->isOpen()) {
+	while (!glfwWindowShouldClose(window)) {
 		eventHandler.routine();
 		renderer.render();
 		interface.drawInfo();
-		window->display();
+		glfwPollEvents();
+		glfwSwapBuffers(window);
 	}
 
 	return(0);

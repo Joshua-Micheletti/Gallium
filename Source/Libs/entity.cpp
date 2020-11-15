@@ -6,11 +6,12 @@
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
 #include "entity.h"
+#define STB_IMAGE_IMPLEMENTATION  
 #include <stb_image.h>
 #include <iostream>
 #include <string>
 using namespace std;
-
+//
 /* CONSTRUCTOR */
 /* -----------------------------------------------------------------------------------------------------------------------*/
 Entity::Entity(string name) {
@@ -60,8 +61,8 @@ Entity::Entity(string name) {
 string Entity::getName() {
 	return(this->name);
 }
-
-
+//
+//
 /* VERTICES */
 /* -----------------------------------------------------------------------------------------------------------------------*/
 void Entity::load3DModel(string model) {
@@ -71,13 +72,13 @@ void Entity::load3DModel(string model) {
 	createBuffer(this->uvs, &this->texBuffer);
 	createBuffer(this->normals, &this->normalBuffer);
 }
-
+//
 void Entity::loadVertices(std::vector<float> vertices) {
 	this->vertices = vertices;
 	placeAtCenter();
 	createBuffer(this->vertices, &this->vertexBuffer);
 }
-
+//
 void Entity::loadModel(string name) {
 	FILE* model = fopen(name.c_str(), "r");
 	char buffer[255];
@@ -175,7 +176,7 @@ void Entity::loadModel(string name) {
 		Entity::normals.push_back(normals[(facesNormals[i] - 1) * 3 + 2]);
 	}
 }
-
+//
 std::vector<float> Entity::getVertices() {
 	return(this->vertices);
 }
