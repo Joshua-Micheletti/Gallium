@@ -13,6 +13,8 @@
 
 unsigned int screenWidth = 1280;
 unsigned int screenHeight = 720;
+unsigned int windowWidth = 1280;
+unsigned int windowHeight = 720;
 bool vsync = true;
 bool fullscreen = false;
 
@@ -62,11 +64,20 @@ void resizeCallback(GLFWwindow* window, int x, int y) {
 
 	screenWidth = width;
 	screenHeight = height;
+
+	if (!fullscreen) {
+		windowWidth = screenWidth;
+		windowHeight = screenHeight;
+	}
+
 	updateResolution = true;
 }
 
 GLFWwindow* initGLFW_OpenGL(std::string name, int AA) {
 	glfwInit();
+
+	glfwWindowHint(GLFW_SAMPLES, 16);
+	
 
 	GLFWwindow* window;
 	window = glfwCreateWindow(screenWidth, screenHeight, "3DEngine", NULL, NULL);
@@ -74,7 +85,7 @@ GLFWwindow* initGLFW_OpenGL(std::string name, int AA) {
 	glfwMakeContextCurrent(window);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	gladLoadGL();
-
+	glEnable(GL_MULTISAMPLE);
 	glfwSetWindowSizeCallback(window, resizeCallback);
 
 	return(window);

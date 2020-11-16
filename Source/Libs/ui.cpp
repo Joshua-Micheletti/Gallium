@@ -23,59 +23,9 @@ UI::UI(GLFWwindow *window, Renderer* renderer, EventHandler* eventHandler) {
 	this->renderer = renderer;
 	this->eventHandler = eventHandler;
 
-	char _windowTitle[255] = "ImGui + SFML = <3";
-	this->windowTitle = _windowTitle;
-
-	float acolor[3] = { 0.f, 0.f, 0.f };
-	color = acolor;
-
 	// setup the update clock
 	this->tick = sf::milliseconds(1000 / 10);
 	this->time = this->clock.getElapsedTime();
-
-	// load the UI font
-	if (!this->font.loadFromFile("../Fonts/segmono_boot.ttf")) {
-		printf("COULDN'T LOAD FONT\n");
-	}
-
-	// set the UI font
-	this->boundingBoxText.setFont(this->font);
-	this->debug.setFont(this->font);
-	this->fps.setFont(this->font);
-	this->frameTime.setFont(this->font);
-
-	// set the entity info style
-	this->debug.setCharacterSize(16);
-	this->debug.setFillColor(sf::Color::White);
-	this->debug.setPosition(5, 5);
-	this->debug.setOutlineThickness(1);
-	this->debug.setOutlineColor(sf::Color::Black);
-
-	// set the fps and frametime styles
-	this->fps.setCharacterSize(16);
-	this->fps.setFillColor(sf::Color::White);
-	this->fps.setOutlineThickness(1);
-	this->fps.setOutlineColor(sf::Color::Black);
-
-	this->frameTime.setCharacterSize(16);
-	this->frameTime.setFillColor(sf::Color::White);
-	this->frameTime.setOutlineThickness(1);
-	this->frameTime.setOutlineColor(sf::Color::Black);
-
-	// set the bounding box text style
-	this->boundingBoxText.setCharacterSize(16);
-	this->boundingBoxText.setFillColor(sf::Color::Red);
-	this->boundingBoxText.setOutlineThickness(1);
-	this->boundingBoxText.setOutlineColor(sf::Color::Black);
-
-	// design the crosshair
-	this->crosshair.setRadius(2);
-	this->crosshair.setFillColor(sf::Color(255, 255, 255));
-	sf::FloatRect crosshairBounds = this->crosshair.getLocalBounds();
-	this->crosshair.setOrigin(crosshairBounds.left + crosshairBounds.width / 2, crosshairBounds.top + crosshairBounds.height / 2);
-	this->crosshair.setPosition(screenWidth / 2, screenHeight / 2);
-	this->crosshair.setOutlineThickness(1);
-	this->crosshair.setOutlineColor(sf::Color::Black);
 
 	this->showMetricsWindow = false;
 	this->showUserGuide = false;
@@ -83,6 +33,7 @@ UI::UI(GLFWwindow *window, Renderer* renderer, EventHandler* eventHandler) {
 	this->showDemoWindow = false;
 	this->showFPS = true;
 	this->pauseFlag = false;
+	this->showLeftColumn = true;
 
 	//ImGui::SFML::Init(*this->window);
 	ImGui::CreateContext();
@@ -153,18 +104,47 @@ void UI::setupImGuiStyle() {
 	colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 }
 
+
 void UI::drawLeftColumn() {
+	bool firstDraw = true;
 	static ImGuiWindowFlags leftColumnWindowFlags = ImGuiWindowFlags_NoMove |
 		//ImGuiWindowFlags_NoResize |
 		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_NoSavedSettings |
 		ImGuiWindowFlags_NoTitleBar;
+
 	ImGui::SetNextWindowSizeConstraints(ImVec2(0, -1), ImVec2(FLT_MAX, -1));
 
 	ImGui::Begin("Left Column", NULL, leftColumnWindowFlags);
 
+	if (ImGui::CollapsingHeader("Entities")) {
+		for (int i = 0; i < entityBuffer.size(); i++) {
+			if (ImGui::TreeNode(entityBuffer[i]->getName().c_str())) {
+				float f1 = entityBuffer[i]->getWorldPosition().x;
+				if (ImGui::DragFloat("x", &f1, 0.005f));
+				float f2 = entityBuffer[i]->getWorldPosition().y;
+				ImGui::DragFloat("y", &f2, 0.005f);
+				float f3 = entityBuffer[i]->getWorldPosition().z;
+				ImGui::DragFloat("z", &f3, 0.005f);
+
+				entityBuffer[i]->placeAt(glm::vec3(f1, f2, f3), camera.getViewMatrix());
+
+				ImGui::TreePop();
+			}
+		}
+	}
+
+	ImGui::Separator();
+
 	ImGui::PushStyleColor(ImGuiCol_ResizeGrip, 0);
-	ImGui::SetWindowSize(ImVec2(200, screenHeight - this->menuBarSize.y), ImGuiCond_FirstUseEver);
+
+	if (firstDraw)
+		ImGui::SetWindowSize(ImVec2(200, screenHeight - this->menuBarSize.y));
+	
+	if (updateResolution) {
+		ImGui::SetWindowSize(ImVec2(ImGui::GetWindowWidth(), screenHeight - this->menuBarSize.y));
+	}
+	
 	ImGui::SetWindowPos(ImVec2(0, this->menuBarSize.y));
 
 	static ImGuiStyle& leftColumnStyle = ImGui::GetStyle();
@@ -249,12 +229,21 @@ void UI::drawMenuBar() {
 					}
 				}
 			}
+
+			tmp = fullscreen;
 			if (ImGui::MenuItem("Fullscreen", NULL, &fullscreen)) {
-				/*sf::RenderWindow *newWindow = initSFML_OpenGL("test", 8);
-				this->window->close();
-				this->window = newWindow;
-				ImGui::SFML::Init(*newWindow);
-				this->eventHandler->setWindowReference(newWindow);*/
+				if (tmp != fullscreen) {
+					if (fullscreen == true) {
+						GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+						const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+						glfwSetWindowMonitor(this->window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+					}
+					else {
+						glfwSetWindowMonitor(this->window, NULL, 0, 0, windowWidth, windowHeight, 60);
+						glfwSetWindowPos(this->window, 40, 40);
+					}
+				}
+				
 			}
 
 			ImGui::EndMenu();
@@ -336,27 +325,10 @@ void UI::drawImGui() {
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-
-// utility method for converting a float number to a string with a desired decimal precision
-std::string UI::floatToString(float number, int precision) {
-	std::stringstream stream;
-	stream << std::fixed << std::setprecision(precision) << number;
-	std::string s = stream.str();
-	return(s);
-}
-
 // just calls all the other methods, this method is public
 void UI::drawInfo() {
 	this->fpsTime = this->fpsClock.getElapsedTime();
-
-	/*while (this->time.asMilliseconds() + this->tick.asMilliseconds() < this->clock.getElapsedTime().asMilliseconds()) {
-		this->time += this->tick;
-	}*/
-
 	this->fpsClock.restart().asSeconds();
-
-	//this->window->draw(this->crosshair);
-
 
 	if (displayInfo) {
 		this->drawImGui();

@@ -57,6 +57,8 @@ typedef enum {
 
 extern unsigned int screenWidth;
 extern unsigned int screenHeight;
+extern unsigned int windowWidth;
+extern unsigned int windowHeight;
 extern bool vsync;
 extern bool fullscreen;
 
