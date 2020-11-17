@@ -24,7 +24,7 @@ Entity::Entity(string name) {
 	this->scaleMatrix = glm::mat4(1.0f);
 	this->modelMatrix = glm::mat4(1.0f);
 	this->worldPosition = glm::vec3(0.0f);
-	this->scaleFactor = 1.0f;
+	this->scaleFactor = glm::vec3(1.0f);
 	this->rotateFactorX = 0.0f;
 	this->rotateFactorY = 0.0f;
 	this->rotateFactorZ = 0.0f;
@@ -458,7 +458,7 @@ glm::vec3 Entity::getRotationFactor() {
 	return(glm::vec3(this->rotateFactorX, this->rotateFactorY, this->rotateFactorZ));
 }
 
-float Entity::getScalingFactor() {
+glm::vec3 Entity::getScalingFactor() {
 	return(this->scaleFactor);
 }
 
@@ -470,6 +470,14 @@ void Entity::placeAt(glm::vec3 position, glm::mat4 viewMatrix) {
 void Entity::scale(float scaleFactor) {
 	this->scaleMatrix = glm::scale(this->scaleMatrix, glm::vec3(scaleFactor));
 	this->scaleFactor *= scaleFactor;
+	calculateModel();
+}
+
+void Entity::setScale(glm::vec3 scale) {
+	this->scaleMatrix = glm::mat4(1.0f);
+	this->scaleMatrix = glm::scale(this->scaleMatrix, scale);
+	this->scaleFactor = scale;
+
 	calculateModel();
 }
 
@@ -493,6 +501,22 @@ void Entity::rotate(float x, float y, float z) {
 	this->rotation = glm::rotate(this->rotation, glm::radians(x), glm::vec3(1.0f, 0.0f, 0.0f));
 	this->rotation = glm::rotate(this->rotation, glm::radians(y), glm::vec3(0.0f, 1.0f, 0.0f));
 	this->rotation = glm::rotate(this->rotation, glm::radians(z), glm::vec3(0.0f, 0.0f, 1.0f));
+	calculateModel();
+}
+
+void Entity::setRotation(float x, float y, float z) {
+	this->rotation = glm::rotate(this->rotation, glm::radians(-this->rotateFactorZ), glm::vec3(0.0f, 0.0f, 1.0f));
+	this->rotation = glm::rotate(this->rotation, glm::radians(-this->rotateFactorY), glm::vec3(0.0f, 1.0f, 0.0f));
+	this->rotation = glm::rotate(this->rotation, glm::radians(-this->rotateFactorX), glm::vec3(1.0f, 0.0f, 0.0f));
+
+	this->rotateFactorX = x;
+	this->rotateFactorY = y;
+	this->rotateFactorZ = z;
+
+	this->rotation = glm::rotate(this->rotation, glm::radians(x), glm::vec3(1.0f, 0.0f, 0.0f));
+	this->rotation = glm::rotate(this->rotation, glm::radians(y), glm::vec3(0.0f, 1.0f, 0.0f));
+	this->rotation = glm::rotate(this->rotation, glm::radians(z), glm::vec3(0.0f, 0.0f, 1.0f));
+
 	calculateModel();
 }
 
@@ -803,7 +827,7 @@ float Entity::getInternalBoundingSphere(bool calculate) {
 		calculateInternalBoundingSphere();
 	}
 
-	return(this->maxDistInt * this->scaleFactor);
+	return(this->maxDistInt * this->scaleFactor.x);
 }
 
 void Entity::calculateInternalBoundingSphere() {
@@ -835,7 +859,7 @@ float Entity::getExternalBoundingSphere(bool calculate) {
 		calculateExternalBoundingSphere();
 	}
 
-	return(this->maxDistExt * this->scaleFactor);
+	return(this->maxDistExt * this->scaleFactor.x);
 }
 
 void Entity::calculateExternalBoundingSphere() {
@@ -867,7 +891,7 @@ float Entity::getBoundingSphere(bool calculate) {
 		calculateBoundingSphere();
 	}
 
-	return(this->maxDist * this->scaleFactor);
+	return(this->maxDist * this->scaleFactor.x);
 }
 
 void Entity::calculateBoundingSphere() {

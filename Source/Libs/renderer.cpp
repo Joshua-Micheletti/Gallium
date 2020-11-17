@@ -230,7 +230,6 @@ void Renderer::render() {
 
 	if (updateResolution) {
 		this->resizeScreen();
-		updateResolution = false;
 	}
 	
 	// reset the renderer for the next render

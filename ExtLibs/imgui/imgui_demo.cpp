@@ -3315,7 +3315,7 @@ static void ShowDemoWindowColumns()
     }
 
     // Scrolling columns
-    /*
+    
     if (ImGui::TreeNode("Vertical Scrolling"))
     {
         ImGui::BeginChild("##header", ImVec2(0, ImGui::GetTextLineHeightWithSpacing()+ImGui::GetStyle().ItemSpacing.y));
@@ -3338,7 +3338,7 @@ static void ShowDemoWindowColumns()
         ImGui::EndChild();
         ImGui::TreePop();
     }
-    */
+    
 
     if (ImGui::TreeNode("Horizontal Scrolling"))
     {

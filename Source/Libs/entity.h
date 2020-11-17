@@ -60,7 +60,7 @@ class Entity {
     glm::mat4 rotation;
     glm::mat4 scaleMatrix;
     glm::mat4 modelMatrix;
-    float scaleFactor;
+    glm::vec3 scaleFactor;
     float rotateFactorX;
     float rotateFactorY;
     float rotateFactorZ;
@@ -89,7 +89,7 @@ class Entity {
     unsigned int getNormalBuffer();
     int getShader();
     glm::vec3 getRotationFactor();
-    float getScalingFactor();
+    glm::vec3 getScalingFactor();
     GLenum getElements();
     unsigned int getTexture();
     GLenum getTextureType();
@@ -113,7 +113,9 @@ class Entity {
     void placeAtCenter();
     void move(glm::vec3, glm::mat4);
     void scale(float);
+    void setScale(glm::vec3);
     void rotate(float, float, float);
+    void setRotation(float, float, float);
     void placeAt(glm::vec3, glm::mat4);
     void setShader(int);
     void setElements(GLenum);

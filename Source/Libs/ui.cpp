@@ -15,7 +15,6 @@
 #include "GLFW/glfw3.h"
 #include <SFML/Graphics.hpp>
 
-
 // initialize the fields and formats the texts styles
 UI::UI(GLFWwindow *window, Renderer* renderer, EventHandler* eventHandler) {
 	// get the window reference
@@ -104,9 +103,10 @@ void UI::setupImGuiStyle() {
 	colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 }
 
-
 void UI::drawLeftColumn() {
-	bool firstDraw = true;
+	static bool firstDraw = true;
+	static Entity *selectedEntity;
+
 	static ImGuiWindowFlags leftColumnWindowFlags = ImGuiWindowFlags_NoMove |
 		//ImGuiWindowFlags_NoResize |
 		ImGuiWindowFlags_NoCollapse |
@@ -118,28 +118,72 @@ void UI::drawLeftColumn() {
 	ImGui::Begin("Left Column", NULL, leftColumnWindowFlags);
 
 	if (ImGui::CollapsingHeader("Entities")) {
+		static int selected = -1;
 		for (int i = 0; i < entityBuffer.size(); i++) {
-			if (ImGui::TreeNode(entityBuffer[i]->getName().c_str())) {
-				float f1 = entityBuffer[i]->getWorldPosition().x;
-				if (ImGui::DragFloat("x", &f1, 0.005f));
-				float f2 = entityBuffer[i]->getWorldPosition().y;
-				ImGui::DragFloat("y", &f2, 0.005f);
-				float f3 = entityBuffer[i]->getWorldPosition().z;
-				ImGui::DragFloat("z", &f3, 0.005f);
-
-				entityBuffer[i]->placeAt(glm::vec3(f1, f2, f3), camera.getViewMatrix());
-
-				ImGui::TreePop();
+			if (ImGui::Selectable(entityBuffer[i]->getName().c_str(), selected == i)) {
+				if (selected == i) {
+					selected = -1;
+					selectedEntity = NULL;
+				}
+				else {
+					selectedEntity = entityBuffer[i];
+					selected = i;
+				}
 			}
 		}
 	}
 
 	ImGui::Separator();
 
+	if (selectedEntity != NULL) {
+		ImGui::Text(std::string("Entity: ").append(selectedEntity->getName()).c_str());
+		if (ImGui::CollapsingHeader("Properties")) {
+			
+			if (ImGui::TreeNode("Position")) {
+				float x = selectedEntity->getWorldPosition().x;
+				ImGui::DragFloat("X", &x, 0.005f);
+				float y = selectedEntity->getWorldPosition().y;
+				ImGui::DragFloat("Y", &y, 0.005f);
+				float z = selectedEntity->getWorldPosition().z;
+				ImGui::DragFloat("Z", &z, 0.005f);
+
+				selectedEntity->placeAt(glm::vec3(x, y, z), camera.getViewMatrix());
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("Rotation")) {
+				float x = selectedEntity->getRotationFactor().x;
+				ImGui::DragFloat("X", &x, 0.02f);
+				float y = selectedEntity->getRotationFactor().y;
+				ImGui::DragFloat("Y", &y, 0.02f);
+				float z = selectedEntity->getRotationFactor().z;
+				ImGui::DragFloat("Z", &z, 0.02f);
+
+				selectedEntity->setRotation(x, y, z);
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("Scale")) {
+				float x = selectedEntity->getScalingFactor().x;
+				if (ImGui::DragFloat("X", &x, 0.005f));
+				float y = selectedEntity->getScalingFactor().y;
+				if (ImGui::DragFloat("Y", &y, 0.005f));
+				float z = selectedEntity->getScalingFactor().z;
+				if (ImGui::DragFloat("Z", &z, 0.005f));
+
+				selectedEntity->setScale(glm::vec3(x, y, z));
+			}
+		}
+	}
+
 	ImGui::PushStyleColor(ImGuiCol_ResizeGrip, 0);
 
-	if (firstDraw)
+	if (firstDraw) {
 		ImGui::SetWindowSize(ImVec2(200, screenHeight - this->menuBarSize.y));
+		firstDraw = false;
+	}
 	
 	if (updateResolution) {
 		ImGui::SetWindowSize(ImVec2(ImGui::GetWindowWidth(), screenHeight - this->menuBarSize.y));
@@ -153,6 +197,8 @@ void UI::drawLeftColumn() {
 	leftColumnStyle.WindowBorderSize = 0;
 
 	ImGui::End();
+
+	
 }
 
 void UI::drawFPSWindow() {
@@ -333,5 +379,7 @@ void UI::drawInfo() {
 	if (displayInfo) {
 		this->drawImGui();
 	}
+
+	updateResolution = false;
 }
 
