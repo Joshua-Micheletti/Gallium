@@ -106,6 +106,18 @@ Renderer::Renderer() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+	glGenTextures(1, &this->screenDepthTexture);
+	// bind the screenTexture texture as the main texture
+	glBindTexture(GL_TEXTURE_2D, this->screenDepthTexture);
+
+	/* ACTIVE TEXTURE: screenDepthTexture */
+
+	// create the actual texture for image with res: screenWidth x screenHeight
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, screenWidth, screenHeight, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
+	// set the texture filters for mipmaps
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 	// create the screenFBO (used for rendering the screen view to a texture)
 	glGenFramebuffers(1, &this->screenFBO);
 	// bind the screenFBO to be the default FBO
@@ -115,18 +127,19 @@ Renderer::Renderer() {
 
 	// attach the screenTexture to the screenFBO, so that the stuff rendered on the screenFBO can be saved to the screenTexture
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->screenTexture, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, this->screenDepthTexture, 0);
 
 	// create a renderbuffer (for the screenFBO)
-	glGenRenderbuffers(1, &this->screenRBO);
+	//glGenRenderbuffers(1, &this->screenRBO);
 	// bind the screenRBO as default renderbuffer
-	glBindRenderbuffer(GL_RENDERBUFFER, this->screenRBO);
+	//glBindRenderbuffer(GL_RENDERBUFFER, this->screenRBO);
 
 	/* ACTIVE RENDERBUFFER: screenRBO */
 
 	// define render buffer multisample (needs more study)
-	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 8, GL_DEPTH24_STENCIL8, screenWidth, screenHeight);
+	//glRenderbufferStorageMultisample(GL_RENDERBUFFER, 8, GL_DEPTH24_STENCIL8, screenWidth, screenHeight);
 	// set the screenRBO to be the screenFBO buffer
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, this->screenRBO);
+	//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, this->screenRBO);
 
 	// reset the current RBO to be the default RBO
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -216,6 +229,7 @@ void Renderer::render() {
 
 	// set the active frame buffer to the screenFBO
 	glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
+	glClear(GL_DEPTH_BUFFER_BIT);
 
 	/* ACTIVE FRAMEBUFFER: screenFBO */
 
@@ -403,9 +417,10 @@ void Renderer::renderEntities(bool reflection) {
 
 // render the screen texture applying post processing shaders
 void Renderer::renderScreen() {
-	glClear(GL_DEPTH_BUFFER_BIT);
+	//glClear(GL_DEPTH_BUFFER_BIT);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClear(GL_DEPTH_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
 	// clear all relevant buffers
 	glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
@@ -420,7 +435,7 @@ void Renderer::renderScreen() {
 	glBindBuffer(GL_ARRAY_BUFFER, this->screenUVVBO);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-	glBindTexture(GL_TEXTURE_2D, this->screenTexture);
+	glBindTexture(GL_TEXTURE_2D, this->screenDepthTexture);
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 

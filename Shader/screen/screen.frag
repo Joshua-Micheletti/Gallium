@@ -52,9 +52,19 @@ void createGaussianKernel(inout float kernel[size * size]) {
     }
 }
 
+float LinearizeDepth(in vec2 uv) {
+    float zNear = 0.1;    // TODO: Replace by the zNear of your perspective projection
+    float zFar  = 5.0; // TODO: Replace by the zFar  of your perspective projection
+    float depth = texture2D(screenTexture, uv).x;
+    return (2.0 * zNear) / (zFar + zNear - depth * (zFar - zNear));
+}
+
 void main() {
+    float depth = LinearizeDepth(TexCoords);
+    FragColor = vec4(depth, depth, depth, 1.0);
+//    FragColor = vec4(texture(screenTexture, TexCoords).xyz, 1.0);
     // normal colors
-    FragColor = vec4(texture(screenTexture, TexCoords).xyz, 1.0);
+//    FragColor = vec4(texture(screenTexture, TexCoords).xyz, 1.0);
 
     // inverted colors
 //    FragColor = vec4(vec3(1.0 - texture(screenTexture, TexCoords)), 1.0);

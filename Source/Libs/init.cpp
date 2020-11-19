@@ -359,7 +359,7 @@ GLFWwindow* setup() {
 	updateResolution = false;
 
 	defaultCamera = 0;
-
+	camera.setPosition(glm::vec3(1.0f, 0.5f, 1.0f));
 	cameraBuffer.push_back(&camera);
 	cameraBuffer.push_back(&camera2);
 	projectionBuffer.push_back(Projection);

@@ -23,6 +23,7 @@ class Renderer {
 
 		unsigned int screenFBO;
 		unsigned int screenTexture;
+		unsigned int screenDepthTexture;
 		unsigned int screenRBO;
 		unsigned int screenVBO;
 		unsigned int screenUVVBO;
