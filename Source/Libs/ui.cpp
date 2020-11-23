@@ -33,6 +33,7 @@ UI::UI(GLFWwindow *window, Renderer* renderer, EventHandler* eventHandler) {
 	this->showFPS = true;
 	this->pauseFlag = false;
 	this->showLeftColumn = true;
+	this->showRightColumn = true;
 
 	//ImGui::SFML::Init(*this->window);
 	ImGui::CreateContext();
@@ -201,6 +202,144 @@ void UI::drawLeftColumn() {
 	
 }
 
+void UI::drawRightColumn() {
+	static bool firstDraw = true;
+	static Entity* selectedEntity;
+
+	static ImGuiWindowFlags rightColumnWindowFlags = ImGuiWindowFlags_NoMove |
+		//ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_NoSavedSettings |
+		ImGuiWindowFlags_NoTitleBar;
+
+	ImGui::SetNextWindowSizeConstraints(ImVec2(0, -1), ImVec2(FLT_MAX, -1));
+
+	ImGui::Begin("Right Column", NULL, rightColumnWindowFlags);
+	static bool antialiasing = true;
+	if (ImGui::CollapsingHeader("Rendering Options")) {
+		bool tmp = vsync;
+		
+
+		if (ImGui::MenuItem("Pause", NULL, &this->pauseFlag));
+		if (ImGui::MenuItem("Render Real Time Reflections", NULL, &doReflection));
+		if (ImGui::MenuItem("VSync", NULL, &vsync)) {
+			if (tmp != vsync) {
+				if (vsync == true) {
+					glfwSwapInterval(1);
+				}
+				else {
+					glfwSwapInterval(0);
+				}
+			}
+		}
+
+		tmp = fullscreen;
+		if (ImGui::MenuItem("Fullscreen", NULL, &fullscreen)) {
+			if (tmp != fullscreen) {
+				if (fullscreen == true) {
+					GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+					const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+					glfwSetWindowMonitor(this->window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+
+					int width;
+					int height;
+					glfwGetFramebufferSize(window, &width, &height);
+					glViewport(0, 0, mode->width, mode->height);
+					screenWidth = mode->width;
+					screenHeight = mode->height;
+					updateResolution = true;
+					printf("fullscreen :D\n");
+				}
+				else {
+					glfwSetWindowMonitor(this->window, NULL, 0, 0, windowWidth, windowHeight, 60);
+					glfwSetWindowPos(this->window, 40, 40);
+
+					int width;
+					int height;
+					glfwGetFramebufferSize(window, &width, &height);
+					glViewport(0, 0, width, height);
+					screenWidth = width;
+					screenHeight = height;
+					updateResolution = true;
+				}
+			}
+
+		}
+
+		if (ImGui::MenuItem("Depth Buffer", NULL, &depthBuffer));
+
+		//if (ImGui::MenuItem("Anti-Aliasing", NULL, &antialiasing));
+
+		// Using the _simplified_ one-liner Combo() api here
+		// See "Combo" section for examples of how to use the more complete BeginCombo()/EndCombo() api.
+		const char* items[] = {"1", "2", "4", "8", "16"};
+		static int item_current = 0;
+		ImGui::Text("MSAA");
+		ImGui::SameLine();
+		ImGui::Combo("###MSAADropdown", &item_current, items, IM_ARRAYSIZE(items));
+
+		if (item_current == 0) {
+			samples = 1;
+			
+		}
+		else if (item_current == 1) {
+			samples = 2;
+		}
+		else if (item_current == 2) {
+			samples = 4;
+		}
+		else if (item_current == 3) {
+			samples = 8;
+		}
+		else if (item_current == 4) {
+			samples = 16;
+		}
+		printf("%d\n", samples);
+	}
+
+	if (ImGui::CollapsingHeader("Bounding Box Display")) {
+		if (ImGui::MenuItem("Object Bounding Box", NULL, &drawOBB));
+		if (ImGui::MenuItem("External Axis Aligned Bounding Box", NULL, &drawAABB1));
+		if (ImGui::MenuItem("Internal Axis Aligned Bounding Box", NULL, &drawAABB2));
+		if (ImGui::MenuItem("Average Axis Aligned Bounding Box", NULL, &drawAABB3));
+		if (ImGui::MenuItem("True Axis Aligned Bounding Box", NULL, &drawAABB4));
+		if (ImGui::MenuItem("Internal Bounding Sphere", NULL, &drawBS));
+		if (ImGui::MenuItem("External Bounding Sphere", NULL, &drawBS2));
+		if (ImGui::MenuItem("True Bounding Sphere", NULL, &drawBS3));
+	}
+
+	/*if (antialiasing) {
+		samples = 16;
+	}
+	else {
+		samples = 1;
+	}*/
+
+
+
+
+	ImGui::PushStyleColor(ImGuiCol_ResizeGrip, 0);
+
+	if (firstDraw) {
+		ImGui::SetWindowSize(ImVec2(250, screenHeight - this->menuBarSize.y));
+		firstDraw = false;
+	}
+
+	if (updateResolution) {
+		ImGui::SetWindowSize(ImVec2(ImGui::GetWindowWidth(), screenHeight - this->menuBarSize.y));
+	}
+
+	ImGui::SetWindowPos(ImVec2(screenWidth - ImGui::GetWindowWidth(), this->menuBarSize.y));
+	this->rightColumnSize = ImGui::GetWindowSize();
+
+	static ImGuiStyle& rightColumnStyle = ImGui::GetStyle();
+
+	rightColumnStyle.WindowRounding = 0;
+	rightColumnStyle.WindowBorderSize = 0;
+
+	ImGui::End();
+}
+
 void UI::drawFPSWindow() {
 	static ImGuiWindowFlags FPSwindowFlags = ImGuiWindowFlags_NoMove |
 		ImGuiWindowFlags_NoResize |
@@ -241,7 +380,14 @@ void UI::drawFPSWindow() {
 		ImGui::PopItemWidth();
 
 		ImGui::SetWindowSize(ImVec2(200.0f, 0.0f));
-		ImGui::SetWindowPos(ImVec2(screenWidth - ImGui::GetWindowSize().x, 0 + this->menuBarSize.y));
+
+		if (this->showRightColumn) {
+			ImGui::SetWindowPos(ImVec2(screenWidth - ImGui::GetWindowSize().x - this->rightColumnSize.x, 0 + this->menuBarSize.y));
+		}
+		else {
+			ImGui::SetWindowPos(ImVec2(screenWidth - ImGui::GetWindowSize().x, 0 + this->menuBarSize.y));
+		}
+		
 
 		static ImGuiStyle& style = ImGui::GetStyle();
 
@@ -250,6 +396,8 @@ void UI::drawFPSWindow() {
 
 		ImGui::End();
 	}
+
+
 }
 
 void UI::drawMenuBar() {
@@ -262,35 +410,6 @@ void UI::drawMenuBar() {
 		}
 
 		if (ImGui::BeginMenu("Edit")) {
-			bool tmp = vsync;
-			if (ImGui::MenuItem("Pause", NULL, &this->pauseFlag));
-			if (ImGui::MenuItem("Render Real Time Reflections", NULL, &doReflection));
-			if (ImGui::MenuItem("VSync", NULL, &vsync)) {
-				if (tmp != vsync) {
-					if (vsync == true) {
-						glfwSwapInterval(1);
-					}
-					else {
-						glfwSwapInterval(0);
-					}
-				}
-			}
-
-			tmp = fullscreen;
-			if (ImGui::MenuItem("Fullscreen", NULL, &fullscreen)) {
-				if (tmp != fullscreen) {
-					if (fullscreen == true) {
-						GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-						const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-						glfwSetWindowMonitor(this->window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
-					}
-					else {
-						glfwSetWindowMonitor(this->window, NULL, 0, 0, windowWidth, windowHeight, 60);
-						glfwSetWindowPos(this->window, 40, 40);
-					}
-				}
-				
-			}
 
 			ImGui::EndMenu();
 		}
@@ -298,17 +417,7 @@ void UI::drawMenuBar() {
 		if (ImGui::BeginMenu("View")) {
 			if (ImGui::MenuItem("FPS", NULL, &this->showFPS));
 			if (ImGui::MenuItem("Left Column", NULL, &this->showLeftColumn));
-
-			ImGui::Separator();
-
-			if (ImGui::MenuItem("Object Bounding Box", NULL, &drawOBB));
-			if (ImGui::MenuItem("External Axis Aligned Bounding Box", NULL, &drawAABB1));
-			if (ImGui::MenuItem("Internal Axis Aligned Bounding Box", NULL, &drawAABB2));
-			if (ImGui::MenuItem("Average Axis Aligned Bounding Box", NULL, &drawAABB3));
-			if (ImGui::MenuItem("True Axis Aligned Bounding Box", NULL, &drawAABB4));
-			if (ImGui::MenuItem("Internal Bounding Sphere", NULL, &drawBS));
-			if (ImGui::MenuItem("External Bounding Sphere", NULL, &drawBS2));
-			if (ImGui::MenuItem("True Bounding Sphere", NULL, &drawBS3));
+			if (ImGui::MenuItem("Right Column", NULL, &this->showRightColumn));
 
 			ImGui::EndMenu();
 		}
@@ -367,6 +476,10 @@ void UI::drawImGui() {
 		this->drawLeftColumn();
 	}
 
+	if (this->showRightColumn == true) {
+		this->drawRightColumn();
+	}
+
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -380,6 +493,10 @@ void UI::drawInfo() {
 		this->drawImGui();
 	}
 
-	updateResolution = false;
+	if (updated) {
+		updateResolution = false;
+	}
+	
+	updated = false;
 }
 

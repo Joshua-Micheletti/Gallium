@@ -49,8 +49,11 @@ class UI {
 		bool showFPS;
 		bool pauseFlag;
 		bool showLeftColumn;
+		bool showRightColumn;
 
 		ImVec2 menuBarSize;
+
+		ImVec2 rightColumnSize;
 
 		void setupImGuiStyle();
 
@@ -59,6 +62,8 @@ class UI {
 		void drawFPSWindow();
 
 		void drawLeftColumn();
+
+		void drawRightColumn();
 
 		void drawImGui();
 };

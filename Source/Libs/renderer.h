@@ -28,6 +28,7 @@ class Renderer {
 		unsigned int screenVBO;
 		unsigned int screenUVVBO;
 		Shader* screenShader;
+		Shader* depthShader;
 
 		std::vector<float> data1;
 		

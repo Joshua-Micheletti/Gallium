@@ -220,7 +220,6 @@ void EventHandler::handleUserEvents() {
 	}
 }
 
-
 void EventHandler::routine() {
 	while (time.asMilliseconds() + tick.asMilliseconds() < clock.getElapsedTime().asMilliseconds()) {
 		handleUserEvents();

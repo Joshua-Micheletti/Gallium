@@ -57,21 +57,12 @@
     <ClCompile Include="ExtLibs\imgui\imgui_widgets.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="ExtLibs\imgui\imgui-SFML.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="ExtLibs\imgui\main.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
     <ClCompile Include="ExtLibs\imgui\imgui_impl_glfw.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExtLibs\imgui\imconfig-SFML.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="ExtLibs\imgui\imgui-SFML_export.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="Source\Libs\lib.h">
@@ -108,9 +99,6 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="ExtLibs\imgui\imgui_internal.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="ExtLibs\imgui\imgui-SFML.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="ExtLibs\imgui\imstb_rectpack.h">

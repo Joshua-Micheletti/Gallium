@@ -3,8 +3,10 @@
 out vec4 FragColor;
 
 in vec2 TexCoords;
+flat in int fragSamples;
 
-uniform sampler2D screenTexture;
+//uniform sampler2D screenTexture;
+uniform sampler2DMS screenTexture;
 
 const float PI = 3.1415926535;
 const float E = 2.71828;
@@ -52,19 +54,36 @@ void createGaussianKernel(inout float kernel[size * size]) {
     }
 }
 
-float LinearizeDepth(in vec2 uv) {
-    float zNear = 0.1;    // TODO: Replace by the zNear of your perspective projection
-    float zFar  = 5.0; // TODO: Replace by the zFar  of your perspective projection
-    float depth = texture2D(screenTexture, uv).x;
-    return (2.0 * zNear) / (zFar + zNear - depth * (zFar - zNear));
+vec4 textureMultisample(sampler2DMS sampler, ivec2 coord) {
+    vec4 color = vec4(0.0);
+
+    for (int i = 0; i < 4; i++)
+        color += texelFetch(sampler, coord, i);
+
+    color /= float(4);
+
+    return color;
 }
 
+
 void main() {
-    float depth = LinearizeDepth(TexCoords);
-    FragColor = vec4(depth, depth, depth, 1.0);
+    ivec2 texSize = textureSize(screenTexture);
+    ivec2 newTexCoord = ivec2(TexCoords.x * texSize.x, TexCoords.y * texSize.y);
+    vec4 color = vec4(0.0);
+    for (int i = 0; i < fragSamples; i++) {
+        color += texelFetch(screenTexture, newTexCoord, i);
+    }
+
+    color /= float(fragSamples);
+
+    FragColor = color;
+
+//    vec4 color = textureMultisample(tex, texCoord);
+//    FragColor = texelFetch(screenTexture, newTexCoord, );
+//    FragColor = textureMultisample(screenTexture, ivec2(newTexCoord));
+//    FragColor = texelFetch(screenTexture, ivec2(newTexCoord), 0);
 //    FragColor = vec4(texture(screenTexture, TexCoords).xyz, 1.0);
-    // normal colors
-//    FragColor = vec4(texture(screenTexture, TexCoords).xyz, 1.0);
+
 
     // inverted colors
 //    FragColor = vec4(vec3(1.0 - texture(screenTexture, TexCoords)), 1.0);

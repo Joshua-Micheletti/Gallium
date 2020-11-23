@@ -15,6 +15,7 @@ unsigned int screenWidth = 1280;
 unsigned int screenHeight = 720;
 unsigned int windowWidth = 1280;
 unsigned int windowHeight = 720;
+int samples = 8;
 bool vsync = true;
 bool fullscreen = false;
 
@@ -38,6 +39,10 @@ bool drawBS3;
 bool doReflection;
 
 bool updateResolution;
+
+bool updated;
+
+bool depthBuffer;
 
 int defaultCamera;
 
@@ -73,12 +78,11 @@ void resizeCallback(GLFWwindow* window, int x, int y) {
 	updateResolution = true;
 }
 
-GLFWwindow* initGLFW_OpenGL(std::string name, int AA) {
+GLFWwindow* initGLFW_OpenGL(std::string name) {
 	glfwInit();
 
-	glfwWindowHint(GLFW_SAMPLES, 16);
+	glfwWindowHint(GLFW_SAMPLES, samples);
 	
-
 	GLFWwindow* window;
 	window = glfwCreateWindow(screenWidth, screenHeight, "3DEngine", NULL, NULL);
 	
@@ -338,7 +342,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 }
 
 GLFWwindow* setup() {
-	GLFWwindow* window = initGLFW_OpenGL("3DEngine", 0);
+	GLFWwindow* window = initGLFW_OpenGL("3DEngine");
 
 	Projection = glm::perspective(glm::radians(45.0f), (float)screenWidth / (float)screenHeight, 0.1f, 10000.0f);
 	Projection2 = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10000.0f);
@@ -357,6 +361,8 @@ GLFWwindow* setup() {
 	drawBS3 = false;
 	doReflection = true;
 	updateResolution = false;
+	updated = true;
+	depthBuffer = false;
 
 	defaultCamera = 0;
 	camera.setPosition(glm::vec3(1.0f, 0.5f, 1.0f));
@@ -371,24 +377,3 @@ GLFWwindow* setup() {
 
 	return(window);
 }
-
-//GLenum glCheckError_(const char* file, int line) {
-//	GLenum errorCode;
-//	while ((errorCode = glGetError()) != GL_NO_ERROR)
-//	{
-//		std::string error;
-//		switch (errorCode)
-//		{
-//		case GL_INVALID_ENUM:                  error = "INVALID_ENUM"; break;
-//		case GL_INVALID_VALUE:                 error = "INVALID_VALUE"; break;
-//		case GL_INVALID_OPERATION:             error = "INVALID_OPERATION"; break;
-//		case GL_STACK_OVERFLOW:                error = "STACK_OVERFLOW"; break;
-//		case GL_STACK_UNDERFLOW:               error = "STACK_UNDERFLOW"; break;
-//		case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
-//		case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
-//		}
-//		std::cout << error << " | " << file << " (" << line << ")" << std::endl;
-//	}
-//	return errorCode;
-//}
-//#define glCheckError() glCheckError_(__FILE__, __LINE__) 

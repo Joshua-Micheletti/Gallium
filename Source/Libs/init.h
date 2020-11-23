@@ -52,13 +52,11 @@ typedef enum {
   vertices
 } renderMode_t;
 
-//// global variables
-////extern GLFWwindow *window;
-
 extern unsigned int screenWidth;
 extern unsigned int screenHeight;
 extern unsigned int windowWidth;
 extern unsigned int windowHeight;
+extern int samples;
 extern bool vsync;
 extern bool fullscreen;
 
@@ -84,6 +82,8 @@ extern bool drawBS2;
 extern bool drawBS3;
 extern bool doReflection;
 extern bool updateResolution;
+extern bool updated;
+extern bool depthBuffer;
 
 ////extern sf::Vector2i center;
 
@@ -97,7 +97,7 @@ extern std::vector<glm::mat4> projectionBuffer;
 extern Entity *light;
 
 extern GLFWwindow *setup();
-extern GLFWwindow *initGLFW_OpenGL(std::string, int);
+extern GLFWwindow *initGLFW_OpenGL(std::string);
 
 //extern GLenum glCheckError_(const char*, int);
 
