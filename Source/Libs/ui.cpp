@@ -176,13 +176,34 @@ void UI::drawLeftColumn() {
 
 				selectedEntity->setScale(glm::vec3(x, y, z));
 			}
+
+			ImGui::Separator();
+
+			std::vector<char*> shaderNames;
+
+			for (int i = 0; i < shaderBuffer.size(); i++) {
+				shaderNames.push_back(shaderBuffer[i].getName());
+			}
+
+			static int item_current;
+			char** Carray = shaderNames.data();
+
+			size_t arraySize = shaderNames.size();
+
+			item_current = selectedEntity->getShader();
+
+			ImGui::Text("Shader");
+			ImGui::SameLine();
+			ImGui::Combo("###ShaderDropdown", &item_current, Carray, arraySize);
+
+			selectedEntity->setShader(item_current);
 		}
 	}
 
 	ImGui::PushStyleColor(ImGuiCol_ResizeGrip, 0);
 
 	if (firstDraw) {
-		ImGui::SetWindowSize(ImVec2(200, screenHeight - this->menuBarSize.y));
+		ImGui::SetWindowSize(ImVec2(250, screenHeight - this->menuBarSize.y));
 		firstDraw = false;
 	}
 	
@@ -198,8 +219,6 @@ void UI::drawLeftColumn() {
 	leftColumnStyle.WindowBorderSize = 0;
 
 	ImGui::End();
-
-	
 }
 
 void UI::drawRightColumn() {
@@ -216,10 +235,10 @@ void UI::drawRightColumn() {
 
 	ImGui::Begin("Right Column", NULL, rightColumnWindowFlags);
 	static bool antialiasing = true;
+	static int item_current = 4;
 	if (ImGui::CollapsingHeader("Rendering Options")) {
 		bool tmp = vsync;
 		
-
 		if (ImGui::MenuItem("Pause", NULL, &this->pauseFlag));
 		if (ImGui::MenuItem("Render Real Time Reflections", NULL, &doReflection));
 		if (ImGui::MenuItem("VSync", NULL, &vsync)) {
@@ -248,7 +267,6 @@ void UI::drawRightColumn() {
 					screenWidth = mode->width;
 					screenHeight = mode->height;
 					updateResolution = true;
-					printf("fullscreen :D\n");
 				}
 				else {
 					glfwSetWindowMonitor(this->window, NULL, 0, 0, windowWidth, windowHeight, 60);
@@ -268,34 +286,14 @@ void UI::drawRightColumn() {
 
 		if (ImGui::MenuItem("Depth Buffer", NULL, &depthBuffer));
 
-		//if (ImGui::MenuItem("Anti-Aliasing", NULL, &antialiasing));
-
-		// Using the _simplified_ one-liner Combo() api here
-		// See "Combo" section for examples of how to use the more complete BeginCombo()/EndCombo() api.
 		const char* items[] = {"1", "2", "4", "8", "16"};
-		static int item_current = 0;
+		
 		ImGui::Text("MSAA");
 		ImGui::SameLine();
 		ImGui::Combo("###MSAADropdown", &item_current, items, IM_ARRAYSIZE(items));
-
-		if (item_current == 0) {
-			samples = 1;
-			
-		}
-		else if (item_current == 1) {
-			samples = 2;
-		}
-		else if (item_current == 2) {
-			samples = 4;
-		}
-		else if (item_current == 3) {
-			samples = 8;
-		}
-		else if (item_current == 4) {
-			samples = 16;
-		}
-		printf("%d\n", samples);
 	}
+
+	samples = pow(2, item_current + 1);
 
 	if (ImGui::CollapsingHeader("Bounding Box Display")) {
 		if (ImGui::MenuItem("Object Bounding Box", NULL, &drawOBB));
@@ -307,16 +305,6 @@ void UI::drawRightColumn() {
 		if (ImGui::MenuItem("External Bounding Sphere", NULL, &drawBS2));
 		if (ImGui::MenuItem("True Bounding Sphere", NULL, &drawBS3));
 	}
-
-	/*if (antialiasing) {
-		samples = 16;
-	}
-	else {
-		samples = 1;
-	}*/
-
-
-
 
 	ImGui::PushStyleColor(ImGuiCol_ResizeGrip, 0);
 
@@ -470,8 +458,6 @@ void UI::drawImGui() {
 
 	this->drawMenuBar();
 
-	this->drawFPSWindow();
-
 	if (this->showLeftColumn == true) {
 		this->drawLeftColumn();
 	}
@@ -479,6 +465,8 @@ void UI::drawImGui() {
 	if (this->showRightColumn == true) {
 		this->drawRightColumn();
 	}
+
+	this->drawFPSWindow();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

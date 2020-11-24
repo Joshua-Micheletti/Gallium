@@ -15,7 +15,7 @@ unsigned int screenWidth = 1280;
 unsigned int screenHeight = 720;
 unsigned int windowWidth = 1280;
 unsigned int windowHeight = 720;
-int samples = 8;
+int samples = 16;
 bool vsync = true;
 bool fullscreen = false;
 

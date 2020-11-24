@@ -14,7 +14,6 @@
 
 // constructor method, sets up the renderer (reflection and post processing)
 Renderer::Renderer() {
-	
 	// sets the color to clear the color buffer with
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
@@ -97,15 +96,14 @@ Renderer::Renderer() {
 	// and will store the screen view image
 	glGenTextures(1, &this->screenTexture);
 	// bind the screenTexture texture as the main texture
-	//glBindTexture(GL_TEXTURE_2D, this->screenTexture);
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture);
 	
 	/* ACTIVE TEXTURE: screenTexture */
 
 	// create the actual texture for image with res: screenWidth x screenHeight
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB, screenWidth, screenHeight, false);
 
+	// create an empty texture for the depth texture
 	glGenTextures(1, &this->screenDepthTexture);
 	// bind the screenTexture texture as the main texture
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture);
@@ -113,7 +111,6 @@ Renderer::Renderer() {
 	/* ACTIVE TEXTURE: screenDepthTexture */
 
 	// create the actual texture for image with res: screenWidth x screenHeight
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, screenWidth, screenHeight, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
 	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_DEPTH_COMPONENT, screenWidth, screenHeight, false);
 
 	// create the screenFBO (used for rendering the screen view to a texture)
@@ -194,45 +191,44 @@ Renderer::Renderer() {
 	// load the post processing shader
 	this->screenShader->loadShader((char*)"../Shader/screen/screen.vert", (char*)"../Shader/screen/screen.frag");
 
+	// create the shader object to hold the post processing depth buffer display shader
 	this->depthShader = new Shader((char*)"depth shader");
+	// load the post processing depth buffer display shader
 	this->depthShader->loadShader((char*)"../Shader/depth/depth.vert", (char*)"../Shader/depth/depth.frag");
 }
 
 // public method for rendering the scene
 void Renderer::render() {
-	// clear the color and depth buffers before drawing again
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	// enable depth testing (draw a fragment only if there's nothing in front of it)
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_MULTISAMPLE);
-
 	if (updateResolution) {
 		this->resizeScreen();
 	}
 
+	// ------------------------------ REFLECTION FRAMEBUFFER RENDERING ------------------------------ //
+
 	// check if the program should render the reflection cubemap
 	if (doReflection) {
+		glBindFramebuffer(GL_FRAMEBUFFER, this->reflectionFBO);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// render the reflection cubemap
 		this->renderReflectionCubemap();
-	}
+	}	
 
-	// set the active frame buffer to the screenFBO
+	// -------------------------------- SCREEN FRAMEBUFFER RENDERING -------------------------------- //
+
 	glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-	/* ACTIVE FRAMEBUFFER: screenFBO */
-
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// render all entities
 	this->renderEntities(false);
 
 	// draw the bounding box for each entity
 	this->displayBoundingBox();
 
+	// ---------------------------------- OUT FRAMEBUFFER RENDERING --------------------------------- //
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// render the screen (post processing)
 	this->renderScreen();
-
-	// reset the renderer for the next render
-	this->resetRender();
 }
 
 // render the cubemap view from the reflection camera to later calculate reflections on
@@ -242,16 +238,8 @@ void Renderer::renderReflectionCubemap() {
 
 	/* ACTIVE CAMERA: camera2 */
 
-	// set the reflectionFBO as the current framebuffer to render on
-	glBindFramebuffer(GL_FRAMEBUFFER, reflectionFBO);
-
-	/* ACTIVE FRAMEBUFFER: reflectionFBO */
-
 	// set the viewport to fit the reflection texture resolution
 	glViewport(0, 0, reflectionRes, reflectionRes);
-
-	// clear the color and depth buffers from the reflectionFBO
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// cycle all the faces of the cubemap
 	for (int i = 0; i < 6; i++) {
@@ -364,7 +352,9 @@ void Renderer::renderEntities(bool reflection) {
 				glBindTexture(entityBuffer[i]->getTextureType(), entityBuffer[i]->getTexture());
 			}
 
-			if (entityBuffer[i]->getName().compare("man") == 0 || entityBuffer[i]->getName().compare("monkey") == 0) {
+			if (strcmp(shaderBuffer[entityBuffer[i]->getShader()].getName(), "reflection") == 0 ||
+				strcmp(shaderBuffer[entityBuffer[i]->getShader()].getName(), "refraction/glass") == 0 ||
+				strcmp(shaderBuffer[entityBuffer[i]->getShader()].getName(), "reflection/diamond") == 0) {
 				glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
 			}
 
@@ -402,50 +392,166 @@ void Renderer::renderEntities(bool reflection) {
 
 // render the screen texture applying post processing shaders
 void Renderer::renderScreen() {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClear(GL_DEPTH_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
-	// clear all relevant buffers
-	glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
-	glClear(GL_COLOR_BUFFER_BIT);
 
 	if (depthBuffer) {
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture);
 		glUseProgram(this->depthShader->getID());
-		glUniform1i(glGetUniformLocation(this->screenShader->getID(), "samples"), samples);
 	}
 	else {
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture);
 		glUseProgram(this->screenShader->getID());
-		glUniform1i(glGetUniformLocation(this->screenShader->getID(), "samples"), samples);
 	}
+
+	glUniform1i(glGetUniformLocation(this->screenShader->getID(), "samples"), samples);
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->screenVBO);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
 	glEnableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, this->screenUVVBO);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	//if (!depthBuffer) {
-	//glBindFramebuffer(GL_READ_FRAMEBUFFER, this->screenFBO);
-	//glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); //draw to to the default framebuffer
-	//glDrawBuffer(GL_BACK);
-	//glBlitFramebuffer(0, 0, screenWidth, screenHeight, 0, 0, screenWidth, screenHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-	//}
-	//else {
-	//	glBindFramebuffer(GL_READ_FRAMEBUFFER, this->screenFBO);
-	//	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); //draw to to the default framebuffer
-	//	glDrawBuffer(GL_BACK);
-	//	glBlitFramebuffer(0, 0, screenWidth, screenHeight, 0, 0, screenWidth, screenHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-	//}
-
 	glEnable(GL_DEPTH_TEST);
-
-	glBindBuffer(GL_ARRAY_BUFFER, tmpBuffer);
 }
+
+void Renderer::resetRender() {
+	glBufferData(GL_ARRAY_BUFFER, data1.size() * sizeof(float), &data1[0], GL_STATIC_DRAW);
+
+	glUseProgram(shaderBuffer[1].getID());
+	glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[0].id, 1, GL_FALSE, &(glm::mat4(1.0f)[0][0]));
+	glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[1].id, 1, GL_FALSE, &(camera.getViewMatrix()[0][0]));
+	glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[2].id, 1, GL_FALSE, &(Projection[0][0]));
+	glUniform3f(shaderBuffer[1].getUniformBuffer()[3].id, 255, 255, 255);
+
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+	glDrawArrays(GL_LINES, 0, data1.size());
+
+	glDisableVertexAttribArray(0);
+}
+
+void Renderer::resizeScreen() {
+	// create an empty texture object for screenTexture, this texture will be bound to the screenFBO
+	// and will store the screen view image
+	glGenTextures(1, &this->screenTexture);
+	// bind the screenTexture texture as the main texture
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture);
+
+	/* ACTIVE TEXTURE: screenTexture */
+
+	// create the actual texture for image with res: screenWidth x screenHeight
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB, screenWidth, screenHeight, false);
+
+
+	// set the texture filters for mipmaps
+	glGenTextures(1, &this->screenDepthTexture);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture);
+
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_DEPTH_COMPONENT, screenWidth, screenHeight, false);
+
+	// create the screenFBO (used for rendering the screen view to a texture)
+	glGenFramebuffers(1, &this->screenFBO);
+	// bind the screenFBO to be the default FBO
+	glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
+
+	/* ACTIVE FRAMEBUFFER: screenFBO */
+
+	// attach the screenTexture to the screenFBO, so that the stuff rendered on the screenFBO can be saved to the screenTexture
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture, 0);
+
+	glViewport(0, 0, screenWidth, screenHeight);
+
+	projectionBuffer[0] = glm::perspective(glm::radians(45.0f), (float)screenWidth / (float)screenHeight, 0.1f, 10000.0f);
+	updated = true;
+}
+
+void Renderer::displayBoundingBox() {
+	for (int i = 0; i < entityBuffer.size(); i++) {
+		if (drawOBB) {
+			drawBoundingBox(entityBuffer[i]->getObjectBoundingBox(true), glm::vec3(1, 0, 0));
+		}
+
+		if (drawAABB1) {
+			drawBoundingBox(entityBuffer[i]->getExternalAxisAlignedBoundingBox(true), glm::vec3(0, 1, 0));
+		}
+
+		if (drawAABB2) {
+			drawBoundingBox(entityBuffer[i]->getInternalAxisAlignedBoundingBox(true), glm::vec3(0, 0, 1));
+		}
+
+		if (drawAABB3) {
+			bounds_t internalWorldBounds;
+			internalWorldBounds = entityBuffer[i]->getInternalAxisAlignedBoundingBox(true);
+
+			bounds_t worldBounds;
+			worldBounds = entityBuffer[i]->getExternalAxisAlignedBoundingBox(true);
+
+			std::vector<float> data5;
+
+			glm::vec3 a2 = glm::vec3((worldBounds.a.x + internalWorldBounds.a.x) / 2, (worldBounds.a.y + internalWorldBounds.a.y) / 2, (worldBounds.a.z + internalWorldBounds.a.z) / 2);
+			glm::vec3 b2 = glm::vec3((worldBounds.b.x + internalWorldBounds.b.x) / 2, (worldBounds.b.y + internalWorldBounds.b.y) / 2, (worldBounds.b.z + internalWorldBounds.b.z) / 2);
+			glm::vec3 c2 = glm::vec3((worldBounds.c.x + internalWorldBounds.c.x) / 2, (worldBounds.c.y + internalWorldBounds.c.y) / 2, (worldBounds.c.z + internalWorldBounds.c.z) / 2);
+			glm::vec3 d2 = glm::vec3((worldBounds.d.x + internalWorldBounds.d.x) / 2, (worldBounds.d.y + internalWorldBounds.d.y) / 2, (worldBounds.d.z + internalWorldBounds.d.z) / 2);
+			glm::vec3 e2 = glm::vec3((worldBounds.e.x + internalWorldBounds.e.x) / 2, (worldBounds.e.y + internalWorldBounds.e.y) / 2, (worldBounds.e.z + internalWorldBounds.e.z) / 2);
+			glm::vec3 f2 = glm::vec3((worldBounds.f.x + internalWorldBounds.f.x) / 2, (worldBounds.f.y + internalWorldBounds.f.y) / 2, (worldBounds.f.z + internalWorldBounds.f.z) / 2);
+			glm::vec3 g2 = glm::vec3((worldBounds.g.x + internalWorldBounds.g.x) / 2, (worldBounds.g.y + internalWorldBounds.g.y) / 2, (worldBounds.g.z + internalWorldBounds.g.z) / 2);
+			glm::vec3 h2 = glm::vec3((worldBounds.h.x + internalWorldBounds.h.x) / 2, (worldBounds.h.y + internalWorldBounds.h.y) / 2, (worldBounds.h.z + internalWorldBounds.h.z) / 2);
+
+			std::vector<glm::vec3> faces4;
+			faces4.push_back(a2);
+			faces4.push_back(b2);
+			faces4.push_back(c2);
+			faces4.push_back(d2);
+			faces4.push_back(e2);
+			faces4.push_back(f2);
+			faces4.push_back(g2);
+			faces4.push_back(h2);
+			createCube(&data5, faces4);
+			glBindBuffer(GL_ARRAY_BUFFER, tmpBuffer);
+			glBufferData(GL_ARRAY_BUFFER, data5.size() * sizeof(float), &data5[0], GL_STATIC_DRAW);
+
+			glUseProgram(shaderBuffer[1].getID());
+
+			glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[0].id, 1, GL_FALSE, &(glm::mat4(1.0f)[0][0]));
+			glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[1].id, 1, GL_FALSE, &(camera.getViewMatrix()[0][0]));
+			glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[2].id, 1, GL_FALSE, &(Projection[0][0]));
+			glUniform3f(shaderBuffer[1].getUniformBuffer()[3].id, 0, 1, 1);
+
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+			glPointSize(10.0f);
+
+			glDrawArrays(GL_LINES, 0, data5.size());
+
+			glDisableVertexAttribArray(0);
+		}
+
+		if (drawAABB4) {
+			drawBoundingBox(entityBuffer[i]->getAxisAlignedBoundingBox(true), glm::vec3(1, 0, 1));
+		}
+
+		if (drawBS) {
+			drawBoundingSphere(entityBuffer[i]->getInternalBoundingSphere(false), entityBuffer[i]->getWorldPosition(), glm::vec3(1, 1, 0));
+		}
+
+		if (drawBS2) {
+			drawBoundingSphere(entityBuffer[i]->getExternalBoundingSphere(false), entityBuffer[i]->getWorldPosition(), glm::vec3(1, 0.5, 0));
+		}
+
+		if (drawBS3) {
+			drawBoundingSphere(entityBuffer[i]->getBoundingSphere(false), entityBuffer[i]->getWorldPosition(), glm::vec3(0.5, 1, 0));
+		}
+	}
+}
+
 
 // pass the correct values to the corresponding uniforms in the shader
 void Renderer::attachUniforms(Entity* entity, std::vector<uniform_t> uniformBuffer) {
@@ -529,62 +635,6 @@ void Renderer::linkLayouts(Entity* entity, std::vector<char*> layoutBuffer) {
 		}
 	}
 }
-
-
-void Renderer::resetRender() {
-	glBufferData(GL_ARRAY_BUFFER, data1.size() * sizeof(float), &data1[0], GL_STATIC_DRAW);
-
-	glUseProgram(shaderBuffer[1].getID());
-	glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[0].id, 1, GL_FALSE, &(glm::mat4(1.0f)[0][0]));
-	glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[1].id, 1, GL_FALSE, &(camera.getViewMatrix()[0][0]));
-	glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[2].id, 1, GL_FALSE, &(Projection[0][0]));
-	glUniform3f(shaderBuffer[1].getUniformBuffer()[3].id, 255, 255, 255);
-
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	glDrawArrays(GL_LINES, 0, data1.size());
-
-	glDisableVertexAttribArray(0);
-}
-
-void Renderer::resizeScreen() {
-	// create an empty texture object for screenTexture, this texture will be bound to the screenFBO
-	// and will store the screen view image
-	glGenTextures(1, &this->screenTexture);
-	// bind the screenTexture texture as the main texture
-	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture);
-
-	/* ACTIVE TEXTURE: screenTexture */
-
-	// create the actual texture for image with res: screenWidth x screenHeight
-	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB, screenWidth, screenHeight, false);
-
-
-	// set the texture filters for mipmaps
-	glGenTextures(1, &this->screenDepthTexture);
-	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture);
-
-	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_DEPTH_COMPONENT, screenWidth, screenHeight, false);
-
-	// create the screenFBO (used for rendering the screen view to a texture)
-	glGenFramebuffers(1, &this->screenFBO);
-	// bind the screenFBO to be the default FBO
-	glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
-
-	/* ACTIVE FRAMEBUFFER: screenFBO */
-
-	// attach the screenTexture to the screenFBO, so that the stuff rendered on the screenFBO can be saved to the screenTexture
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture, 0);
-
-	glViewport(0, 0, screenWidth, screenHeight);
-
-	projectionBuffer[0] = glm::perspective(glm::radians(45.0f), (float)screenWidth / (float)screenHeight, 0.1f, 10000.0f);
-	updated = true;
-}
-
 
 void Renderer::createCube(std::vector<float>* array, std::vector<glm::vec3> faces) {
 	array->push_back(faces[0].x);
@@ -823,85 +873,4 @@ void Renderer::drawBoundingSphere(float radius, glm::vec3 center, glm::vec3 colo
 
 	glDisableVertexAttribArray(0);
 }
-
-void Renderer::displayBoundingBox() {
-	for (int i = 0; i < entityBuffer.size(); i++) {
-		if (drawOBB) {
-			drawBoundingBox(entityBuffer[i]->getObjectBoundingBox(true), glm::vec3(1, 0, 0));
-		}
-
-		if (drawAABB1) {
-			drawBoundingBox(entityBuffer[i]->getExternalAxisAlignedBoundingBox(true), glm::vec3(0, 1, 0));
-		}
-
-		if (drawAABB2) {
-			drawBoundingBox(entityBuffer[i]->getInternalAxisAlignedBoundingBox(true), glm::vec3(0, 0, 1));
-		}
-
-		if (drawAABB3) {
-			bounds_t internalWorldBounds;
-			internalWorldBounds = entityBuffer[i]->getInternalAxisAlignedBoundingBox(true);
-
-			bounds_t worldBounds;
-			worldBounds = entityBuffer[i]->getExternalAxisAlignedBoundingBox(true);
-
-			std::vector<float> data5;
-
-			glm::vec3 a2 = glm::vec3((worldBounds.a.x + internalWorldBounds.a.x) / 2, (worldBounds.a.y + internalWorldBounds.a.y) / 2, (worldBounds.a.z + internalWorldBounds.a.z) / 2);
-			glm::vec3 b2 = glm::vec3((worldBounds.b.x + internalWorldBounds.b.x) / 2, (worldBounds.b.y + internalWorldBounds.b.y) / 2, (worldBounds.b.z + internalWorldBounds.b.z) / 2);
-			glm::vec3 c2 = glm::vec3((worldBounds.c.x + internalWorldBounds.c.x) / 2, (worldBounds.c.y + internalWorldBounds.c.y) / 2, (worldBounds.c.z + internalWorldBounds.c.z) / 2);
-			glm::vec3 d2 = glm::vec3((worldBounds.d.x + internalWorldBounds.d.x) / 2, (worldBounds.d.y + internalWorldBounds.d.y) / 2, (worldBounds.d.z + internalWorldBounds.d.z) / 2);
-			glm::vec3 e2 = glm::vec3((worldBounds.e.x + internalWorldBounds.e.x) / 2, (worldBounds.e.y + internalWorldBounds.e.y) / 2, (worldBounds.e.z + internalWorldBounds.e.z) / 2);
-			glm::vec3 f2 = glm::vec3((worldBounds.f.x + internalWorldBounds.f.x) / 2, (worldBounds.f.y + internalWorldBounds.f.y) / 2, (worldBounds.f.z + internalWorldBounds.f.z) / 2);
-			glm::vec3 g2 = glm::vec3((worldBounds.g.x + internalWorldBounds.g.x) / 2, (worldBounds.g.y + internalWorldBounds.g.y) / 2, (worldBounds.g.z + internalWorldBounds.g.z) / 2);
-			glm::vec3 h2 = glm::vec3((worldBounds.h.x + internalWorldBounds.h.x) / 2, (worldBounds.h.y + internalWorldBounds.h.y) / 2, (worldBounds.h.z + internalWorldBounds.h.z) / 2);
-
-			std::vector<glm::vec3> faces4;
-			faces4.push_back(a2);
-			faces4.push_back(b2);
-			faces4.push_back(c2);
-			faces4.push_back(d2);
-			faces4.push_back(e2);
-			faces4.push_back(f2);
-			faces4.push_back(g2);
-			faces4.push_back(h2);
-			createCube(&data5, faces4);
-			glBindBuffer(GL_ARRAY_BUFFER, tmpBuffer);
-			glBufferData(GL_ARRAY_BUFFER, data5.size() * sizeof(float), &data5[0], GL_STATIC_DRAW);
-
-			glUseProgram(shaderBuffer[1].getID());
-
-			glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[0].id, 1, GL_FALSE, &(glm::mat4(1.0f)[0][0]));
-			glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[1].id, 1, GL_FALSE, &(camera.getViewMatrix()[0][0]));
-			glUniformMatrix4fv(shaderBuffer[1].getUniformBuffer()[2].id, 1, GL_FALSE, &(Projection[0][0]));
-			glUniform3f(shaderBuffer[1].getUniformBuffer()[3].id, 0, 1, 1);
-
-			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-			glPointSize(10.0f);
-
-			glDrawArrays(GL_LINES, 0, data5.size());
-
-			glDisableVertexAttribArray(0);
-		}
-
-		if (drawAABB4) {
-			drawBoundingBox(entityBuffer[i]->getAxisAlignedBoundingBox(true), glm::vec3(1, 0, 1));
-		}
-
-		if (drawBS) {
-			drawBoundingSphere(entityBuffer[i]->getInternalBoundingSphere(false), entityBuffer[i]->getWorldPosition(), glm::vec3(1, 1, 0));
-		}
-
-		if (drawBS2) {
-			drawBoundingSphere(entityBuffer[i]->getExternalBoundingSphere(false), entityBuffer[i]->getWorldPosition(), glm::vec3(1, 0.5, 0));
-		}
-
-		if (drawBS3) {
-			drawBoundingSphere(entityBuffer[i]->getBoundingSphere(false), entityBuffer[i]->getWorldPosition(), glm::vec3(0.5, 1, 0));
-		}
-	}
-}
-
 
