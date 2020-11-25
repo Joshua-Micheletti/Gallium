@@ -19,6 +19,8 @@ Renderer::Renderer() {
 
 	// enable multisampling
 	glEnable(GL_MULTISAMPLE);
+	glEnable(GL_STENCIL_TEST);
+	//glDisable(GL_STENCIL_TEST);
 
 	// enables back-face culling:
 	// polygons aren't rendered if the vertices that define the triangle are seen clockwise or counterclockwise,
@@ -111,8 +113,8 @@ Renderer::Renderer() {
 	/* ACTIVE TEXTURE: screenDepthTexture */
 
 	// create the actual texture for image with res: screenWidth x screenHeight
-	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_DEPTH_COMPONENT, screenWidth, screenHeight, false);
-
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_DEPTH_STENCIL, screenWidth, screenHeight, false);
+	//glTextureParameteri(this->screenDepthTexture, GL_DEPTH_STENCIL_TEXTURE_MODE, GL_STENCIL_INDEX);
 	// create the screenFBO (used for rendering the screen view to a texture)
 	glGenFramebuffers(1, &this->screenFBO);
 	// bind the screenFBO to be the default FBO
@@ -122,7 +124,13 @@ Renderer::Renderer() {
 
 	// attach the screenTexture to the screenFBO, so that the stuff rendered on the screenFBO can be saved to the screenTexture
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture, 0);
+
+	int framebufferStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+
+	if (framebufferStatus != GL_FRAMEBUFFER_COMPLETE) {
+		printf("framebuffer error: %d\n", framebufferStatus);
+	}
 
 	// create a square of vertices for the post processing shader
 	std::vector<float> square;
@@ -216,10 +224,72 @@ void Renderer::render() {
 	// -------------------------------- SCREEN FRAMEBUFFER RENDERING -------------------------------- //
 
 	glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	// render all entities
-	this->renderEntities(false);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_STENCIL_TEST);
+	glStencilOp(GL_KEEP,    // stencil fail
+				GL_KEEP, // stencil pass, depth fail
+				GL_REPLACE);   // stencil pass, depth pass
 
+	glStencilMask(255);
+	glClearStencil(0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	// render all entities
+	//this->renderEntities(false);
+	glStencilMask(0);
+
+	this->renderEntity(entityBuffer[0]); // skybox
+
+	glStencilFunc(GL_ALWAYS, 1, 255);
+	glStencilMask(255);
+	this->renderEntity(entityBuffer[3]);
+	
+	glStencilMask(0);
+	glStencilFunc(GL_ALWAYS, 1, 255);
+	this->renderEntity(entityBuffer[6]); // sphere
+	this->renderEntity(entityBuffer[1]);
+	this->renderEntity(entityBuffer[2]);
+	//this->renderEntity(entityBuffer[3]);
+	this->renderEntity(entityBuffer[4]);
+	this->renderEntity(entityBuffer[5]);
+	this->renderEntity(entityBuffer[7]);
+	this->renderEntity(entityBuffer[8]);
+	this->renderEntity(entityBuffer[9]);
+	this->renderEntity(entityBuffer[10]);
+	this->renderEntity(entityBuffer[11]);
+	this->renderEntity(entityBuffer[12]);
+
+	glStencilFunc(GL_NOTEQUAL, 1, 255);
+	glDisable(GL_DEPTH_TEST);
+	entityBuffer[3]->setShader(5);
+	entityBuffer[3]->setScale(glm::vec3(1.1));
+	this->renderEntity(entityBuffer[3]); // white cube
+	entityBuffer[3]->setScale(glm::vec3(1.0));
+	entityBuffer[3]->setShader(0);
+	glEnable(GL_DEPTH_TEST);
+
+	/*glStencilMask(0);
+	glStencilFunc(GL_NOTEQUAL, 1, 127);*/
+	 // textured cube
+	
+	//glEnable(GL_DEPTH_TEST);
+
+	//this->renderEntity(entityBuffer[6]);
+	/*glStencilMask(0x00);
+	glStencilFunc(GL_ALWAYS, 1, 0xFF);*/
+
+	//this->renderEntity(entityBuffer[1]);
+	//this->renderEntity(entityBuffer[2]);
+	////this->renderEntity(entityBuffer[3]);
+	//this->renderEntity(entityBuffer[4]);
+	//this->renderEntity(entityBuffer[5]);
+	//this->renderEntity(entityBuffer[7]);
+	//this->renderEntity(entityBuffer[8]);
+	//this->renderEntity(entityBuffer[9]);
+	//this->renderEntity(entityBuffer[10]);
+	//this->renderEntity(entityBuffer[11]);
+	//this->renderEntity(entityBuffer[12]);
+
+	//this->renderEntities(false);
 	// draw the bounding box for each entity
 	this->displayBoundingBox();
 
@@ -388,6 +458,57 @@ void Renderer::renderEntities(bool reflection) {
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 	}
+}
+
+void Renderer::renderEntity(Entity* entity) {
+	if (entity->getName().compare("skybox") == 0) {
+		glDepthMask(GL_FALSE);
+	}
+
+	glUseProgram(shaderBuffer[entity->getShader()].getID());
+
+	attachUniforms(entity, shaderBuffer[entity->getShader()].getUniformBuffer());
+
+	linkLayouts(entity, shaderBuffer[entity->getShader()].getLayoutBuffer());
+
+	if (entity->getTexture() != 0) {
+		glBindTexture(entity->getTextureType(), entity->getTexture());
+	}
+
+	if (strcmp(shaderBuffer[entity->getShader()].getName(), "reflection") == 0 ||
+		strcmp(shaderBuffer[entity->getShader()].getName(), "refraction/glass") == 0 ||
+		strcmp(shaderBuffer[entity->getShader()].getName(), "reflection/diamond") == 0) {
+		glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
+	}
+
+	// check which mode things should be rendered as
+	if (entity->getName().compare("skybox") == 0) {
+		// render the skybox
+		glDrawArrays(GL_TRIANGLES, 0, entity->getVertices().size());
+		// re-enable the depth mask (now rendering also affects the depth buffer as well)
+		glDepthMask(GL_TRUE);
+	}
+
+	else {
+		switch (renderMode) {
+		case wireframe:
+			glDrawArrays(GL_LINES, 0, entity->getVertices().size());
+			break;
+
+		case vertices:
+			glPointSize(2.0f);
+			glDrawArrays(GL_POINTS, 0, entity->getVertices().size());
+			break;
+
+		default:
+			glDrawArrays(entity->getElements(), 0, entity->getVertices().size());
+
+		}
+	}
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
 }
 
 // render the screen texture applying post processing shaders

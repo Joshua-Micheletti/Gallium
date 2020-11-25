@@ -24,6 +24,7 @@ class Renderer {
 		unsigned int screenFBO;
 		unsigned int screenTexture;
 		unsigned int screenDepthTexture;
+		unsigned int screenStencilTexture;
 		unsigned int screenRBO;
 		unsigned int screenVBO;
 		unsigned int screenUVVBO;
@@ -38,6 +39,7 @@ class Renderer {
 		// method for updating the render resolution
 		void resizeScreen();
 		void renderEntities(bool);
+		void renderEntity(Entity*);
 		void attachUniforms(Entity *, std::vector<uniform_t>);
 		void linkLayouts(Entity*, std::vector<char *>);
 
