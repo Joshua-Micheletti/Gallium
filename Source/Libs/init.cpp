@@ -107,6 +107,7 @@ void loadShaders(std::vector<Shader>* shaderBuffer) {
 	Shader shader9((char*)"refraction/glass");
 	Shader shader10((char*)"refraction/diamond");
 	Shader shader11((char*)"toon");
+	Shader shader12((char*)"hightlight");
 
 	shader1.loadShader((char*)"../Shader/shader1/vertex.c", (char*)"../Shader/shader1/fragment.c");
 	shader2.loadShader((char*)"../Shader/shader2/vertex2.c", (char*)"../Shader/shader2/fragment2.c");
@@ -119,6 +120,7 @@ void loadShaders(std::vector<Shader>* shaderBuffer) {
 	shader9.loadShader((char*)"../Shader/refraction/glass/vertex.c", (char*)"../Shader/refraction/glass/fragment.c");
 	shader10.loadShader((char*)"../Shader/refraction/diamond/vertex.c", (char*)"../Shader/refraction/diamond/fragment.c");
 	shader11.loadShader((char*)"../Shader/toon/vertex.c", (char*)"../Shader/toon/fragment.c");
+	shader12.loadShader((char*)"../Shader/highlight/highlight.vert", (char*)"../Shader/highlight/highlight.frag");
 
 	shaderBuffer->push_back(shader1);
 	shaderBuffer->push_back(shader2);
@@ -131,6 +133,7 @@ void loadShaders(std::vector<Shader>* shaderBuffer) {
 	shaderBuffer->push_back(shader9);
 	shaderBuffer->push_back(shader10);
 	shaderBuffer->push_back(shader11);
+	shaderBuffer->push_back(shader12);
 }
 
 void createAxis(Entity* axis) {

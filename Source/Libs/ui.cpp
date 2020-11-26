@@ -107,6 +107,7 @@ void UI::setupImGuiStyle() {
 void UI::drawLeftColumn() {
 	static bool firstDraw = true;
 	static Entity *selectedEntity;
+	static int selected = -1;
 
 	static ImGuiWindowFlags leftColumnWindowFlags = ImGuiWindowFlags_NoMove |
 		//ImGuiWindowFlags_NoResize |
@@ -119,7 +120,6 @@ void UI::drawLeftColumn() {
 	ImGui::Begin("Left Column", NULL, leftColumnWindowFlags);
 
 	if (ImGui::CollapsingHeader("Entities")) {
-		static int selected = -1;
 		for (int i = 0; i < entityBuffer.size(); i++) {
 			if (ImGui::Selectable(entityBuffer[i]->getName().c_str(), selected == i)) {
 				if (selected == i) {
@@ -210,6 +210,8 @@ void UI::drawLeftColumn() {
 	if (updateResolution) {
 		ImGui::SetWindowSize(ImVec2(ImGui::GetWindowWidth(), screenHeight - this->menuBarSize.y));
 	}
+
+	this->renderer->setHighlightedEntity(selected);
 	
 	ImGui::SetWindowPos(ImVec2(0, this->menuBarSize.y));
 

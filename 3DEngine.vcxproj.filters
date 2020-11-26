@@ -120,5 +120,7 @@
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="README.md" />
+    <None Include="Shader\highlight\highlight.vert" />
+    <None Include="Shader\highlight\highlight.frag" />
   </ItemGroup>
 </Project>

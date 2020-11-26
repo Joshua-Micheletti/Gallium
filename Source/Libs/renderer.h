@@ -11,9 +11,12 @@ class Renderer {
 		Renderer();
 		// method for rendering
 		void render();
+
+		void setHighlightedEntity(int);
 		
 
 	private:
+		int highlightedEntity;
 		unsigned int tmpBuffer;
 
 		unsigned int reflectionFBO;
