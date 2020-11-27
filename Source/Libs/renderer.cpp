@@ -202,6 +202,10 @@ Renderer::Renderer() {
 	this->depthShader = new Shader((char*)"depth shader");
 	// load the post processing depth buffer display shader
 	this->depthShader->loadShader((char*)"../Shader/depth/depth.vert", (char*)"../Shader/depth/depth.frag");
+
+	int maxSamples;
+	glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
+	printf("max samples: %d\n", maxSamples);
 }
 
 // public method for rendering the scene
@@ -223,19 +227,40 @@ void Renderer::render() {
 	// -------------------------------- SCREEN FRAMEBUFFER RENDERING -------------------------------- //
 
 	glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
+	glEnable(GL_STENCIL_TEST);
 	glStencilOp(GL_KEEP,    // stencil fail
 				GL_KEEP, // stencil pass, depth fail
 				GL_REPLACE);   // stencil pass, depth pass
-
-	glStencilMask(255);
+	
+	glStencilMask(0xFF);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	//glStencilMask(0);
-	//glStencilFunc(GL_ALWAYS, 1, 255);
-	//this->renderEntity(entityBuffer[0]); // skybox
-	//this->renderEntity(entityBuffer[6]); // sphere
-	//this->renderEntity(entityBuffer[1]);
+	this->renderEntities(false);
+
+	//glStencilMask(0x00);
+	//this->renderEntity(entityBuffer[0]);
+
+	//glStencilMask(0xFF);
+	//glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	//glDisable(GL_DEPTH_TEST);
+	//glStencilFunc(GL_ALWAYS, 1, 0xFF);
+	//this->renderEntity(entityBuffer[6]);
+	//glEnable(GL_DEPTH_TEST);
+	//glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+	//glStencilMask(0x00);
+	//glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+	//entityBuffer[6]->setShader(11);
+	//glm::vec3 initialScale = entityBuffer[6]->getScalingFactor();
+	//entityBuffer[6]->setScale(initialScale * glm::vec3(1.1));
+	//this->renderEntity(entityBuffer[6]);
+	//entityBuffer[6]->setScale(initialScale);
+
+	//glStencilFunc(GL_EQUAL, 1, 0xFF);
+	//glStencilMask(0x00);
+	////this->renderEntity(entityBuffer[1]);
 	//this->renderEntity(entityBuffer[2]);
+	//this->renderEntity(entityBuffer[3]);
 	//this->renderEntity(entityBuffer[4]);
 	//this->renderEntity(entityBuffer[5]);
 	//this->renderEntity(entityBuffer[7]);
@@ -244,6 +269,21 @@ void Renderer::render() {
 	//this->renderEntity(entityBuffer[10]);
 	//this->renderEntity(entityBuffer[11]);
 	//this->renderEntity(entityBuffer[12]);
+
+	//glStencilFunc(GL_ALWAYS, 1, 0xFF);
+	//glStencilMask(0);
+	
+	/*this->renderEntity(entityBuffer[1]);
+	this->renderEntity(entityBuffer[2]);*/
+	
+	/*this->renderEntity(entityBuffer[4]);
+	this->renderEntity(entityBuffer[5]);
+	this->renderEntity(entityBuffer[7]);
+	this->renderEntity(entityBuffer[8]);
+	this->renderEntity(entityBuffer[9]);
+	this->renderEntity(entityBuffer[10]);
+	this->renderEntity(entityBuffer[11]);
+	this->renderEntity(entityBuffer[12]);*/
 
 	/*glStencilFunc(GL_ALWAYS, 1, 255);
 	glStencilMask(255);
@@ -259,7 +299,7 @@ void Renderer::render() {
 	//entityBuffer[3]->setScale(glm::vec3(1.0));
 	//entityBuffer[3]->setShader(0);
 	//glEnable(GL_DEPTH_TEST);
-	this->renderEntities(false);
+	//this->renderEntities(false);
 
 	// draw the bounding box for each entity
 	this->displayBoundingBox();
@@ -414,6 +454,7 @@ void Renderer::renderEntities(bool reflection) {
 				else {
 					switch (renderMode) {
 					case wireframe:
+						glLineWidth(5.0f);
 						glDrawArrays(GL_LINES, 0, entityBuffer[i]->getVertices().size());
 						break;
 
@@ -424,7 +465,6 @@ void Renderer::renderEntities(bool reflection) {
 
 					default:
 						glDrawArrays(entityBuffer[i]->getElements(), 0, entityBuffer[i]->getVertices().size());
-
 					}
 				}
 			}
@@ -444,9 +484,15 @@ void Renderer::renderEntities(bool reflection) {
 		glStencilMask(0);
 		glStencilFunc(GL_NOTEQUAL, 1, 255);
 
-		glDisable(GL_DEPTH_TEST);
+		
 		int previousShader = entityBuffer[this->highlightedEntity]->getShader();
 		entityBuffer[this->highlightedEntity]->setShader(11);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glLineWidth(10.0f);
+		this->renderEntity(entityBuffer[this->highlightedEntity]);
+		glLineWidth(1.0f);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glDisable(GL_DEPTH_TEST);
 		this->renderEntity(entityBuffer[this->highlightedEntity]);
 		entityBuffer[this->highlightedEntity]->setShader(previousShader);
 		glEnable(GL_DEPTH_TEST);
