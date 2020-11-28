@@ -108,6 +108,8 @@ void loadShaders(std::vector<Shader>* shaderBuffer) {
 	Shader shader10((char*)"refraction/diamond");
 	Shader shader11((char*)"toon");
 	Shader shader12((char*)"hightlight");
+	Shader shader13((char*)"outline");
+	Shader shader14((char*)"white");
 
 	shader1.loadShader((char*)"../Shader/shader1/vertex.c", (char*)"../Shader/shader1/fragment.c");
 	shader2.loadShader((char*)"../Shader/shader2/vertex2.c", (char*)"../Shader/shader2/fragment2.c");
@@ -121,6 +123,8 @@ void loadShaders(std::vector<Shader>* shaderBuffer) {
 	shader10.loadShader((char*)"../Shader/refraction/diamond/vertex.c", (char*)"../Shader/refraction/diamond/fragment.c");
 	shader11.loadShader((char*)"../Shader/toon/vertex.c", (char*)"../Shader/toon/fragment.c");
 	shader12.loadShader((char*)"../Shader/highlight/highlight.vert", (char*)"../Shader/highlight/highlight.frag");
+	shader13.loadShader((char*)"../Shader/outline/outline.vert", (char*)"../Shader/outline/outline.frag");
+	shader14.loadShader((char*)"../Shader/white/white.vert", (char*)"../Shader/white/white.frag");
 
 	shaderBuffer->push_back(shader1);
 	shaderBuffer->push_back(shader2);
@@ -134,6 +138,8 @@ void loadShaders(std::vector<Shader>* shaderBuffer) {
 	shaderBuffer->push_back(shader10);
 	shaderBuffer->push_back(shader11);
 	shaderBuffer->push_back(shader12);
+	shaderBuffer->push_back(shader13);
+	shaderBuffer->push_back(shader14);
 }
 
 void createAxis(Entity* axis) {
@@ -275,7 +281,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	plane->setShader(3);
 	jacket->setShader(4);
 	manaya->setShader(7);
-	genshinEnemy->setShader(8);
+	genshinEnemy->setShader(10);
 
 	//manaya->setToReflect(false);
 	//monkey->setToReflect(false);

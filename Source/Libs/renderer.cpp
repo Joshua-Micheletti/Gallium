@@ -119,6 +119,11 @@ Renderer::Renderer() {
 	// bind the screenFBO to be the default FBO
 	glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
 
+
+	glGenTextures(1, &this->outlineTextureMask);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->outlineTextureMask);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB, screenWidth, screenHeight, false);
+
 	/* ACTIVE FRAMEBUFFER: screenFBO */
 
 	// attach the screenTexture to the screenFBO, so that the stuff rendered on the screenFBO can be saved to the screenTexture
@@ -236,6 +241,61 @@ void Renderer::render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	this->renderEntities(false);
+	/*glStencilMask(0x00);
+	glStencilFunc(GL_ALWAYS, 1, 255);
+	this->renderEntity(entityBuffer[12]);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, this->outlineTextureMask, 0);
+
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_STENCIL_TEST);
+	int previousShader = entityBuffer[12]->getShader();
+	entityBuffer[12]->setShader(5);
+	this->renderEntity(entityBuffer[12]);
+	entityBuffer[12]->setShader(previousShader);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_STENCIL_TEST);
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture, 0);
+
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_STENCIL_TEST);
+
+	glUseProgram(shaderBuffer[12].getID());
+
+	int screenTexUniformID = glGetUniformLocation(shaderBuffer[12].getID(), "screenTexture");
+	int outlineMaskUniformID = glGetUniformLocation(shaderBuffer[12].getID(), "outlineMask");
+
+	glUniform1i(screenTexUniformID, 0);
+	glUniform1i(outlineMaskUniformID, 1);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->outlineTextureMask);
+
+	glUniform1i(glGetUniformLocation(shaderBuffer[12].getID(), "samples"), samples);
+
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, this->screenVBO);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, this->screenUVVBO);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glActiveTexture(GL_TEXTURE0);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_STENCIL_TEST);*/
+
+
+
+	//glActiveTexture(GL_TEXTURE0);
 
 	//glStencilMask(0x00);
 	//this->renderEntity(entityBuffer[0]);
@@ -302,7 +362,7 @@ void Renderer::render() {
 	//this->renderEntities(false);
 
 	// draw the bounding box for each entity
-	this->displayBoundingBox();
+	//this->displayBoundingBox();
 
 	// ---------------------------------- OUT FRAMEBUFFER RENDERING --------------------------------- //
 
@@ -484,18 +544,79 @@ void Renderer::renderEntities(bool reflection) {
 		glStencilMask(0);
 		glStencilFunc(GL_NOTEQUAL, 1, 255);
 
-		
+		glDisable(GL_DEPTH_TEST);
 		int previousShader = entityBuffer[this->highlightedEntity]->getShader();
 		entityBuffer[this->highlightedEntity]->setShader(11);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glLineWidth(10.0f);
-		this->renderEntity(entityBuffer[this->highlightedEntity]);
-		glLineWidth(1.0f);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glDisable(GL_DEPTH_TEST);
 		this->renderEntity(entityBuffer[this->highlightedEntity]);
 		entityBuffer[this->highlightedEntity]->setShader(previousShader);
 		glEnable(GL_DEPTH_TEST);
+
+		bool outlineMode = true;
+
+		// wireframe outline implementation
+		if (outlineMode == true) {
+			glDisable(GL_DEPTH_TEST);
+			glPolygonMode(GL_FRONT, GL_LINE);
+			glLineWidth(10.0f);
+			int previousShader = entityBuffer[this->highlightedEntity]->getShader();
+			entityBuffer[this->highlightedEntity]->setShader(11);
+			this->renderEntity(entityBuffer[this->highlightedEntity]);
+			entityBuffer[this->highlightedEntity]->setShader(previousShader);
+			glLineWidth(1.0f);
+			glPolygonMode(GL_FRONT, GL_FILL);
+			glEnable(GL_DEPTH_TEST);
+		}
+
+		// post-processing outline implementation
+		else if (outlineMode == false) {
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, this->outlineTextureMask, 0);
+
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+			glDisable(GL_DEPTH_TEST);
+			glDisable(GL_STENCIL_TEST);
+			int previousShader = entityBuffer[this->highlightedEntity]->getShader();
+			entityBuffer[this->highlightedEntity]->setShader(13);
+			this->renderEntity(entityBuffer[this->highlightedEntity]);
+			entityBuffer[this->highlightedEntity]->setShader(previousShader);
+			glEnable(GL_DEPTH_TEST);
+			glEnable(GL_STENCIL_TEST);
+			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture, 0);
+
+			glDisable(GL_DEPTH_TEST);
+			glDisable(GL_STENCIL_TEST);
+
+			glUseProgram(shaderBuffer[12].getID());
+
+			int screenTexUniformID = glGetUniformLocation(shaderBuffer[12].getID(), "screenTexture");
+			int outlineMaskUniformID = glGetUniformLocation(shaderBuffer[12].getID(), "outlineMask");
+
+			glUniform1i(screenTexUniformID, 0);
+			glUniform1i(outlineMaskUniformID, 1);
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture);
+
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->outlineTextureMask);
+
+			glUniform1i(glGetUniformLocation(shaderBuffer[12].getID(), "samples"), samples);
+
+			glEnableVertexAttribArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, this->screenVBO);
+			glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+			glEnableVertexAttribArray(1);
+			glBindBuffer(GL_ARRAY_BUFFER, this->screenUVVBO);
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+			glActiveTexture(GL_TEXTURE0);
+			glEnable(GL_DEPTH_TEST);
+			glEnable(GL_STENCIL_TEST);
+		}
 	}
 }
 
@@ -519,6 +640,8 @@ void Renderer::renderEntity(Entity* entity) {
 		strcmp(shaderBuffer[entity->getShader()].getName(), "reflection/diamond") == 0) {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
 	}
+
+	
 
 	// check which mode things should be rendered as
 	if (entity->getName().compare("skybox") == 0) {
@@ -617,6 +740,12 @@ void Renderer::resizeScreen() {
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture);
 
 	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_DEPTH_STENCIL, screenWidth, screenHeight, false);
+
+	glDeleteTextures(1, &this->outlineTextureMask);
+	glGenTextures(1, &this->outlineTextureMask);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->outlineTextureMask);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB, screenWidth, screenHeight, false);
+
 
 	// create the screenFBO (used for rendering the screen view to a texture)
 	glDeleteFramebuffers(1, &this->screenFBO);

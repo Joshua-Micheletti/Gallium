@@ -31,6 +31,7 @@ class Renderer {
 		unsigned int screenRBO;
 		unsigned int screenVBO;
 		unsigned int screenUVVBO;
+		unsigned int outlineTextureMask;
 		Shader* screenShader;
 		Shader* depthShader;
 

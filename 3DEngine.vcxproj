@@ -194,6 +194,10 @@
     <None Include="README.md" />
     <None Include="Shader\highlight\highlight.frag" />
     <None Include="Shader\highlight\highlight.vert" />
+    <None Include="Shader\outline\outline.frag" />
+    <None Include="Shader\outline\outline.vert" />
+    <None Include="Shader\white\white.frag" />
+    <None Include="Shader\white\white.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
