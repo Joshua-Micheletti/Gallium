@@ -34,6 +34,7 @@ class Renderer {
 		unsigned int outlineTextureMask;
 		unsigned int postProcessingFBO;
 		unsigned int postProcessingTexture;
+		unsigned int postProcessingTexture2;
 		unsigned int postProcessingDepthTexture;
 		Shader* postProcessingShader;
 		Shader* screenShader;
@@ -51,6 +52,7 @@ class Renderer {
 		void renderEntity(Entity*);
 		void attachUniforms(Entity *, std::vector<uniform_t>);
 		void linkLayouts(Entity*, std::vector<char *>);
+		void renderOutline();
 
 		void displayBoundingBox();
 		void drawBoundingBox(bounds_t, glm::vec3);

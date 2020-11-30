@@ -3,18 +3,17 @@
 out vec4 FragColor;
 
 in vec2 TexCoords;
-flat in int fragSamples;
 
-uniform sampler2DMS screenTexture;
-uniform sampler2DMS outlineMask;
+uniform sampler2D screenTexture;
+uniform sampler2D outlineMask;
 
 void main() {
     int size = 5;
-    ivec2 texSize = textureSize(screenTexture);
+    ivec2 texSize = textureSize(screenTexture, 0);
     ivec2 newTexCoord = ivec2(TexCoords.x * texSize.x, TexCoords.y * texSize.y);
     vec4 color = vec4(0.0);
 
-    float threshold = 0.005;
+    float threshold = 0.01;
 
     bool hit = false;
     if (texelFetch(outlineMask, newTexCoord, 0).x <= 0.5) {
@@ -33,11 +32,6 @@ void main() {
     if (hit == true) {
         FragColor = vec4(1.0, 0.2, 0.0, 1.0);
     } else {
-        for (int i = 0; i < fragSamples; i++) {
-            color += texelFetch(screenTexture, newTexCoord, i);
-        }
-        color /= float(fragSamples);
-
-        FragColor = color;
+        FragColor = texelFetch(screenTexture, newTexCoord, 0);
     }
 }
