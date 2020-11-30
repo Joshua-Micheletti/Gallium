@@ -32,12 +32,17 @@ class Renderer {
 		unsigned int screenVBO;
 		unsigned int screenUVVBO;
 		unsigned int outlineTextureMask;
+		unsigned int postProcessingFBO;
+		unsigned int postProcessingTexture;
+		unsigned int postProcessingDepthTexture;
+		Shader* postProcessingShader;
 		Shader* screenShader;
 		Shader* depthShader;
 
 		std::vector<float> data1;
 		
 		void renderReflectionCubemap();
+		void renderMultisamplePostProcessing();
 		void renderScreen();
 		void resetRender();
 		// method for updating the render resolution

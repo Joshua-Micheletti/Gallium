@@ -81,7 +81,7 @@ void resizeCallback(GLFWwindow* window, int x, int y) {
 GLFWwindow* initGLFW_OpenGL(std::string name) {
 	glfwInit();
 
-	glfwWindowHint(GLFW_SAMPLES, samples);
+	//glfwWindowHint(GLFW_SAMPLES, samples);
 	
 	GLFWwindow* window;
 	window = glfwCreateWindow(screenWidth, screenHeight, "3DEngine", NULL, NULL);

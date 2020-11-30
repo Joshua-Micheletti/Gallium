@@ -77,6 +77,7 @@ void main() {
     color /= float(fragSamples);
 
     FragColor = color;
+//    FragColor = texelFetch(screenTexture, newTexCoord, 0);
 
 //    vec4 color = textureMultisample(tex, texCoord);
 //    FragColor = texelFetch(screenTexture, newTexCoord, );
