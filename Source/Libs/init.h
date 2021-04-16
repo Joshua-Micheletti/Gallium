@@ -89,6 +89,8 @@ extern bool depthBuffer;
 
 extern int defaultCamera;
 
+extern int outlineType;
+
 extern std::vector<Entity *> entityBuffer;
 extern std::vector<Shader> shaderBuffer;
 extern std::vector<Camera *> cameraBuffer;

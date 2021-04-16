@@ -46,6 +46,8 @@ bool depthBuffer;
 
 int defaultCamera;
 
+int outlineType;
+
 std::vector<Entity*> entityBuffer;
 std::vector<Shader> shaderBuffer;
 std::vector<Camera*> cameraBuffer;
@@ -110,6 +112,7 @@ void loadShaders(std::vector<Shader>* shaderBuffer) {
 	Shader shader12((char*)"hightlight");
 	Shader shader13((char*)"outline");
 	Shader shader14((char*)"white");
+	Shader shader15((char*)"outlineAlpha");
 
 	shader1.loadShader((char*)"../Shader/shader1/vertex.c", (char*)"../Shader/shader1/fragment.c");
 	shader2.loadShader((char*)"../Shader/shader2/vertex2.c", (char*)"../Shader/shader2/fragment2.c");
@@ -123,9 +126,9 @@ void loadShaders(std::vector<Shader>* shaderBuffer) {
 	shader10.loadShader((char*)"../Shader/refraction/diamond/vertex.c", (char*)"../Shader/refraction/diamond/fragment.c");
 	shader11.loadShader((char*)"../Shader/toon/vertex.c", (char*)"../Shader/toon/fragment.c");
 	shader12.loadShader((char*)"../Shader/highlight/highlight.vert", (char*)"../Shader/highlight/highlight.frag");
-	//shader13.loadShader((char*)"../Shader/outline/outline.vert", (char*)"../Shader/outline/outline.frag");
-	shader13.loadShader((char*)"../Shader/outlineAlpha/outline.vert", (char*)"../Shader/outlineAlpha/outline.frag");
+	shader13.loadShader((char*)"../Shader/outline/outline.vert", (char*)"../Shader/outline/outline.frag");
 	shader14.loadShader((char*)"../Shader/white/white.vert", (char*)"../Shader/white/white.frag");
+	shader15.loadShader((char*)"../Shader/outlineAlpha/outline.vert", (char*)"../Shader/outlineAlpha/outline.frag");
 
 	shaderBuffer->push_back(shader1);
 	shaderBuffer->push_back(shader2);
@@ -141,6 +144,7 @@ void loadShaders(std::vector<Shader>* shaderBuffer) {
 	shaderBuffer->push_back(shader12);
 	shaderBuffer->push_back(shader13);
 	shaderBuffer->push_back(shader14);
+	shaderBuffer->push_back(shader15);
 }
 
 void createAxis(Entity* axis) {
@@ -373,6 +377,7 @@ GLFWwindow* setup() {
 	updateResolution = false;
 	updated = true;
 	depthBuffer = false;
+	outlineType = 0;
 
 	defaultCamera = 0;
 	camera.setPosition(glm::vec3(1.0f, 0.5f, 1.0f));

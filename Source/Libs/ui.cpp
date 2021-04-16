@@ -197,6 +197,24 @@ void UI::drawLeftColumn() {
 			ImGui::Combo("###ShaderDropdown", &item_current, Carray, arraySize);
 
 			selectedEntity->setShader(item_current);
+
+			std::vector<char*> outlineNames;
+
+			outlineNames.push_back((char*)"Solid");
+			outlineNames.push_back((char*)"Alpha");
+			outlineNames.push_back((char*)"Wireframe");
+
+			char** outlineCarray = outlineNames.data();
+
+			size_t outlineArraySize = outlineNames.size();
+
+			static int outlineCurrent = outlineType;
+
+			ImGui::Text("Outline");
+			ImGui::SameLine();
+			ImGui::Combo("###OutlineDropdown", &outlineCurrent, outlineCarray, outlineArraySize);
+
+			outlineType = outlineCurrent;
 		}
 	}
 

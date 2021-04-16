@@ -618,7 +618,9 @@ void Renderer::renderOutline() {
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_STENCIL_TEST);
 	int previousShader = entityBuffer[this->highlightedEntity]->getShader();
+
 	entityBuffer[this->highlightedEntity]->setShader(13);
+	
 	this->renderEntity(entityBuffer[this->highlightedEntity]);
 	entityBuffer[this->highlightedEntity]->setShader(previousShader);
 	glEnable(GL_DEPTH_TEST);
@@ -630,10 +632,18 @@ void Renderer::renderOutline() {
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_STENCIL_TEST);
 
-	glUseProgram(shaderBuffer[12].getID());
+	int shaderOutline;
+	if (outlineType == 0) {
+		shaderOutline = 12;
+	}
+	else if (outlineType == 1) {
+		shaderOutline = 14;
+	}
 
-	int screenTexUniformID = glGetUniformLocation(shaderBuffer[12].getID(), "screenTexture");
-	int outlineMaskUniformID = glGetUniformLocation(shaderBuffer[12].getID(), "outlineMask");
+	glUseProgram(shaderBuffer[shaderOutline].getID());
+
+	int screenTexUniformID = glGetUniformLocation(shaderBuffer[shaderOutline].getID(), "screenTexture");
+	int outlineMaskUniformID = glGetUniformLocation(shaderBuffer[shaderOutline].getID(), "outlineMask");
 
 	glUniform1i(screenTexUniformID, 0);
 	glUniform1i(outlineMaskUniformID, 1);
