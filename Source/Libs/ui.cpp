@@ -342,6 +342,10 @@ void UI::drawFPSWindow() {
 
 		static float fps[90] = {};
 		static float frameTime[90] = {};
+		static float reflectionRenderTime[90] = {};
+		static float forwardRenderTime[90] = {};
+		static float MSPostProcessRenderTime[90] = {};
+		static float postProcessRenderTime[90] = {};
 		static int values_offset = 0;
 		static double refresh_time = 0.0;
 
@@ -352,6 +356,10 @@ void UI::drawFPSWindow() {
 		while (refresh_time < ImGui::GetTime()) {
 			fps[values_offset] = 1.0f / this->fpsTime.asSeconds();
 			frameTime[values_offset] = this->fpsTime.asMicroseconds() / 1000.0f;
+			reflectionRenderTime[values_offset] = this->renderer->getReflectionRenderTime() * 1000.0f;
+			forwardRenderTime[values_offset] = this->renderer->getForwardRenderTime() * 1000.0f;
+			MSPostProcessRenderTime[values_offset] = this->renderer->getMSPostProcessingPassTime() * 1000.0f;
+			postProcessRenderTime[values_offset] = this->renderer->getPostProcessingPassTime() * 1000.0f;
 			values_offset = (values_offset + 1) % IM_ARRAYSIZE(fps);
 			refresh_time += 1.0f / 10.0f;
 		}
@@ -368,6 +376,37 @@ void UI::drawFPSWindow() {
 		ImGui::PushItemWidth(-1);
 		ImGui::PlotLines("###frameTimeGraph", frameTime, IM_ARRAYSIZE(frameTime), values_offset, overlay, 0.0f, 60.0f, ImVec2(0, 40.0f));
 		ImGui::PopItemWidth();
+
+
+		ImGui::Separator();
+
+		if (ImGui::CollapsingHeader("More Info")) {
+
+			sprintf(overlay, "Reflection %.3f", reflectionRenderTime[(values_offset - 1) % IM_ARRAYSIZE(reflectionRenderTime)]);
+
+			ImGui::PushItemWidth(-1);
+			ImGui::PlotLines("###reflectionGraph", reflectionRenderTime, IM_ARRAYSIZE(reflectionRenderTime), values_offset, overlay, 0.0f, 60.0f, ImVec2(0, 40.0f));
+			ImGui::PopItemWidth();
+
+			sprintf(overlay, "Forward %.3f", forwardRenderTime[(values_offset - 1) % IM_ARRAYSIZE(forwardRenderTime)]);
+
+			ImGui::PushItemWidth(-1);
+			ImGui::PlotLines("###forwardGraph", forwardRenderTime, IM_ARRAYSIZE(forwardRenderTime), values_offset, overlay, 0.0f, 60.0f, ImVec2(0, 40.0f));
+			ImGui::PopItemWidth();
+
+			sprintf(overlay, "MS Post %.3f", MSPostProcessRenderTime[(values_offset - 1) % IM_ARRAYSIZE(MSPostProcessRenderTime)]);
+
+			ImGui::PushItemWidth(-1);
+			ImGui::PlotLines("###MSPostGraph", MSPostProcessRenderTime, IM_ARRAYSIZE(MSPostProcessRenderTime), values_offset, overlay, 0.0f, 60.0f, ImVec2(0, 40.0f));
+			ImGui::PopItemWidth();
+
+			sprintf(overlay, "Post Process %.3f", postProcessRenderTime[(values_offset - 1) % IM_ARRAYSIZE(postProcessRenderTime)]);
+
+			ImGui::PushItemWidth(-1);
+			ImGui::PlotLines("###postProcessGraph", postProcessRenderTime, IM_ARRAYSIZE(postProcessRenderTime), values_offset, overlay, 0.0f, 60.0f, ImVec2(0, 40.0f));
+			ImGui::PopItemWidth();
+		}
+
 
 		ImGui::SetWindowSize(ImVec2(200.0f, 0.0f));
 

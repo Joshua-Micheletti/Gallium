@@ -123,7 +123,8 @@ void loadShaders(std::vector<Shader>* shaderBuffer) {
 	shader10.loadShader((char*)"../Shader/refraction/diamond/vertex.c", (char*)"../Shader/refraction/diamond/fragment.c");
 	shader11.loadShader((char*)"../Shader/toon/vertex.c", (char*)"../Shader/toon/fragment.c");
 	shader12.loadShader((char*)"../Shader/highlight/highlight.vert", (char*)"../Shader/highlight/highlight.frag");
-	shader13.loadShader((char*)"../Shader/outline/outline.vert", (char*)"../Shader/outline/outline.frag");
+	//shader13.loadShader((char*)"../Shader/outline/outline.vert", (char*)"../Shader/outline/outline.frag");
+	shader13.loadShader((char*)"../Shader/outlineAlpha/outline.vert", (char*)"../Shader/outlineAlpha/outline.frag");
 	shader14.loadShader((char*)"../Shader/white/white.vert", (char*)"../Shader/white/white.frag");
 
 	shaderBuffer->push_back(shader1);

@@ -249,6 +249,8 @@ void Renderer::render() {
 
 	// ------------------------------ REFLECTION FRAMEBUFFER RENDERING ------------------------------ //
 
+	this->reflectionRenderTime = glfwGetTime();
+
 	// check if the program should render the reflection cubemap
 	if (doReflection) {
 		glBindFramebuffer(GL_FRAMEBUFFER, this->reflectionFBO);
@@ -257,7 +259,11 @@ void Renderer::render() {
 		this->renderReflectionCubemap();
 	}	
 
+	this->reflectionRenderTime = glfwGetTime() - this->reflectionRenderTime;
+	
 	// -------------------------------- SCREEN FRAMEBUFFER RENDERING -------------------------------- //
+
+	this->forwardRenderTime = glfwGetTime();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
 	glEnable(GL_STENCIL_TEST);
@@ -273,23 +279,34 @@ void Renderer::render() {
 	// draw the bounding box for each entity
 	this->displayBoundingBox();
 
+	this->forwardRenderTime = glfwGetTime() - this->forwardRenderTime;
+
 	// ---------------------------- POST PROCESSING FRAMEBUFFER RENDERING --------------------------- //
+
+	this->MSPostProcessingPassTime = glfwGetTime();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, this->postProcessingFBO);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	this->renderMultisamplePostProcessing();
 
+	this->MSPostProcessingPassTime = glfwGetTime() - this->MSPostProcessingPassTime;
+
+
+	this->postProcessingPassTime = glfwGetTime();
+
 	if (this->highlightedEntity >= 0) {
 		this->renderOutline();
 	}
-	
+
 	// ---------------------------------- OUT FRAMEBUFFER RENDERING --------------------------------- //
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	this->renderScreen();
+
+	this->postProcessingPassTime = glfwGetTime() - this->postProcessingPassTime;
 }
 
 // render the cubemap view from the reflection camera to later calculate reflections on
@@ -1190,5 +1207,23 @@ void Renderer::drawBoundingSphere(float radius, glm::vec3 center, glm::vec3 colo
 	glDrawArrays(GL_LINES, 0, data.size());
 
 	glDisableVertexAttribArray(0);
+}
+
+
+
+double Renderer::getReflectionRenderTime() {
+	return(this->reflectionRenderTime);
+}
+
+double Renderer::getForwardRenderTime() {
+	return(this->forwardRenderTime);
+}
+
+double Renderer::getMSPostProcessingPassTime() {
+	return(this->MSPostProcessingPassTime);
+}
+
+double Renderer::getPostProcessingPassTime() {
+	return(this->postProcessingPassTime);
 }
 

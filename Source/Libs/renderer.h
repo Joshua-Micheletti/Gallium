@@ -13,6 +13,11 @@ class Renderer {
 		void render();
 
 		void setHighlightedEntity(int);
+
+		double getReflectionRenderTime();
+		double getForwardRenderTime();
+		double getMSPostProcessingPassTime();
+		double getPostProcessingPassTime();
 		
 
 	private:
@@ -36,11 +41,17 @@ class Renderer {
 		unsigned int postProcessingTexture;
 		unsigned int postProcessingTexture2;
 		unsigned int postProcessingDepthTexture;
+
 		Shader* postProcessingShader;
 		Shader* screenShader;
 		Shader* depthShader;
 
 		std::vector<float> data1;
+
+		double reflectionRenderTime;
+		double forwardRenderTime;
+		double MSPostProcessingPassTime;
+		double postProcessingPassTime;
 		
 		void renderReflectionCubemap();
 		void renderMultisamplePostProcessing();
