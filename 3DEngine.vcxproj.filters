@@ -126,5 +126,7 @@
     <None Include="Shader\outline\outline.frag" />
     <None Include="Shader\white\white.vert" />
     <None Include="Shader\white\white.frag" />
+    <None Include="Shader\outlineAlpha\outline.frag" />
+    <None Include="Shader\outlineAlpha\outline.vert" />
   </ItemGroup>
 </Project>

@@ -88,7 +88,6 @@ Renderer::Renderer() {
 
 	/* ACTIVE RENDERBUFFER: Default */
 
-
 	/*-------------------------------------------------------------------------------*/
 	/*                             POST PROCESSING SETUP                             */
 	/*-------------------------------------------------------------------------------*/
@@ -267,8 +266,8 @@ void Renderer::render() {
 
 	glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
 	glEnable(GL_STENCIL_TEST);
-	glStencilOp(GL_KEEP,    // stencil fail
-				GL_KEEP, // stencil pass, depth fail
+	glStencilOp(GL_KEEP,	   // stencil fail
+				GL_KEEP,	   // stencil pass, depth fail
 				GL_REPLACE);   // stencil pass, depth pass
 	
 	glStencilMask(0xFF);
@@ -285,9 +284,6 @@ void Renderer::render() {
 
 	this->MSPostProcessingPassTime = glfwGetTime();
 
-	glBindFramebuffer(GL_FRAMEBUFFER, this->postProcessingFBO);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	this->renderMultisamplePostProcessing();
 
 	this->MSPostProcessingPassTime = glfwGetTime() - this->MSPostProcessingPassTime;
@@ -295,7 +291,7 @@ void Renderer::render() {
 
 	this->postProcessingPassTime = glfwGetTime();
 
-	if (this->highlightedEntity >= 0) {
+	if (this->highlightedEntity >= 0 && (outlineType == 0 || outlineType == 1)) {
 		this->renderOutline();
 	}
 
@@ -437,7 +433,13 @@ void Renderer::renderEntities(bool reflection) {
 				if (strcmp(shaderBuffer[entityBuffer[i]->getShader()].getName(), "reflection") == 0 ||
 					strcmp(shaderBuffer[entityBuffer[i]->getShader()].getName(), "refraction/glass") == 0 ||
 					strcmp(shaderBuffer[entityBuffer[i]->getShader()].getName(), "reflection/diamond") == 0) {
-					glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
+					if (doReflection) {
+						glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
+					}
+					else {
+						glBindTexture(GL_TEXTURE_CUBE_MAP, entityBuffer[0]->getTexture());
+					}
+					
 				}
 
 				// check which mode things should be rendered as
@@ -488,10 +490,8 @@ void Renderer::renderEntities(bool reflection) {
 		entityBuffer[this->highlightedEntity]->setShader(previousShader);
 		glEnable(GL_DEPTH_TEST);
 
-		bool outlineMode = false;
-
 		// wireframe outline implementation
-		if (outlineMode == true) {
+		if (outlineType == 2) {
 			glDisable(GL_DEPTH_TEST);
 			glPolygonMode(GL_FRONT, GL_LINE);
 			glLineWidth(10.0f);
@@ -503,57 +503,6 @@ void Renderer::renderEntities(bool reflection) {
 			glPolygonMode(GL_FRONT, GL_FILL);
 			glEnable(GL_DEPTH_TEST);
 		}
-
-	//	// post-processing outline implementation
-	//	/*else if (outlineMode == false) {
-	//		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, this->outlineTextureMask, 0);
-
-	//		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	//		glClear(GL_COLOR_BUFFER_BIT);
-	//		glDisable(GL_DEPTH_TEST);
-	//		glDisable(GL_STENCIL_TEST);
-	//		int previousShader = entityBuffer[this->highlightedEntity]->getShader();
-	//		entityBuffer[this->highlightedEntity]->setShader(13);
-	//		this->renderEntity(entityBuffer[this->highlightedEntity]);
-	//		entityBuffer[this->highlightedEntity]->setShader(previousShader);
-	//		glEnable(GL_DEPTH_TEST);
-	//		glEnable(GL_STENCIL_TEST);
-	//		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-
-	//		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture, 0);
-
-	//		glDisable(GL_DEPTH_TEST);
-	//		glDisable(GL_STENCIL_TEST);
-
-	//		glUseProgram(shaderBuffer[12].getID());
-
-	//		int screenTexUniformID = glGetUniformLocation(shaderBuffer[12].getID(), "screenTexture");
-	//		int outlineMaskUniformID = glGetUniformLocation(shaderBuffer[12].getID(), "outlineMask");
-
-	//		glUniform1i(screenTexUniformID, 0);
-	//		glUniform1i(outlineMaskUniformID, 1);
-
-	//		glActiveTexture(GL_TEXTURE0);
-	//		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture);
-
-	//		glActiveTexture(GL_TEXTURE1);
-	//		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->outlineTextureMask);
-
-	//		glUniform1i(glGetUniformLocation(shaderBuffer[12].getID(), "samples"), samples);
-
-	//		glEnableVertexAttribArray(0);
-	//		glBindBuffer(GL_ARRAY_BUFFER, this->screenVBO);
-	//		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	//		glEnableVertexAttribArray(1);
-	//		glBindBuffer(GL_ARRAY_BUFFER, this->screenUVVBO);
-	//		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	//		glDrawArrays(GL_TRIANGLES, 0, 6);
-	//		glActiveTexture(GL_TEXTURE0);
-	//		glEnable(GL_DEPTH_TEST);
-	//		glEnable(GL_STENCIL_TEST);
-	//	}*/
 	}
 }
 
@@ -575,7 +524,12 @@ void Renderer::renderEntity(Entity* entity) {
 	if (strcmp(shaderBuffer[entity->getShader()].getName(), "reflection") == 0 ||
 		strcmp(shaderBuffer[entity->getShader()].getName(), "refraction/glass") == 0 ||
 		strcmp(shaderBuffer[entity->getShader()].getName(), "reflection/diamond") == 0) {
-		glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
+		if (doReflection) {
+			glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
+		}
+		else {
+			glBindTexture(GL_TEXTURE_CUBE_MAP, entityBuffer[0]->getTexture());
+		}
 	}
 
 
@@ -670,15 +624,20 @@ void Renderer::renderOutline() {
 
 
 void Renderer::renderMultisamplePostProcessing() {
+	glBindFramebuffer(GL_FRAMEBUFFER, this->postProcessingFBO);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
 
 	if (depthBuffer) {
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture);
 		glUseProgram(this->depthShader->getID());
+		glUniform1i(glGetUniformLocation(this->screenShader->getID(), "samples"), 1);
 	}
 	else {
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture);
 		glUseProgram(this->screenShader->getID());
+		glUniform1i(glGetUniformLocation(this->screenShader->getID(), "samples"), samples);
 	}
 
 	/*if (this->highlightedEntity >= 0 && !depthBuffer) {
@@ -688,7 +647,7 @@ void Renderer::renderMultisamplePostProcessing() {
 		glUniform1i(glGetUniformLocation(this->screenShader->getID(), "samples"), samples);
 	}*/
 
-	glUniform1i(glGetUniformLocation(this->screenShader->getID(), "samples"), samples);
+	
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->screenVBO);
@@ -1235,5 +1194,21 @@ double Renderer::getMSPostProcessingPassTime() {
 
 double Renderer::getPostProcessingPassTime() {
 	return(this->postProcessingPassTime);
+}
+
+unsigned int Renderer::getOutlineMaskTexture() {
+	return(this->outlineTextureMask);
+}
+
+unsigned int Renderer::getDepthBufferTexture() {
+	bool tmpVar = depthBuffer;
+
+	depthBuffer = true;
+	this->renderMultisamplePostProcessing();
+	depthBuffer = tmpVar;
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	return(this->postProcessingTexture);
 }
 

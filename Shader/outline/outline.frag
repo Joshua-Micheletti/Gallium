@@ -42,9 +42,7 @@ void main() {
         float g = map(154, 0, 255, 0, 1);
         float b = map(102, 0, 255, 0, 1);
 //        FragColor = vec4(1.0, 0.2, 0.0, 1.0);
-//        FragColor = vec4(r, g, b, 1.0);
-
-        FragColor = mix(vec4(r,g,b,1.0), texelFetch(screenTexture, newTexCoord, 0), 0.5);
+        FragColor = vec4(r, g, b, 1.0);
         
     } else {
         FragColor = texelFetch(screenTexture, newTexCoord, 0);

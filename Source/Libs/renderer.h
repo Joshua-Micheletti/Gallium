@@ -18,6 +18,9 @@ class Renderer {
 		double getForwardRenderTime();
 		double getMSPostProcessingPassTime();
 		double getPostProcessingPassTime();
+
+		unsigned int getOutlineMaskTexture();
+		unsigned int getDepthBufferTexture();
 		
 
 	private:

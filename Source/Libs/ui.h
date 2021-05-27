@@ -50,10 +50,15 @@ class UI {
 		bool pauseFlag;
 		bool showLeftColumn;
 		bool showRightColumn;
+		bool showBottomRow;
 
 		ImVec2 menuBarSize;
 
 		ImVec2 rightColumnSize;
+
+		ImVec2 leftColumnSize;
+
+		unsigned int depthTexture;
 
 		void setupImGuiStyle();
 
@@ -64,6 +69,8 @@ class UI {
 		void drawLeftColumn();
 
 		void drawRightColumn();
+
+		void drawBottomRow();
 
 		void drawImGui();
 };

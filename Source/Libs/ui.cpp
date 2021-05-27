@@ -14,6 +14,8 @@
 #include "eventHandler.h"
 #include "GLFW/glfw3.h"
 #include <SFML/Graphics.hpp>
+#include <stdio.h>
+#include <algorithm>
 
 // initialize the fields and formats the texts styles
 UI::UI(GLFWwindow *window, Renderer* renderer, EventHandler* eventHandler) {
@@ -34,6 +36,7 @@ UI::UI(GLFWwindow *window, Renderer* renderer, EventHandler* eventHandler) {
 	this->pauseFlag = false;
 	this->showLeftColumn = true;
 	this->showRightColumn = true;
+	this->showBottomRow = true;
 
 	//ImGui::SFML::Init(*this->window);
 	ImGui::CreateContext();
@@ -229,6 +232,8 @@ void UI::drawLeftColumn() {
 		ImGui::SetWindowSize(ImVec2(ImGui::GetWindowWidth(), screenHeight - this->menuBarSize.y));
 	}
 
+	this->leftColumnSize = ImGui::GetWindowSize();
+
 	this->renderer->setHighlightedEntity(selected);
 	
 	ImGui::SetWindowPos(ImVec2(0, this->menuBarSize.y));
@@ -344,6 +349,59 @@ void UI::drawRightColumn() {
 
 	rightColumnStyle.WindowRounding = 0;
 	rightColumnStyle.WindowBorderSize = 0;
+
+	ImGui::End();
+}
+
+void UI::drawBottomRow() {
+	static bool firstDraw = true;
+
+	static ImGuiWindowFlags bottomRowFlags = ImGuiWindowFlags_NoMove |
+		//ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_NoSavedSettings |
+		ImGuiWindowFlags_NoTitleBar;
+
+	ImGui::SetNextWindowSizeConstraints(ImVec2(-1, 0), ImVec2(-1, FLT_MAX));
+
+	ImGui::Begin("BottomRow", NULL, bottomRowFlags);
+	{
+		float height;
+		if (firstDraw) {
+			height = 200.0f;
+		}
+		else {
+			height = std::min(ImGui::GetWindowSize().y - 20.0f, 200.0f);
+		}
+
+		ImGui::BeginChild("OutlineMask", ImVec2((float)screenWidth / (float)screenHeight * height, 0));
+		ImGui::Image((ImTextureID)this->renderer->getOutlineMaskTexture(), ImVec2((float)screenWidth / (float)screenHeight * height, height), ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::EndChild();
+
+		ImGui::SameLine();
+
+		ImGui::BeginChild("Depth", ImVec2((float)screenWidth / (float)screenHeight * height, 0));
+		ImGui::Image((ImTextureID)this->renderer->getDepthBufferTexture(), ImVec2((float)screenWidth / (float)screenHeight * height, height), ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::EndChild();
+
+		ImGui::SameLine();
+
+		ImGui::BeginChild("Texture", ImVec2((float)screenWidth / (float)screenHeight * height, 0));
+		ImGui::Image((ImTextureID)entityBuffer[3]->getTexture(), ImVec2((float)screenWidth / (float)screenHeight * height, height), ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::EndChild();
+	}
+
+	if (firstDraw) {
+		ImGui::SetWindowSize(ImVec2(screenWidth - 500, 220));
+		firstDraw = false;
+	}
+	else {
+		ImGui::SetWindowSize(ImVec2(screenWidth - this->leftColumnSize.x - this->rightColumnSize.x, ImGui::GetWindowSize().y));
+	}
+	
+	ImVec2 size = ImGui::GetWindowSize();
+
+	ImGui::SetWindowPos(ImVec2(this->leftColumnSize.x, screenHeight - size.y));
 
 	ImGui::End();
 }
@@ -523,6 +581,10 @@ void UI::drawImGui() {
 
 	if (this->showRightColumn == true) {
 		this->drawRightColumn();
+	}
+
+	if (this->showBottomRow == true) {
+		this->drawBottomRow();
 	}
 
 	this->drawFPSWindow();

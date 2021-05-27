@@ -12,7 +12,7 @@ float map(float x, float in_min, float in_max, float out_min, float out_max) {
 }
 
 void main() {
-    int size = 20;
+    int size = 10;
     int steps = 10;
     ivec2 texSize = textureSize(screenTexture, 0);
     ivec2 newTexCoord = ivec2(TexCoords.x * texSize.x, TexCoords.y * texSize.y);
@@ -25,8 +25,8 @@ void main() {
     float dist = size + 1;
     float tmpDist;
     if (texelFetch(outlineMask, newTexCoord, 0).x <= 0.5) {
-        for (int i = -size; i < size; i += size / steps) {
-            for (int j = -size; j < size; j += size / steps) {
+        for (int i = -size; i < size; i += int(size / steps)) {
+            for (int j = -size; j < size; j += int(size / steps)) {
                 if (texelFetch(outlineMask, ivec2(newTexCoord.x + i, newTexCoord.y + j), 0).x >= 0.5) {
                     tmpDist = sqrt(pow(i, 2) + pow(j, 2));
                     if (tmpDist < dist) {

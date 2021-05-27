@@ -1,5 +1,3 @@
-//#include <glad\glad.h>
-//#include <SFML/Graphics.hpp>
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
@@ -15,6 +13,7 @@ unsigned int screenWidth = 1280;
 unsigned int screenHeight = 720;
 unsigned int windowWidth = 1280;
 unsigned int windowHeight = 720;
+
 int samples = 16;
 bool vsync = true;
 bool fullscreen = false;
@@ -54,12 +53,12 @@ std::vector<Camera*> cameraBuffer;
 std::vector<glm::mat4> projectionBuffer;
 
 Camera camera(glm::vec3(30.0f, 30.0f, 30.0f),   // position
-	glm::vec3(0.0f, 225.0f, -35.0f),  // direction
-	glm::vec3(0.0f, 1.0f, 0.0f));     // up;
+			  glm::vec3(0.0f, 225.0f, -35.0f),  // direction
+			  glm::vec3(0.0f, 1.0f, 0.0f));     // up;
 
 Camera camera2(glm::vec3(0.0f, 0.0f, 0.0f),
-	glm::vec3(0.0f, 0.0f, 0.0f),
-	glm::vec3(0.0f, -1.0f, 0.0f));
+			   glm::vec3(0.0f, 0.0f, 0.0f),
+			   glm::vec3(0.0f, -1.0f, 0.0f));
 
 Entity* light = new Entity("light");
 
@@ -82,8 +81,6 @@ void resizeCallback(GLFWwindow* window, int x, int y) {
 
 GLFWwindow* initGLFW_OpenGL(std::string name) {
 	glfwInit();
-
-	//glfwWindowHint(GLFW_SAMPLES, samples);
 	
 	GLFWwindow* window;
 	window = glfwCreateWindow(screenWidth, screenHeight, "3DEngine", NULL, NULL);
@@ -373,7 +370,7 @@ GLFWwindow* setup() {
 	drawBS = false;
 	drawBS2 = false;
 	drawBS3 = false;
-	doReflection = true;
+	doReflection = false;
 	updateResolution = false;
 	updated = true;
 	depthBuffer = false;
