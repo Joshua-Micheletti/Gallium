@@ -6,6 +6,7 @@ layout (location = 1) in vec2 uv ;
 uniform int samples ;
 
 out vec2 TexCoords;
+
 flat out int fragSamples;
 
 void main() {

@@ -5,11 +5,12 @@ out vec4 FragColor;
 in vec2 TexCoords;
 flat in int fragSamples;
 
-//uniform sampler2D screenTexture;
 uniform sampler2DMS screenTexture;
+uniform int kernelSize_f ;
+uniform float kernel_f[121] ;
+uniform int effect ;
 
 const float PI = 3.1415926535;
-const float E = 2.71828;
 
 const float BarrelPower = 1.5;
 
@@ -26,208 +27,136 @@ vec2 Distort(vec2 p) {
     return 0.5 * (p + 1.0);
 }
 
-const float offset = 1.0 / 961.0;
-
-const int size = 5;
-
-float gaussian(float x, float sigma, float mu) {
-    return((1.0 / sigma * sqrt(2 * PI)) * pow(E, (-(1.0f / 2.0f)) * pow((x - mu) / sigma, 2)));
-}
-
-void createGaussianKernel(inout float kernel[size * size]) {
-    int index = 0;
-    float total = 0;
-    for (int i = -int(size / 2); i <= int(size / 2); i++) {
-        for (int j = -int(size / 2); j <= int(size / 2); j++) {
-            kernel[index] = (gaussian(i, 1, 0)) * (gaussian(j, 1, 0));
-            total += kernel[index];
-            index++;
-        }
-    }
-    index = 0;
-
-    for (int i = -int(size / 2); i <= int(size / 2); i++) {
-        for (int j = -int(size / 2); j <= int(size / 2); j++) {
-            kernel[index] /= total;
-            index++;
-        }
-    }
-}
-
-vec4 textureMultisample(sampler2DMS sampler, ivec2 coord) {
-    vec4 color = vec4(0.0);
-
-    for (int i = 0; i < 4; i++)
-        color += texelFetch(sampler, coord, i);
-
-    color /= float(4);
-
-    return color;
-}
-
-
 void main() {
     ivec2 texSize = textureSize(screenTexture);
-    ivec2 newTexCoord = ivec2(TexCoords.x * texSize.x, TexCoords.y * texSize.y);
-    vec4 color = vec4(0.0);
-    for (int i = 0; i < fragSamples; i++) {
-        color += texelFetch(screenTexture, newTexCoord, i);
+
+    // MSAA
+    if (effect == 0) {
+        ivec2 texSize = textureSize(screenTexture);
+        ivec2 newTexCoord = ivec2(TexCoords.x * texSize.x, TexCoords.y * texSize.y);
+        vec4 color = vec4(0.0);
+        for (int i = 0; i < fragSamples; i++) {
+            color += texelFetch(screenTexture, newTexCoord, i);
+        }
+
+        color /= float(fragSamples);
+
+        FragColor = color;
     }
 
-    color /= float(fragSamples);
-
-    FragColor = color;
-//    FragColor = texelFetch(screenTexture, newTexCoord, 0);
-
-//    vec4 color = textureMultisample(tex, texCoord);
-//    FragColor = texelFetch(screenTexture, newTexCoord, );
-//    FragColor = textureMultisample(screenTexture, ivec2(newTexCoord));
-//    FragColor = texelFetch(screenTexture, ivec2(newTexCoord), 0);
-//    FragColor = vec4(texture(screenTexture, TexCoords).xyz, 1.0);
-
-
     // inverted colors
-//    FragColor = vec4(vec3(1.0 - texture(screenTexture, TexCoords)), 1.0);
-
+    else if (effect == 1) {
+        vec3 texel = texelFetch(screenTexture, ivec2(TexCoords.x * texSize.x, TexCoords.y * texSize.y), 0).xyz;
+        FragColor = vec4(1.0 - texel, 1.0);
+    }
+     
     // color filter
-    // FragColor = vec4(texture(screenTexture, TexCoords).xyz * vec3(0.8, 0.8, 0.8), 1.0);
-
+    else if (effect == 2) {
+        vec3 texel = texelFetch(screenTexture, ivec2(TexCoords.x * texSize.x, TexCoords.y * texSize.y), 0).xyz;
+        FragColor = vec4(texel * vec3(1.0, 0.0, 1.0), 1.0);
+    }
 
     // black circle (view coords)
-    // float dist;
-    //
-    // dist = sqrt(pow(TexCoords.x - 0.5, 2) + pow(TexCoords.y - 0.5, 2));
-    // if (dist > 0.5) {
-    //   FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-    // } else {
-    //   FragColor = vec4(texture(screenTexture, TexCoords).xyz, 1.0);
-    // }
-
+    else if (effect == 3) {
+        float dist;
+        vec3 texel = texelFetch(screenTexture, ivec2(TexCoords.x * texSize.x, TexCoords.y * texSize.y), 0).xyz;
+        dist = sqrt(pow(TexCoords.x - 0.5, 2) + pow(TexCoords.y - 0.5, 2));
+        if (dist > 0.5) {
+            FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+        } else {
+            FragColor = vec4(texel, 1.0);
+        }
+    }
+    
     // black circle (screen coords)
-    // float screenX = map(TexCoords.x, 0.0, 1.0, 0.0, 1920.0);
-    // float screenY = map(TexCoords.y, 0.0, 1.0, 0.0, 1080.0);
-    // float screenDist = sqrt(pow(screenX - 960, 2) + pow(screenY - 540, 2));
-    //
-    // if (screenDist > 500) {
-    //   FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-    // } else {
-    //   FragColor = vec4(texture(screenTexture, TexCoords).xyz, 1.0);
-    // }
-
+    else if (effect == 4) {
+        vec3 texel = texelFetch(screenTexture, ivec2(TexCoords.x * texSize.x, TexCoords.y * texSize.y), 0).xyz;
+        float screenX = map(TexCoords.x, 0.0, 1.0, 0.0, 1920.0);
+        float screenY = map(TexCoords.y, 0.0, 1.0, 0.0, 1080.0);
+        float screenDist = sqrt(pow(screenX - 960, 2) + pow(screenY - 540, 2));
+    
+        if (screenDist > 500) {
+            FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+        } else {
+            FragColor = vec4(texel, 1.0);
+        }
+    }
 
     // black fade (view coords)
-    // float dist;
-    // dist = sqrt(pow(TexCoords.x - 0.5, 2) + pow(TexCoords.y - 0.5, 2));
-    // FragColor = vec4(texture(screenTexture, TexCoords).xyz * (1 - dist), 1.0);
+    else if (effect == 5) {
+        vec3 texel = texelFetch(screenTexture, ivec2(TexCoords.x * texSize.x, TexCoords.y * texSize.y), 0).xyz;
+        float dist;
+        dist = sqrt(pow(TexCoords.x - 0.5, 2) + pow(TexCoords.y - 0.5, 2));
+        FragColor = vec4(texel * (1 - dist), 1.0);
+    }  
 
     // black fade (screen coords)
-    // float screenX = map(TexCoords.x, 0.0, 1.0, 0.0, 1920.0);
-    // float screenY = map(TexCoords.y, 0.0, 1.0, 0.0, 1080.0);
-    // float screenDist = sqrt(pow(screenX - 960, 2) + pow(screenY - 540, 2));
-    //
-    // float distColor = map(screenDist, 0.0, 800.0, 0.0, 1.0);
-    // FragColor = vec4(texture(screenTexture, TexCoords).xyz * (1 - distColor), 1.0);
+    else if (effect == 6) {
+        vec3 texel = texelFetch(screenTexture, ivec2(TexCoords.x * texSize.x, TexCoords.y * texSize.y), 0).xyz;
+        float screenX = map(TexCoords.x, 0.0, 1.0, 0.0, 1920.0);
+        float screenY = map(TexCoords.y, 0.0, 1.0, 0.0, 1080.0);
+        float screenDist = sqrt(pow(screenX - 960, 2) + pow(screenY - 540, 2));
+    
+        float distColor = map(screenDist, 0.0, 800.0, 0.0, 1.0);
+        FragColor = vec4(texel * (1 - distColor), 1.0);
+    }
 
     // fish eye
-//    float aperture = 178.0;
-//    float apertureHalf = 0.5 * aperture * (PI / 180.0);
-//    float maxFactor = sin(apertureHalf);
-//    
-//    vec2 uv;
-//    vec2 xy = 2.0 * TexCoords - 1.0;
-//    float d = length(xy);
-//    if (d < (2.0 - maxFactor)) {
-//        d = length(xy * maxFactor);
-//        float z = sqrt(1.0 - d * d);
-//        float r = atan(d, z) / PI;
-//        float phi = atan(xy.y, xy.x);
-//    
-//        uv.x = r * cos(phi) + 0.5;
-//        uv.y = r * sin(phi) + 0.5;
-//    } else {
-//        uv = TexCoords;
-//    }
-//    
-//     FragColor = vec4(texture(screenTexture, uv).xyz, 1.0);
-
-
-     //barrel distortion
-//     vec2 xy = 2.0 * TexCoords.xy - 1.0;
-//     vec2 uv;
-//     float d = length(xy);
-//    
-//     if (d < 1.0) {
-//       uv = Distort(xy);
-//     } else {
-//       uv = TexCoords.xy;
-//     }
-//    
-//     FragColor = texture2D(screenTexture, uv);
-
-//    vec2 offsets[9] = vec2[](
-//        vec2(-offset,  offset), // top-left
-//        vec2( 0.0f,    offset), // top-center
-//        vec2( offset,  offset), // top-right
-//        vec2(-offset,  0.0f),   // center-left
-//        vec2( 0.0f,    0.0f),   // center-center
-//        vec2( offset,  0.0f),   // center-right
-//        vec2(-offset, -offset), // bottom-left
-//        vec2( 0.0f,   -offset), // bottom-center
-//        vec2( offset, -offset)  // bottom-right    
-//    );
-
-//    int middle = int(size / 2);
-//    vec2 offsets[size * size];
-//    int index = 0;
-//    for (int i = 0; i < size; i++) {
-//        for (int j = 0; j < size; j++) {
-//            offsets[index] = vec2(-middle * offset + offset * j, -middle * offset + offset * i);
-//            index++;
-//        }
-//    }
-//
-////    float kernel[9] = float[](
-////        1.0/16.0, 2.0/16.0, 1.0/16.0,
-////        2.0/16.0, 4.0/16.0, 2.0/16.0,
-////        1.0/16.0, 2.0/16.0, 1.0/16.0
-////    );
-//
-////    float kernel[25] = float[](
-////        1/273.0,  4/273.0,  7/273.0,  4/273.0, 1/273.0,
-////        4/273.0, 16/273.0, 26/273.0, 16/273.0, 4/273.0,
-////        7/273.0, 26/273.0, 41/273.0, 26/273.0, 7/273.0,
-////        4/273.0, 16/273.0, 26/273.0, 16/273.0, 4/273.0,
-////        1/273.0,  4/273.0,  7/273.0,  4/273.0, 1/273.0
-////    );
-//
-//    float kernel[size * size];
-//////
-//    for (int i = 0; i < size * size; i++) {
-//        kernel[i] = 0;
-//    }
-////
-//    createGaussianKernel(kernel);
-//
-////    float kernel[9] = float[](
-////        2,   2, 2,
-////        2, -15, 2,
-////        2,   2, 2
-////    );
-//
-////    float kernel[9] = float[](
-////        1, 1, 1,
-////        1, -8, 1,
-////        1, 1, 1
-////    );
-//    
-//    vec3 sampleTex[size * size];
-//    for(int i = 0; i < size * size; i++) {
-//        sampleTex[i] = vec3(texture(screenTexture, TexCoords.st + offsets[i]));
-//    }
-//
-//    vec3 col = vec3(0.0);
-//    for(int i = 0; i < size * size; i++)
-//        col += sampleTex[i] * kernel[i];
+    else if (effect == 7) {
+        float aperture = 178.0;
+        float apertureHalf = 0.5 * aperture * (PI / 180.0);
+        float maxFactor = sin(apertureHalf);
     
-//    FragColor = vec4(col, 1.0);
+        vec2 uv;
+        vec2 xy = 2.0 * TexCoords - 1.0;
+        float d = length(xy);
+        if (d < (2.0 - maxFactor)) {
+            d = length(xy * maxFactor);
+            float z = sqrt(1.0 - d * d);
+            float r = atan(d, z) / PI;
+            float phi = atan(xy.y, xy.x);
+    
+            uv.x = r * cos(phi) + 0.5;
+            uv.y = r * sin(phi) + 0.5;
+        } else {
+            uv = TexCoords;
+        }
+    
+        FragColor = vec4(texelFetch(screenTexture, ivec2(uv.x * texSize.x, uv.y * texSize.y), 0).xyz, 1.0);
+    }
+
+    //barrel distortion
+    else if (effect == 8) {
+        vec2 xy = 2.0 * TexCoords.xy - 1.0;
+        vec2 uv;
+        float d = length(xy);
+    
+        if (d < 1.0) {
+            uv = Distort(xy);
+        } else {
+            uv = TexCoords.xy;
+        }
+    
+        FragColor = vec4(texelFetch(screenTexture, ivec2(uv.x * texSize.x, uv.y * texSize.y), 0).xyz, 0.0);
+     }
+
+    // kernel convolution
+    else if (effect == 9) {
+        vec3 col = vec3(0.0);
+
+        int j = -int(trunc(float(kernelSize_f) / 2.0));
+        int i = -int(trunc(float(kernelSize_f) / 2.0));
+
+        for (int k = 0 ; k < kernelSize_f * kernelSize_f; k++) {
+            col += texelFetch(screenTexture, ivec2(TexCoords.x * texSize.x + i, TexCoords.y * texSize.y + j), 0).xyz * kernel_f[k];
+
+            i++;
+            if (i > int(trunc(float(kernelSize_f) / 2.0))) {
+                i = -int(trunc(float(kernelSize_f) / 2.0));
+                j++;
+            }
+        }
+
+        FragColor = vec4(col, 1.0);
+    }
 }

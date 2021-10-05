@@ -2,6 +2,7 @@
 #include "entity.h"
 #include "camera.h"
 #include "shader.h"
+#include "kernel.h"
 #include <vector>
 #include <glad\glad.h>
 #include <glm\glm.hpp>
@@ -14,6 +15,13 @@
 
 // constructor method, sets up the renderer (reflection and post processing)
 Renderer::Renderer() {
+	this->Kernels = new Kernel();
+
+	this->kernelMode = 0;
+	this->kernelSize = 3;
+	this->gaussianBlurStrength = 1.0;
+	this->postProcessingEffect = 0;
+
 	// sets the color to clear the color buffer with
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
@@ -239,6 +247,7 @@ Renderer::Renderer() {
 	glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
 	printf("max samples: %d\n", maxSamples);
 }
+
 
 // public method for rendering the scene
 void Renderer::render() {
@@ -632,12 +641,36 @@ void Renderer::renderMultisamplePostProcessing() {
 	if (depthBuffer) {
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture);
 		glUseProgram(this->depthShader->getID());
-		glUniform1i(glGetUniformLocation(this->screenShader->getID(), "samples"), 1);
+		glUniform1i(glGetUniformLocation(this->depthShader->getID(), "samples"), 1);
 	}
 	else {
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture);
 		glUseProgram(this->screenShader->getID());
 		glUniform1i(glGetUniformLocation(this->screenShader->getID(), "samples"), samples);
+
+		glUniform1i(glGetUniformLocation(this->screenShader->getID(), "effect"), this->postProcessingEffect);
+
+		if (this->postProcessingEffect == 9) {
+			if (this->kernelMode == 0) {
+				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), this->kernelSize);
+				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), this->kernelSize * this->kernelSize, this->Kernels->getGaussianKernel(this->gaussianBlurStrength, this->kernelSize));
+			}
+
+			else if (this->kernelMode == 1) {
+				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), this->kernelSize);
+				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), this->kernelSize * this->kernelSize, this->Kernels->getBoxBlurKernel(this->kernelSize));
+			}
+
+			else if (this->kernelMode == 2) {
+				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), 3);
+				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), 9, this->Kernels->getEdgeDetectionKernel());
+			} 
+
+			else if (this->kernelMode == 3) {
+				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), 3);
+				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), 9, this->Kernels->getSharpeningKernel());
+			}
+		}
 	}
 
 	/*if (this->highlightedEntity >= 0 && !depthBuffer) {
@@ -1210,5 +1243,21 @@ unsigned int Renderer::getDepthBufferTexture() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	return(this->postProcessingTexture);
+}
+
+void Renderer::setKernelConvolutionMode(int mode) {
+	this->kernelMode = mode;
+}
+
+void Renderer::setKernelSize(int size) {
+	this->kernelSize = size;
+}
+
+void Renderer::setGaussianBlurStrength(float sigma) {
+	this->gaussianBlurStrength = sigma;
+}
+
+void Renderer::setPostProcessingEffect(int effect) {
+	this->postProcessingEffect = effect;
 }
 

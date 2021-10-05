@@ -60,6 +60,9 @@
     <ClCompile Include="ExtLibs\imgui\imgui_impl_glfw.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Libs\kernel.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExtLibs\imgui\imconfig-SFML.h">
@@ -111,6 +114,9 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="ExtLibs\imgui\imgui_impl_glfw.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Libs\kernel.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

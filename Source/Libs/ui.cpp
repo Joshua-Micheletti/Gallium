@@ -331,6 +331,54 @@ void UI::drawRightColumn() {
 		if (ImGui::MenuItem("True Bounding Sphere", NULL, &drawBS3));
 	}
 
+	if (ImGui::CollapsingHeader("Post Processing Effect")) {
+		static int selectedEffect = 0;
+
+		const char* items[] = {"None", "Inverted Colors", "Color Filter", "Black Circle (View)", "Black Circle (screen)", "Black Fade (view)",
+							   "Black Fade (screen)", "Fish Eye", "Barrel Distortion", "Kernel Convolution"};
+
+		ImGui::Text("Effect");
+		ImGui::SameLine();
+		ImGui::Combo("###PostProcessDropdown", &selectedEffect, items, IM_ARRAYSIZE(items));
+
+		/*if (selectedEffect == 0) {
+			this->renderer->setPostProcessingEffect(0);
+		}
+
+		else if (selectedEffect == 1) {
+			this->renderer->setPostProcessingEffect(1);
+		}*/
+
+		this->renderer->setPostProcessingEffect(selectedEffect);
+
+		if (selectedEffect == 9) {
+			this->renderer->setPostProcessingEffect(9);
+
+			const char* kernels[] = { "Gaussian Blur", "Box Blur", "Edge Detection", "Sharpening" };
+
+			static int selectedKernel;
+			ImGui::Text("Kernel");
+			ImGui::SameLine();
+			ImGui::Combo("###KernelDropdown", &selectedKernel, kernels, IM_ARRAYSIZE(kernels));
+
+			this->renderer->setKernelConvolutionMode(selectedKernel);
+
+			if (selectedKernel == 0 || selectedKernel == 1) {
+				static int kernelSize;
+				ImGui::InputInt("Kernel Size", &kernelSize);
+
+				this->renderer->setKernelSize(kernelSize);
+
+				if (selectedKernel == 0) {
+					static float blurStrength;
+					ImGui::InputFloat("Blur Strength", &blurStrength);
+
+					this->renderer->setGaussianBlurStrength(blurStrength);
+				}
+			}
+		}
+	}
+
 	ImGui::PushStyleColor(ImGuiCol_ResizeGrip, 0);
 
 	if (firstDraw) {

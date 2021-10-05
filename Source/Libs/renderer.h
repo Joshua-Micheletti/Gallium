@@ -3,6 +3,7 @@
 #include <vector>
 #include "entity.h"
 #include "shader.h"
+#include "kernel.h"
 
 // class for rendering entities using shaders (mainly openGL)
 class Renderer {
@@ -21,11 +22,21 @@ class Renderer {
 
 		unsigned int getOutlineMaskTexture();
 		unsigned int getDepthBufferTexture();
+
+		void setKernelConvolutionMode(int);
+		void setKernelSize(int);
+		void setGaussianBlurStrength(float);
+		void setPostProcessingEffect(int);
 		
 
 	private:
 		int highlightedEntity;
 		unsigned int tmpBuffer;
+
+		int kernelMode;
+		int kernelSize;
+		float gaussianBlurStrength;
+		int postProcessingEffect;
 
 		unsigned int reflectionFBO;
 		unsigned int reflectionRBO;
@@ -55,6 +66,8 @@ class Renderer {
 		double forwardRenderTime;
 		double MSPostProcessingPassTime;
 		double postProcessingPassTime;
+
+		Kernel* Kernels;
 		
 		void renderReflectionCubemap();
 		void renderMultisamplePostProcessing();
@@ -63,7 +76,7 @@ class Renderer {
 		// method for updating the render resolution
 		void resizeScreen();
 		void renderEntities(bool);
-		void renderEntity(Entity*);
+		void renderEntity(Entity *);
 		void attachUniforms(Entity *, std::vector<uniform_t>);
 		void linkLayouts(Entity*, std::vector<char *>);
 		void renderOutline();
