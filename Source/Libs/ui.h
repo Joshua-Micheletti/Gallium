@@ -62,6 +62,8 @@ class UI {
 
 		void setupImGuiStyle();
 
+		void drawImage(unsigned int, float, float);
+
 		void drawMenuBar();
 
 		void drawFPSWindow();

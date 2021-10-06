@@ -53,6 +53,39 @@ void UI::setReferenceWindow(GLFWwindow *window) {
 	this->window = window;
 }
 
+void UI::drawImage(unsigned int texture, float width, float height) {
+	float my_tex_w = width;
+	float my_tex_h = height;
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		//ImGui::Text("%.0fx%.0f", my_tex_w, my_tex_h);
+		ImVec2 pos = ImGui::GetCursorScreenPos();
+		ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
+		ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
+		ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);   // No tint
+		ImVec4 border_col = ImVec4(1.0f, 1.0f, 1.0f, 0.5f); // 50% opaque white
+		ImGui::Image((ImTextureID)texture, ImVec2(my_tex_w, my_tex_h), ImVec2(0, 1), ImVec2(1, 0));
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::BeginTooltip();
+			float region_sz = 32.0f;
+			float region_x = io.MousePos.x - pos.x - region_sz * 0.5f;
+			float region_y = io.MousePos.y - pos.y - region_sz * 0.5f;
+			float zoom = 4.0f;
+			if (region_x < 0.0f) { region_x = 0.0f; }
+			else if (region_x > my_tex_w - region_sz) { region_x = my_tex_w - region_sz; }
+			if (region_y < 0.0f) { region_y = 0.0f; }
+			else if (region_y > my_tex_h - region_sz) { region_y = my_tex_h - region_sz; }
+			ImGui::Text("Min: (%.2f, %.2f)", region_x, region_y);
+			ImGui::Text("Max: (%.2f, %.2f)", region_x + region_sz, region_y + region_sz);
+			ImVec2 uv0 = ImVec2((region_x) / my_tex_w, (region_y) / my_tex_h);
+			ImVec2 uv1 = ImVec2((region_x + region_sz) / my_tex_w, (region_y + region_sz) / my_tex_h);
+			ImGui::Image((ImTextureID)texture, ImVec2(region_sz * zoom, region_sz * zoom), ImVec2(uv0.x, fabs(1 - uv0.y)), ImVec2(uv1.x, fabs(1 - uv1.y)), tint_col, border_col);
+			ImGui::EndTooltip();
+		}
+	}
+}
+
 void UI::setupImGuiStyle() {
 	ImGuiStyle& style = ImGui::GetStyle();
 	style.FrameRounding = 0.0f;
@@ -341,41 +374,53 @@ void UI::drawRightColumn() {
 		ImGui::SameLine();
 		ImGui::Combo("###PostProcessDropdown", &selectedEffect, items, IM_ARRAYSIZE(items));
 
-		/*if (selectedEffect == 0) {
-			this->renderer->setPostProcessingEffect(0);
-		}
-
-		else if (selectedEffect == 1) {
-			this->renderer->setPostProcessingEffect(1);
-		}*/
-
 		this->renderer->setPostProcessingEffect(selectedEffect);
+
+		ImGui::Separator();
+
+		if (selectedEffect == 2) {
+			static float color[3] = { 1.0, 1.0, 1.0 };
+			ImGui::ColorEdit3("Color", color);
+
+			this->renderer->setFilterColor(color[0], color[1], color[2]);
+		}
 
 		if (selectedEffect == 9) {
 			this->renderer->setPostProcessingEffect(9);
 
-			const char* kernels[] = { "Gaussian Blur", "Box Blur", "Edge Detection", "Sharpening" };
+			const char* kernels[] = { "Gaussian Blur", "Box Blur", "Edge Detection", "Sharpening", "Emboss", "Horizontal", "Vertical", "Diagonal SX", "Diagonal DX"};
 
-			static int selectedKernel;
+			// add custom
+
+			static int selectedKernel = 0;
 			ImGui::Text("Kernel");
 			ImGui::SameLine();
 			ImGui::Combo("###KernelDropdown", &selectedKernel, kernels, IM_ARRAYSIZE(kernels));
 
 			this->renderer->setKernelConvolutionMode(selectedKernel);
 
+			ImGui::Separator();
+
 			if (selectedKernel == 0 || selectedKernel == 1) {
-				static int kernelSize;
+				static int kernelSize = 3;
 				ImGui::InputInt("Kernel Size", &kernelSize);
+				if (kernelSize < 1) {
+					kernelSize = 1;
+				}
+				else if (kernelSize > 21) {
+					kernelSize = 21;
+				}
 
 				this->renderer->setKernelSize(kernelSize);
 
 				if (selectedKernel == 0) {
-					static float blurStrength;
+					static float blurStrength = 3;
 					ImGui::InputFloat("Blur Strength", &blurStrength);
 
 					this->renderer->setGaussianBlurStrength(blurStrength);
 				}
 			}
+
 		}
 	}
 
@@ -422,20 +467,23 @@ void UI::drawBottomRow() {
 			height = std::min(ImGui::GetWindowSize().y - 20.0f, 200.0f);
 		}
 
+		float imageWidth = (float)screenWidth / (float)screenHeight * height;
+		float imageHeight = (float)height;
+
 		ImGui::BeginChild("OutlineMask", ImVec2((float)screenWidth / (float)screenHeight * height, 0));
-		ImGui::Image((ImTextureID)this->renderer->getOutlineMaskTexture(), ImVec2((float)screenWidth / (float)screenHeight * height, height), ImVec2(0, 1), ImVec2(1, 0));
+		this->drawImage(this->renderer->getOutlineMaskTexture(), imageWidth, imageHeight);
 		ImGui::EndChild();
 
 		ImGui::SameLine();
 
 		ImGui::BeginChild("Depth", ImVec2((float)screenWidth / (float)screenHeight * height, 0));
-		ImGui::Image((ImTextureID)this->renderer->getDepthBufferTexture(), ImVec2((float)screenWidth / (float)screenHeight * height, height), ImVec2(0, 1), ImVec2(1, 0));
+		this->drawImage(this->renderer->getDepthBufferTexture(), imageWidth, imageHeight);
 		ImGui::EndChild();
 
 		ImGui::SameLine();
 
 		ImGui::BeginChild("Texture", ImVec2((float)screenWidth / (float)screenHeight * height, 0));
-		ImGui::Image((ImTextureID)entityBuffer[3]->getTexture(), ImVec2((float)screenWidth / (float)screenHeight * height, height), ImVec2(0, 1), ImVec2(1, 0));
+		this->drawImage(entityBuffer[3]->getTexture(), imageWidth, imageHeight);
 		ImGui::EndChild();
 	}
 

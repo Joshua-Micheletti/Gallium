@@ -7,8 +7,9 @@ flat in int fragSamples;
 
 uniform sampler2DMS screenTexture;
 uniform int kernelSize_f ;
-uniform float kernel_f[121] ;
+uniform float kernel_f[441] ;
 uniform int effect ;
+uniform vec3 filterColor ;
 
 const float PI = 3.1415926535;
 
@@ -53,7 +54,7 @@ void main() {
     // color filter
     else if (effect == 2) {
         vec3 texel = texelFetch(screenTexture, ivec2(TexCoords.x * texSize.x, TexCoords.y * texSize.y), 0).xyz;
-        FragColor = vec4(texel * vec3(1.0, 0.0, 1.0), 1.0);
+        FragColor = vec4(texel * filterColor, 1.0);
     }
 
     // black circle (view coords)

@@ -73,3 +73,53 @@ float* Kernel::getBoxBlurKernel(int size) {
 
     return(kernel);
 }
+
+float* Kernel::getEmbossKernel() {
+    float kernel[9] = {
+        -2, -1,  0,
+        -1,  1,  1,
+         0,  1,  2
+    };
+
+    return(kernel);
+}
+
+float* Kernel::getHorizontalKernel() {
+    float kernel[9] = {
+        -1, -1, -1,
+         2,  2,  2,
+        -1, -1, -1
+    };
+
+    return(kernel);
+}
+
+float* Kernel::getVerticalKernel() {
+    float kernel[9] = {
+        -1,  2, -1,
+        -1,  2, -1,
+        -1,  2, -1
+    };
+
+    return(kernel);
+}
+
+float* Kernel::getDiagonalSXKernel() {
+    float kernel[9] = {
+         2, -1, -1,
+        -1,  2, -1,
+        -1, -1,  2
+    };
+
+    return(kernel);
+}
+
+float* Kernel::getDiagonalDXKernel() {
+    float kernel[9] = {
+        -1, -1,  2,
+        -1,  2, -1,
+         2, -1, -1
+    };
+
+    return(kernel);
+}

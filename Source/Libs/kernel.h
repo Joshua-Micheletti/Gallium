@@ -11,4 +11,9 @@ class Kernel {
 		float* getEdgeDetectionKernel();
 		float* getSharpeningKernel();
 		float* getBoxBlurKernel(int);
+		float* getEmbossKernel();
+		float* getHorizontalKernel();
+		float* getVerticalKernel();
+		float* getDiagonalSXKernel();
+		float* getDiagonalDXKernel();
 };

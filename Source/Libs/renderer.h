@@ -4,6 +4,7 @@
 #include "entity.h"
 #include "shader.h"
 #include "kernel.h"
+#include <glm\glm.hpp>
 
 // class for rendering entities using shaders (mainly openGL)
 class Renderer {
@@ -27,6 +28,7 @@ class Renderer {
 		void setKernelSize(int);
 		void setGaussianBlurStrength(float);
 		void setPostProcessingEffect(int);
+		void setFilterColor(float, float, float);
 		
 
 	private:
@@ -37,6 +39,8 @@ class Renderer {
 		int kernelSize;
 		float gaussianBlurStrength;
 		int postProcessingEffect;
+
+		glm::vec3 filterColor;
 
 		unsigned int reflectionFBO;
 		unsigned int reflectionRBO;

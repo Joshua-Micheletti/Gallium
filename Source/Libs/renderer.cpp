@@ -650,6 +650,10 @@ void Renderer::renderMultisamplePostProcessing() {
 
 		glUniform1i(glGetUniformLocation(this->screenShader->getID(), "effect"), this->postProcessingEffect);
 
+		if (this->postProcessingEffect == 2) {
+			glUniform3f(glGetUniformLocation(this->screenShader->getID(), "filterColor"), this->filterColor.x, this->filterColor.y, this->filterColor.z);
+		}
+
 		if (this->postProcessingEffect == 9) {
 			if (this->kernelMode == 0) {
 				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), this->kernelSize);
@@ -669,6 +673,31 @@ void Renderer::renderMultisamplePostProcessing() {
 			else if (this->kernelMode == 3) {
 				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), 3);
 				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), 9, this->Kernels->getSharpeningKernel());
+			}
+
+			else if (this->kernelMode == 4) {
+				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), 3);
+				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), 9, this->Kernels->getEmbossKernel());
+			}
+
+			else if (this->kernelMode == 5) {
+				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), 3);
+				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), 9, this->Kernels->getHorizontalKernel());
+			}
+
+			else if (this->kernelMode == 6) {
+				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), 3);
+				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), 9, this->Kernels->getVerticalKernel());
+			}
+
+			else if (this->kernelMode == 7) {
+				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), 3);
+				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), 9, this->Kernels->getDiagonalSXKernel());
+			}
+
+			else if (this->kernelMode == 8) {
+				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), 3);
+				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), 9, this->Kernels->getDiagonalDXKernel());
 			}
 		}
 	}
@@ -1259,5 +1288,9 @@ void Renderer::setGaussianBlurStrength(float sigma) {
 
 void Renderer::setPostProcessingEffect(int effect) {
 	this->postProcessingEffect = effect;
+}
+
+void Renderer::setFilterColor(float r, float g, float b) {
+	this->filterColor = glm::vec3(r, g, b);
 }
 
