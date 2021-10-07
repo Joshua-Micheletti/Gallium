@@ -7,13 +7,25 @@ class Kernel {
 	public:
 		Kernel();
 
-		float *getGaussianKernel(float, int);
-		float* getEdgeDetectionKernel();
-		float* getSharpeningKernel();
-		float* getBoxBlurKernel(int);
-		float* getEmbossKernel();
-		float* getHorizontalKernel();
-		float* getVerticalKernel();
-		float* getDiagonalSXKernel();
-		float* getDiagonalDXKernel();
+		void setGaussianKernel(float, int);
+		void setEdgeDetectionKernel();
+		void setSharpeningKernel();
+		void setBoxBlurKernel(int);
+		void setEmbossKernel();
+		void setHorizontalKernel();
+		void setVerticalKernel();
+		void setDiagonalSXKernel();
+		void setDiagonalDXKernel();
+		void setCustomKernel();
+		void setCustomKernel(float, float, float, float, float, float, float, float, float);
+
+		float* getKernel();
+		int getKernelSize();
+		float getBlurStrength();
+
+	private:
+		float* kernel;
+		int kernelMode;
+		int kernelSize;
+		float gaussianBlurStrength;
 };

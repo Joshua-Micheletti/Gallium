@@ -53,6 +53,19 @@ void UI::setReferenceWindow(GLFWwindow *window) {
 	this->window = window;
 }
 
+void UI::HelpMarker(const char* desc)
+{
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted(desc);
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
+}
+
 void UI::drawImage(unsigned int texture, float width, float height) {
 	float my_tex_w = width;
 	float my_tex_h = height;
@@ -386,18 +399,51 @@ void UI::drawRightColumn() {
 		}
 
 		if (selectedEffect == 9) {
-			this->renderer->setPostProcessingEffect(9);
-
-			const char* kernels[] = { "Gaussian Blur", "Box Blur", "Edge Detection", "Sharpening", "Emboss", "Horizontal", "Vertical", "Diagonal SX", "Diagonal DX"};
-
-			// add custom
+			const char* kernels[] = { "Gaussian Blur", "Box Blur", "Edge Detection", "Sharpening", "Emboss", "Horizontal", "Vertical",
+									  "Diagonal SX", "Diagonal DX", "Custom" };
 
 			static int selectedKernel = 0;
 			ImGui::Text("Kernel");
 			ImGui::SameLine();
 			ImGui::Combo("###KernelDropdown", &selectedKernel, kernels, IM_ARRAYSIZE(kernels));
 
-			this->renderer->setKernelConvolutionMode(selectedKernel);
+			
+			//this->renderer->setKernelConvolutionMode(selectedKernel);
+			if (selectedKernel == 2) {
+				this->renderer->Kernels->setEdgeDetectionKernel();
+				ImGui::SameLine();
+				this->HelpMarker("|-1|-1|-1|\n|-1| 8|-1|\n|-1|-1|-1|");
+			}
+			else if (selectedKernel == 3) {
+				this->renderer->Kernels->setSharpeningKernel();
+				ImGui::SameLine();
+				this->HelpMarker("| 0|-1| 0|\n|-1| 5|-1|\n| 0|-1| 0|");
+			}
+			else if (selectedKernel == 4) {
+				this->renderer->Kernels->setEmbossKernel();
+				ImGui::SameLine();
+				this->HelpMarker("|-2|-1| 0|\n|-1| 1| 1|\n| 0| 1| 2|");
+			}
+			else if (selectedKernel == 5) {
+				this->renderer->Kernels->setHorizontalKernel();
+				ImGui::SameLine();
+				this->HelpMarker("|-1|-1|-1|\n| 2| 2| 2|\n|-1|-1|-1|");
+			}
+			else if (selectedKernel == 6) {
+				this->renderer->Kernels->setVerticalKernel();
+				ImGui::SameLine();
+				this->HelpMarker("|-1| 2|-1|\n|-1| 2|-1|\n|-1| 2|-1|");
+			}
+			else if (selectedKernel == 7) {
+				this->renderer->Kernels->setDiagonalSXKernel();
+				ImGui::SameLine();
+				this->HelpMarker("| 2|-1|-1|\n|-1| 2|-1|\n|-1|-1| 2|");
+			}
+			else if (selectedKernel == 8) {
+				this->renderer->Kernels->setDiagonalDXKernel();
+				ImGui::SameLine();
+				this->HelpMarker("|-1|-1| 2|\n|-1| 2|-1|\n| 2|-1|-1|");
+			}
 
 			ImGui::Separator();
 
@@ -411,16 +457,48 @@ void UI::drawRightColumn() {
 					kernelSize = 21;
 				}
 
-				this->renderer->setKernelSize(kernelSize);
-
 				if (selectedKernel == 0) {
 					static float blurStrength = 3;
 					ImGui::InputFloat("Blur Strength", &blurStrength);
-
-					this->renderer->setGaussianBlurStrength(blurStrength);
+					this->renderer->Kernels->setGaussianKernel(blurStrength, kernelSize);
+				}
+				else {
+					this->renderer->Kernels->setBoxBlurKernel(kernelSize);
 				}
 			}
 
+			if (selectedKernel == 9) {
+				static float a = 0;
+				static float b = 0;
+				static float c = 0;
+				static float d = 0;
+				static float e = 1;
+				static float f = 0;
+				static float g = 0;
+				static float h = 0;
+				static float i = 0;
+
+				ImGui::PushItemWidth((ImGui::GetWindowSize().x - 30) / 3);
+				ImGui::DragFloat("###A", &a, 0.005f);
+				ImGui::SameLine();
+				ImGui::DragFloat("###B", &b, 0.005f);
+				ImGui::SameLine();
+				ImGui::DragFloat("###C", &c, 0.005f);
+
+				ImGui::DragFloat("###D", &d, 0.005f);
+				ImGui::SameLine();
+				ImGui::DragFloat("###E", &e, 0.005f);
+				ImGui::SameLine();
+				ImGui::DragFloat("###F", &f, 0.005f);
+
+				ImGui::DragFloat("###G", &g, 0.005f);
+				ImGui::SameLine();
+				ImGui::DragFloat("###H", &h, 0.005f);
+				ImGui::SameLine();
+				ImGui::DragFloat("###I", &i, 0.005f);
+
+				this->renderer->Kernels->setCustomKernel(a, b, c, d, e, f, g, h, i);
+			}
 		}
 	}
 
@@ -492,13 +570,29 @@ void UI::drawBottomRow() {
 		firstDraw = false;
 	}
 	else {
-		ImGui::SetWindowSize(ImVec2(screenWidth - this->leftColumnSize.x - this->rightColumnSize.x, ImGui::GetWindowSize().y));
+		float offset = 0;
+
+		if (this->showLeftColumn) {
+			offset += this->leftColumnSize.x;
+		}
+
+		if (this->showRightColumn) {
+			offset += this->rightColumnSize.x;
+		}
+
+		ImGui::SetWindowSize(ImVec2(screenWidth - offset, ImGui::GetWindowSize().y));
 	}
 	
 	ImVec2 size = ImGui::GetWindowSize();
 
-	ImGui::SetWindowPos(ImVec2(this->leftColumnSize.x, screenHeight - size.y));
+	if (this->showLeftColumn) {
+		ImGui::SetWindowPos(ImVec2(this->leftColumnSize.x, screenHeight - size.y));
+	}
+	else {
+		ImGui::SetWindowPos(ImVec2(0, screenHeight - size.y));
+	}
 
+	
 	ImGui::End();
 }
 
@@ -616,9 +710,10 @@ void UI::drawMenuBar() {
 		}
 
 		if (ImGui::BeginMenu("View")) {
-			if (ImGui::MenuItem("FPS", NULL, &this->showFPS));
-			if (ImGui::MenuItem("Left Column", NULL, &this->showLeftColumn));
-			if (ImGui::MenuItem("Right Column", NULL, &this->showRightColumn));
+			ImGui::MenuItem("FPS", NULL, &this->showFPS);
+			ImGui::MenuItem("Left Column", NULL, &this->showLeftColumn);
+			ImGui::MenuItem("Right Column", NULL, &this->showRightColumn);
+			ImGui::MenuItem("Bottom Row", NULL, &this->showBottomRow);
 
 			ImGui::EndMenu();
 		}

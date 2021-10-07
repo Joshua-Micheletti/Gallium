@@ -14,6 +14,8 @@ class Renderer {
 		// method for rendering
 		void render();
 
+		Kernel* Kernels;
+
 		void setHighlightedEntity(int);
 
 		double getReflectionRenderTime();
@@ -24,9 +26,6 @@ class Renderer {
 		unsigned int getOutlineMaskTexture();
 		unsigned int getDepthBufferTexture();
 
-		void setKernelConvolutionMode(int);
-		void setKernelSize(int);
-		void setGaussianBlurStrength(float);
 		void setPostProcessingEffect(int);
 		void setFilterColor(float, float, float);
 		
@@ -35,11 +34,7 @@ class Renderer {
 		int highlightedEntity;
 		unsigned int tmpBuffer;
 
-		int kernelMode;
-		int kernelSize;
-		float gaussianBlurStrength;
 		int postProcessingEffect;
-
 		glm::vec3 filterColor;
 
 		unsigned int reflectionFBO;
@@ -70,8 +65,6 @@ class Renderer {
 		double forwardRenderTime;
 		double MSPostProcessingPassTime;
 		double postProcessingPassTime;
-
-		Kernel* Kernels;
 		
 		void renderReflectionCubemap();
 		void renderMultisamplePostProcessing();

@@ -16,10 +16,6 @@
 // constructor method, sets up the renderer (reflection and post processing)
 Renderer::Renderer() {
 	this->Kernels = new Kernel();
-
-	this->kernelMode = 0;
-	this->kernelSize = 3;
-	this->gaussianBlurStrength = 1.0;
 	this->postProcessingEffect = 0;
 
 	// sets the color to clear the color buffer with
@@ -247,7 +243,6 @@ Renderer::Renderer() {
 	glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
 	printf("max samples: %d\n", maxSamples);
 }
-
 
 // public method for rendering the scene
 void Renderer::render() {
@@ -655,7 +650,11 @@ void Renderer::renderMultisamplePostProcessing() {
 		}
 
 		if (this->postProcessingEffect == 9) {
-			if (this->kernelMode == 0) {
+			int kernelSize = this->Kernels->getKernelSize();
+
+			glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), kernelSize);
+			glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), kernelSize * kernelSize, this->Kernels->getKernel());
+			/*if (this->kernelMode == 0) {
 				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), this->kernelSize);
 				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), this->kernelSize * this->kernelSize, this->Kernels->getGaussianKernel(this->gaussianBlurStrength, this->kernelSize));
 			}
@@ -699,17 +698,13 @@ void Renderer::renderMultisamplePostProcessing() {
 				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), 3);
 				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), 9, this->Kernels->getDiagonalDXKernel());
 			}
+
+			else if (this->kernelMode == 9) {
+				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), 3);
+				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), 9, this->Kernels->getCustomKernel());
+			}*/
 		}
 	}
-
-	/*if (this->highlightedEntity >= 0 && !depthBuffer) {
-		glUniform1i(glGetUniformLocation(this->screenShader->getID(), "samples"), 1);
-	}
-	else {
-		glUniform1i(glGetUniformLocation(this->screenShader->getID(), "samples"), samples);
-	}*/
-
-	
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->screenVBO);
@@ -1274,18 +1269,6 @@ unsigned int Renderer::getDepthBufferTexture() {
 	return(this->postProcessingTexture);
 }
 
-void Renderer::setKernelConvolutionMode(int mode) {
-	this->kernelMode = mode;
-}
-
-void Renderer::setKernelSize(int size) {
-	this->kernelSize = size;
-}
-
-void Renderer::setGaussianBlurStrength(float sigma) {
-	this->gaussianBlurStrength = sigma;
-}
-
 void Renderer::setPostProcessingEffect(int effect) {
 	this->postProcessingEffect = effect;
 }
@@ -1293,4 +1276,5 @@ void Renderer::setPostProcessingEffect(int effect) {
 void Renderer::setFilterColor(float r, float g, float b) {
 	this->filterColor = glm::vec3(r, g, b);
 }
+
 

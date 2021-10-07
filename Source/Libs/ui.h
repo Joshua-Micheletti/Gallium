@@ -75,4 +75,6 @@ class UI {
 		void drawBottomRow();
 
 		void drawImGui();
+
+		void HelpMarker(const char*);
 };
