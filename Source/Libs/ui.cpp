@@ -698,9 +698,17 @@ void UI::drawFPSWindow() {
 void UI::drawMenuBar() {
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
+			if (ImGui::MenuItem("Open File")) {
+				char filename[1024];
+				FILE* f = _popen("zenity --file-selection", "r");
+				printf("%s\n", fgets(filename, 1024, f));
+				loadEntity(&entityBuffer, filename);
+			}
+
 			if (ImGui::MenuItem("Close", "ALT + F4")) {
 				glfwSetWindowShouldClose(this->window, GL_TRUE);
 			}
+
 			ImGui::EndMenu();
 		}
 

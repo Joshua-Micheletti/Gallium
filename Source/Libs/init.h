@@ -100,6 +100,7 @@ extern Entity *light;
 
 extern GLFWwindow *setup();
 extern GLFWwindow *initGLFW_OpenGL(std::string);
+extern void loadEntity(std::vector<Entity*>*, char*);
 
 //extern GLenum glCheckError_(const char*, int);
 

@@ -16,7 +16,6 @@ class Kernel {
 		void setVerticalKernel();
 		void setDiagonalSXKernel();
 		void setDiagonalDXKernel();
-		void setCustomKernel();
 		void setCustomKernel(float, float, float, float, float, float, float, float, float);
 
 		float* getKernel();
@@ -25,7 +24,6 @@ class Kernel {
 
 	private:
 		float* kernel;
-		int kernelMode;
 		int kernelSize;
 		float gaussianBlurStrength;
 };

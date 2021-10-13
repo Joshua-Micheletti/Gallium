@@ -649,60 +649,11 @@ void Renderer::renderMultisamplePostProcessing() {
 			glUniform3f(glGetUniformLocation(this->screenShader->getID(), "filterColor"), this->filterColor.x, this->filterColor.y, this->filterColor.z);
 		}
 
-		if (this->postProcessingEffect == 9) {
+		else if (this->postProcessingEffect == 9) {
 			int kernelSize = this->Kernels->getKernelSize();
 
 			glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), kernelSize);
 			glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), kernelSize * kernelSize, this->Kernels->getKernel());
-			/*if (this->kernelMode == 0) {
-				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), this->kernelSize);
-				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), this->kernelSize * this->kernelSize, this->Kernels->getGaussianKernel(this->gaussianBlurStrength, this->kernelSize));
-			}
-
-			else if (this->kernelMode == 1) {
-				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), this->kernelSize);
-				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), this->kernelSize * this->kernelSize, this->Kernels->getBoxBlurKernel(this->kernelSize));
-			}
-
-			else if (this->kernelMode == 2) {
-				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), 3);
-				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), 9, this->Kernels->getEdgeDetectionKernel());
-			} 
-
-			else if (this->kernelMode == 3) {
-				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), 3);
-				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), 9, this->Kernels->getSharpeningKernel());
-			}
-
-			else if (this->kernelMode == 4) {
-				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), 3);
-				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), 9, this->Kernels->getEmbossKernel());
-			}
-
-			else if (this->kernelMode == 5) {
-				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), 3);
-				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), 9, this->Kernels->getHorizontalKernel());
-			}
-
-			else if (this->kernelMode == 6) {
-				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), 3);
-				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), 9, this->Kernels->getVerticalKernel());
-			}
-
-			else if (this->kernelMode == 7) {
-				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), 3);
-				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), 9, this->Kernels->getDiagonalSXKernel());
-			}
-
-			else if (this->kernelMode == 8) {
-				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), 3);
-				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), 9, this->Kernels->getDiagonalDXKernel());
-			}
-
-			else if (this->kernelMode == 9) {
-				glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), 3);
-				glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), 9, this->Kernels->getCustomKernel());
-			}*/
 		}
 	}
 

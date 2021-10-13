@@ -8,6 +8,7 @@
 #include "shader.h"
 #include "camera.h"
 #include "init.h"
+#include <errno.h>
 
 unsigned int screenWidth = 1280;
 unsigned int screenHeight = 720;
@@ -204,6 +205,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	Entity* jacket = new Entity("jacket");
 	Entity* manaya = new Entity("manaya");
 	Entity* genshinEnemy = new Entity("genshinEnemy");
+	Entity* box2 = new Entity("Box 2");
 
 	createAxis(axis);
 	std::vector<float> vex;
@@ -222,6 +224,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	jacket->load3DModel("../Models/blj.obj");
 	manaya->load3DModel("../Models/manaya6.obj");
 	genshinEnemy->load3DModel("../Models/genshinEnemy.obj");
+	box2->load3DModel("D:/Programs/C++/3DEngine/3DEngine/Models/box2.obj");
 
 	std::vector<float> skyboxVertices = {
 		// positions
@@ -284,6 +287,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	jacket->setShader(4);
 	manaya->setShader(7);
 	genshinEnemy->setShader(10);
+	box2->setShader(3);
 
 	//manaya->setToReflect(false);
 	//monkey->setToReflect(false);
@@ -350,6 +354,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	//entityBuffer->push_back(plane);
 	entityBuffer->push_back(manaya);
 	entityBuffer->push_back(genshinEnemy);
+	entityBuffer->push_back(box2);
 }
 
 GLFWwindow* setup() {
@@ -388,4 +393,67 @@ GLFWwindow* setup() {
 	loadEntities(&entityBuffer);
 
 	return(window);
+}
+
+void loadEntity(std::vector<Entity*>* entityBuffer, char* path) {
+	int i = 0;
+	int k = 0;
+
+	char fileName[256];
+	while (path[i] != '\n') {
+		if (path[i] == '\\') {
+			k = 0;
+			path[i] = '/';
+		}
+		else {
+			fileName[k] = path[i];
+			k++;
+		}
+		
+		i++;
+	}
+	path[i] = '\0';
+
+	fileName[k + 1] = '\0';
+
+	printf("%s\n", fileName);
+
+	// FIX
+	char entityName[256];
+
+	i = 0;
+	int tmpIndex = 0;
+	while (fileName[i] != '\0') {
+		if (fileName[i] == '.') {
+			tmpIndex = i;
+		}
+
+		entityName[i] = fileName[i];
+
+		i++;
+	}
+
+	entityName[tmpIndex] = '\0';
+
+	printf("%s\n", entityName);
+
+	Entity* tmp = new Entity(entityName);
+
+	/*FILE* model;
+	errno = 0;
+	model = fopen(path, "r");
+
+	if (errno != 0) {
+		perror("Error occured while opening file.\n");
+	}
+
+	if (model == NULL) {
+		printf("model not loaded\n");
+	}*/
+
+	tmp->load3DModel(path);
+
+	tmp->setShader(3);
+
+	entityBuffer->push_back(tmp);
 }
