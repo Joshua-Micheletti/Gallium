@@ -2,8 +2,8 @@
 #include "init.h"
 #include "camera.h"
 #include "entity.h"
-#include <glm\glm.hpp>
-#include <SFML\Graphics.hpp>
+#include <glm/glm.hpp>
+#include <SFML/System.hpp>
 #include "GLFW/glfw3.h"
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {

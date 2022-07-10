@@ -24,6 +24,8 @@ UI::UI(GLFWwindow *window, Renderer* renderer, EventHandler* eventHandler) {
 	this->renderer = renderer;
 	this->eventHandler = eventHandler;
 
+	printf("testone!\n");
+
 	// setup the update clock
 	this->tick = sf::milliseconds(1000 / 10);
 	this->time = this->clock.getElapsedTime();
@@ -289,6 +291,8 @@ void UI::drawLeftColumn() {
 	leftColumnStyle.WindowRounding = 0;
 	leftColumnStyle.WindowBorderSize = 0;
 
+	ImGui::PopStyleColor();
+
 	ImGui::End();
 }
 
@@ -306,7 +310,7 @@ void UI::drawRightColumn() {
 
 	ImGui::Begin("Right Column", NULL, rightColumnWindowFlags);
 	static bool antialiasing = true;
-	static int item_current = 4;
+	static int item_current = 0;
 	if (ImGui::CollapsingHeader("Rendering Options")) {
 		bool tmp = vsync;
 		
@@ -521,6 +525,8 @@ void UI::drawRightColumn() {
 	rightColumnStyle.WindowRounding = 0;
 	rightColumnStyle.WindowBorderSize = 0;
 
+	ImGui::PopStyleColor();
+
 	ImGui::End();
 }
 
@@ -697,13 +703,13 @@ void UI::drawFPSWindow() {
 
 void UI::drawMenuBar() {
 	if (ImGui::BeginMainMenuBar()) {
-		if (ImGui::BeginMenu("File")) {
+		if (ImGui::BeginMenu("File")) { /*
 			if (ImGui::MenuItem("Open File")) {
 				char filename[1024];
 				FILE* f = _popen("zenity --file-selection", "r");
 				printf("%s\n", fgets(filename, 1024, f));
 				loadEntity(&entityBuffer, filename);
-			}
+			} */
 
 			if (ImGui::MenuItem("Close", "ALT + F4")) {
 				glfwSetWindowShouldClose(this->window, GL_TRUE);

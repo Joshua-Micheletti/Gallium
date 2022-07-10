@@ -4,11 +4,11 @@
 #include "shader.h"
 #include "kernel.h"
 #include <vector>
-#include <glad\glad.h>
-#include <glm\glm.hpp>
-#include <glm\gtc\matrix_transform.hpp>
-#include <glm\gtc\type_ptr.hpp>
-#include <SFML\Graphics.hpp>
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <SFML/Graphics.hpp>
 #include "init.h"
 #include <iostream>
 #include <string>
@@ -242,6 +242,8 @@ Renderer::Renderer() {
 	int maxSamples;
 	glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
 	printf("max samples: %d\n", maxSamples);
+
+	this->highlightedEntity = -1;
 }
 
 // public method for rendering the scene

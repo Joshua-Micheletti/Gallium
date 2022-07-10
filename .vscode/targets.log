@@ -1,0 +1,549 @@
+make.exe all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
+# GNU Make 4.3
+# Built for Windows32
+# Copyright (C) 1988-2020 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+ 
+
+# Make data base, printed on Sun Jul 10 10:46:14 2022
+
+# Variables
+
+# environment
+SYSTEMDRIVE = C:
+# environment
+LC_ALL = C
+# environment
+USERPROFILE = C:\Users\solid
+# environment
+STARSHIP_SESSION_KEY = lH9Iqba23oSTDV7Q
+# makefile (from 'makefile', line 26)
+extLibI = ${gladI} -I ${glfwI} -I ${glmI} -I ${sfmlI} -I ${imguiI} -I ${stbimage}
+# environment
+LOCALAPPDATA = C:\Users\solid\AppData\Local
+# environment
+WSLENV = WT_SESSION::WT_PROFILE_ID
+# makefile (from 'makefile', line 5)
+glfwI = ${extLibs}/glfw/include
+# environment
+VSCODE_CWD = D:\Programs\C++\3DEngineVS\3DEngineVS
+# environment
+CHOCOLATEYINSTALL = C:\ProgramData\chocolatey
+# environment
+SYSTEMROOT = C:\Windows
+# environment
+PROCESSOR_LEVEL = 6
+# environment
+PSMODULEPATH = C:\Users\solid\Documents\WindowsPowerShell\Modules;C:\Program Files\WindowsPowerShell\Modules;C:\Windows\system32\WindowsPowerShell\v1.0\Modules
+# default
+MAKE_COMMAND := C:/ProgramData/chocolatey/lib/make/tools/install/bin/make.exe
+# automatic
+@D = $(patsubst %/,%,$(patsubst %\,%,$(dir $@)))
+# makefile (from 'makefile', line 18)
+libraries = -lopengl32 -lglfw3 -lsfml-graphics -lsfml-window -lsfml-system
+# environment
+CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_6724_ZWIZZWXVIJJVRICK
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# default
+.VARIABLES := 
+# automatic
+%D = $(patsubst %/,%,$(patsubst %\,%,$(dir $%)))
+# makefile (from 'makefile', line 7)
+glmI = ${extLibs}/glm
+# automatic
+^D = $(patsubst %/,%,$(patsubst %\,%,$(dir $^)))
+# automatic
+%F = $(notdir $%)
+# environment
+VSCODE_CODE_CACHE_PATH = C:\Users\solid\AppData\Roaming\Code\CachedData\92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9
+# environment
+LANG = C
+# default
+.LOADED := 
+# environment
+TMP = C:\Users\solid\AppData\Local\Temp
+# default
+.INCLUDE_DIRS = .
+# environment
+PROCESSOR_ARCHITEW6432 = AMD64
+# makefile
+MAKEFLAGS = pqrR
+# makefile (from 'makefile', line 31)
+objectsPath = ./bin/objects
+# environment
+ONEDRIVE = C:\Users\solid\OneDrive
+# makefile
+CURDIR := d:/Programs/C++/3DEngineVS/3DEngineVS
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+# automatic
+*D = $(patsubst %/,%,$(patsubst %\,%,$(dir $*)))
+# environment
+PROGRAMFILES = C:\Program Files (x86)
+# environment
+MFLAGS = -pqrR
+# default
+.SHELLFLAGS := -c
+# environment
+COMMONPROGRAMW6432 = C:\Program Files\Common Files
+# automatic
++D = $(patsubst %/,%,$(patsubst %\,%,$(dir $+)))
+# makefile (from 'makefile', line 1)
+MAKEFILE_LIST := makefile
+# automatic
+@F = $(notdir $@)
+# environment
+VSCODE_PID = 6724
+# automatic
+?D = $(patsubst %/,%,$(patsubst %\,%,$(dir $ 
+?)))
+# environment
+POSH_THEMES_PATH = C:\Users\solid\AppData\Local\Programs\oh-my-posh\themes
+# environment
+WT_PROFILE_ID = {61c54bbd-c2c6-5271-96e7-009a87ff44bf}
+# automatic
+*F = $(notdir $*)
+# environment
+VSCODE_CLI_REMOTE_ENV = /tmp/vscode-distro-env.NzaYst
+# makefile (from 'makefile', line 3)
+gladI = ${extLibs}/GLAD/include
+# automatic
+<D = $(patsubst %/,%,$(patsubst %\,%,$(dir $<)))
+# makefile (from 'makefile', line 2)
+extLibs = ./ExtLibs
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
+# makefile (from 'makefile', line 11)
+stbimage = ${extLibs}/stb-master
+# environment
+ONEDRIVECONSUMER = C:\Users\solid\OneDrive
+# default
+MAKE_HOST := Windows32
+# environment
+PROGRAMDATA = C:\ProgramData
+# default
+SHELL := sh.exe
+# environment
+HOMEPATH = \Users\solid
+# default
+MAKECMDGOALS := all
+# makefile (from 'makefile', line 32)
+objects = ${objectsPath}/Main.o ${objectsPath}/glad.o ${objectsPath}/init.o ${objectsPath}/renderer.o ${objectsPath}/eventHandler.o ${objectsPath}/ui.o ${objectsPath}/entity.o ${objectsPath}/shader.o ${objectsPath}/camera.o ${objectsPath}/kernel.o ${objectsPath}/imgui.o ${objectsPath}/imgui_impl_glfw.o ${objectsPath}/imgui_impl_opengl3.o ${objectsPath}/imgui_demo.o ${objectsPath}/imgui_draw.o ${objectsPath}/imgui_widgets.o 
+# environment
+DRIVERDATA = C:\Windows\System32\Drivers\DriverData
+# environment
+COMSPEC = C:\Windows\system32\cmd.exe
+# environment
+WINDIR = C:\Windows
+# environment
+MAKELEVEL := 0
+# default
+MAKE = $(MAKE_COMMAND)
+# environment
+PATH = c:\program files\common files\oracle\java\javapath;c:\windows\system32;c:\windows;c:\windows\system32\wbem;c:\windows\system32\windowspowershell\v1.0\;c:\windows\system32\openssh\;c:\program files\nvidia corporation\nvidia nvdlisr;c:\program files\git\cmd;c:\program files\cmake\bin;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\ProgramData\chocolatey\bin;C:\Program Files\dotnet\;D:\Programs\starshipConfig;C:\Users\solid\scoop\shims;C:\Users\solid\AppData\Local\Microsoft\WindowsApps;C:\Users\solid\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\CMake\bin;C:\Users\solid\.dotnet\tools;C:\MinGW\bin
+# environment
+COMPUTERNAME = SOLIDPC
+# default
+MAKEFILES := 
+# automatic
+^F = $(notdir $^)
+# environment
+VIRTUAL_ENV_DISABLE_PROMPT = 1
+# environment
+PROMPT = $P$G
+# environment
+CHOCOLATEYLASTPATHUPDATE = 132961560562330954
+# environment
+WT_SESSION = caae43c3-f307-4c33-88e0-94b85977aba4
+# environment
+LOGONSERVER = \\SOLIDPC
+# environment
+USERNAME = solid
+# makefile (from 'makefile', line 16)
+glfwL = ${extLibs}/glfw/lib-mingw
+# environment
+COMMONPROGRAMFILES = C:\Program Files (x86)\Common Files
+# automatic
+?F = $(notdir $?)
+# environment
+PROGRAMW6432 = C:\Program Files
+# makefile (from 'makefile', line 33)
+objectsTarget = ${objectsPath}/main.o glad.o init.o renderer.o eventHandler.o ui.o entity.o shader.o camera.o kernel.o imgui.o imgui_impl_glfw.o imgui_impl_opengl3.o imgui_demo.o imgui_draw.o imgui_widgets.o
+# environment
+PATHEXT = .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.CPL
+# automatic
++F = $(notdir $+)
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = undefined
+# environment
+USERDOMAIN = SOLIDPC
+# 'override' directive
+GNUMAKEFLAGS := 
+# environment
+OS = Windows_NT
+# makefile
+.DEFAULT_GOAL := main
+# default
+MAKE_VERSION := 4.3
+# environment
+PROGRAMFILES(X86) = C:\Program Files (x86)
+# environment
+STARSHIP_CONFIG = C:\Users\solid\.config\starship.toml
+# makefile (from 'makefile', line 10)
+imguiI = ${extLibs}/imgui
+# environment
+USERDOMAIN_ROAMINGPROFILE = SOLIDPC
+# envir 
+onment
+NUMBER_OF_PROCESSORS = 4
+# environment
+STARSHIP_SHELL = powershell
+# environment
+PUBLIC = C:\Users\Public
+# makefile (from 'makefile', line 17)
+extLibL = ${glfwL} -L ${glmI} -L ${sfmlL} -L ${imguiI} -L ${stbimage}
+# environment
+APPDATA = C:\Users\solid\AppData\Roaming
+# environment
+HOMEDRIVE = C:
+# environment
+PROCESSOR_ARCHITECTURE = x86
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# makefile (from 'makefile', line 15)
+sfmlL = ${extLibs}/SFML-2.5.1-mingw/lib
+# environment
+COMMONPROGRAMFILES(X86) = C:\Program Files (x86)\Common Files
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# environment
+TEMP = C:\Users\solid\AppData\Local\Temp
+# environment
+VSCODE_IPC_HOOK = \\.\pipe\98b493b39559777ded7174d3d0a8fd5d-1.69.0-main-sock
+# default
+.RECIPEPREFIX := 
+# automatic
+<F = $(notdir $<)
+# default
+SUFFIXES := 
+# environment
+ALLUSERSPROFILE = C:\ProgramData
+# environment
+VSCODE_CLI = 1
+# environment
+ELECTRON_NO_ATTACH_CONSOLE = 1
+# makefile (from 'makefile', line 1)
+source = ./Source
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync load
+# environment
+PROCESSOR_REVISION = 9e0b
+# makefile (from 'makefile', line 4)
+gladL = ${extLibs}/GLAD/src
+# makefile (from 'makefile', line 28)
+flags = -w -std=c++11 -Ofast
+# makefile (from 'makefile', line 14)
+sfmlI = ${extLibs}/SFML-2.5.1-mingw/include
+# environment
+PROCESSOR_IDENTIFIER = Intel64 Family 6 Model 158 Stepping 11 
+, GenuineIntel
+# variable set hash-table stats:
+# Load=118/1024=12%, Rehash=0, Collisions=10/195=5%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (key d:/Programs/C++/3DEngineVS/3DEngineVS, mtime 1657397005): 20 files, no impossibilities.
+
+# 20 files, no impossibilities in 1 directories.
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+# Not a target:
+Source/Libs/camera.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+Source/Libs/renderer.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+bin/objects/kernel.o: Source/Libs/kernel.cpp makefile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 73):
+	echo "============= kernel.cpp (source) ============="
+	g++ -c -o ${objectsPath}/kernel.o ${source}/Libs/kernel.cpp -I ${extLibI} -L ${extLibL} ${flags}
+
+# Not a target:
+ExtLibs/imgui/imgui_impl_opengl3.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+bin/objects/camera.o: Source/Libs/camera.cpp makefile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 69):
+	echo "============= camera.cpp (source) ============="
+	g++ -c -o ${objectsPath}/camera.o ${source}/Libs/camera.cpp -I ${extLibI} -L ${extLibL} ${flags}
+
+# Not a target:
+Source/Libs/init.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+bin/objects/shader.o: Source/Libs/shader.cpp makefile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 65):
+	echo "============= shader.cpp (source) ============="
+	g++ -c -o ${objectsPath}/shader.o ${source}/Libs/shader.cpp -I ${extLibI} -L ${extLibL} ${flags}
+
+bin/objects/imgui_impl_glfw.o: ExtLibs/imgui/imgui_impl_glfw.cpp makefile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 81):
+	echo "============= imgui_impl_glfw.cpp (extLib) ============="
+	g++ -c -o ${objectsPath}/imgui_impl_glfw.o ${extLibs}/imgui/imgui_impl_glfw.cpp -I ${extLibI} ${flags}
+
+bin/objects/Main.o: Source/Main.cpp makefile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 41):
+	echo "============= Main.cpp (source) ============="
+	g++ -c -o ${objectsPath}/main.o ${source}/Main.cpp -I ${extLibI} -I ${source}/Libs/ -L ${extLibL} ${flags} ${libraries}
+
+# Not a target:
+ExtLibs/imgui/imgui_impl_glfw.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+Source/Libs/eventHandler.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+Source/Libs/kernel.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+bin/objects/imgui_impl_opengl3.o: ExtLibs/imgui/imgui_impl_opengl3.cpp makefile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 85):
+	echo "============= imgui_impl_opengl3.cpp (extLib) ============="
+	g++ -c -o ${objectsPath}/imgui_impl_opengl3.o ${extLibs}/imgui/imgui_impl_opengl3.cpp -I ${extLibI} ${flags}
+
+# Not a target:
+Source/Libs/ui.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+ExtLibs/imgui/imgui_draw.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+Source/Libs/entity.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+ExtLibs/imgui/imgui_demo.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+bin/objects/ui.o: Source/Libs/ui.cpp makefile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 57):
+	echo "============= ui.cpp (source) ============="
+	g++ -c -o ${objectsPath}/ui.o ${source}/Libs/ui.cpp -I ${extLibI} -L ${extLibL} ${flags}
+
+bin/objects/imgui_demo.o: ExtLibs/imgui/imgui_demo.cpp makefile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 89):
+	echo "============= imgui_demo.cpp (extLib) ============="
+	g++ -c -o ${objectsPath}/imgui_demo.o ${extLibs}/imgui/imgui_demo.cpp -I ${extLibI} ${flags}
+
+bin/objects/imgui_widgets.o: ExtLibs/imgui/imgui_widgets.cpp makefile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 97):
+	echo "============= imgui_widgets.cpp (extLib) ============="
+	g++ -c -o ${objectsPath}/imgui_widgets.o ${extLibs}/imgui/imgui_widgets.cpp -I ${extLibI} ${flags}
+
+bin/objects/imgui_draw.o: ExtLibs/imgui/imgui_draw.cpp makefile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 93):
+	echo "============= imgui_draw.cpp (extLib) ============="
+	g++ -c -o ${objectsPath}/imgui_draw.o ${extLibs}/imgui/imgui_draw.cpp -I ${extLibI} ${flags}
+
+# Not a target:
+Source/Libs/shader.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+ExtLibs/imgui/imgui_widgets.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+bin/objects/entity.o: Source/Libs/entity.cpp makefile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 61):
+	echo "============= entity.cpp (source) ============="
+	g++ -c -o ${objectsPath}/entity.o ${source}/Libs/entity.cpp -I ${extLibI} -L ${extLibL} ${flags}
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+all:
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+
+run:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 108):
+	cd "./bin" && "./launch.exe"
+
+# Not a target:
+ExtLibs/GLAD/src/glad.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+main: bin/objects/Main.o bin/objects/glad.o bin/objects/init.o bin/objects/renderer.o bin/objects/eventHandler.o bin/objects/ui.o bin/objects/entity.o bin/objects/shader.o bin/objects/camera.o bin/objects/kernel.o bin/objects/imgui.o bin/objects/imgui_impl_glfw.o bin/objects/imgui_impl_opengl3.o bin/objects/imgui_demo.o bin/objects/imgui_draw.o bin/objects/imgui_widgets.o makefile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 36):
+	echo ============= COMPILING MAIN PROGRAM =============
+	g++ -o ./bin/launch ${objects} -L ${extLibL} -I ${extLibI} ${libraries} ${flags}
+
+bin/objects/renderer.o: Source/Libs/renderer.cpp makefile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 49):
+	echo "============= renderer.cpp (source) ============="
+	g++ -c -o ${objectsPath}/renderer.o ${source}/Libs/renderer.cpp -I ${extLibI} -L ${extLibL} ${flags}
+
+# Not a target:
+makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-07-09 23:04:56
+#  File has been updated.
+#  Successfully updated.
+
+bin/objects/eventHandler.o: Source/Libs/eventHandler.cpp makefile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 53):
+	echo "============= eventHandler.cpp (source) ============="
+	g++ -c -o ${objectsPath}/eventHandler.o ${source}/Libs/eventHandler.cpp -I ${extLibI} -L ${extLibL} ${flags} ${libraries}
+
+bin/objects/imgui.o: ExtLibs/imgui/imgui.cpp makefile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 77):
+	echo "============= imgui.cpp (extLib) ============="
+	g++ -c -o ${objectsPath}/imgui.o ${extLibs}/imgui/imgui.cpp -I ${extLibI} ${flags}
+
+# Not a target:
+ExtLibs/imgui/imgui.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+bin/objects/init.o: Source/Libs/init.cpp makefile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 45):
+	echo "============= init.cpp (source) ============="
+	g++ -c -o ${objectsPath}/init.o ${source}/Libs/init.cpp -I ${extLibI} -L ${extLibL} ${flags} ${libraries}
+
+# Not a target:
+Source/Main.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+bin/objects/glad.o: ExtLibs/GLAD/src/glad.c makefile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 101):
+	echo "============= glad.c (extLib) ============="
+	g++ -c -o ${objectsPath}/glad.o ${extLibs}/GLAD/src/glad.c -I ${extLibs}/GLAD/include ${flags}
+
+# files hash-table stats:
+# Load=38/1024=4%, Rehash=0, Collisions=0/113=0%
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 57 / storage = 993 B / avg = 17 B
+# current buf: size = 8174 B / used = 993 B / count = 57 / avg = 17 B
+
+# strcache performance: lookups = 112 / hit rate = 49%
+# hash-table stats:
+# Load=57/8192=1%, Rehash=0, Collisions=0/112=0%
+# Finished Make data base on Sun Jul 10 10:46:14 2022
+
+ 

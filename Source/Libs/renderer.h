@@ -4,7 +4,7 @@
 #include "entity.h"
 #include "shader.h"
 #include "kernel.h"
-#include <glm\glm.hpp>
+#include <glm/glm.hpp>
 
 // class for rendering entities using shaders (mainly openGL)
 class Renderer {

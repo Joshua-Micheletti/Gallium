@@ -1,0 +1,38 @@
+make.exe --dry-run --always-make --keep-going --print-directory
+make: Entering directory 'd:/Programs/C++/3DEngineVS/3DEngineVS'
+echo "============= Main.cpp (source) ============="
+g++ -c -o ./bin/objects/main.o ./Source/Main.cpp -I ./ExtLibs/GLAD/include -I ./ExtLibs/glfw/include -I ./ExtLibs/glm -I ./ExtLibs/SFML-2.5.1-mingw/include -I ./ExtLibs/imgui -I ./ExtLibs/stb-master -I ./Source/Libs/ -L ./ExtLibs/glfw/lib-mingw -L ./ExtLibs/glm -L ./ExtLibs/SFML-2.5.1-mingw/lib -L ./ExtLibs/imgui -L ./ExtLibs/stb-master -w -std=c++11 -Ofast -lopengl32 -lglfw3 -lsfml-graphics -lsfml-window -lsfml-system
+echo "============= glad.c (extLib) ============="
+g++ -c -o ./bin/objects/glad.o ./ExtLibs/GLAD/src/glad.c -I ./ExtLibs/GLAD/include -w -std=c++11 -Ofast
+echo "============= init.cpp (source) ============="
+g++ -c -o ./bin/objects/init.o ./Source/Libs/init.cpp -I ./ExtLibs/GLAD/include -I ./ExtLibs/glfw/include -I ./ExtLibs/glm -I ./ExtLibs/SFML-2.5.1-mingw/include -I ./ExtLibs/imgui -I ./ExtLibs/stb-master -L ./ExtLibs/glfw/lib-mingw -L ./ExtLibs/glm -L ./ExtLibs/SFML-2.5.1-mingw/lib -L ./ExtLibs/imgui -L ./ExtLibs/stb-master -w -std=c++11 -Ofast -lopengl32 -lglfw3 -lsfml-graphics -lsfml-window -lsfml-system
+echo "============= renderer.cpp (source) ============="
+g++ -c -o ./bin/objects/renderer.o ./Source/Libs/renderer.cpp -I ./ExtLibs/GLAD/include -I ./ExtLibs/glfw/include -I ./ExtLibs/glm -I ./ExtLibs/SFML-2.5.1-mingw/include -I ./ExtLibs/imgui -I ./ExtLibs/stb-master -L ./ExtLibs/glfw/lib-mingw -L ./ExtLibs/glm -L ./ExtLibs/SFML-2.5.1-mingw/lib -L ./ExtLibs/imgui -L ./ExtLibs/stb-master -w -std=c++11 -Ofast
+echo "============= eventHandler.cpp (source) ============="
+g++ -c -o ./bin/objects/eventHandler.o ./Source/Libs/eventHandler.cpp -I ./ExtLibs/GLAD/include -I ./ExtLibs/glfw/include -I ./ExtLibs/glm -I ./ExtLibs/SFML-2.5.1-mingw/include -I ./ExtLibs/imgui -I ./ExtLibs/stb-master -L ./ExtLibs/glfw/lib-mingw -L ./ExtLibs/glm -L ./ExtLibs/SFML-2.5.1-mingw/lib -L ./ExtLibs/imgui -L ./ExtLibs/stb-master -w -std=c++11 -Ofast -lopengl32 -lglfw3 -lsfml-graphics -lsfml-window -lsfml-system
+echo "============= ui.cpp (source) ============="
+g++ -c -o ./bin/objects/ui.o ./Source/Libs/ui.cpp -I ./ExtLibs/GLAD/include -I ./ExtLibs/glfw/include -I ./ExtLibs/glm -I ./ExtLibs/SFML-2.5.1-mingw/include -I ./ExtLibs/imgui -I ./ExtLibs/stb-master -L ./ExtLibs/glfw/lib-mingw -L ./ExtLibs/glm -L ./ExtLibs/SFML-2.5.1-mingw/lib -L ./ExtLibs/imgui -L ./ExtLibs/stb-master -w -std=c++11 -Ofast
+echo "============= entity.cpp (source) ============="
+g++ -c -o ./bin/objects/entity.o ./Source/Libs/entity.cpp -I ./ExtLibs/GLAD/include -I ./ExtLibs/glfw/include -I ./ExtLibs/glm -I ./ExtLibs/SFML-2.5.1-mingw/include -I ./ExtLibs/imgui -I ./ExtLibs/stb-master -L ./ExtLibs/glfw/lib-mingw -L ./ExtLibs/glm -L ./ExtLibs/SFML-2.5.1-mingw/lib -L ./ExtLibs/imgui -L ./ExtLibs/stb-master -w -std=c++11 -Ofast
+echo "============= shader.cpp (source) ============="
+g++ -c -o ./bin/objects/shader.o ./Source/Libs/shader.cpp -I ./ExtLibs/GLAD/include -I ./ExtLibs/glfw/include -I ./ExtLibs/glm -I ./ExtLibs/SFML-2.5.1-mingw/include -I ./ExtLibs/imgui -I ./ExtLibs/stb-master -L ./ExtLibs/glfw/lib-mingw -L ./ExtLibs/glm -L ./ExtLibs/SFML-2.5.1-mingw/lib -L ./ExtLibs/imgui -L ./ExtLibs/stb-master -w -std=c++11 -Ofast
+echo "============= camera.cpp (source) ============="
+g++ -c -o ./bin/objects/camera.o ./Source/Libs/camera.cpp -I ./ExtLibs/GLAD/include -I ./ExtLibs/glfw/include -I ./ExtLibs/glm -I ./ExtLibs/SFML-2.5.1-mingw/include -I ./ExtLibs/imgui -I ./ExtLibs/stb-master -L ./ExtLibs/glfw/lib-mingw -L ./ExtLibs/glm -L ./ExtLibs/SFML-2.5.1-mingw/lib -L ./ExtLibs/imgui -L ./ExtLibs/stb-master -w -std=c++11 -Ofast
+echo "============= kernel.cpp (source) ============="
+g++ -c -o ./bin/objects/kernel.o ./Source/Libs/kernel.cpp -I ./ExtLibs/GLAD/include -I ./ExtLibs/glfw/include -I ./ExtLibs/glm -I ./ExtLibs/SFML-2.5.1-mingw/include -I ./ExtLibs/imgui -I ./ExtLibs/stb-master -L ./ExtLibs/glfw/lib-mingw -L ./ExtLibs/glm -L ./ExtLibs/SFML-2.5.1-mingw/lib -L ./ExtLibs/imgui -L ./ExtLibs/stb-master -w -std=c++11 -Ofast
+echo "============= imgui.cpp (extLib) ============="
+g++ -c -o ./bin/objects/imgui.o ./ExtLibs/imgui/imgui.cpp -I ./ExtLibs/GLAD/include -I ./ExtLibs/glfw/include -I ./ExtLibs/glm -I ./ExtLibs/SFML-2.5.1-mingw/include -I ./ExtLibs/imgui -I ./ExtLibs/stb-master -w -std=c++11 -Ofast
+echo "============= imgui_impl_glfw.cpp (extLib) ============="
+g++ -c -o ./bin/objects/imgui_impl_glfw.o ./ExtLibs/imgui/imgui_impl_glfw.cpp -I ./ExtLibs/GLAD/include -I ./ExtLibs/glfw/include -I ./ExtLibs/glm -I ./ExtLibs/SFML-2.5.1-mingw/include -I ./ExtLibs/imgui -I ./ExtLibs/stb-master -w -std=c++11 -Ofast
+echo "============= imgui_impl_opengl3.cpp (extLib) ============="
+g++ -c -o ./bin/objects/imgui_impl_opengl3.o ./ExtLibs/imgui/imgui_impl_opengl3.cpp -I ./ExtLibs/GLAD/include -I ./ExtLibs/glfw/include -I ./ExtLibs/glm -I ./ExtLibs/SFML-2.5.1-mingw/include -I ./ExtLibs/imgui -I ./ExtLibs/stb-master -w -std=c++11 -Ofast
+echo "============= imgui_demo.cpp (extLib) ============="
+g++ -c -o ./bin/objects/imgui_demo.o ./ExtLibs/imgui/imgui_demo.cpp -I ./ExtLibs/GLAD/include -I ./ExtLibs/glfw/include -I ./ExtLibs/glm -I ./ExtLibs/SFML-2.5.1-mingw/include -I ./ExtLibs/imgui -I ./ExtLibs/stb-master -w -std=c++11 -Ofast
+echo "============= imgui_draw.cpp (extLib) ============="
+g++ -c -o ./bin/objects/imgui_draw.o ./ExtLibs/imgui/imgui_draw.cpp -I ./ExtLibs/GLAD/include -I ./ExtLibs/glfw/include -I ./ExtLibs/glm -I ./ExtLibs/SFML-2.5.1-mingw/include -I ./ExtLibs/imgui -I ./ExtLibs/stb-master -w -std=c++11 -Ofast
+echo "============= imgui_widgets.cpp (extLib) ============="
+g++ -c -o ./bin/objects/imgui_widgets.o ./ExtLibs/imgui/imgui_widgets.cpp -I ./ExtLibs/GLAD/include -I ./ExtLibs/glfw/include -I ./ExtLibs/glm -I ./ExtLibs/SFML-2.5.1-mingw/include -I ./ExtLibs/imgui -I ./ExtLibs/stb-master -w -std=c++11 -Ofast
+echo ============= COMPILING MAIN PROGRAM =============
+g++ -o ./bin/launch ./bin/objects/Main.o ./bin/objects/glad.o ./bin/objects/init.o ./bin/objects/renderer.o ./bin/objects/eventHandler.o ./bin/objects/ui.o ./bin/objects/entity.o ./bin/objects/shader.o ./bin/objects/camera.o ./bin/objects/kernel.o ./bin/objects/imgui.o ./bin/objects/imgui_impl_glfw.o ./bin/objects/imgui_impl_opengl3.o ./bin/objects/imgui_demo.o ./bin/objects/imgui_draw.o ./bin/objects/imgui_widgets.o  -L ./ExtLibs/glfw/lib-mingw -L ./ExtLibs/glm -L ./ExtLibs/SFML-2.5.1-mingw/lib -L ./ExtLibs/imgui -L ./ExtLibs/stb-master -I ./ExtLibs/GLAD/include -I ./ExtLibs/glfw/include -I ./ExtLibs/glm -I ./ExtLibs/SFML-2.5.1-mingw/include -I ./ExtLibs/imgui -I ./ExtLibs/stb-master -lopengl32 -lglfw3 -lsfml-graphics -lsfml-window -lsfml-system -w -std=c++11 -Ofast
+make: Leaving directory 'd:/Programs/C++/3DEngineVS/3DEngineVS'
+ 

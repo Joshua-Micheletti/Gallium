@@ -1,6 +1,6 @@
-#include <glm\glm.hpp>
-#include <glm\gtc\matrix_transform.hpp>
-#include <glm\gtc\type_ptr.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <vector>
 #include <stdlib.h>
 #include <iostream>
@@ -192,8 +192,8 @@ void createAxis(Entity* axis) {
 }
 
 void loadEntities(std::vector<Entity*>* entityBuffer) {
-	Entity* axis = new Entity("axis");
-	Entity* box = new Entity("box");
+	Entity* axis = new Entity(std::string("axis"));
+	Entity* box = new Entity(std::string("box"));
 	Entity* walnut = new Entity("walnut");
 	Entity* monkey = new Entity("monkey");
 	Entity* man = new Entity("man");
@@ -206,6 +206,8 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	Entity* manaya = new Entity("manaya");
 	Entity* genshinEnemy = new Entity("genshinEnemy");
 	Entity* box2 = new Entity("Box 2");
+
+	printf("box: %s\n", box->getName().c_str());
 
 	createAxis(axis);
 	std::vector<float> vex;
@@ -224,7 +226,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	jacket->load3DModel("../Models/blj.obj");
 	manaya->load3DModel("../Models/manaya6.obj");
 	genshinEnemy->load3DModel("../Models/genshinEnemy.obj");
-	box2->load3DModel("D:/Programs/C++/3DEngine/3DEngine/Models/box2.obj");
+	box2->load3DModel("../Models/box2.obj");
 
 	std::vector<float> skyboxVertices = {
 		// positions
@@ -389,8 +391,15 @@ GLFWwindow* setup() {
 	projectionBuffer.push_back(Projection2);
 
 	loadShaders(&shaderBuffer);
-	
+
 	loadEntities(&entityBuffer);
+
+	printf("loaded entities: \n");
+	for (int i = 0; i < 5; i++) {
+		printf("%i: %s\n", i, entityBuffer[0]->getName());
+	}
+
+	
 
 	return(window);
 }

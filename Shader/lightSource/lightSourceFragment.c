@@ -1,4 +1,4 @@
-#version 440 compatibility
+#version 330 compatibility
 
 out vec3 finalColor;
 

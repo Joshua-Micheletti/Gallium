@@ -1,4 +1,4 @@
-#version 440 compatibility
+#version 330 compatibility
 
 layout (location = 0) in vec3 vertex ;
 

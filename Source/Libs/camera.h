@@ -1,8 +1,8 @@
 #ifndef __CAMERA__
 #define __CAMERA__
 
-#include <glm\glm.hpp>
-#include <SFML\Graphics.hpp>
+#include <glm/glm.hpp>
+#include <SFML/Graphics.hpp>
 
 class Camera {
   public:

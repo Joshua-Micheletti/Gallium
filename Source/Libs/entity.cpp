@@ -1,10 +1,10 @@
 #include <vector>
 #include <stdio.h>
 #include <stdlib.h>
-#include <glad\glad.h>
-#include <glm\glm.hpp>
-#include <glm\gtc\matrix_transform.hpp>
-#include <glm\gtc\type_ptr.hpp>
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "entity.h"
 #define STB_IMAGE_IMPLEMENTATION  
 #include <stb_image.h>
@@ -16,7 +16,7 @@ using namespace std;
 //
 /* CONSTRUCTOR */
 /* -----------------------------------------------------------------------------------------------------------------------*/
-Entity::Entity(string name) {
+Entity::Entity(std::string name) {
 	this->name = name;
 	this->center = glm::vec3(0.0f);
 	this->translation = glm::mat4(1.0f);
@@ -60,7 +60,7 @@ Entity::Entity(string name) {
 	this->localBounds.maxZ = glm::vec3(0, 0, 0);
 }
 
-string Entity::getName() {
+std::string Entity::getName() {
 	return(this->name);
 }
 //
@@ -82,6 +82,7 @@ void Entity::loadVertices(std::vector<float> vertices) {
 }
 //
 void Entity::loadModel(string name) {
+	printf("%s\n", name);
 	FILE* model = fopen(name.c_str(), "r");
 	char buffer[255];
 

@@ -1,0 +1,2 @@
+﻿  Main.cpp
+D:\Programs\C++\3DEngineVS\3DEngineVS\Source\Libs\lib.h(1,10): fatal error C1083: Cannot open include file: 'glad/glad.h': No such file or directory

@@ -3,10 +3,10 @@
 
 #include <vector>
 #include <string>
-#include <glad\glad.h>
-#include <glm\glm.hpp>
-#include <glm\gtc\matrix_transform.hpp>
-#include <glm\gtc\type_ptr.hpp>
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace std;
 
@@ -34,7 +34,7 @@ typedef struct {
 class Entity {
   public:
     // constructor
-    Entity(string);
+    Entity(std::string);
 
   private:
     std::vector<float> vertices;
@@ -77,7 +77,7 @@ class Entity {
 
   public:
     // get methods
-    string getName();
+    std::string getName();
     std::vector<float> getVertices();
     std::vector<float> getUVs();
     std::vector<float> getNormals();

@@ -2,11 +2,13 @@
 #define __INIT__
 
 //#include <SFML\Graphics.hpp>
-#include "GLFW\glfw3.h"
-#include <glm\glm.hpp>
-#include <glm\gtc\matrix_transform.hpp>
-#include <glm\gtc\type_ptr.hpp>
-//#include <glad\glad.h>
+#include <glad/glad.h>
+#define GLFW_DLL
+#include "GLFW/glfw3.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <vector>
 #include "entity.h"
 #include "shader.h"

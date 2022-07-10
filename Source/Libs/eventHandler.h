@@ -1,8 +1,9 @@
 #ifndef __EVENTHANDLER__
 #define __EVENTHANDLER__
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
+#include <glad/glad.h>
 #include "GLFW/glfw3.h"
-#include <glm\glm.hpp>
+#include <glm/glm.hpp>
 #include "init.h"
 
 // class for handling keyboard, window and entity events
