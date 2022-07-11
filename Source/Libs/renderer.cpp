@@ -111,7 +111,7 @@ Renderer::Renderer() {
 	glGenTextures(1, &this->screenDepthTexture);
 	// bind the screenTexture texture as the main texture
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture);
-	
+
 	/* ACTIVE TEXTURE: screenDepthTexture */
 
 	// create the actual texture for image with res: screenWidth x screenHeight
@@ -121,7 +121,6 @@ Renderer::Renderer() {
 	glGenFramebuffers(1, &this->screenFBO);
 	// bind the screenFBO to be the default FBO
 	glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
-
 
 	glGenTextures(1, &this->outlineTextureMask);
 	glBindTexture(GL_TEXTURE_2D, this->outlineTextureMask);

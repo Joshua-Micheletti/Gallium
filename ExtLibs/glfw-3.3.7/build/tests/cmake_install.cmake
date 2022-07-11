@@ -1,4 +1,4 @@
-# Install script for directory: /mnt/d/Programs/C++/3DEngineVS/3DEngineVS/ExtLibs/glfw-3.3.7/tests
+# Install script for directory: /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/tests
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -35,5 +35,10 @@ endif()
 # Is this installation the result of a crosscompile?
 if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
+endif()
+
+# Set default install directory permissions.
+if(NOT DEFINED CMAKE_OBJDUMP)
+  set(CMAKE_OBJDUMP "/usr/bin/objdump")
 endif()
 

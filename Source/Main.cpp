@@ -7,8 +7,6 @@ int main(void) {
 	EventHandler eventHandler(window);
 	UI interface(window, &renderer, &eventHandler);
 
-	printf("test main\n");
-
 	while (!glfwWindowShouldClose(window)) {
 		eventHandler.routine();
 		renderer.render();

@@ -1,23 +1,20 @@
+
+# Consider dependencies only in project.
+set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
+
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
-  "C"
   )
-# The set of files for implicit dependencies of each language:
-set(CMAKE_DEPENDS_CHECK_C
-  "/mnt/d/Programs/C++/3DEngineVS/3DEngineVS/ExtLibs/glfw-3.3.7/deps/glad_gl.c" "/mnt/d/Programs/C++/3DEngineVS/3DEngineVS/ExtLibs/glfw-3.3.7/build/examples/CMakeFiles/gears.dir/__/deps/glad_gl.c.o"
-  "/mnt/d/Programs/C++/3DEngineVS/3DEngineVS/ExtLibs/glfw-3.3.7/examples/gears.c" "/mnt/d/Programs/C++/3DEngineVS/3DEngineVS/ExtLibs/glfw-3.3.7/build/examples/CMakeFiles/gears.dir/gears.c.o"
-  )
-set(CMAKE_C_COMPILER_ID "GNU")
 
-# The include file search paths:
-set(CMAKE_C_TARGET_INCLUDE_PATH
-  "../deps"
-  "../include"
+# The set of dependency files which are needed:
+set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/deps/glad_gl.c" "examples/CMakeFiles/gears.dir/__/deps/glad_gl.c.o" "gcc" "examples/CMakeFiles/gears.dir/__/deps/glad_gl.c.o.d"
+  "/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/examples/gears.c" "examples/CMakeFiles/gears.dir/gears.c.o" "gcc" "examples/CMakeFiles/gears.dir/gears.c.o.d"
   )
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
-  "/mnt/d/Programs/C++/3DEngineVS/3DEngineVS/ExtLibs/glfw-3.3.7/build/src/CMakeFiles/glfw.dir/DependInfo.cmake"
+  "/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/src/CMakeFiles/glfw.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

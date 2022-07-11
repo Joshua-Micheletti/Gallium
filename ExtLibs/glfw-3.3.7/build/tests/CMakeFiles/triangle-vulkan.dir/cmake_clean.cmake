@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/triangle-vulkan.dir/__/deps/glad_vulkan.c.o"
+  "CMakeFiles/triangle-vulkan.dir/__/deps/glad_vulkan.c.o.d"
   "CMakeFiles/triangle-vulkan.dir/triangle-vulkan.c.o"
+  "CMakeFiles/triangle-vulkan.dir/triangle-vulkan.c.o.d"
   "triangle-vulkan"
   "triangle-vulkan.pdb"
 )

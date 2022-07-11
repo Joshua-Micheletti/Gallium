@@ -1,7 +1,10 @@
 file(REMOVE_RECURSE
   "CMakeFiles/msaa.dir/__/deps/getopt.c.o"
+  "CMakeFiles/msaa.dir/__/deps/getopt.c.o.d"
   "CMakeFiles/msaa.dir/__/deps/glad_gl.c.o"
+  "CMakeFiles/msaa.dir/__/deps/glad_gl.c.o.d"
   "CMakeFiles/msaa.dir/msaa.c.o"
+  "CMakeFiles/msaa.dir/msaa.c.o.d"
   "msaa"
   "msaa.pdb"
 )

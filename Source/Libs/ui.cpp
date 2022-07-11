@@ -24,8 +24,6 @@ UI::UI(GLFWwindow *window, Renderer* renderer, EventHandler* eventHandler) {
 	this->renderer = renderer;
 	this->eventHandler = eventHandler;
 
-	printf("testone!\n");
-
 	// setup the update clock
 	this->tick = sf::milliseconds(1000 / 10);
 	this->time = this->clock.getElapsedTime();
@@ -42,8 +40,9 @@ UI::UI(GLFWwindow *window, Renderer* renderer, EventHandler* eventHandler) {
 
 	//ImGui::SFML::Init(*this->window);
 	ImGui::CreateContext();
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	
 	ImGuiIO& io = ImGui::GetIO();
 
 	io.FontDefault = io.Fonts->AddFontFromFileTTF("../Fonts/OpenSans/OpenSans-Regular.ttf", 18.0f);

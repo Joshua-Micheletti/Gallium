@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/reopen.dir/__/deps/glad_gl.c.o"
+  "CMakeFiles/reopen.dir/__/deps/glad_gl.c.o.d"
   "CMakeFiles/reopen.dir/reopen.c.o"
+  "CMakeFiles/reopen.dir/reopen.c.o.d"
   "reopen"
   "reopen.pdb"
 )

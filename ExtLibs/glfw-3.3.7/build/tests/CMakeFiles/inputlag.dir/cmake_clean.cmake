@@ -1,7 +1,10 @@
 file(REMOVE_RECURSE
   "CMakeFiles/inputlag.dir/__/deps/getopt.c.o"
+  "CMakeFiles/inputlag.dir/__/deps/getopt.c.o.d"
   "CMakeFiles/inputlag.dir/__/deps/glad_gl.c.o"
+  "CMakeFiles/inputlag.dir/__/deps/glad_gl.c.o.d"
   "CMakeFiles/inputlag.dir/inputlag.c.o"
+  "CMakeFiles/inputlag.dir/inputlag.c.o.d"
   "inputlag"
   "inputlag.pdb"
 )

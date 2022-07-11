@@ -4,3 +4,6 @@
 /Models
 /.vs
 /Portable
+/bin
+/.vscode
+/x64

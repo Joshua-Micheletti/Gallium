@@ -15,7 +15,7 @@ unsigned int screenHeight = 720;
 unsigned int windowWidth = 1280;
 unsigned int windowHeight = 720;
 
-int samples = 16;
+int samples = 1;
 bool vsync = true;
 bool fullscreen = false;
 
@@ -67,6 +67,7 @@ void resizeCallback(GLFWwindow* window, int x, int y) {
 	int width;
 	int height;
 	glfwGetFramebufferSize(window, &width, &height);
+
 	glViewport(0, 0, width, height);
 
 	screenWidth = width;
@@ -80,6 +81,7 @@ void resizeCallback(GLFWwindow* window, int x, int y) {
 	updateResolution = true;
 }
 
+
 GLFWwindow* initGLFW_OpenGL(std::string name) {
 	glfwInit();
 	
@@ -87,6 +89,7 @@ GLFWwindow* initGLFW_OpenGL(std::string name) {
 	window = glfwCreateWindow(screenWidth, screenHeight, "3DEngine", NULL, NULL);
 	
 	glfwMakeContextCurrent(window);
+	gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	gladLoadGL();
 	glEnable(GL_MULTISAMPLE);
@@ -207,8 +210,6 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	Entity* genshinEnemy = new Entity("genshinEnemy");
 	Entity* box2 = new Entity("Box 2");
 
-	printf("box: %s\n", box->getName().c_str());
-
 	createAxis(axis);
 	std::vector<float> vex;
 	vex.push_back(0);
@@ -223,7 +224,7 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 	man3->load3DModel("../Models/guy.obj");
 	map->load3DModel("../Models/dust2_.obj");
 	plane->load3DModel("../Models/plane.obj");
-	jacket->load3DModel("../Models/blj.obj");
+	jacket->load3DModel("../Models/Blj.obj");
 	manaya->load3DModel("../Models/manaya6.obj");
 	genshinEnemy->load3DModel("../Models/genshinEnemy.obj");
 	box2->load3DModel("../Models/box2.obj");
@@ -393,13 +394,6 @@ GLFWwindow* setup() {
 	loadShaders(&shaderBuffer);
 
 	loadEntities(&entityBuffer);
-
-	printf("loaded entities: \n");
-	for (int i = 0; i < 5; i++) {
-		printf("%i: %s\n", i, entityBuffer[0]->getName());
-	}
-
-	
 
 	return(window);
 }

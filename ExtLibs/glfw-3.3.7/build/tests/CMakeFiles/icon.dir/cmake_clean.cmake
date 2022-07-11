@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/icon.dir/__/deps/glad_gl.c.o"
+  "CMakeFiles/icon.dir/__/deps/glad_gl.c.o.d"
   "CMakeFiles/icon.dir/icon.c.o"
+  "CMakeFiles/icon.dir/icon.c.o.d"
   "icon"
   "icon.pdb"
 )

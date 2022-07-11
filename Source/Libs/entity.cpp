@@ -82,7 +82,6 @@ void Entity::loadVertices(std::vector<float> vertices) {
 }
 //
 void Entity::loadModel(string name) {
-	printf("%s\n", name);
 	FILE* model = fopen(name.c_str(), "r");
 	char buffer[255];
 

@@ -609,6 +609,8 @@ bool    ImGui_ImplOpenGL3_CreateDeviceObjects()
         "    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);\n"
         "}\n";
 
+    printf("so far so good\n");
+
     // Select shaders matching our GLSL versions
     const GLchar* vertex_shader = NULL;
     const GLchar* fragment_shader = NULL;
@@ -633,12 +635,19 @@ bool    ImGui_ImplOpenGL3_CreateDeviceObjects()
         fragment_shader = fragment_shader_glsl_130;
     }
 
+    printf("sus area\n");
+
     // Create shaders
     const GLchar* vertex_shader_with_version[2] = { g_GlslVersionString, vertex_shader };
+    printf("ultra sus\n");
     g_VertHandle = glCreateShader(GL_VERTEX_SHADER);
+    printf("not sure at this point\n");
     glShaderSource(g_VertHandle, 2, vertex_shader_with_version, NULL);
     glCompileShader(g_VertHandle);
+    printf("compiled shaders\n");
     CheckShader(g_VertHandle, "vertex shader");
+
+    printf("create shaders\n");
 
     const GLchar* fragment_shader_with_version[2] = { g_GlslVersionString, fragment_shader };
     g_FragHandle = glCreateShader(GL_FRAGMENT_SHADER);
@@ -661,6 +670,8 @@ bool    ImGui_ImplOpenGL3_CreateDeviceObjects()
     // Create buffers
     glGenBuffers(1, &g_VboHandle);
     glGenBuffers(1, &g_ElementsHandle);
+
+    printf("last function\n");
 
     ImGui_ImplOpenGL3_CreateFontsTexture();
 
