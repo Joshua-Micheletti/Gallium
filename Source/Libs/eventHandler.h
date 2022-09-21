@@ -1,6 +1,5 @@
 #ifndef __EVENTHANDLER__
 #define __EVENTHANDLER__
-#include <SFML/Graphics.hpp>
 #include <glad/glad.h>
 #include "GLFW/glfw3.h"
 #include <glm/glm.hpp>
@@ -24,13 +23,10 @@ class EventHandler
 		void handleUserEvents();
 		// reference to the window object
 		GLFWwindow* window;
-		// object for storing window events
-		sf::Event windowEvent;
 		
 		// time variables for syncing event polling and update frequency to tickrate
-		sf::Time time;
-		sf::Time tick;
-		sf::Clock clock;
+		double time;
+		double tick;
 
 		// tmp variables for updating entities
 		float x1;

@@ -12,24 +12,19 @@ imguiBE = ${imgui}/backends
 stbimage = ${extLibs}/stb-master
 
 ifeq ($(OS),Windows_NT)
-	sfmlI = ${extLibs}/SFML-2.5.1-mingw/include
-	sfmlL = ${extLibs}/SFML-2.5.1-mingw/lib
 	glfwL = ${extLibs}/glfw/lib-mingw
-	extLibL = ${glfwL} -L ${glmI} -L ${sfmlL} -L ${imgui} -L ${stbimage}
-	libraries = -lopengl32 -lglfw3 -lsfml-graphics -lsfml-window -lsfml-system
+	extLibL = ${glfwL} -L ${glmI} -L ${imgui} -L ${stbimage}
+	libraries = -lopengl32 -lglfw3
 	runCommand = cd "./bin" && "./launch.exe"
 else
-	sfmlI = ${extLibs}/SFML-2.5.1-linux/include
-	sfmlL = ${extLibs}/SFML-2.5.1-linux/lib
-	extLibL = ${glmI} -L ${sfmlL} -L ${imgui} -L ${stbimage}
-	libraries = -lGL -lglfw3 -ldl -lm -lGLU -lX11 -lpthread -lsfml-graphics -lsfml-window -lsfml-system -lGLEW
+	extLibL = ${glmI} -L ${imgui} -L ${stbimage}
+	libraries = -lGL -lglfw3 -ldl -lm -lGLU -lX11 -lpthread -lGLEW
 	runCommand = (cd ./bin && ./launch)
 endif
 
-extLibI = ${gladI} -I ${glfwI} -I ${glmI} -I ${sfmlI} -I ${imgui} -I ${imguiBE} -I ${stbimage}
+extLibI = ${gladI} -I ${glfwI} -I ${glmI} -I ${imgui} -I ${imguiBE} -I ${stbimage}
 
 flags = -w -std=c++11 -Ofast
-#libraries = -lopengl32 -lglfw3 -lsfml-graphics -lsfml-window -lsfml-system
 
 objectsPath = ./bin/objects
 objects = ${objectsPath}/main.o ${objectsPath}/glad.o ${objectsPath}/init.o ${objectsPath}/renderer.o ${objectsPath}/eventHandler.o ${objectsPath}/ui.o ${objectsPath}/entity.o ${objectsPath}/shader.o ${objectsPath}/camera.o ${objectsPath}/kernel.o ${objectsPath}/imgui.o ${objectsPath}/imgui_impl_glfw.o ${objectsPath}/imgui_impl_opengl3.o ${objectsPath}/imgui_demo.o ${objectsPath}/imgui_draw.o ${objectsPath}/imgui_widgets.o ${objectsPath}/imgui_tables.o
@@ -108,10 +103,6 @@ ${objectsPath}/glad.o: ${extLibs}/GLAD/src/glad.c makefile
 	g++ -c -o ${objectsPath}/glad.o ${extLibs}/GLAD/src/glad.c -I ${extLibs}/GLAD/include ${flags}
 
 run:
-#start /d "./bin" launch.exe
-#Start-Process -FilePath launch.exe -WorkingDirectory ./bin
-#start launch.exe -wo ./bin
-#cd "./bin" && "./launch.exe"
 	${runCommand}
 
 build_run: main run

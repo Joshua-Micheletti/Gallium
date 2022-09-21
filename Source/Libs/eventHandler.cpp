@@ -3,7 +3,6 @@
 #include "camera.h"
 #include "entity.h"
 #include <glm/glm.hpp>
-#include <SFML/System.hpp>
 #include "GLFW/glfw3.h"
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -104,8 +103,8 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 EventHandler::EventHandler(GLFWwindow* window) {
 	this->window = window;
 	this->update = true;
-	tick = sf::milliseconds(1000 / 300);
-	time = clock.getElapsedTime();
+	this->time = glfwGetTime();
+	this->tick = (double)(1.0 / 300.0);
 
 	glfwSetKeyCallback(this->window, keyCallback);
 
@@ -221,14 +220,14 @@ void EventHandler::handleUserEvents() {
 }
 
 void EventHandler::routine() {
-	while (time.asMilliseconds() + tick.asMilliseconds() < clock.getElapsedTime().asMilliseconds()) {
+	while (this->time + this->tick < glfwGetTime()) {
 		handleUserEvents();
 
 		if (this->update == true) {
 			updateEntities();
 		}
 
-		time += tick;
+		this->time += this->tick;
 	}
 }
 

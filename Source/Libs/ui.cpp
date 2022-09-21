@@ -13,7 +13,6 @@
 #include "renderer.h"
 #include "eventHandler.h"
 #include "GLFW/glfw3.h"
-#include <SFML/Graphics.hpp>
 #include <stdio.h>
 #include <algorithm>
 
@@ -25,8 +24,7 @@ UI::UI(GLFWwindow *window, Renderer* renderer, EventHandler* eventHandler) {
 	this->eventHandler = eventHandler;
 
 	// setup the update clock
-	this->tick = sf::milliseconds(1000 / 10);
-	this->time = this->clock.getElapsedTime();
+
 
 	this->showMetricsWindow = false;
 	this->showUserGuide = false;
@@ -625,8 +623,8 @@ void UI::drawFPSWindow() {
 		}
 
 		while (refresh_time < ImGui::GetTime()) {
-			fps[values_offset] = 1.0f / this->fpsTime.asSeconds();
-			frameTime[values_offset] = this->fpsTime.asMicroseconds() / 1000.0f;
+			fps[values_offset] = 1.0f / this->fpsTime;
+			frameTime[values_offset] = this->fpsTime;
 			reflectionRenderTime[values_offset] = this->renderer->getReflectionRenderTime() * 1000.0f;
 			forwardRenderTime[values_offset] = this->renderer->getForwardRenderTime() * 1000.0f;
 			MSPostProcessRenderTime[values_offset] = this->renderer->getMSPostProcessingPassTime() * 1000.0f;
@@ -799,8 +797,9 @@ void UI::drawImGui() {
 
 // just calls all the other methods, this method is public
 void UI::drawInfo() {
-	this->fpsTime = this->fpsClock.getElapsedTime();
-	this->fpsClock.restart().asSeconds();
+	static double tmpTime;
+	this->fpsTime = glfwGetTime() - tmpTime;
+	tmpTime = glfwGetTime();
 
 	if (displayInfo) {
 		this->drawImGui();

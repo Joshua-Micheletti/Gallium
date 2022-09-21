@@ -1,7 +1,5 @@
-#include <SFML/Graphics.hpp>
 #include <string>
 #include "imgui.h"
-//#include "imgui-SFML.h"
 #include "renderer.h"
 #include "eventHandler.h"
 
@@ -23,20 +21,8 @@ class UI {
 		// event handler reference
 		EventHandler *eventHandler;
 
-		// clock for keeping time of frame time
-		sf::Clock fpsClock;
 		// object to store frame time
-		sf::Time fpsTime;
-		// object to store elapsed time, used for defining the UI update rate
-		sf::Time time;
-		// delay between UI updates
-		sf::Time tick;
-		// clock to measure update time for the UI
-		sf::Clock clock;
-
-		sf::Clock deltaClock;
-
-		sf::Color bgColor;
+		double fpsTime;
 
 		float* color;
 

@@ -3,7 +3,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <cmath>
 #include "camera.h"
-#include <SFML/Graphics.hpp>
 
 Camera::Camera(glm::vec3 position, glm::vec3 orientation, glm::vec3 up) {
   this->position = position;
