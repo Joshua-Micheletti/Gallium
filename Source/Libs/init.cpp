@@ -4,9 +4,9 @@
 #include <vector>
 #include <stdlib.h>
 #include <iostream>
-#include "entity.h"
-#include "shader.h"
-#include "camera.h"
+#include "Model/entity.h"
+#include "View/shader.h"
+#include "View/camera.h"
 #include "init.h"
 #include <errno.h>
 

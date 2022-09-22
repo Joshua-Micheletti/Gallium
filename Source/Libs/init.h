@@ -10,9 +10,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <vector>
-#include "entity.h"
-#include "shader.h"
-#include "camera.h"
+#include "Model/entity.h"
+#include "View/shader.h"
+#include "View/camera.h"
 
 typedef struct buttons{
   bool backslash = false;
@@ -103,7 +103,5 @@ extern Entity *light;
 extern GLFWwindow *setup();
 extern GLFWwindow *initGLFW_OpenGL(std::string);
 extern void loadEntity(std::vector<Entity*>*, char*);
-
-//extern GLenum glCheckError_(const char*, int);
 
 #endif
