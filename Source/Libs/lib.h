@@ -12,3 +12,5 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "utils.h"
+#include "View/window.h"
+#include "View/drawingEntity.h"

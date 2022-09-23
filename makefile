@@ -34,7 +34,7 @@ extLibI = ${gladI} -I ${glfwI} -I ${glmI} -I ${imgui} -I ${imguiBE} -I ${stbimag
 flags = -w -std=c++11 -Ofast
 
 objectsPath = ./bin/objects
-objects = ${objectsPath}/main.o ${objectsPath}/utils.o ${objectsPath}/glad.o ${objectsPath}/init.o ${objectsPath}/renderer.o ${objectsPath}/model.o ${objectsPath}/eventHandler.o ${objectsPath}/ui.o ${objectsPath}/entity.o ${objectsPath}/shader.o ${objectsPath}/camera.o ${objectsPath}/kernel.o ${objectsPath}/imgui.o ${objectsPath}/imgui_impl_glfw.o ${objectsPath}/imgui_impl_opengl3.o ${objectsPath}/imgui_demo.o ${objectsPath}/imgui_draw.o ${objectsPath}/imgui_widgets.o ${objectsPath}/imgui_tables.o
+objects = ${objectsPath}/main.o ${objectsPath}/window.o ${objectsPath}/utils.o ${objectsPath}/glad.o ${objectsPath}/init.o ${objectsPath}/renderer.o ${objectsPath}/drawingEntity.o ${objectsPath}/model.o ${objectsPath}/material.o ${objectsPath}/eventHandler.o ${objectsPath}/ui.o ${objectsPath}/entity.o ${objectsPath}/shader.o ${objectsPath}/camera.o ${objectsPath}/kernel.o ${objectsPath}/imgui.o ${objectsPath}/imgui_impl_glfw.o ${objectsPath}/imgui_impl_opengl3.o ${objectsPath}/imgui_demo.o ${objectsPath}/imgui_draw.o ${objectsPath}/imgui_widgets.o ${objectsPath}/imgui_tables.o
 
 main: ${objects} makefile
 	@echo ${marks}${escape}[31m============= COMPILING MAIN PROGRAM =============${noColor}${marks}
@@ -51,16 +51,28 @@ ${objectsPath}/init.o: ${source}/Libs/init.cpp makefile
 	g++ -c -o ${objectsPath}/init.o ${source}/Libs/init.cpp -I ${extLibI} ${flags} ${libraries}
 
 ${objectsPath}/utils.o: ${source}/Libs/utils.cpp makefile
-	@echo ${marks}${escape}[31m============= init.cpp (source) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= utils.cpp (source) =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/utils.o ${source}/Libs/utils.cpp -I ${extLibI} ${flags} ${libraries}
+
+${objectsPath}/window.o: ${view}/window.cpp makefile
+	@echo ${marks}${escape}[31m============= window.cpp (source) =============${noColor}${marks}
+	g++ -c -o ${objectsPath}/window.o ${view}/window.cpp -I ${extLibI} ${flags}
 
 ${objectsPath}/renderer.o: ${view}/renderer.cpp makefile
 	@echo ${marks}${escape}[31m============= renderer.cpp (source) =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/renderer.o ${view}/renderer.cpp -I ${extLibI} ${flags}
 
+${objectsPath}/drawingEntity.o: ${view}/drawingEntity.cpp makefile
+	@echo ${marks}${escape}[31m============= drawingEntity.cpp (source) =============${noColor}${marks}
+	g++ -c -o ${objectsPath}/drawingEntity.o ${view}/drawingEntity.cpp -I ${extLibI} ${flags}
+
 ${objectsPath}/model.o: ${view}/model.cpp makefile
 	@echo ${marks}${escape}[31m============= model.cpp (source) =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/model.o ${view}/model.cpp -I ${extLibI} ${flags}
+
+${objectsPath}/material.o: ${view}/material.cpp makefile
+	@echo ${marks}${escape}[31m============= material.cpp (source) =============${noColor}${marks}
+	g++ -c -o ${objectsPath}/material.o ${view}/material.cpp -I ${extLibI} ${flags}
 
 ${objectsPath}/eventHandler.o: ${controller}/eventHandler.cpp makefile
 	@echo ${marks}${escape}[31m============= eventHandler.cpp (source) =============${noColor}${marks}

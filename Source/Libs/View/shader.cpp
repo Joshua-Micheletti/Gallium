@@ -173,3 +173,8 @@ void Shader::findUniformAndLayouts(char* shader) {
 		}
 	}
 }
+
+
+void Shader::printFull() {
+	printf("Shader: %s\n", this->name);
+}

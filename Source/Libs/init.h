@@ -1,7 +1,6 @@
 #ifndef __INIT__
 #define __INIT__
 
-//#include <SFML\Graphics.hpp>
 #include <glad/glad.h>
 #define GLFW_DLL
 #include "GLFW/glfw3.h"
@@ -86,8 +85,6 @@ extern bool doReflection;
 extern bool updateResolution;
 extern bool updated;
 extern bool depthBuffer;
-
-////extern sf::Vector2i center;
 
 extern int defaultCamera;
 

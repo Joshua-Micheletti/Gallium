@@ -26,6 +26,8 @@ class Shader {
 		std::vector<uniform_t> getUniformBuffer();
 		// get method for getting the buffer containing all the layouts of the shader
 		std::vector<char*> getLayoutBuffer();
+
+		void printFull();
 		
 	private:
 		// shader name

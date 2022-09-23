@@ -2,29 +2,34 @@
 #include "Libs/lib.h"
 
 void testFunc() {
-	Model test;
-	test.loadModel("../Models/box2.obj");
-	test.printFull();
-	test.printFace(2);
-
+	DrawingEntity de;
+	de.model()->loadModel("../Models/box2.obj");
+	de.printFull();
 }
 
 int main(void) {
-	GLFWwindow* window = setup();
+	//GLFWwindow* window = setup();
+	Window window;
 	Renderer renderer;
-	EventHandler eventHandler(window);
-	UI interface(window, &renderer, &eventHandler);
+	//EventHandler eventHandler(window);
+	EventHandler eventHandler(window.getWindow());
+	//UI interface(window, &renderer, &eventHandler);
+	UI interface(window.getWindow(), &renderer, &eventHandler);
 
 	testFunc();
-	
-	while (!glfwWindowShouldClose(window)) {
+	while (!glfwWindowShouldClose(window.getWindow())) {
+	//while (!glfwWindowShouldClose(window)) {
 		eventHandler.routine();
 		renderer.render();
-		interface.drawInfo();
+		
+		// interface.drawInfo();
+		
 		glfwPollEvents();
-		glfwSwapBuffers(window);
+		glfwSwapBuffers(window.getWindow());
+		//glfwSwapBuffers(window);
 	}
 
+	glfwTerminate();
 	return(0);
 }
 
