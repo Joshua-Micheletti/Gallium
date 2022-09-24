@@ -5,6 +5,7 @@
 #include "shader.h"
 #include "kernel.h"
 #include <glm/glm.hpp>
+#include <map>
 
 // class for rendering entities using shaders (mainly openGL)
 class Renderer {
@@ -28,7 +29,6 @@ class Renderer {
 
 		void setPostProcessingEffect(int);
 		void setFilterColor(float, float, float);
-		
 
 	private:
 		int highlightedEntity;
@@ -84,4 +84,5 @@ class Renderer {
 		void createCube(std::vector<float>*, std::vector<glm::vec3>);
 		void createSphere(glm::vec3, float, int, std::vector<float>*);
 };
+
 #endif

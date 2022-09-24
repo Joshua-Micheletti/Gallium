@@ -8,7 +8,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "../utils.h"
-#include "material.h"
 
 class Model {
     public:
@@ -43,11 +42,6 @@ class Model {
         unsigned int vertexBuffer_;
         unsigned int uvBuffer_;
         unsigned int normalBuffer_;
-
-        glm::mat4 model_;
-        glm::mat4 translation_;
-        glm::mat4 rotation_;
-        glm::mat4 scale_;
 };
 
 #endif

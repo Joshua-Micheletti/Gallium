@@ -15,6 +15,7 @@ class Shader {
 	public:
 		// constructor method
 		Shader(char*);
+		Shader();
 		// public method for loading vertex and fragment shaders
 		void loadShader(char*, char*);
 

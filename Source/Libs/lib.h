@@ -4,6 +4,7 @@
 #include <string>
 #include <stdlib.h>
 #include "init.h"
+#include "View/drawingEntity.h"
 #include "View/renderer.h"
 #include "View/model.h"
 #include "Controller/eventHandler.h"
@@ -13,4 +14,4 @@
 #include "imgui_impl_opengl3.h"
 #include "utils.h"
 #include "View/window.h"
-#include "View/drawingEntity.h"
+#include "global.h"

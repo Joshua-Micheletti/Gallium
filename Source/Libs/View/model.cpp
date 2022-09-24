@@ -1,7 +1,6 @@
 #include "model.h"
 
 Model::Model() {
-    printf("created model\n");
 }
 
 
@@ -13,9 +12,9 @@ void Model::loadModel(std::string filepath) {
     createBuffer(this->uvs_, &this->uvBuffer_);
     createBuffer(this->normals_, &this->normalBuffer_);
 
-    printf("vertex buffer: %d\n", this->vertexBuffer_);
-    printf("uv buffer: %d\n", this->uvBuffer_);
-    printf("normal buffer: %d\n", this->normalBuffer_);
+    // printf("vertex buffer: %d\n", this->vertexBuffer_);
+    // printf("uv buffer: %d\n", this->uvBuffer_);
+    // printf("normal buffer: %d\n", this->normalBuffer_);
 }
 
 
@@ -194,7 +193,7 @@ void Model::printFace(int face) {
 }
 
 void Model::print() {
-    printf("\nModel:\nSource = %s\nVertices = %d\nUVs = %d\nNormals = %d\nFaces = %d\n",
+    printf("Source = %s\nVertices = %d\nUVs = %d\nNormals = %d\nFaces = %d\n",
             this->source_.c_str(),
             (int)(this->vertices_.size() / 3),
             (int)(this->uvs_.size() / 2),

@@ -4,15 +4,22 @@ DrawingEntity::DrawingEntity() {
 
 }
 
-Model* DrawingEntity::model() {
-    return(&this->model_);
+void DrawingEntity::setModel(std::string id) {
+    this->model_ = id;
 }
 
-Material* DrawingEntity::material() {
-    return(&this->material_);
+void DrawingEntity::setMaterial(std::string id) {
+    this->material_ = id;
+}
+
+std::string DrawingEntity::model() {
+    return(this->model_);
+}
+
+std::string DrawingEntity::material() {
+    return(this->material_);
 }
 
 void DrawingEntity::printFull() {
-    this->model_.printFull();
-    this->material_.printFull();
+    printf("Model: %s\nMaterial: %s\n", this->model_.c_str(), this->material_.c_str());
 }

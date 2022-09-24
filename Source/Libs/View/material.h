@@ -3,17 +3,16 @@
 
 #include "GLAD/glad.h"
 #include <string>
-#include "shader.h"
 
 class Material {
     public:
         Material();
-        Shader shader();
-
+        std::string shader();
+        void shader(std::string);
         void printFull();
 
     private:
-        Shader shader_ = NULL;
+        std::string shader_;
 };
 
 

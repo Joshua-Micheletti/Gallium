@@ -34,7 +34,7 @@ extLibI = ${gladI} -I ${glfwI} -I ${glmI} -I ${imgui} -I ${imguiBE} -I ${stbimag
 flags = -w -std=c++11 -Ofast
 
 objectsPath = ./bin/objects
-objects = ${objectsPath}/main.o ${objectsPath}/window.o ${objectsPath}/utils.o ${objectsPath}/glad.o ${objectsPath}/init.o ${objectsPath}/renderer.o ${objectsPath}/drawingEntity.o ${objectsPath}/model.o ${objectsPath}/material.o ${objectsPath}/eventHandler.o ${objectsPath}/ui.o ${objectsPath}/entity.o ${objectsPath}/shader.o ${objectsPath}/camera.o ${objectsPath}/kernel.o ${objectsPath}/imgui.o ${objectsPath}/imgui_impl_glfw.o ${objectsPath}/imgui_impl_opengl3.o ${objectsPath}/imgui_demo.o ${objectsPath}/imgui_draw.o ${objectsPath}/imgui_widgets.o ${objectsPath}/imgui_tables.o
+objects = ${objectsPath}/main.o ${objectsPath}/window.o ${objectsPath}/utils.o ${objectsPath}/glad.o ${objectsPath}/init.o ${objectsPath}/renderer.o ${objectsPath}/rendererManager.o ${objectsPath}/drawingEntity.o ${objectsPath}/model.o ${objectsPath}/material.o ${objectsPath}/eventHandler.o ${objectsPath}/ui.o ${objectsPath}/entity.o ${objectsPath}/shader.o ${objectsPath}/camera.o ${objectsPath}/kernel.o ${objectsPath}/imgui.o ${objectsPath}/imgui_impl_glfw.o ${objectsPath}/imgui_impl_opengl3.o ${objectsPath}/imgui_demo.o ${objectsPath}/imgui_draw.o ${objectsPath}/imgui_widgets.o ${objectsPath}/imgui_tables.o
 
 main: ${objects} makefile
 	@echo ${marks}${escape}[31m============= COMPILING MAIN PROGRAM =============${noColor}${marks}
@@ -61,6 +61,10 @@ ${objectsPath}/window.o: ${view}/window.cpp makefile
 ${objectsPath}/renderer.o: ${view}/renderer.cpp makefile
 	@echo ${marks}${escape}[31m============= renderer.cpp (source) =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/renderer.o ${view}/renderer.cpp -I ${extLibI} ${flags}
+
+${objectsPath}/rendererManager.o: ${view}/rendererManager.cpp makefile
+	@echo ${marks}${escape}[31m============= rendererManager.cpp (source) =============${noColor}${marks}
+	g++ -c -o ${objectsPath}/rendererManager.o ${view}/rendererManager.cpp -I ${extLibI} ${flags}
 
 ${objectsPath}/drawingEntity.o: ${view}/drawingEntity.cpp makefile
 	@echo ${marks}${escape}[31m============= drawingEntity.cpp (source) =============${noColor}${marks}

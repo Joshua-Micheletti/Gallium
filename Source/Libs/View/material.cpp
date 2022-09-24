@@ -1,13 +1,16 @@
 #include "material.h"
 
 Material::Material() {
-    this->shader_ = Shader("test");
 }
 
-Shader Material::shader() {
+std::string Material::shader() {
     return(this->shader_);
 }
 
+void Material::shader(std::string name) {
+    this->shader_ = name;
+}
+
 void Material::printFull() {
-    this->shader_.printFull();
+    printf("Shader: %s\n", this->shader_.c_str());
 }

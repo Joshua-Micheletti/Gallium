@@ -1,20 +1,23 @@
-#ifndef __DRAWINGENTITY_
+#ifndef __DRAWINGENTITY__
 #define __DRAWINGENTITY__
 
-#include "model.h"
-#include "material.h"
+//#include "../global.h"
+#include <string>
 
 class DrawingEntity {
     public:
         DrawingEntity();
-        Model* model();
-        Material* material();
+        std::string model();
+        std::string material();
+
+        void setModel(std::string);
+        void setMaterial(std::string);
 
         void printFull();
 
     private:
-        Model model_;
-        Material material_;
+        std::string model_;
+        std::string material_;
 };
 
 #endif

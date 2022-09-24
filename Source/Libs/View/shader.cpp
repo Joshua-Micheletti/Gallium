@@ -12,6 +12,9 @@ Shader::Shader(char* name) {
 	this->name = name;
 }
 
+Shader::Shader() {
+
+}
 
 char* Shader::getName() {
 	return(this->name);
@@ -176,5 +179,4 @@ void Shader::findUniformAndLayouts(char* shader) {
 
 
 void Shader::printFull() {
-	printf("Shader: %s\n", this->name);
 }
