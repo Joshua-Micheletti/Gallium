@@ -16,8 +16,8 @@ class DrawingEntity {
         std::string model();
         std::string material();
 
-        void model(std::string);
-        void material(std::string);
+        DrawingEntity* model(std::string);
+        DrawingEntity* material(std::string);
 
         glm::mat4 modelMatrix();
         glm::mat4 translationMatrix();
@@ -27,6 +27,15 @@ class DrawingEntity {
         void translate(glm::vec3);
         void rotate(glm::vec3);
         void scale(glm::vec3);
+
+        glm::vec3 position();
+        void position(glm::vec3);
+
+        glm::vec3 lightColor();
+        void lightColor(glm::vec3);
+
+        bool isLight();
+        void isLight(bool);
 
         void printFull();
 
@@ -38,6 +47,12 @@ class DrawingEntity {
         glm::mat4 translationMatrix_;
         glm::mat4 rotationMatrix_;
         glm::mat4 scaleMatrix_;
+
+        glm::vec3 position_;
+
+        // FIND A WAY TO TURN LIGHT INTO A SUBCLASS
+        bool isLight_;
+        glm::vec3 lightColor_;
 };
 
 #endif

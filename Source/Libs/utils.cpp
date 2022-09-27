@@ -131,4 +131,7 @@ void readOBJ(std::string filepath, std::vector<float>& v, std::vector<float>& t,
 	}
 }
 
-
+void polarToCartesian(float r, float teta, float* x, float* y) {
+	*x = r * cos(teta);
+	*y = r * sin(teta);
+}

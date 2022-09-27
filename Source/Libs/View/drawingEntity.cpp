@@ -5,14 +5,18 @@ DrawingEntity::DrawingEntity() {
     this->translationMatrix_ = glm::mat4(1);
     this->rotationMatrix_ = glm::mat4(1);
     this->scaleMatrix_ = glm::mat4(1);
+
+    this->position_ = glm::vec3(0);
 }
 
-void DrawingEntity::model(std::string name) {
+DrawingEntity* DrawingEntity::model(std::string name) {
     this->model_ = name;
+    return(this);
 }
 
-void DrawingEntity::material(std::string name) {
+DrawingEntity* DrawingEntity::material(std::string name) {
     this->material_ = name;
+    return(this);
 }
 
 std::string DrawingEntity::model() {
@@ -25,6 +29,7 @@ std::string DrawingEntity::material() {
 
 
 void DrawingEntity::translate(glm::vec3 translation) {
+    this->position_ += translation;
     this->translationMatrix_ = glm::translate(this->translationMatrix_, translation);
 }
 
@@ -39,12 +44,39 @@ void DrawingEntity::scale(glm::vec3 scale) {
 }
 
 
+void DrawingEntity::position(glm::vec3 position) {
+    this->position_ = position;
+    this->translationMatrix_ = glm::translate(glm::mat4(1), position);
+}
+
+glm::vec3 DrawingEntity::position() {
+    return(this->position_);
+}
+
+
 // OPTIMIZE MAKING IT ONLY CALCULATE THE MODEL MATRIX WHEN THE OTHER MATRICES CHANGE
 glm::mat4 DrawingEntity::modelMatrix() {
     this->modelMatrix_ = this->translationMatrix_ * this->rotationMatrix_ * this->scaleMatrix_;
     return(this->modelMatrix_);
 }
 
+
+bool DrawingEntity::isLight() {
+    return(this->isLight_);
+}
+
+void DrawingEntity::isLight(bool flag) {
+    this->isLight_ = flag;
+}
+
+
+glm::vec3 DrawingEntity::lightColor() {
+    return(this->lightColor_);
+}
+
+void DrawingEntity::lightColor(glm::vec3 color) {
+    this->lightColor_ = color;
+}
 
 
 void DrawingEntity::printFull() {

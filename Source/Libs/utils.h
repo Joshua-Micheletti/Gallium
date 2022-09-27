@@ -11,6 +11,7 @@ extern int maxLength(std::vector<float>);
 extern int countFaces(std::vector<float>);
 extern void createBuffer(std::vector<float>, unsigned int*);
 extern void readOBJ(std::string, std::vector<float>&, std::vector<float>&, std::vector<float>&);
+extern void polarToCartesian(float, float, float*, float*);
 
 extern std::string strRed;
 extern std::string strGreen;

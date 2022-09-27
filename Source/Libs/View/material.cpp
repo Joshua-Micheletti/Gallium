@@ -7,16 +7,18 @@ std::string Material::shader() {
     return(this->shader_);
 }
 
-void Material::shader(std::string name) {
+Material* Material::shader(std::string name) {
     this->shader_ = name;
+    return(this);
 }
 
 std::string Material::texture() {
     return(this->texture_);
 }
 
-void Material::texture(std::string name) {
+Material* Material::texture(std::string name) {
     this->texture_ = name;
+    return(this);
 }
 
 void Material::printFull() {

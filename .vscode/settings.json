@@ -47,6 +47,7 @@
         "xlocale": "cpp",
         "xlocinfo": "cpp",
         "xlocnum": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "cstdarg": "cpp"
     }
 }

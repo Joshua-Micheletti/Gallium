@@ -26,7 +26,40 @@ RendererManager::RendererManager() {
                                glm::vec3(0.0f, 1.0f, 0.0f));
 
     this->projection_ = glm::perspective(glm::radians(45.0f), (float)1280 / (float)720, 0.1f, 10000.0f);
+
+    this->newShader("S_Default")->loadShader("../Shader/default/default.vert", "../Shader/default/default.frag");
+    this->newTexture("T_Default")->loadTexture("../Textures/default2.jpg");
+    this->newMaterial("MA_Default")->shader("S_Default")->texture("T_Default");
+    this->newModel("M_Default")->loadModel("../Models/box2.obj");
+
+
+    this->newShader("S_Skybox")->loadShader("../Shader/skybox/skybox.vert", "../Shader/skybox/skybox.frag");
+
+    std::vector<std::string> faces;
+	std::string directory = "Epic_BlueSunset";
+	faces.push_back("../Textures/Skybox/" + directory + "/right.png"); //right
+	faces.push_back("../Textures/Skybox/" + directory + "/left.png");  //left
+	faces.push_back("../Textures/Skybox/" + directory + "/top.png");   //top
+	faces.push_back("../Textures/Skybox/" + directory + "/bottom.png");//bottom
+	faces.push_back("../Textures/Skybox/" + directory + "/front.png"); //front
+	faces.push_back("../Textures/Skybox/" + directory + "/back.png");  //back
+
+    this->newTexture("T_Skybox")->loadCubemap(faces);
+
+    this->newMaterial("MA_Skybox")->shader("S_Skybox")->texture("T_Skybox");
+    this->newDrawingEntity("DE_Skybox")->model("M_Default")->material("MA_Skybox");
+
+    this->skybox_ = "DE_Skybox";
 }
+
+void RendererManager::skybox(std::string name) {
+    this->skybox_ = name;
+}
+
+std::string RendererManager::skybox() {
+    return(this->skybox_);
+}
+
 
 // RETURN BUFFERS
 std::map<std::string, DrawingEntity*> RendererManager::drawingEntityBuffer() {
@@ -55,14 +88,20 @@ DrawingEntity* RendererManager::drawingEntity(std::string name) {
     return(this->drawingEntityBuffer_[name]);
 }
 
-std::string RendererManager::newDrawingEntity(std::string name) {
+DrawingEntity* RendererManager::newDrawingEntity(std::string name) {
     DrawingEntity* de = new DrawingEntity();
+
+    de->model("M_Default")->material("MA_Default");
+
     this->drawingEntityBuffer_[name] = de;
-    return(name);
+    return(this->drawingEntityBuffer_[name]);
 }
 
 std::vector<DrawingEntity*> RendererManager::drawingEntities() {
+    // DrawingEntity* tmpSkybox = this->drawingEntityBuffer_[this->skybox_];
+    // this->drawingEntityBuffer_.erase(this->skybox_);
     return(extractValues(this->drawingEntityBuffer_));
+    // this->drawingEntityBuffer_[this->skybox_] = tmpSkybox;
 }
 
 
@@ -71,25 +110,31 @@ Model* RendererManager::model(std::string name) {
     return(this->modelBuffer_[name]);
 }
 
-std::string RendererManager::newModel(std::string name) {
+Model* RendererManager::newModel(std::string name) {
     Model* m = new Model();
     this->modelBuffer_[name] = m;
-    return(name);
+    return(this->modelBuffer_[name]);
 }
 
 std::vector<Model*> RendererManager::models() {
     return(extractValues(this->modelBuffer_));
 }
 
+std::vector<std::string> RendererManager::modelNames() {
+    return(extractKeys(this->modelBuffer_));
+}
+
+
 // MATERIAL
 Material* RendererManager::material(std::string name) {
     return(this->materialBuffer_[name]);
 }
 
-std::string RendererManager::newMaterial(std::string name) {
+Material* RendererManager::newMaterial(std::string name) {
     Material* ma = new Material();
+    ma->shader("S_Default")->texture("T_Default");
     this->materialBuffer_[name] = ma;
-    return(name);
+    return(this->materialBuffer_[name]);
 }
 
 std::vector<Material*> RendererManager::materials() {
@@ -102,10 +147,10 @@ Shader* RendererManager::shader(std::string name) {
     return(this->shaderBuffer_[name]);
 }
 
-std::string RendererManager::newShader(std::string name) {
+Shader* RendererManager::newShader(std::string name) {
     Shader* s = new Shader();
     this->shaderBuffer_[name] = s;
-    return(name);
+    return(this->shaderBuffer_[name]);
 }
 
 std::vector<Shader*> RendererManager::shaders() {
@@ -118,10 +163,10 @@ Texture* RendererManager::texture(std::string name) {
     return(this->textureBuffer_[name]);
 }
 
-std::string RendererManager::newTexture(std::string name) {
+Texture* RendererManager::newTexture(std::string name) {
     Texture* s = new Texture();
     this->textureBuffer_[name] = s;
-    return(name);
+    return(this->textureBuffer_[name]);
 }
 
 std::vector<Texture*> RendererManager::textures() {

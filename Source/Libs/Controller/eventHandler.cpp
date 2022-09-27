@@ -116,57 +116,73 @@ EventHandler::EventHandler(GLFWwindow* window) {
 }
 
 void EventHandler::updateEntities() {
-	for (int i = 0; i < entityBuffer.size(); i++) {
-		Entity* entity = entityBuffer[i];
+	// TO BE CHANGED, SHOULD WORK ON ENTITIES, NOT DRAWING ENTITIES
 
-		if (entity->getName().compare("walnut") == 0) {
-			// entity->move(glm::vec3(0.005f, 0.005f, 0.005f), camera.getViewMatrix());
-			//
-			// entity->rotate(-0.1f, 0.2f, 0.3f);
-			//
-			// entity->scale(1.0001f);
-		}
+	float r = 50.0f;
 
-		else if (entity->getName().compare("box") == 0) {
-			// entity->rotate(0.1f, 0.1f, 0.1f);
+	static float teta = 0.0f; 
 
-			// entity->scale(1 - 0.01f);
-		}
+	teta += 0.001;
 
-		else if (entity->getName().compare("monkey") == 0) {
-			x2 = x1;
-			x1 += 0.01;
-			entity->scale(1 / (sin(x2) + 2.0f));
-			entity->scale(sin(x1) + 2.0f);
+	float x;
+	float y;
 
-			entity->rotate(0.1f, 0.1f, -0.1f);
-		}
+	polarToCartesian(r, teta, &x, &y);
 
-		else if (entity->getName().compare("man") == 0) {
-			// entity->rotate(0.3f, 0.2f, 0.1f);
-			// entity->move(glm::vec3(-0.01f, -0.01f, -0.01f), camera.getViewMatrix());
-		}
+	RM.drawingEntity("DE_Light")->position(glm::vec3(x, 10.0f, y));
 
-		else if (entity->getName().compare("light") == 0) {
-			angle += 0.001f;
 
-			glPointSize(30);
+	// for (int i = 0; i < entityBuffer.size(); i++) {
+	// 	Entity* entity = entityBuffer[i];
 
-			light->placeAt(glm::vec3(dist * cos(angle), 10.0, dist * sin(angle)), camera.getViewMatrix());
-		}
+	// 	if (entity->getName().compare("walnut") == 0) {
+	// 		// entity->move(glm::vec3(0.005f, 0.005f, 0.005f), camera.getViewMatrix());
+	// 		//
+	// 		// entity->rotate(-0.1f, 0.2f, 0.3f);
+	// 		//
+	// 		// entity->scale(1.0001f);
+	// 	}
 
-		else if (entity->getName().compare("man2") == 0) {
-			entity->rotate(0.0f, 0.2f, 0.0f);
-		}
+	// 	else if (entity->getName().compare("box") == 0) {
+	// 		// entity->rotate(0.1f, 0.1f, 0.1f);
 
-		else if (entity->getName().compare("man3") == 0) {
-			entity->rotate(0.0f, 0.2f, 0.0f);
-		}
+	// 		// entity->scale(1 - 0.01f);
+	// 	}
 
-		else if (entity->getName().compare("manaya") == 0) {
-			entity->rotate(0.1f, 0.0f, 0.0f);
-		}
-	}
+	// 	else if (entity->getName().compare("monkey") == 0) {
+	// 		x2 = x1;
+	// 		x1 += 0.01;
+	// 		entity->scale(1 / (sin(x2) + 2.0f));
+	// 		entity->scale(sin(x1) + 2.0f);
+
+	// 		entity->rotate(0.1f, 0.1f, -0.1f);
+	// 	}
+
+	// 	else if (entity->getName().compare("man") == 0) {
+	// 		// entity->rotate(0.3f, 0.2f, 0.1f);
+	// 		// entity->move(glm::vec3(-0.01f, -0.01f, -0.01f), camera.getViewMatrix());
+	// 	}
+
+	// 	else if (entity->getName().compare("light") == 0) {
+	// 		angle += 0.001f;
+
+	// 		glPointSize(30);
+
+	// 		light->placeAt(glm::vec3(dist * cos(angle), 10.0, dist * sin(angle)), camera.getViewMatrix());
+	// 	}
+
+	// 	else if (entity->getName().compare("man2") == 0) {
+	// 		entity->rotate(0.0f, 0.2f, 0.0f);
+	// 	}
+
+	// 	else if (entity->getName().compare("man3") == 0) {
+	// 		entity->rotate(0.0f, 0.2f, 0.0f);
+	// 	}
+
+	// 	else if (entity->getName().compare("manaya") == 0) {
+	// 		entity->rotate(0.1f, 0.0f, 0.0f);
+	// 	}
+	// }
 }
 
 void EventHandler::handleUserEvents() {

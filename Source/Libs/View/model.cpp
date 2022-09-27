@@ -12,10 +12,6 @@ void Model::loadModel(std::string filepath) {
     createBuffer(this->vertices_, &this->vertexBuffer_);
     createBuffer(this->uvs_, &this->uvBuffer_);
     createBuffer(this->normals_, &this->normalBuffer_);
-
-    // printf("vertex buffer: %d\n", this->vertexBuffer_);
-    // printf("uv buffer: %d\n", this->uvBuffer_);
-    // printf("normal buffer: %d\n", this->normalBuffer_);
 }
 
 // manually load the vertices into the model

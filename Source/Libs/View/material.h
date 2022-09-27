@@ -8,10 +8,10 @@ class Material {
     public:
         Material();
         std::string shader();
-        void shader(std::string);
+        Material* shader(std::string);
         
         std::string texture();
-        void texture(std::string);
+        Material* texture(std::string);
         void printFull();
 
     private:

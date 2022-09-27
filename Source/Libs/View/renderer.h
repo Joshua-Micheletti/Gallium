@@ -77,6 +77,7 @@ class Renderer {
 		// method for updating the render resolution
 		void resizeScreen();
 		void renderEntities(bool);
+		void renderSkybox();
 		void renderEntity(Entity *);
 		void attachUniforms(DrawingEntity *, std::vector<uniform_t>);
 		void linkLayouts(Model*, std::vector<std::string>);

@@ -24,6 +24,7 @@ Renderer::Renderer() {
 	// enable multisampling
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_STENCIL_TEST);
+	glEnable(GL_DEPTH_TEST);
 
 	// enables back-face culling:
 	// polygons aren't rendered if the vertices that define the triangle are seen clockwise or counterclockwise,
@@ -292,7 +293,11 @@ void Renderer::render() {
 	glStencilMask(0xFF);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
+	// printf("about to render the skybox\n");
+	this->renderSkybox();
+	// printf("rendered the skybox\n");
 	this->renderEntities(false);
+	// printf("rendered the entities\n");
 
 	// draw the bounding box for each entity
 	// this->displayBoundingBox();
@@ -377,6 +382,10 @@ void Renderer::renderEntities(bool reflection) {
 
 	// render entities
 	for (int i = 0; i < drawingEntities.size(); i++) {
+		if (drawingEntities[i] != RM.drawingEntity(RM.skybox())) {
+
+		
+
 		DrawingEntity* currentDE = drawingEntities[i];
 		Model* currentM = RM.model(currentDE->model());
 		Material* currentMA = RM.material(currentDE->material());
@@ -504,9 +513,10 @@ void Renderer::renderEntities(bool reflection) {
 			// }
 		// }
 
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-		glDisableVertexAttribArray(2);
+			glDisableVertexAttribArray(0);
+			glDisableVertexAttribArray(1);
+			glDisableVertexAttribArray(2);
+		}
 	}
 
 	// render highlighted entity
@@ -598,6 +608,50 @@ void Renderer::renderEntity(Entity* entity) {
 // 	glDisableVertexAttribArray(2);
 }
 
+void Renderer::renderSkybox() {
+	glDepthMask(GL_FALSE);
+	glDisable(GL_CULL_FACE);
+	// printf("starting the skybox rendering\n");
+
+	// std::vector<std::string> modelNames = RM.modelNames();
+
+	// std::vector<Model*> models = RM.models();
+
+	// for (int i = 0; i < models.size(); i++) {
+	// 	printf("%s\n", modelNames[i].c_str());
+	// 	models[i]->print();
+	// }
+
+	// // RM.printFullDE(RM.skybox());
+	// printf("%s\n", RM.skybox().c_str());
+	// printf("%p\n", RM.drawingEntity(RM.skybox()));
+	// printf("%p\n", RM.drawingEntity("DE_Test"));
+
+	DrawingEntity* skyboxDE = RM.drawingEntity(RM.skybox());
+	// printf("loaded the skybox entity\n");
+	Model* skyboxM = RM.model(skyboxDE->model());
+	// printf("loaded the skybox model\n");
+	Material* skyboxMA = RM.material(skyboxDE->material());
+	Shader* skyboxS = RM.shader(skyboxMA->shader());
+	Texture* skyboxT = RM.texture(skyboxMA->texture());
+
+	// printf("rendering the skybox\n");
+
+	glUseProgram(skyboxS->id());
+
+	attachUniforms(skyboxDE, skyboxS->uniformBuffer());
+
+	linkLayouts(skyboxM, skyboxS->layoutBuffer());
+
+	glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxT->id());
+	// render the skybox
+	glDrawArrays(GL_TRIANGLES, 0, skyboxM->vertices().size() / 3);
+	// re-enable the depth mask (now rendering also affects the depth buffer as well)
+	glDepthMask(GL_TRUE);
+	glEnable(GL_CULL_FACE);
+
+	// printf("after rendering skybox: %p\n", RM.drawingEntity(RM.skybox()));
+}
 
 void Renderer::renderOutline() {
 // 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->outlineTextureMask, 0);
@@ -909,16 +963,16 @@ void Renderer::attachUniforms(DrawingEntity* entity, std::vector<uniform_t> unif
 		// if the uniform is "viewMatrix", set it to the camera viewMatrix
 		else if (strcmp(uniformBuffer[i].name, "viewMatrix") == 0) {
 			// if the entity we're rendering is the skybox, 
-			// if (entity->getName().compare("skybox") == 0) {
+			if (entity == RM.drawingEntity(RM.skybox())) {
 			// 	// this process removes all the translations from the camera, this way camera movement is not taken into account
-			// 	glm::mat4 staticCameraView = glm::mat4(glm::mat3(cameraBuffer[defaultCamera]->getViewMatrix()));
-			// 	glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(staticCameraView[0][0]));
-			// }
+				glm::mat4 staticCameraView = glm::mat4(glm::mat3(RM.camera()->getViewMatrix()));
+				glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(staticCameraView[0][0]));
+			}
 			// otherwise pass the camera view matrix, including all translations
-			// else {
+			else {
 				// glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(cameraBuffer[defaultCamera]->getViewMatrix()[0][0]));
 				glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(RM.camera()->getViewMatrix()[0][0]));
-			// }
+			}
 		}
 
 		// if the uniform is "projectionMatrix", set it to the main camera projection matrix in the projectionBuffer
@@ -929,7 +983,8 @@ void Renderer::attachUniforms(DrawingEntity* entity, std::vector<uniform_t> unif
 
 		// if the uniform is "lightPosition", pass the light position (x, y, z)
 		else if (strcmp(uniformBuffer[i].name, "lightPosition") == 0) {
-			glUniform3f(uniformBuffer[i].id, light->getWorldPosition().x, light->getWorldPosition().y, light->getWorldPosition().z);
+			glm::vec3 lightPosition = RM.drawingEntity("DE_Light")->position();
+			glUniform3f(uniformBuffer[i].id, lightPosition.x, lightPosition.y, lightPosition.z);
 		}
 
 		// if the uniform is "eyePosition", pass the camera position (x, y, z)

@@ -31,17 +31,19 @@ class RendererManager {
         std::vector<Shader*> shaders();
         std::vector<Texture*> textures();
 
+        std::vector<std::string> modelNames();
+
         DrawingEntity* drawingEntity(std::string);
         Model* model(std::string);
         Material* material(std::string);
         Shader* shader(std::string);
         Texture* texture(std::string);
 
-        std::string newDrawingEntity(std::string);
-        std::string newModel(std::string);
-        std::string newMaterial(std::string);
-        std::string newShader(std::string);
-        std::string newTexture(std::string);
+        DrawingEntity* newDrawingEntity(std::string);
+        Model* newModel(std::string);
+        Material* newMaterial(std::string);
+        Shader* newShader(std::string);
+        Texture* newTexture(std::string);
 
         void printFullDE(std::string);
         void printFullM(std::string);
@@ -52,6 +54,9 @@ class RendererManager {
         Camera* camera();
         glm::mat4 projection();
 
+        std::string skybox();
+        void skybox(std::string);
+
     private:
         std::map<std::string, DrawingEntity*> drawingEntityBuffer_;
         std::map<std::string, Model*> modelBuffer_;
@@ -61,6 +66,7 @@ class RendererManager {
 
         Camera* camera_;
         glm::mat4 projection_;
+        std::string skybox_;
 };
 
 #endif
