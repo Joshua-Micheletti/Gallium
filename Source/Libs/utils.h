@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 #include <glad/glad.h>
+#include <map>
+#include "View/drawingEntity.h"
 
 extern int maxLength(std::vector<float>);
 extern int countFaces(std::vector<float>);

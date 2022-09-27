@@ -1,9 +1,10 @@
 #include "model.h"
 
+// CONSTRUCTOR
 Model::Model() {
 }
 
-
+// function for loading 3D models from file to OpenGL buffers
 void Model::loadModel(std::string filepath) {
     this->source_ = filepath;
     readOBJ(filepath, this->vertices_, this->uvs_, this->normals_);
@@ -17,17 +18,19 @@ void Model::loadModel(std::string filepath) {
     // printf("normal buffer: %d\n", this->normalBuffer_);
 }
 
-
+// manually load the vertices into the model
 void Model::loadVertices(std::vector<float> v) {
     this->vertices_ = v;
     createBuffer(this->vertices_, &this->vertexBuffer_);
 }
 
+// manually load the UVs into the model
 void Model::loadUVs(std::vector<float> t) {
     this->uvs_ = t;
     createBuffer(this->uvs_, &this->uvBuffer_);
 }
 
+// manually load the normals into the model
 void Model::loadNormals(std::vector<float> n) {
     this->normals_ = n;
     createBuffer(this->normals_, &this->normalBuffer_);

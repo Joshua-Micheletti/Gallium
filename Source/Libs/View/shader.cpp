@@ -8,36 +8,39 @@
 #include "shader.h"
 
 // constructor method, sets the shader name
-Shader::Shader(char* name) {
-	this->name = name;
+Shader::Shader(std::string name) {
+	this->name_ = name;
 }
 
 Shader::Shader() {
 
 }
 
-char* Shader::getName() {
-	return(this->name);
+std::string Shader::name() {
+	return(this->name_);
 }
 
-unsigned int Shader::getID() {
-	return(this->id);
+unsigned int Shader::id() {
+	return(this->id_);
 }
 
-std::vector<uniform_t> Shader::getUniformBuffer() {
-	return(this->uniformBuffer);
+std::vector<uniform_t> Shader::uniformBuffer() {
+	return(this->uniformBuffer_);
 }
 
-std::vector<char*> Shader::getLayoutBuffer() {
-	return(this->layoutBuffer);
+std::vector<std::string> Shader::layoutBuffer() {
+	return(this->layoutBuffer_);
 }
 
-void Shader::loadShader(char* vertex, char* fragment) {
-	this->id = compileShader(vertex, fragment);
-	findUniformAndLayouts(vertex);
+void Shader::loadShader(std::string vertex, std::string fragment) {
+	this->vertexSource_ = vertex;
+	this->fragmentSource_ = fragment;
+
+	this->id_ = compileShader(vertex.c_str(), fragment.c_str());
+	findUniformAndLayouts(vertex.c_str());
 }
 
-unsigned int Shader::compileShader(char* vertex_file_path, char* fragment_file_path) {
+unsigned int Shader::compileShader(const char* vertex_file_path, const char* fragment_file_path) {
 	// Create the shaders
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -123,10 +126,9 @@ unsigned int Shader::compileShader(char* vertex_file_path, char* fragment_file_p
 	glDeleteShader(FragmentShaderID);
 
 	return ProgramID;
-	//return(0);
 }
 
-void Shader::findUniformAndLayouts(char* shader) {
+void Shader::findUniformAndLayouts(const char* shader) {
 	FILE* vertexShader = fopen(shader, "r");
 	int readingUniform = 0;
 	int readingLayouts = 0;
@@ -150,8 +152,8 @@ void Shader::findUniformAndLayouts(char* shader) {
 
 			else if (readingUniform == 1) {
 				strcpy(tmpUniform.name, buffer);
-				tmpUniform.id = glGetUniformLocation(this->id, tmpUniform.name);
-				this->uniformBuffer.push_back(tmpUniform);
+				tmpUniform.id = glGetUniformLocation(this->id_, tmpUniform.name);
+				this->uniformBuffer_.push_back(tmpUniform);
 				tmpUniform.name = (char*)calloc(sizeof(char), 255);
 				tmpUniform.type = (char*)calloc(sizeof(char), 255);
 			}
@@ -161,7 +163,7 @@ void Shader::findUniformAndLayouts(char* shader) {
 		if (readingLayouts) {
 			if (readingLayouts == 1) {
 				strcpy(tmpLayout, buffer);
-				this->layoutBuffer.push_back(&tmpLayout[0]);
+				this->layoutBuffer_.push_back(&tmpLayout[0]);
 				tmpLayout = (char*)calloc(sizeof(char), 255);
 			}
 			readingLayouts--;
@@ -179,4 +181,14 @@ void Shader::findUniformAndLayouts(char* shader) {
 
 
 void Shader::printFull() {
+	printf("Vertex: %s\nFragment: %s\n", this->vertexSource_.c_str(), this->fragmentSource_.c_str());
+	printf("Uniforms:\n");
+	for (int i = 0; i < this->uniformBuffer_.size(); i++) {
+		printf("\t%d: %s %s\n", this->uniformBuffer_[i].id, this->uniformBuffer_[i].type, this->uniformBuffer_[i].name);
+	}
+
+	printf("Layouts:\n");
+	for (int i = 0; i < this->layoutBuffer_.size(); i++) {
+		printf("\t%s\n", this->layoutBuffer_[i].c_str());
+	}
 }

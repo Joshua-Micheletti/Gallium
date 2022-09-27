@@ -9,10 +9,14 @@ class Material {
         Material();
         std::string shader();
         void shader(std::string);
+        
+        std::string texture();
+        void texture(std::string);
         void printFull();
 
     private:
         std::string shader_;
+        std::string texture_;
 };
 
 

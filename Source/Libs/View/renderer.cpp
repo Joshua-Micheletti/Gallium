@@ -225,18 +225,30 @@ Renderer::Renderer() {
 	// pass the UV coordinates to the buffer
 	glBufferData(GL_ARRAY_BUFFER, uv.size() * sizeof(float), &uv[0], GL_STATIC_DRAW);
 
+	RM.newShader("RS_ScreenShader");
+	RM.shader("RS_ScreenShader")->loadShader("../Shader/screen/screen.vert", "../Shader/screen/screen.frag");
+
+	RM.newShader("RS_DepthShader");
+	RM.shader("RS_DepthShader")->loadShader("../Shader/depth/depth.vert", "../Shader/depth/depth.frag");
+
+	RM.newShader("RS_PostProcessingShader");
+	RM.shader("RS_PostProcessingShader")->loadShader("../Shader/postProcessing/postProcessing.vert", "../Shader/postProcessing/postProcessing.frag");
+
+	/*
 	// create the shader object to hold the post processing shader
 	this->screenShader = new Shader((char*)"screen shader");
 	// load the post processing shader
-	this->screenShader->loadShader((char*)"../Shader/screen/screen.vert", (char*)"../Shader/screen/screen.frag");
+	this->screenShader->loadShader("../Shader/screen/screen.vert", "../Shader/screen/screen.frag");
 
 	// create the shader object to hold the post processing depth buffer display shader
 	this->depthShader = new Shader((char*)"depth shader");
 	// load the post processing depth buffer display shader
-	this->depthShader->loadShader((char*)"../Shader/depth/depth.vert", (char*)"../Shader/depth/depth.frag");
+	this->depthShader->loadShader("../Shader/depth/depth.vert", "../Shader/depth/depth.frag");
 
 	this->postProcessingShader = new Shader((char*)"post-processing shader");
-	this->postProcessingShader->loadShader((char*)"../Shader/postProcessing/postProcessing.vert", (char*)"../Shader/postProcessing/postProcessing.frag");
+	this->postProcessingShader->loadShader("../Shader/postProcessing/postProcessing.vert", "../Shader/postProcessing/postProcessing.frag");
+	*/
+
 
 	int maxSamples;
 	glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
@@ -247,72 +259,74 @@ Renderer::Renderer() {
 
 
 // public method for rendering the scene
-// void Renderer::render() {
-// 	if (updateResolution) {
-// 		this->resizeScreen();
-// 	}
+void Renderer::render() {
+	if (updateResolution) {
+		this->resizeScreen();
+	}
 
-// 	// ------------------------------ REFLECTION FRAMEBUFFER RENDERING ------------------------------ //
+	// ------------------------------ REFLECTION FRAMEBUFFER RENDERING ------------------------------ //
 
-// 	this->reflectionRenderTime = glfwGetTime();
+	this->reflectionRenderTime = glfwGetTime();
 
-// 	// check if the program should render the reflection cubemap
-// 	if (doReflection) {
-// 		glBindFramebuffer(GL_FRAMEBUFFER, this->reflectionFBO);
-// 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-// 		// render the reflection cubemap
-// 		this->renderReflectionCubemap();
-// 	}	
+	// check if the program should render the reflection cubemap
+	if (doReflection) {
+		glBindFramebuffer(GL_FRAMEBUFFER, this->reflectionFBO);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// render the reflection cubemap
+		this->renderReflectionCubemap();
+	}	
 
-// 	this->reflectionRenderTime = glfwGetTime() - this->reflectionRenderTime;
+	this->reflectionRenderTime = glfwGetTime() - this->reflectionRenderTime;
+
+	// -------------------------------- SCREEN FRAMEBUFFER RENDERING -------------------------------- //
+
+	this->forwardRenderTime = glfwGetTime();
+
+	// glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glEnable(GL_STENCIL_TEST);
+	glStencilOp(GL_KEEP,	   // stencil fail
+				GL_KEEP,	   // stencil pass, depth fail
+				GL_REPLACE);   // stencil pass, depth pass
 	
-// 	// -------------------------------- SCREEN FRAMEBUFFER RENDERING -------------------------------- //
+	glStencilMask(0xFF);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-// 	this->forwardRenderTime = glfwGetTime();
+	this->renderEntities(false);
 
-// 	glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
-// 	glEnable(GL_STENCIL_TEST);
-// 	glStencilOp(GL_KEEP,	   // stencil fail
-// 				GL_KEEP,	   // stencil pass, depth fail
-// 				GL_REPLACE);   // stencil pass, depth pass
-	
-// 	glStencilMask(0xFF);
-// 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	// draw the bounding box for each entity
+	// this->displayBoundingBox();
 
-// 	this->renderEntities(false);
+	this->forwardRenderTime = glfwGetTime() - this->forwardRenderTime;
 
-// 	// draw the bounding box for each entity
-// 	this->displayBoundingBox();
+	// ---------------------------- POST PROCESSING FRAMEBUFFER RENDERING --------------------------- //
 
-// 	this->forwardRenderTime = glfwGetTime() - this->forwardRenderTime;
+	this->MSPostProcessingPassTime = glfwGetTime();
 
-// 	// ---------------------------- POST PROCESSING FRAMEBUFFER RENDERING --------------------------- //
+	// this->renderMultisamplePostProcessing();
 
-// 	this->MSPostProcessingPassTime = glfwGetTime();
-
-// 	this->renderMultisamplePostProcessing();
-
-// 	this->MSPostProcessingPassTime = glfwGetTime() - this->MSPostProcessingPassTime;
+	this->MSPostProcessingPassTime = glfwGetTime() - this->MSPostProcessingPassTime;
 
 
-// 	this->postProcessingPassTime = glfwGetTime();
+	this->postProcessingPassTime = glfwGetTime();
 
-// 	if (this->highlightedEntity >= 0 && (outlineType == 0 || outlineType == 1)) {
-// 		this->renderOutline();
-// 	}
+	if (this->highlightedEntity >= 0 && (outlineType == 0 || outlineType == 1)) {
+		// this->renderOutline();
+	}
 
-// 	// ---------------------------------- OUT FRAMEBUFFER RENDERING --------------------------------- //
+	// ---------------------------------- OUT FRAMEBUFFER RENDERING --------------------------------- //
 
-// 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-// 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-// 	this->renderScreen();
+	// this->renderScreen();
 
-// 	this->postProcessingPassTime = glfwGetTime() - this->postProcessingPassTime;
-// }
+	this->postProcessingPassTime = glfwGetTime() - this->postProcessingPassTime;
+}
 
 // // render the cubemap view from the reflection camera to later calculate reflections on
-// void Renderer::renderReflectionCubemap() {
+void Renderer::renderReflectionCubemap() {
+	
 // 	// set the current camera to the camera inside the reflective object
 // 	defaultCamera = 1;
 
@@ -352,167 +366,182 @@ Renderer::Renderer() {
 // 	defaultCamera = 0;
 
 // 	/* ACTIVE CAMERA: camera1 */
-// }
+}
 
-// // render all entities with their corresponding shader (forward rendering)
-// void Renderer::renderEntities(bool reflection) {
-// 	glStencilMask(0);
-// 	glStencilFunc(GL_ALWAYS, 1, 255);
+// render all entities with their corresponding shader (forward rendering)
+void Renderer::renderEntities(bool reflection) {
+	glStencilMask(0);
+	glStencilFunc(GL_ALWAYS, 1, 255);
 
-// 	// render entities
-// 	for (int i = 0; i < entityBuffer.size(); i++) {
-// 		// if it's rendering entities to be displayed in the reflection:
-// 		if (reflection) {
-// 			// check what entities are supposed to be rendered in the reflection
-// 			if (entityBuffer[i]->getToReflect() == true) {
-// 				// if it's rendering the skybox
-// 				if (entityBuffer[i]->getName().compare("skybox") == 0) {
-// 					// disable the depth mask (the rendering won't write into the depth buffer)
-// 					glDepthMask(GL_FALSE);
-// 				}
+	std::vector<DrawingEntity*> drawingEntities = RM.drawingEntities(); 
 
-// 				// installs the shader to render the entity (it gets the shader from the entity)
-// 				glUseProgram(shaderBuffer[entityBuffer[i]->getShader()].getID());
+	// render entities
+	for (int i = 0; i < drawingEntities.size(); i++) {
+		DrawingEntity* currentDE = drawingEntities[i];
+		Model* currentM = RM.model(currentDE->model());
+		Material* currentMA = RM.material(currentDE->material());
+		Shader* currentS = RM.shader(currentMA->shader());
+		Texture* currentT = RM.texture(currentMA->texture());
 
-// 				// pass the values for the shader uniforms.
-// 				// shader uniforms are global variables for shaders that can be set by the user.
-// 				// uniforms are global to all shaders, so they don't need to be set by every shader call if the value doesn't change
-// 				// for example matrices for 3D rendering usually don't change between shaders (some optimization is possible)
-// 				this->attachUniforms(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getUniformBuffer());
+		// if it's rendering entities to be displayed in the reflection:
+		// if (reflection) {
+		// 	// check what entities are supposed to be rendered in the reflection
+		// 	if (entityBuffer[i]->getToReflect() == true) {
+		// 		// if it's rendering the skybox
+		// 		if (entityBuffer[i]->getName().compare("skybox") == 0) {
+		// 			// disable the depth mask (the rendering won't write into the depth buffer)
+		// 			glDepthMask(GL_FALSE);
+		// 		}
 
-// 				// link the layouts to the data origin.
-// 				// layouts define where the data for a certain variable comes from
-// 				this->linkLayouts(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getLayoutBuffer());
+		// 		// installs the shader to render the entity (it gets the shader from the entity)
+		// 		glUseProgram(shaderBuffer[entityBuffer[i]->getShader()].getID());
 
-// 				// if the entity has a texture attached to it
-// 				if (entityBuffer[i]->getTexture() != 0) {
-// 					// bind it as the current active texture
-// 					glBindTexture(entityBuffer[i]->getTextureType(), entityBuffer[i]->getTexture());
-// 				}
+		// 		// pass the values for the shader uniforms.
+		// 		// shader uniforms are global variables for shaders that can be set by the user.
+		// 		// uniforms are global to all shaders, so they don't need to be set by every shader call if the value doesn't change
+		// 		// for example matrices for 3D rendering usually don't change between shaders (some optimization is possible)
+		// 		this->attachUniforms(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getUniformBuffer());
 
-// 				// check which mode things should be rendered as
-// 				// if we're rendering the skybox, always render as triangles (weird results if you render with different primitives)
-// 				if (entityBuffer[i]->getName().compare("skybox") == 0) {
-// 					// render the skybox
-// 					glDrawArrays(GL_TRIANGLES, 0, entityBuffer[i]->getVertices().size());
-// 					// re-enable the depth mask (now rendering also affects the depth buffer as well)
-// 					glDepthMask(GL_TRUE);
-// 				}
+		// 		// link the layouts to the data origin.
+		// 		// layouts define where the data for a certain variable comes from
+		// 		this->linkLayouts(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getLayoutBuffer());
 
-// 				else {
-// 					switch (renderMode) {
-// 						// draw lines
-// 					case wireframe:
-// 						glDrawArrays(GL_LINES, 0, entityBuffer[i]->getVertices().size());
-// 						break;
+		// 		// if the entity has a texture attached to it
+		// 		if (entityBuffer[i]->getTexture() != 0) {
+		// 			// bind it as the current active texture
+		// 			glBindTexture(entityBuffer[i]->getTextureType(), entityBuffer[i]->getTexture());
+		// 		}
 
-// 						// draw points
-// 					case vertices:
-// 						glPointSize(2.0f);
-// 						glDrawArrays(GL_POINTS, 0, entityBuffer[i]->getVertices().size());
-// 						break;
+		// 		// check which mode things should be rendered as
+		// 		// if we're rendering the skybox, always render as triangles (weird results if you render with different primitives)
+		// 		if (entityBuffer[i]->getName().compare("skybox") == 0) {
+		// 			// render the skybox
+		// 			glDrawArrays(GL_TRIANGLES, 0, entityBuffer[i]->getVertices().size());
+		// 			// re-enable the depth mask (now rendering also affects the depth buffer as well)
+		// 			glDepthMask(GL_TRUE);
+		// 		}
 
-// 						// draw in the element's primitive (mainly triangles)
-// 					default:
-// 						glDrawArrays(entityBuffer[i]->getElements(), 0, entityBuffer[i]->getVertices().size());
-// 					}
-// 				}
-// 			}
-// 		}
+		// 		else {
+		// 			switch (renderMode) {
+		// 				// draw lines
+		// 			case wireframe:
+		// 				glDrawArrays(GL_LINES, 0, entityBuffer[i]->getVertices().size());
+		// 				break;
 
-// 		else {
-// 			if (i != this->highlightedEntity) {
-// 				if (entityBuffer[i]->getName().compare("skybox") == 0) {
-// 					glDepthMask(GL_FALSE);
-// 				}
+		// 				// draw points
+		// 			case vertices:
+		// 				glPointSize(2.0f);
+		// 				glDrawArrays(GL_POINTS, 0, entityBuffer[i]->getVertices().size());
+		// 				break;
 
-// 				glUseProgram(shaderBuffer[entityBuffer[i]->getShader()].getID());
+		// 				// draw in the element's primitive (mainly triangles)
+		// 			default:
+		// 				glDrawArrays(entityBuffer[i]->getElements(), 0, entityBuffer[i]->getVertices().size());
+		// 			}
+		// 		}
+		// 	}
+		// }
 
-// 				attachUniforms(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getUniformBuffer());
+		// else {
+			// printf("about to go into highlighted\n");
+			// if (i != this->highlightedEntity) {
+				// printf("got into the highlighted part\n");
+				// if (entityBuffer[i]->getName().compare("skybox") == 0) {
+				// 	glDepthMask(GL_FALSE);
+				// }
 
-// 				linkLayouts(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getLayoutBuffer());
+				glUseProgram(currentS->id());
+				// glUseProgram(shaderBuffer[entityBuffer[i]->getShader()].getID());
 
-// 				if (entityBuffer[i]->getTexture() != 0) {
-// 					glBindTexture(entityBuffer[i]->getTextureType(), entityBuffer[i]->getTexture());
-// 				}
+				// attachUniforms(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getUniformBuffer());
+				attachUniforms(currentDE, currentS->uniformBuffer());
 
-// 				if (strcmp(shaderBuffer[entityBuffer[i]->getShader()].getName(), "reflection") == 0 ||
-// 					strcmp(shaderBuffer[entityBuffer[i]->getShader()].getName(), "refraction/glass") == 0 ||
-// 					strcmp(shaderBuffer[entityBuffer[i]->getShader()].getName(), "reflection/diamond") == 0) {
-// 					if (doReflection) {
-// 						glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
-// 					}
-// 					else {
-// 						glBindTexture(GL_TEXTURE_CUBE_MAP, entityBuffer[0]->getTexture());
-// 					}
+				// linkLayouts(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getLayoutBuffer());
+				linkLayouts(currentM, currentS->layoutBuffer());
+
+				// if (entityBuffer[i]->getTexture() != 0) {
+					// glBindTexture(entityBuffer[i]->getTextureType(), entityBuffer[i]->getTexture());
+				glBindTexture(GL_TEXTURE_2D, currentT->id());
+				// }
+
+				// if (strcmp(shaderBuffer[entityBuffer[i]->getShader()].getName(), "reflection") == 0 ||
+				// 	strcmp(shaderBuffer[entityBuffer[i]->getShader()].getName(), "refraction/glass") == 0 ||
+				// 	strcmp(shaderBuffer[entityBuffer[i]->getShader()].getName(), "reflection/diamond") == 0) {
+				// 	if (doReflection) {
+				// 		glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
+				// 	}
+				// 	else {
+				// 		glBindTexture(GL_TEXTURE_CUBE_MAP, entityBuffer[0]->getTexture());
+				// 	}
 					
-// 				}
+				// }
 
-// 				// check which mode things should be rendered as
-// 				if (entityBuffer[i]->getName().compare("skybox") == 0) {
-// 					// render the skybox
-// 					glDrawArrays(GL_TRIANGLES, 0, entityBuffer[i]->getVertices().size());
-// 					// re-enable the depth mask (now rendering also affects the depth buffer as well)
-// 					glDepthMask(GL_TRUE);
-// 				}
+				// check which mode things should be rendered as
+				// if (entityBuffer[i]->getName().compare("skybox") == 0) {
+				// 	// render the skybox
+				// 	glDrawArrays(GL_TRIANGLES, 0, entityBuffer[i]->getVertices().size());
+				// 	// re-enable the depth mask (now rendering also affects the depth buffer as well)
+				// 	glDepthMask(GL_TRUE);
+				// }
 
-// 				else {
-// 					switch (renderMode) {
-// 					case wireframe:
-// 						glLineWidth(5.0f);
-// 						glDrawArrays(GL_LINES, 0, entityBuffer[i]->getVertices().size());
-// 						break;
+				// else {
+				// 	switch (renderMode) {
+				// 	case wireframe:
+				// 		glLineWidth(5.0f);
+				// 		glDrawArrays(GL_LINES, 0, entityBuffer[i]->getVertices().size());
+				// 		break;
 
-// 					case vertices:
-// 						glPointSize(2.0f);
-// 						glDrawArrays(GL_POINTS, 0, entityBuffer[i]->getVertices().size());
-// 						break;
+				// 	case vertices:
+				// 		glPointSize(2.0f);
+				// 		glDrawArrays(GL_POINTS, 0, entityBuffer[i]->getVertices().size());
+				// 		break;
 
-// 					default:
-// 						glDrawArrays(entityBuffer[i]->getElements(), 0, entityBuffer[i]->getVertices().size());
-// 					}
-// 				}
-// 			}
-// 		}
+				// 	default:
+				// 		glDrawArrays(entityBuffer[i]->getElements(), 0, entityBuffer[i]->getVertices().size());
+				// 	}
+				// }
+				glDrawArrays(GL_TRIANGLES, 0, currentM->vertices().size() / 3);
+			// }
+		// }
 
-// 		glDisableVertexAttribArray(0);
-// 		glDisableVertexAttribArray(1);
-// 		glDisableVertexAttribArray(2);
-// 	}
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+	}
 
-// 	// render highlighted entity
-// 	if (this->highlightedEntity >= 0 && reflection == false) {
-// 		glStencilFunc(GL_ALWAYS, 1, 255);
-// 		glStencilMask(255);
-// 		this->renderEntity(entityBuffer[this->highlightedEntity]);
+	// render highlighted entity
+	if (this->highlightedEntity >= 0 && reflection == false) {
+		glStencilFunc(GL_ALWAYS, 1, 255);
+		glStencilMask(255);
+		this->renderEntity(entityBuffer[this->highlightedEntity]);
 
-// 		glStencilMask(0);
-// 		glStencilFunc(GL_NOTEQUAL, 1, 255);
+		glStencilMask(0);
+		glStencilFunc(GL_NOTEQUAL, 1, 255);
 
-// 		glDisable(GL_DEPTH_TEST);
-// 		int previousShader = entityBuffer[this->highlightedEntity]->getShader();
-// 		entityBuffer[this->highlightedEntity]->setShader(11);
-// 		this->renderEntity(entityBuffer[this->highlightedEntity]);
-// 		entityBuffer[this->highlightedEntity]->setShader(previousShader);
-// 		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_DEPTH_TEST);
+		int previousShader = entityBuffer[this->highlightedEntity]->getShader();
+		entityBuffer[this->highlightedEntity]->setShader(11);
+		this->renderEntity(entityBuffer[this->highlightedEntity]);
+		entityBuffer[this->highlightedEntity]->setShader(previousShader);
+		glEnable(GL_DEPTH_TEST);
 
-// 		// wireframe outline implementation
-// 		if (outlineType == 2) {
-// 			glDisable(GL_DEPTH_TEST);
-// 			glPolygonMode(GL_FRONT, GL_LINE);
-// 			glLineWidth(10.0f);
-// 			int previousShader = entityBuffer[this->highlightedEntity]->getShader();
-// 			entityBuffer[this->highlightedEntity]->setShader(11);
-// 			this->renderEntity(entityBuffer[this->highlightedEntity]);
-// 			entityBuffer[this->highlightedEntity]->setShader(previousShader);
-// 			glLineWidth(1.0f);
-// 			glPolygonMode(GL_FRONT, GL_FILL);
-// 			glEnable(GL_DEPTH_TEST);
-// 		}
-// 	}
-// }
+		// wireframe outline implementation
+		if (outlineType == 2) {
+			glDisable(GL_DEPTH_TEST);
+			glPolygonMode(GL_FRONT, GL_LINE);
+			glLineWidth(10.0f);
+			int previousShader = entityBuffer[this->highlightedEntity]->getShader();
+			entityBuffer[this->highlightedEntity]->setShader(11);
+			this->renderEntity(entityBuffer[this->highlightedEntity]);
+			entityBuffer[this->highlightedEntity]->setShader(previousShader);
+			glLineWidth(1.0f);
+			glPolygonMode(GL_FRONT, GL_FILL);
+			glEnable(GL_DEPTH_TEST);
+		}
+	}
+}
 
-// void Renderer::renderEntity(Entity* entity) {
+void Renderer::renderEntity(Entity* entity) {
 // 	if (entity->getName().compare("skybox") == 0) {
 // 		glDepthMask(GL_FALSE);
 // 	}
@@ -567,10 +596,10 @@ Renderer::Renderer() {
 // 	glDisableVertexAttribArray(0);
 // 	glDisableVertexAttribArray(1);
 // 	glDisableVertexAttribArray(2);
-// }
+}
 
 
-// void Renderer::renderOutline() {
+void Renderer::renderOutline() {
 // 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->outlineTextureMask, 0);
 
 // 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -626,80 +655,80 @@ Renderer::Renderer() {
 // 	glActiveTexture(GL_TEXTURE0);
 // 	glEnable(GL_DEPTH_TEST);
 // 	glEnable(GL_STENCIL_TEST);
-// }
+}
 
 
-// void Renderer::renderMultisamplePostProcessing() {
-// 	glBindFramebuffer(GL_FRAMEBUFFER, this->postProcessingFBO);
-// 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+void Renderer::renderMultisamplePostProcessing() {
+	glBindFramebuffer(GL_FRAMEBUFFER, this->postProcessingFBO);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-// 	glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
+	glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
 
-// 	if (depthBuffer) {
-// 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture);
-// 		glUseProgram(this->depthShader->getID());
-// 		glUniform1i(glGetUniformLocation(this->depthShader->getID(), "samples"), 1);
-// 	}
-// 	else {
-// 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture);
-// 		glUseProgram(this->screenShader->getID());
-// 		glUniform1i(glGetUniformLocation(this->screenShader->getID(), "samples"), samples);
+	if (depthBuffer) {
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture);
+		glUseProgram(RM.shader("RS_DepthShader")->id());
+		glUniform1i(glGetUniformLocation(RM.shader("RS_DepthShader")->id(), "samples"), 1);
+	}
+	else {
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture);
+		glUseProgram(RM.shader("RS_ScreenShader")->id());
+		glUniform1i(glGetUniformLocation(RM.shader("RS_ScreenShader")->id(), "samples"), samples);
 
-// 		glUniform1i(glGetUniformLocation(this->screenShader->getID(), "effect"), this->postProcessingEffect);
+		glUniform1i(glGetUniformLocation(RM.shader("RS_ScreenShader")->id(), "effect"), this->postProcessingEffect);
 
-// 		if (this->postProcessingEffect == 2) {
-// 			glUniform3f(glGetUniformLocation(this->screenShader->getID(), "filterColor"), this->filterColor.x, this->filterColor.y, this->filterColor.z);
-// 		}
+		if (this->postProcessingEffect == 2) {
+			glUniform3f(glGetUniformLocation(RM.shader("RS_ScreenShader")->id(), "filterColor"), this->filterColor.x, this->filterColor.y, this->filterColor.z);
+		}
 
-// 		else if (this->postProcessingEffect == 9) {
-// 			int kernelSize = this->Kernels->getKernelSize();
+		else if (this->postProcessingEffect == 9) {
+			int kernelSize = this->Kernels->getKernelSize();
 
-// 			glUniform1i(glGetUniformLocation(this->screenShader->getID(), "kernelSize_f"), kernelSize);
-// 			glUniform1fv(glGetUniformLocation(this->screenShader->getID(), "kernel_f"), kernelSize * kernelSize, this->Kernels->getKernel());
-// 		}
-// 	}
+			glUniform1i(glGetUniformLocation(RM.shader("RS_ScreenShader")->id(), "kernelSize_f"), kernelSize);
+			glUniform1fv(glGetUniformLocation(RM.shader("RS_ScreenShader")->id(), "kernel_f"), kernelSize * kernelSize, this->Kernels->getKernel());
+		}
+	}
 
-// 	glEnableVertexAttribArray(0);
-// 	glBindBuffer(GL_ARRAY_BUFFER, this->screenVBO);
-// 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, this->screenVBO);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-// 	glEnableVertexAttribArray(1);
-// 	glBindBuffer(GL_ARRAY_BUFFER, this->screenUVVBO);
-// 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, this->screenUVVBO);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-// 	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-// 	glEnable(GL_DEPTH_TEST);
-// 	glDisableVertexAttribArray(0);
-// 	glDisableVertexAttribArray(1);
-// }
+	glEnable(GL_DEPTH_TEST);
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+}
 
-// // render the screen texture applying post processing shaders
-// void Renderer::renderScreen() {
-// 	glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
+// render the screen texture applying post processing shaders
+void Renderer::renderScreen() {
+	glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
 
-// 	glActiveTexture(GL_TEXTURE0);
-// 	glBindTexture(GL_TEXTURE_2D, this->postProcessingTexture);
-// 	glUseProgram(this->postProcessingShader->getID());
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, this->postProcessingTexture);
+	glUseProgram(RM.shader("RS_PostProcessingShader")->id());
 
-// 	glEnableVertexAttribArray(0);
-// 	glBindBuffer(GL_ARRAY_BUFFER, this->screenVBO);
-// 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, this->screenVBO);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-// 	glEnableVertexAttribArray(1);
-// 	glBindBuffer(GL_ARRAY_BUFFER, this->screenUVVBO);
-// 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, this->screenUVVBO);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-// 	int screenTexUniformID = glGetUniformLocation(this->postProcessingShader->getID(), "screenTexture");
+	int screenTexUniformID = glGetUniformLocation(RM.shader("RS_PostProcessingShader")->id(), "screenTexture");
 
-// 	glUniform1i(screenTexUniformID, 0);
+	glUniform1i(screenTexUniformID, 0);
 
-// 	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-// 	glEnable(GL_DEPTH_TEST);
-// }
+	glEnable(GL_DEPTH_TEST);
+}
 
-// void Renderer::resetRender() {
+void Renderer::resetRender() {
 // 	glBufferData(GL_ARRAY_BUFFER, data1.size() * sizeof(float), &data1[0], GL_STATIC_DRAW);
 
 // 	glUseProgram(shaderBuffer[1].getID());
@@ -715,9 +744,9 @@ Renderer::Renderer() {
 // 	glDrawArrays(GL_LINES, 0, data1.size());
 
 // 	glDisableVertexAttribArray(0);
-// }
+}
 
-// void Renderer::resizeScreen() {
+void Renderer::resizeScreen() {
 // 	// create an empty texture object for screenTexture, this texture will be bound to the screenFBO
 // 	// and will store the screen view image
 // 	glDeleteTextures(1, &this->screenTexture);
@@ -780,9 +809,9 @@ Renderer::Renderer() {
 
 // 	projectionBuffer[0] = glm::perspective(glm::radians(45.0f), (float)screenWidth / (float)screenHeight, 0.1f, 10000.0f);
 // 	updated = true;
-// }
+}
 
-// void Renderer::displayBoundingBox() {
+void Renderer::displayBoundingBox() {
 // 	for (int i = 0; i < entityBuffer.size(); i++) {
 // 		if (drawOBB) {
 // 			drawBoundingBox(entityBuffer[i]->getObjectBoundingBox(true), glm::vec3(1, 0, 0));
@@ -860,97 +889,100 @@ Renderer::Renderer() {
 // 			drawBoundingSphere(entityBuffer[i]->getBoundingSphere(false), entityBuffer[i]->getWorldPosition(), glm::vec3(0.5, 1, 0));
 // 		}
 // 	}
-// }
+}
 
 
-// void Renderer::setHighlightedEntity(int index) {
+void Renderer::setHighlightedEntity(int index) {
 // 	this->highlightedEntity = index;
-// }
+}
 
 // // pass the correct values to the corresponding uniforms in the shader
-// void Renderer::attachUniforms(Entity* entity, std::vector<uniform_t> uniformBuffer) {
-// 	// cycle through the uniformBuffer of the shader
-// 	for (int i = 0; i < uniformBuffer.size(); i++) {
-// 		// if the uniform is "modelMatrix", set it to the entity modelMatrix
-// 		if (strcmp(uniformBuffer[i].name, "modelMatrix") == 0) {
-// 			glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(entity->getModelMatrix()[0][0]));
-// 		}
+void Renderer::attachUniforms(DrawingEntity* entity, std::vector<uniform_t> uniformBuffer) {
+	// cycle through the uniformBuffer of the shader
+	for (int i = 0; i < uniformBuffer.size(); i++) {
+		// if the uniform is "modelMatrix", set it to the entity modelMatrix
+		if (strcmp(uniformBuffer[i].name, "modelMatrix") == 0) {
+			// glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(entity->getModelMatrix()[0][0]));
+			glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(entity->modelMatrix()[0][0]));
+		}
 
-// 		// if the uniform is "viewMatrix", set it to the camera viewMatrix
-// 		else if (strcmp(uniformBuffer[i].name, "viewMatrix") == 0) {
-// 			// if the entity we're rendering is the skybox, 
-// 			if (entity->getName().compare("skybox") == 0) {
-// 				// this process removes all the translations from the camera, this way camera movement is not taken into account
-// 				glm::mat4 staticCameraView = glm::mat4(glm::mat3(cameraBuffer[defaultCamera]->getViewMatrix()));
-// 				glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(staticCameraView[0][0]));
-// 			}
-// 			// otherwise pass the camera view matrix, including all translations
-// 			else {
-// 				glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(cameraBuffer[defaultCamera]->getViewMatrix()[0][0]));
-// 			}
-// 		}
+		// if the uniform is "viewMatrix", set it to the camera viewMatrix
+		else if (strcmp(uniformBuffer[i].name, "viewMatrix") == 0) {
+			// if the entity we're rendering is the skybox, 
+			// if (entity->getName().compare("skybox") == 0) {
+			// 	// this process removes all the translations from the camera, this way camera movement is not taken into account
+			// 	glm::mat4 staticCameraView = glm::mat4(glm::mat3(cameraBuffer[defaultCamera]->getViewMatrix()));
+			// 	glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(staticCameraView[0][0]));
+			// }
+			// otherwise pass the camera view matrix, including all translations
+			// else {
+				// glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(cameraBuffer[defaultCamera]->getViewMatrix()[0][0]));
+				glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(RM.camera()->getViewMatrix()[0][0]));
+			// }
+		}
 
-// 		// if the uniform is "projectionMatrix", set it to the main camera projection matrix in the projectionBuffer
-// 		else if (strcmp(uniformBuffer[i].name, "projectionMatrix") == 0) {
-// 			glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(projectionBuffer[defaultCamera][0][0]));
-// 		}
+		// if the uniform is "projectionMatrix", set it to the main camera projection matrix in the projectionBuffer
+		else if (strcmp(uniformBuffer[i].name, "projectionMatrix") == 0) {
+			// glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(projectionBuffer[defaultCamera][0][0]));
+			glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(RM.projection()[0][0]));
+		}
 
-// 		// if the uniform is "lightPosition", pass the light position (x, y, z)
-// 		else if (strcmp(uniformBuffer[i].name, "lightPosition") == 0) {
-// 			glUniform3f(uniformBuffer[i].id, light->getWorldPosition().x, light->getWorldPosition().y, light->getWorldPosition().z);
-// 		}
+		// if the uniform is "lightPosition", pass the light position (x, y, z)
+		else if (strcmp(uniformBuffer[i].name, "lightPosition") == 0) {
+			glUniform3f(uniformBuffer[i].id, light->getWorldPosition().x, light->getWorldPosition().y, light->getWorldPosition().z);
+		}
 
-// 		// if the uniform is "eyePosition", pass the camera position (x, y, z)
-// 		else if (strcmp(uniformBuffer[i].name, "eyePosition") == 0) {
-// 			glUniform3f(uniformBuffer[i].id, cameraBuffer[defaultCamera]->getPosition().x, cameraBuffer[defaultCamera]->getPosition().y, cameraBuffer[defaultCamera]->getPosition().z);
-// 		}
-// 	}
-// }
+		// if the uniform is "eyePosition", pass the camera position (x, y, z)
+		else if (strcmp(uniformBuffer[i].name, "eyePosition") == 0) {
+			glUniform3f(uniformBuffer[i].id, RM.camera()->getPosition().x, RM.camera()->getPosition().y, RM.camera()->getPosition().z);
+		}
+	}
+}
 
 // // link layouts to the data origin (mainly VAO)
-// void Renderer::linkLayouts(Entity* entity, std::vector<char*> layoutBuffer) {
-// 	// cycle all the layouts in the layout buffer of the shader
-// 	for (int i = 0; i < layoutBuffer.size(); i++) {
-// 		// if the layout is named "vertex" (contains the entity vertices that make the geometry of the entity)
-// 		if (strcmp(layoutBuffer[i], "vertex") == 0) {
-// 			// enable the VAO in position 0
-// 			glEnableVertexAttribArray(0);
-// 			// bind the geometry VBO of the entity
-// 			glBindBuffer(GL_ARRAY_BUFFER, entity->getVertexBuffer());
-// 			// setup the VAO to reference the VBO (needs more study)
-// 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-// 		}
-// 		// if the layout is named "uv" (contains the UV coordinates to map the texture to the geometry)
-// 		else if (strcmp(layoutBuffer[i], "uv") == 0) {
-// 			// enable the VAO in position 1
-// 			glEnableVertexAttribArray(1);
-// 			// bind the UV VBO of the entity
-// 			glBindBuffer(GL_ARRAY_BUFFER, entity->getTexBuffer());
-// 			// setup the VAO to reference the VBO (needs more study)
-// 			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-// 		}
-// 		// if the layout is named "color" (contains the color vectors that make the entity color)
-// 		else if (strcmp(layoutBuffer[i], "color") == 0) {
-// 			// enable the VAO in position 1
-// 			glEnableVertexAttribArray(1);
-// 			// bind the color VBO of the entity
-// 			glBindBuffer(GL_ARRAY_BUFFER, entity->getTexBuffer());
-// 			// setup the VAO to reference the VBO (needs more study)
-// 			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-// 		}
-// 		// if the layout is named "normal" (contains the normals to the vertices, used for light calculation)
-// 		else if (strcmp(layoutBuffer[i], "normal") == 0) {
-// 			// enable the VAO in position 1
-// 			glEnableVertexAttribArray(2);
-// 			// bind the normal VBO of the entity
-// 			glBindBuffer(GL_ARRAY_BUFFER, entity->getNormalBuffer());
-// 			// setup the VAO to reference the VBO (needs more study)
-// 			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-// 		}
-// 	}
-// }
+void Renderer::linkLayouts(Model* model, std::vector<std::string> layoutBuffer) {
+	// cycle all the layouts in the layout buffer of the shader
+	for (int i = 0; i < layoutBuffer.size(); i++) {
+		// if the layout is named "vertex" (contains the entity vertices that make the geometry of the entity)
+		if (strcmp(layoutBuffer[i].c_str(), "vertex") == 0) {
+			// enable the VAO in position 0
+			glEnableVertexAttribArray(0);
+			// bind the geometry VBO of the entity
+			glBindBuffer(GL_ARRAY_BUFFER, model->vertexBuffer());
+			// setup the VAO to reference the VBO (needs more study)
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		}
+		// if the layout is named "uv" (contains the UV coordinates to map the texture to the geometry)
+		else if (strcmp(layoutBuffer[i].c_str(), "uv") == 0) {
+			// enable the VAO in position 1
+			glEnableVertexAttribArray(1);
+			// bind the UV VBO of the entity
+			glBindBuffer(GL_ARRAY_BUFFER, model->uvBuffer());
+			// setup the VAO to reference the VBO (needs more study)
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		}
+		// if the layout is named "color" (contains the color vectors that make the entity color)
+		else if (strcmp(layoutBuffer[i].c_str(), "color") == 0) {
+			// enable the VAO in position 1
+			glEnableVertexAttribArray(1);
+			// bind the color VBO of the entity
+			glBindBuffer(GL_ARRAY_BUFFER, model->uvBuffer());
+			// setup the VAO to reference the VBO (needs more study)
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		}
+		// if the layout is named "normal" (contains the normals to the vertices, used for light calculation)
+		else if (strcmp(layoutBuffer[i].c_str(), "normal") == 0) {
+			// enable the VAO in position 1
+			glEnableVertexAttribArray(2);
+			// bind the normal VBO of the entity
+			glBindBuffer(GL_ARRAY_BUFFER, model->normalBuffer());
+			// setup the VAO to reference the VBO (needs more study)
+			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		}
+	}
+}
 
-// void Renderer::createCube(std::vector<float>* array, std::vector<glm::vec3> faces) {
+void Renderer::createCube(std::vector<float>* array, std::vector<glm::vec3> faces) {
 // 	array->push_back(faces[0].x);
 // 	array->push_back(faces[0].y);
 // 	array->push_back(faces[0].z);
@@ -1034,9 +1066,9 @@ Renderer::Renderer() {
 // 	array->push_back(faces[5].x);
 // 	array->push_back(faces[5].y);
 // 	array->push_back(faces[5].z);
-// }
+}
 
-// void Renderer::createSphere(glm::vec3 center, float dist, int sides, std::vector<float>* data) {
+void Renderer::createSphere(glm::vec3 center, float dist, int sides, std::vector<float>* data) {
 
 // 	double pi = 3.1415926535897;
 
@@ -1131,9 +1163,9 @@ Renderer::Renderer() {
 // 	data->push_back(tmp.x);
 // 	data->push_back(tmp.y);
 // 	data->push_back(tmp.z);
-// }
+}
 
-// void Renderer::drawBoundingBox(bounds_t bounds, glm::vec3 color) {
+void Renderer::drawBoundingBox(bounds_t bounds, glm::vec3 color) {
 // 	std::vector<float> data;
 // 	std::vector<glm::vec3> faces;
 // 	faces.push_back(bounds.a);
@@ -1163,9 +1195,9 @@ Renderer::Renderer() {
 // 	glDrawArrays(GL_LINES, 0, data.size());
 
 // 	glDisableVertexAttribArray(0);
-// }
+}
 
-// void Renderer::drawBoundingSphere(float radius, glm::vec3 center, glm::vec3 color) {
+void Renderer::drawBoundingSphere(float radius, glm::vec3 center, glm::vec3 color) {
 // 	std::vector<float> data;
 
 // 	createSphere(center, radius, 100, &data);
@@ -1186,49 +1218,49 @@ Renderer::Renderer() {
 // 	glDrawArrays(GL_LINES, 0, data.size());
 
 // 	glDisableVertexAttribArray(0);
-// }
+}
 
 
 
-// double Renderer::getReflectionRenderTime() {
-// 	return(this->reflectionRenderTime);
-// }
+double Renderer::getReflectionRenderTime() {
+	return(this->reflectionRenderTime);
+}
 
-// double Renderer::getForwardRenderTime() {
-// 	return(this->forwardRenderTime);
-// }
+double Renderer::getForwardRenderTime() {
+	return(this->forwardRenderTime);
+}
 
-// double Renderer::getMSPostProcessingPassTime() {
-// 	return(this->MSPostProcessingPassTime);
-// }
+double Renderer::getMSPostProcessingPassTime() {
+	return(this->MSPostProcessingPassTime);
+}
 
-// double Renderer::getPostProcessingPassTime() {
-// 	return(this->postProcessingPassTime);
-// }
+double Renderer::getPostProcessingPassTime() {
+	return(this->postProcessingPassTime);
+}
 
-// unsigned int Renderer::getOutlineMaskTexture() {
-// 	return(this->outlineTextureMask);
-// }
+unsigned int Renderer::getOutlineMaskTexture() {
+	return(this->outlineTextureMask);
+}
 
-// unsigned int Renderer::getDepthBufferTexture() {
-// 	bool tmpVar = depthBuffer;
+unsigned int Renderer::getDepthBufferTexture() {
+	bool tmpVar = depthBuffer;
 
-// 	depthBuffer = true;
-// 	this->renderMultisamplePostProcessing();
-// 	depthBuffer = tmpVar;
+	depthBuffer = true;
+	this->renderMultisamplePostProcessing();
+	depthBuffer = tmpVar;
 
-// 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-// 	return(this->postProcessingTexture);
-// }
+	return(this->postProcessingTexture);
+}
 
-// void Renderer::setPostProcessingEffect(int effect) {
-// 	this->postProcessingEffect = effect;
-// }
+void Renderer::setPostProcessingEffect(int effect) {
+	this->postProcessingEffect = effect;
+}
 
-// void Renderer::setFilterColor(float r, float g, float b) {
-// 	this->filterColor = glm::vec3(r, g, b);
-// }
+void Renderer::setFilterColor(float r, float g, float b) {
+	this->filterColor = glm::vec3(r, g, b);
+}
 
 // */
 

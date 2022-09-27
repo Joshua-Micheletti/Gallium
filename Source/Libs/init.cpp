@@ -99,37 +99,37 @@ GLFWwindow* initGLFW_OpenGL(std::string name) {
 }
 
 void loadShaders(std::vector<Shader>* shaderBuffer) {
-	Shader shader1((char*)"shader1");
-	Shader shader2((char*)"shader2");
-	Shader shader3((char*)"shader3");
-	Shader shader4((char*)"light");
-	Shader shader5((char*)"lightTex");
-	Shader shader6((char*)"lightSource");
-	Shader shader7((char*)"skybox");
-	Shader shader8((char*)"reflection");
-	Shader shader9((char*)"refraction/glass");
-	Shader shader10((char*)"refraction/diamond");
-	Shader shader11((char*)"toon");
-	Shader shader12((char*)"hightlight");
-	Shader shader13((char*)"outline");
-	Shader shader14((char*)"white");
-	Shader shader15((char*)"outlineAlpha");
+	Shader shader1("shader1");
+	Shader shader2("shader2");
+	Shader shader3("shader3");
+	Shader shader4("light");
+	Shader shader5("lightTex");
+	Shader shader6("lightSource");
+	Shader shader7("skybox");
+	Shader shader8("reflection");
+	Shader shader9("refraction/glass");
+	Shader shader10("refraction/diamond");
+	Shader shader11("toon");
+	Shader shader12("hightlight");
+	Shader shader13("outline");
+	Shader shader14("white");
+	Shader shader15("outlineAlpha");
 
-	shader1.loadShader((char*)"../Shader/shader1/vertex.c", (char*)"../Shader/shader1/fragment.c");
-	shader2.loadShader((char*)"../Shader/shader2/vertex2.c", (char*)"../Shader/shader2/fragment2.c");
-	shader3.loadShader((char*)"../Shader/shader3/vertex3.c", (char*)"../Shader/shader3/fragment3.c");
-	shader4.loadShader((char*)"../Shader/lighting/lightVertex.c", (char*)"../Shader/lighting/lightFragment.c");
-	shader5.loadShader((char*)"../Shader/lightingTex/lightVertexTexture.c", (char*)"../Shader/lightingTex/lightFragmentTexture.c");
-	shader6.loadShader((char*)"../Shader/lightSource/lightSourceVertex.c", (char*)"../Shader/lightSource/lightSourceFragment.c");
-	shader7.loadShader((char*)"../Shader/skybox/vertex.c", (char*)"../Shader/skybox/fragment.c");
-	shader8.loadShader((char*)"../Shader/reflection/vertex.vert", (char*)"../Shader/reflection/fragment.frag");
-	shader9.loadShader((char*)"../Shader/refraction/glass/vertex.c", (char*)"../Shader/refraction/glass/fragment.c");
-	shader10.loadShader((char*)"../Shader/refraction/diamond/vertex.c", (char*)"../Shader/refraction/diamond/fragment.c");
-	shader11.loadShader((char*)"../Shader/toon/vertex.c", (char*)"../Shader/toon/fragment.c");
-	shader12.loadShader((char*)"../Shader/highlight/highlight.vert", (char*)"../Shader/highlight/highlight.frag");
-	shader13.loadShader((char*)"../Shader/outline/outline.vert", (char*)"../Shader/outline/outline.frag");
-	shader14.loadShader((char*)"../Shader/white/white.vert", (char*)"../Shader/white/white.frag");
-	shader15.loadShader((char*)"../Shader/outlineAlpha/outline.vert", (char*)"../Shader/outlineAlpha/outline.frag");
+	shader1.loadShader("../Shader/shader1/vertex.c", "../Shader/shader1/fragment.c");
+	shader2.loadShader("../Shader/shader2/vertex2.c", "../Shader/shader2/fragment2.c");
+	shader3.loadShader("../Shader/shader3/vertex3.c", "../Shader/shader3/fragment3.c");
+	shader4.loadShader("../Shader/lighting/lightVertex.c", "../Shader/lighting/lightFragment.c");
+	shader5.loadShader("../Shader/lightingTex/lightVertexTexture.c", "../Shader/lightingTex/lightFragmentTexture.c");
+	shader6.loadShader("../Shader/lightSource/lightSourceVertex.c", "../Shader/lightSource/lightSourceFragment.c");
+	shader7.loadShader("../Shader/skybox/vertex.c", "../Shader/skybox/fragment.c");
+	shader8.loadShader("../Shader/reflection/vertex.vert", "../Shader/reflection/fragment.frag");
+	shader9.loadShader("../Shader/refraction/glass/vertex.c", "../Shader/refraction/glass/fragment.c");
+	shader10.loadShader("../Shader/refraction/diamond/vertex.c", "../Shader/refraction/diamond/fragment.c");
+	shader11.loadShader("../Shader/toon/vertex.c", "../Shader/toon/fragment.c");
+	shader12.loadShader("../Shader/highlight/highlight.vert", "../Shader/highlight/highlight.frag");
+	shader13.loadShader("../Shader/outline/outline.vert", "../Shader/outline/outline.frag");
+	shader14.loadShader("../Shader/white/white.vert", "../Shader/white/white.frag");
+	shader15.loadShader("../Shader/outlineAlpha/outline.vert", "../Shader/outlineAlpha/outline.frag");
 
 	shaderBuffer->push_back(shader1);
 	shaderBuffer->push_back(shader2);

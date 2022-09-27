@@ -14,36 +14,40 @@ typedef struct {
 class Shader {
 	public:
 		// constructor method
-		Shader(char*);
+		Shader(std::string);
 		Shader();
 		// public method for loading vertex and fragment shaders
-		void loadShader(char*, char*);
+		void loadShader(std::string, std::string);
 
 		// get method for getting the shader id
-		unsigned int getID();
+		unsigned int id();
 		// get method for getting the shader name
-		char* getName();
+		std::string name();
 		// get method for getting the buffer containing all the uniforms of the shader
-		std::vector<uniform_t> getUniformBuffer();
+		std::vector<uniform_t> uniformBuffer();
 		// get method for getting the buffer containing all the layouts of the shader
-		std::vector<char*> getLayoutBuffer();
+		std::vector<std::string> layoutBuffer();
 
 		void printFull();
 		
 	private:
 		// shader name
-		char* name;
+		std::string name_;
+
+		std::string vertexSource_;
+		std::string fragmentSource_;
+
 		// shader id
-		unsigned int id;
+		unsigned int id_;
 		// buffer containing the shader uniforms information
-		std::vector<uniform_t> uniformBuffer;
+		std::vector<uniform_t> uniformBuffer_;
 		// buffer containing the shader layout information
-		std::vector<char*> layoutBuffer;
+		std::vector<std::string> layoutBuffer_;
 		
 		// method for compiling shader code
-		unsigned int compileShader(char*, char*);
+		unsigned int compileShader(const char*, const char*);
 		// method for reading the shader code and finding uniforms and layouts, to store them in the relative shaders
-		void findUniformAndLayouts(char*);
+		void findUniformAndLayouts(const char*);
 };
 
 #endif

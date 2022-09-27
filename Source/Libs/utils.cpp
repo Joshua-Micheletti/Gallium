@@ -130,3 +130,5 @@ void readOBJ(std::string filepath, std::vector<float>& v, std::vector<float>& t,
 		n.push_back(normals[(facesNormals[i] - 1) * 3 + 2]);
 	}
 }
+
+

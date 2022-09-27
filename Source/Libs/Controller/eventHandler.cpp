@@ -182,7 +182,8 @@ void EventHandler::handleUserEvents() {
 		float offX = xpos - (screenWidth / 2);
 		float offY = (screenHeight / 2) - ypos;
 
-		camera.setOrientation(glm::vec3(camera.getOrientation().x, camera.getOrientation().y + offX * sensitivity, camera.getOrientation().z + offY * sensitivity));
+		RM.camera()->setOrientation(glm::vec3(RM.camera()->getOrientation().x, RM.camera()->getOrientation().y + offX * sensitivity, RM.camera()->getOrientation().z + offY * sensitivity));
+		
 
 		/*sf::Mouse::setPosition(center);*/
 		glfwSetCursorPos(this->window, screenWidth / 2, screenHeight / 2);
@@ -195,27 +196,27 @@ void EventHandler::handleUserEvents() {
 	}
 
 	if (press.W == true) {
-		camera.setPosition(camera.getPosition() + camera.getOrientationCartesian() * cameraSpeed);
+		RM.camera()->setPosition(RM.camera()->getPosition() + RM.camera()->getOrientationCartesian() * cameraSpeed);
 	}
 
 	if (press.S == true) {
-		camera.setPosition(camera.getPosition() - camera.getOrientationCartesian() * cameraSpeed);
+		RM.camera()->setPosition(RM.camera()->getPosition() - RM.camera()->getOrientationCartesian() * cameraSpeed);
 	}
 
 	if (press.A == true) {
-		camera.setPosition(camera.getPosition() - glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
+		RM.camera()->setPosition(RM.camera()->getPosition() - glm::normalize(glm::cross(RM.camera()->getOrientationCartesian(), RM.camera()->getUp())) * cameraSpeed);
 	}
 			
 	if (press.D == true) {
-		camera.setPosition(camera.getPosition() + glm::normalize(glm::cross(camera.getOrientationCartesian(), camera.getUp())) * cameraSpeed);
+		RM.camera()->setPosition(RM.camera()->getPosition() + glm::normalize(glm::cross(RM.camera()->getOrientationCartesian(), RM.camera()->getUp())) * cameraSpeed);
 	}
 
 	if (press.SPACE == true) {
-		camera.setPosition(camera.getPosition() + camera.getUp() * cameraSpeed);
+		RM.camera()->setPosition(RM.camera()->getPosition() + RM.camera()->getUp() * cameraSpeed);
 	}
 		
 	if (press.LCTRL == true) {
-		camera.setPosition(camera.getPosition() - camera.getUp() * cameraSpeed);
+		RM.camera()->setPosition(RM.camera()->getPosition() - RM.camera()->getUp() * cameraSpeed);
 	}
 }
 

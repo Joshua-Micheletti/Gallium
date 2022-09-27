@@ -5,7 +5,11 @@
 #include "shader.h"
 #include "kernel.h"
 #include <glm/glm.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/string_cast.hpp>
+
 #include <map>
+#include "../global.h"
 
 // class for rendering entities using shaders (mainly openGL)
 class Renderer {
@@ -74,8 +78,8 @@ class Renderer {
 		void resizeScreen();
 		void renderEntities(bool);
 		void renderEntity(Entity *);
-		void attachUniforms(Entity *, std::vector<uniform_t>);
-		void linkLayouts(Entity*, std::vector<char *>);
+		void attachUniforms(DrawingEntity *, std::vector<uniform_t>);
+		void linkLayouts(Model*, std::vector<std::string>);
 		void renderOutline();
 
 		void displayBoundingBox();
