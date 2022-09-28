@@ -10,8 +10,8 @@
 
 #include <vector>
 #include "Model/entity.h"
-#include "View/shader.h"
-#include "View/camera.h"
+#include "View/drawingEntity/material/shader/shader.h"
+#include "View/camera/camera.h"
 
 typedef struct buttons{
   bool backslash = false;
@@ -71,7 +71,7 @@ extern Camera camera2;
 extern buttons_t press;
 extern renderMode_t renderMode;
 
-extern bool displayInfo;
+// extern bool displayInfo;
 extern bool freeMouse;
 extern bool drawOBB;
 extern bool drawAABB1;
@@ -82,7 +82,7 @@ extern bool drawBS;
 extern bool drawBS2;
 extern bool drawBS3;
 extern bool doReflection;
-extern bool updateResolution;
+// extern bool updateResolution;
 extern bool updated;
 extern bool depthBuffer;
 

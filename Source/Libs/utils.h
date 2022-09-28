@@ -4,8 +4,9 @@
 #include <vector>
 #include <string>
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include <map>
-#include "View/drawingEntity.h"
+#include "View/drawingEntity/drawingEntity.h"
 
 extern int maxLength(std::vector<float>);
 extern int countFaces(std::vector<float>);
@@ -17,5 +18,8 @@ extern std::string strRed;
 extern std::string strGreen;
 extern std::string strBlue;
 extern std::string strNoColor;
+
+extern bool updateResolution;
+
 
 #endif

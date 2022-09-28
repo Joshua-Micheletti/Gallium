@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <iostream>
 #include "Model/entity.h"
-#include "View/shader.h"
-#include "View/camera.h"
+#include "View/drawingEntity/material/shader/shader.h"
+#include "View/camera/camera.h"
 #include "init.h"
 #include <errno.h>
 
@@ -15,7 +15,7 @@ unsigned int screenHeight = 720;
 unsigned int windowWidth = 1280;
 unsigned int windowHeight = 720;
 
-int samples = 1;
+int samples = 16;
 bool vsync = true;
 bool fullscreen = false;
 
@@ -26,7 +26,7 @@ glm::mat4 world_model;
 buttons_t press;
 renderMode_t renderMode;
 
-bool displayInfo;
+// bool displayInfo;
 bool freeMouse;
 bool drawOBB;
 bool drawAABB1;
@@ -38,7 +38,7 @@ bool drawBS2;
 bool drawBS3;
 bool doReflection;
 
-bool updateResolution;
+// bool updateResolution;
 
 bool updated;
 
@@ -63,23 +63,23 @@ Camera camera2(glm::vec3(0.0f, 0.0f, 0.0f),
 
 Entity* light = new Entity("light");
 
-void resizeCallback(GLFWwindow* window, int x, int y) {
-	int width;
-	int height;
-	glfwGetFramebufferSize(window, &width, &height);
+// void resizeCallback(GLFWwindow* window, int x, int y) {
+// 	int width;
+// 	int height;
+// 	glfwGetFramebufferSize(window, &width, &height);
 
-	glViewport(0, 0, width, height);
+// 	glViewport(0, 0, width, height);
 
-	screenWidth = width;
-	screenHeight = height;
+// 	screenWidth = width;
+// 	screenHeight = height;
 
-	if (!fullscreen) {
-		windowWidth = screenWidth;
-		windowHeight = screenHeight;
-	}
+// 	if (!fullscreen) {
+// 		windowWidth = screenWidth;
+// 		windowHeight = screenHeight;
+// 	}
 
-	updateResolution = true;
-}
+// 	updateResolution = true;
+// }
 
 
 GLFWwindow* initGLFW_OpenGL(std::string name) {
@@ -93,7 +93,7 @@ GLFWwindow* initGLFW_OpenGL(std::string name) {
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	gladLoadGL();
 	glEnable(GL_MULTISAMPLE);
-	glfwSetWindowSizeCallback(window, resizeCallback);
+	// glfwSetWindowSizeCallback(window, resizeCallback);
 
 	return(window);
 }
@@ -300,33 +300,33 @@ void loadEntities(std::vector<Entity*>* entityBuffer) {
 
 	light->setElements(GL_POINTS);
 
-	monkey->move(glm::vec3(0.0f, 0.0f, 10.0f), camera.getViewMatrix());
+	// monkey->move(glm::vec3(0.0f, 0.0f, 10.0f), camera.getViewMatrix());
 	// box->move(glm::vec3(-20.0f, 0.0f, 5.0f), camera.getViewMatrix());
 	// box->rotate(0.0f, 180.0f, 180.0f);
 	// box->scale(0.1f);
-	man->scale(1.7f);
-	// man->move(glm::vec3(0.0f, 0.0f, 20.0f), camera.getViewMatrix());
-	// camera2.setPosition(man->getWorldPosition());
-	man2->scale(0.7f);
-	man3->scale(0.7f);
-	man2->move(man2->getWorldPosition() - man2->getExternalAxisAlignedBoundingBox(true).minY, camera.getViewMatrix());
-	man3->move(man3->getWorldPosition() - man3->getExternalAxisAlignedBoundingBox(true).minY, camera.getViewMatrix());
-	// man->move(man->getWorldPosition() - man->getExternalAxisAlignedBoundingBox(true).minY, camera.getViewMatrix());
-	walnut->move(walnut->getWorldPosition() - walnut->getExternalAxisAlignedBoundingBox(true).minY, camera.getViewMatrix());
-	// box->move(glm::vec3(0.0f, box->getBoundingSphere(true), 0.0f), camera.getViewMatrix());
-	//monkey->move(monkey->getWorldPosition() - monkey->getExternalAxisAlignedBoundingBox(true).minY, camera.getViewMatrix());
-	jacket->move(jacket->getWorldPosition() - jacket->getExternalAxisAlignedBoundingBox(true).minY, camera.getViewMatrix());
-	man3->move(glm::vec3(12.0f, 0.0f, 0.0f), camera.getViewMatrix());
-	light->move(glm::vec3(60.0f, 10.0f, 0.0f), camera.getViewMatrix());
-	walnut->move(glm::vec3(-10.0f, 0.0f, 0.0f), camera.getViewMatrix());
-	plane->scale(50.0f);
-	jacket->move(glm::vec3(0.0f, 0.0f, 50.0f), camera.getViewMatrix());
-	manaya->scale(0.01f);
-	manaya->move(glm::vec3(0.0f, 20.0f, 3.0f), camera.getViewMatrix());
-	manaya->rotate(0, 270, 0);
-	map->move(glm::vec3(0.0f, -20.0f, 0.0f), camera.getViewMatrix());
-	box->move(glm::vec3(0.0f, -5.0f, -10.0f), camera.getViewMatrix());
-	genshinEnemy->move(glm::vec3(0.0f, -5.0f, 0.0f), camera.getViewMatrix());
+	// man->scale(1.7f);
+	// // man->move(glm::vec3(0.0f, 0.0f, 20.0f), camera.getViewMatrix());
+	// // camera2.setPosition(man->getWorldPosition());
+	// man2->scale(0.7f);
+	// man3->scale(0.7f);
+	// man2->move(man2->getWorldPosition() - man2->getExternalAxisAlignedBoundingBox(true).minY, camera.getViewMatrix());
+	// man3->move(man3->getWorldPosition() - man3->getExternalAxisAlignedBoundingBox(true).minY, camera.getViewMatrix());
+	// // man->move(man->getWorldPosition() - man->getExternalAxisAlignedBoundingBox(true).minY, camera.getViewMatrix());
+	// walnut->move(walnut->getWorldPosition() - walnut->getExternalAxisAlignedBoundingBox(true).minY, camera.getViewMatrix());
+	// // box->move(glm::vec3(0.0f, box->getBoundingSphere(true), 0.0f), camera.getViewMatrix());
+	// //monkey->move(monkey->getWorldPosition() - monkey->getExternalAxisAlignedBoundingBox(true).minY, camera.getViewMatrix());
+	// jacket->move(jacket->getWorldPosition() - jacket->getExternalAxisAlignedBoundingBox(true).minY, camera.getViewMatrix());
+	// man3->move(glm::vec3(12.0f, 0.0f, 0.0f), camera.getViewMatrix());
+	// light->move(glm::vec3(60.0f, 10.0f, 0.0f), camera.getViewMatrix());
+	// walnut->move(glm::vec3(-10.0f, 0.0f, 0.0f), camera.getViewMatrix());
+	// plane->scale(50.0f);
+	// jacket->move(glm::vec3(0.0f, 0.0f, 50.0f), camera.getViewMatrix());
+	// manaya->scale(0.01f);
+	// manaya->move(glm::vec3(0.0f, 20.0f, 3.0f), camera.getViewMatrix());
+	// manaya->rotate(0, 270, 0);
+	// map->move(glm::vec3(0.0f, -20.0f, 0.0f), camera.getViewMatrix());
+	// box->move(glm::vec3(0.0f, -5.0f, -10.0f), camera.getViewMatrix());
+	// genshinEnemy->move(glm::vec3(0.0f, -5.0f, 0.0f), camera.getViewMatrix());
 
 	// box->loadTexture("Textures/DefaultMaterial_Base_Color.png");
 	box->loadTexture("../Textures/fi_uv_4096__display_grid_8x8_32x32_128x128_by_fisholith-d786zt5.png");
@@ -369,7 +369,7 @@ GLFWwindow* setup() {
 
 	renderMode = base;
 
-	displayInfo = true;
+	// displayInfo = true;
 	drawOBB = false;
 	drawAABB1 = false;
 	drawAABB2 = false;
@@ -379,13 +379,13 @@ GLFWwindow* setup() {
 	drawBS2 = false;
 	drawBS3 = false;
 	doReflection = false;
-	updateResolution = false;
+	// updateResolution = false;
 	updated = true;
 	depthBuffer = false;
 	outlineType = 0;
 
 	defaultCamera = 0;
-	camera.setPosition(glm::vec3(1.0f, 0.5f, 1.0f));
+	// camera.setPosition(glm::vec3(1.0f, 0.5f, 1.0f));
 	cameraBuffer.push_back(&camera);
 	cameraBuffer.push_back(&camera2);
 	projectionBuffer.push_back(Projection);

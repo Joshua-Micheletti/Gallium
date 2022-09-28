@@ -19,6 +19,52 @@ std::vector<TK> extractKeys(std::map<TK, TV> const& input_map) {
     return retval;
 }
 
+void createAxis(Model* axis) {
+	std::vector<float> axisColor;
+	axisColor.push_back(1.0f);
+	axisColor.push_back(0.0f);
+	axisColor.push_back(0.0f);
+	axisColor.push_back(1.0f);
+	axisColor.push_back(0.0f);
+	axisColor.push_back(0.0f);
+	axisColor.push_back(0.0f);
+	axisColor.push_back(1.0f);
+	axisColor.push_back(0.0f);
+	axisColor.push_back(0.0f);
+	axisColor.push_back(1.0f);
+	axisColor.push_back(0.0f);
+	axisColor.push_back(0.0f);
+	axisColor.push_back(0.0f);
+	axisColor.push_back(1.0f);
+	axisColor.push_back(0.0f);
+	axisColor.push_back(0.0f);
+	axisColor.push_back(1.0f);
+
+	axis->loadUVs(axisColor);
+
+	std::vector<float> axisVertices;
+	axisVertices.push_back(100.0f);
+	axisVertices.push_back(0.0f);
+	axisVertices.push_back(0.0f);
+	axisVertices.push_back(-100.0f);
+	axisVertices.push_back(0.0f);
+	axisVertices.push_back(0.0f);
+	axisVertices.push_back(0.0f);
+	axisVertices.push_back(100.0f);
+	axisVertices.push_back(0.0f);
+	axisVertices.push_back(0.0f);
+	axisVertices.push_back(-100.0f);
+	axisVertices.push_back(0.0f);
+	axisVertices.push_back(0.0f);
+	axisVertices.push_back(0.0f);
+	axisVertices.push_back(100.0f);
+	axisVertices.push_back(0.0f);
+	axisVertices.push_back(0.0f);
+	axisVertices.push_back(-100.0f);
+
+	axis->loadVertices(axisVertices);
+}
+
 
 RendererManager::RendererManager() {
     this->camera_ = new Camera(glm::vec3(30.0f, 30.0f, 30.0f),   // position
@@ -32,9 +78,7 @@ RendererManager::RendererManager() {
     this->newMaterial("MA_Default")->shader("S_Default")->texture("T_Default");
     this->newModel("M_Default")->loadModel("../Models/box2.obj");
 
-
     this->newShader("S_Skybox")->loadShader("../Shader/skybox/skybox.vert", "../Shader/skybox/skybox.frag");
-
     std::vector<std::string> faces;
 	std::string directory = "Epic_BlueSunset";
 	faces.push_back("../Textures/Skybox/" + directory + "/right.png"); //right
@@ -43,13 +87,15 @@ RendererManager::RendererManager() {
 	faces.push_back("../Textures/Skybox/" + directory + "/bottom.png");//bottom
 	faces.push_back("../Textures/Skybox/" + directory + "/front.png"); //front
 	faces.push_back("../Textures/Skybox/" + directory + "/back.png");  //back
-
     this->newTexture("T_Skybox")->loadCubemap(faces);
-
     this->newMaterial("MA_Skybox")->shader("S_Skybox")->texture("T_Skybox");
     this->newDrawingEntity("DE_Skybox")->model("M_Default")->material("MA_Skybox");
-
     this->skybox_ = "DE_Skybox";
+
+    createAxis(this->newModel("M_Axis")->drawingMode(GL_LINES));
+    this->newShader("S_Axis")->loadShader("../Shader/color/color.vert", "../Shader/color/color.frag");
+    this->newMaterial("MA_Axis")->shader("S_Axis");
+    this->newDrawingEntity("DE_Axis")->model("M_Axis")->material("MA_Axis");
 }
 
 void RendererManager::skybox(std::string name) {
@@ -104,6 +150,9 @@ std::vector<DrawingEntity*> RendererManager::drawingEntities() {
     // this->drawingEntityBuffer_[this->skybox_] = tmpSkybox;
 }
 
+std::vector<std::string> RendererManager::drawingEntityNames() {
+    return(extractKeys(this->drawingEntityBuffer_));
+}
 
 // MODEL
 Model* RendererManager::model(std::string name) {
@@ -157,6 +206,9 @@ std::vector<Shader*> RendererManager::shaders() {
     return(extractValues(this->shaderBuffer_));
 }
 
+std::vector<std::string> RendererManager::shaderNames() {
+    return(extractKeys(this->shaderBuffer_));
+}
 
 // TEXTURE
 Texture* RendererManager::texture(std::string name) {
@@ -181,6 +233,11 @@ Camera* RendererManager::camera() {
 glm::mat4 RendererManager::projection() {
     return(this->projection_);
 }
+
+void RendererManager::projection(glm::mat4 p) {
+    this->projection_ = p;
+}
+
 
 // PRINTS
 void RendererManager::printFullDE(std::string name) {

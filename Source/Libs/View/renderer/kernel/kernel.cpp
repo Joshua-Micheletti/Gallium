@@ -1,7 +1,4 @@
 #include "kernel.h"
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
 
 float gaussian(float x, float sigma) {
     return((1.0 / sqrt(2 * PI * pow(sigma, 2))) * pow(Em, (-(pow(x, 2) / (2 * pow(sigma, 2))))));

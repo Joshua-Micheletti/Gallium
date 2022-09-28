@@ -7,7 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "../utils.h"
+#include "../../../utils.h"
 
 class Model {
     public:
@@ -26,6 +26,9 @@ class Model {
         unsigned int uvBuffer();
         unsigned int normalBuffer();
 
+        GLenum drawingMode();
+        Model* drawingMode(GLenum);
+
         void printVertices();
         void printUVs();
         void printNormals();
@@ -42,6 +45,8 @@ class Model {
         unsigned int vertexBuffer_;
         unsigned int uvBuffer_;
         unsigned int normalBuffer_;
+
+        GLenum drawingMode_;
 };
 
 #endif

@@ -1,17 +1,4 @@
 #include "renderer.h"
-#include "../Model/entity.h"
-#include "camera.h"
-#include "shader.h"
-#include "kernel.h"
-#include <vector>
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include "../init.h"
-#include <iostream>
-#include <string>
-#include <map>
 
 // constructor method, sets up the renderer (reflection and post processing)
 Renderer::Renderer() {
@@ -283,8 +270,7 @@ void Renderer::render() {
 
 	this->forwardRenderTime = glfwGetTime();
 
-	// glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
 	glEnable(GL_STENCIL_TEST);
 	glStencilOp(GL_KEEP,	   // stencil fail
 				GL_KEEP,	   // stencil pass, depth fail
@@ -293,11 +279,9 @@ void Renderer::render() {
 	glStencilMask(0xFF);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	// printf("about to render the skybox\n");
 	this->renderSkybox();
-	// printf("rendered the skybox\n");
+
 	this->renderEntities(false);
-	// printf("rendered the entities\n");
 
 	// draw the bounding box for each entity
 	// this->displayBoundingBox();
@@ -308,7 +292,7 @@ void Renderer::render() {
 
 	this->MSPostProcessingPassTime = glfwGetTime();
 
-	// this->renderMultisamplePostProcessing();
+	this->renderMultisamplePostProcessing();
 
 	this->MSPostProcessingPassTime = glfwGetTime() - this->MSPostProcessingPassTime;
 
@@ -321,15 +305,14 @@ void Renderer::render() {
 
 	// ---------------------------------- OUT FRAMEBUFFER RENDERING --------------------------------- //
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// this->renderScreen();
+	this->renderScreen();
 
 	this->postProcessingPassTime = glfwGetTime() - this->postProcessingPassTime;
 }
 
-// // render the cubemap view from the reflection camera to later calculate reflections on
+
+// render the cubemap view from the reflection camera to later calculate reflections on
 void Renderer::renderReflectionCubemap() {
 	
 // 	// set the current camera to the camera inside the reflective object
@@ -383,24 +366,16 @@ void Renderer::renderEntities(bool reflection) {
 	// render entities
 	for (int i = 0; i < drawingEntities.size(); i++) {
 		if (drawingEntities[i] != RM.drawingEntity(RM.skybox())) {
-
-		
-
-		DrawingEntity* currentDE = drawingEntities[i];
-		Model* currentM = RM.model(currentDE->model());
-		Material* currentMA = RM.material(currentDE->material());
-		Shader* currentS = RM.shader(currentMA->shader());
-		Texture* currentT = RM.texture(currentMA->texture());
+			DrawingEntity* currentDE = drawingEntities[i];
+			Model* currentM = RM.model(currentDE->model());
+			Material* currentMA = RM.material(currentDE->material());
+			Shader* currentS = RM.shader(currentMA->shader());
+			Texture* currentT = RM.texture(currentMA->texture());
 
 		// if it's rendering entities to be displayed in the reflection:
 		// if (reflection) {
 		// 	// check what entities are supposed to be rendered in the reflection
 		// 	if (entityBuffer[i]->getToReflect() == true) {
-		// 		// if it's rendering the skybox
-		// 		if (entityBuffer[i]->getName().compare("skybox") == 0) {
-		// 			// disable the depth mask (the rendering won't write into the depth buffer)
-		// 			glDepthMask(GL_FALSE);
-		// 		}
 
 		// 		// installs the shader to render the entity (it gets the shader from the entity)
 		// 		glUseProgram(shaderBuffer[entityBuffer[i]->getShader()].getID());
@@ -422,14 +397,6 @@ void Renderer::renderEntities(bool reflection) {
 		// 		}
 
 		// 		// check which mode things should be rendered as
-		// 		// if we're rendering the skybox, always render as triangles (weird results if you render with different primitives)
-		// 		if (entityBuffer[i]->getName().compare("skybox") == 0) {
-		// 			// render the skybox
-		// 			glDrawArrays(GL_TRIANGLES, 0, entityBuffer[i]->getVertices().size());
-		// 			// re-enable the depth mask (now rendering also affects the depth buffer as well)
-		// 			glDepthMask(GL_TRUE);
-		// 		}
-
 		// 		else {
 		// 			switch (renderMode) {
 		// 				// draw lines
@@ -460,14 +427,10 @@ void Renderer::renderEntities(bool reflection) {
 				// }
 
 				glUseProgram(currentS->id());
-				// glUseProgram(shaderBuffer[entityBuffer[i]->getShader()].getID());
-
-				// attachUniforms(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getUniformBuffer());
 				attachUniforms(currentDE, currentS->uniformBuffer());
-
-				// linkLayouts(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getLayoutBuffer());
 				linkLayouts(currentM, currentS->layoutBuffer());
 
+				// THINK IF BINDING A PLACEHOLDER TEX EVERY FRAME IS HEAVY
 				// if (entityBuffer[i]->getTexture() != 0) {
 					// glBindTexture(entityBuffer[i]->getTextureType(), entityBuffer[i]->getTexture());
 				glBindTexture(GL_TEXTURE_2D, currentT->id());
@@ -486,13 +449,6 @@ void Renderer::renderEntities(bool reflection) {
 				// }
 
 				// check which mode things should be rendered as
-				// if (entityBuffer[i]->getName().compare("skybox") == 0) {
-				// 	// render the skybox
-				// 	glDrawArrays(GL_TRIANGLES, 0, entityBuffer[i]->getVertices().size());
-				// 	// re-enable the depth mask (now rendering also affects the depth buffer as well)
-				// 	glDepthMask(GL_TRUE);
-				// }
-
 				// else {
 				// 	switch (renderMode) {
 				// 	case wireframe:
@@ -509,7 +465,7 @@ void Renderer::renderEntities(bool reflection) {
 				// 		glDrawArrays(entityBuffer[i]->getElements(), 0, entityBuffer[i]->getVertices().size());
 				// 	}
 				// }
-				glDrawArrays(GL_TRIANGLES, 0, currentM->vertices().size() / 3);
+				glDrawArrays(currentM->drawingMode(), 0, currentM->vertices().size() / 3);
 			// }
 		// }
 
@@ -609,48 +565,32 @@ void Renderer::renderEntity(Entity* entity) {
 }
 
 void Renderer::renderSkybox() {
+	// disable depth
 	glDepthMask(GL_FALSE);
+	// disable backface culling
 	glDisable(GL_CULL_FACE);
-	// printf("starting the skybox rendering\n");
 
-	// std::vector<std::string> modelNames = RM.modelNames();
-
-	// std::vector<Model*> models = RM.models();
-
-	// for (int i = 0; i < models.size(); i++) {
-	// 	printf("%s\n", modelNames[i].c_str());
-	// 	models[i]->print();
-	// }
-
-	// // RM.printFullDE(RM.skybox());
-	// printf("%s\n", RM.skybox().c_str());
-	// printf("%p\n", RM.drawingEntity(RM.skybox()));
-	// printf("%p\n", RM.drawingEntity("DE_Test"));
-
+	// extract the skybox components
 	DrawingEntity* skyboxDE = RM.drawingEntity(RM.skybox());
-	// printf("loaded the skybox entity\n");
 	Model* skyboxM = RM.model(skyboxDE->model());
-	// printf("loaded the skybox model\n");
 	Material* skyboxMA = RM.material(skyboxDE->material());
 	Shader* skyboxS = RM.shader(skyboxMA->shader());
 	Texture* skyboxT = RM.texture(skyboxMA->texture());
 
-	// printf("rendering the skybox\n");
-
+	// bind the shader
 	glUseProgram(skyboxS->id());
-
+	// attach the shader uniforms
 	attachUniforms(skyboxDE, skyboxS->uniformBuffer());
-
+	// link the shader layouts
 	linkLayouts(skyboxM, skyboxS->layoutBuffer());
-
+	// bind the skybox texture
 	glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxT->id());
 	// render the skybox
-	glDrawArrays(GL_TRIANGLES, 0, skyboxM->vertices().size() / 3);
+	glDrawArrays(skyboxM->drawingMode(), 0, skyboxM->vertices().size() / 3);
+
 	// re-enable the depth mask (now rendering also affects the depth buffer as well)
 	glDepthMask(GL_TRUE);
 	glEnable(GL_CULL_FACE);
-
-	// printf("after rendering skybox: %p\n", RM.drawingEntity(RM.skybox()));
 }
 
 void Renderer::renderOutline() {
@@ -759,12 +699,19 @@ void Renderer::renderMultisamplePostProcessing() {
 
 // render the screen texture applying post processing shaders
 void Renderer::renderScreen() {
-	glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// disable depth test so screen-space quad isn't discarded due to depth test.
+	glDisable(GL_DEPTH_TEST); 
 
+	// enable the texture slot 0
 	glActiveTexture(GL_TEXTURE0);
+	// bind the post processed texture
 	glBindTexture(GL_TEXTURE_2D, this->postProcessingTexture);
+	// bind the post processing shader
 	glUseProgram(RM.shader("RS_PostProcessingShader")->id());
 
+	// bind the VBOs
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->screenVBO);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
@@ -773,12 +720,14 @@ void Renderer::renderScreen() {
 	glBindBuffer(GL_ARRAY_BUFFER, this->screenUVVBO);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
+	// bind the uniform
 	int screenTexUniformID = glGetUniformLocation(RM.shader("RS_PostProcessingShader")->id(), "screenTexture");
-
 	glUniform1i(screenTexUniformID, 0);
 
+	// draw the quad
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
+	// re-enable depth testing
 	glEnable(GL_DEPTH_TEST);
 }
 
@@ -801,68 +750,70 @@ void Renderer::resetRender() {
 }
 
 void Renderer::resizeScreen() {
-// 	// create an empty texture object for screenTexture, this texture will be bound to the screenFBO
-// 	// and will store the screen view image
-// 	glDeleteTextures(1, &this->screenTexture);
-// 	glGenTextures(1, &this->screenTexture);
-// 	// bind the screenTexture texture as the main texture
-// 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture);
+	// create an empty texture object for screenTexture, this texture will be bound to the screenFBO
+	// and will store the screen view image
+	glDeleteTextures(1, &this->screenTexture);
+	glGenTextures(1, &this->screenTexture);
+	// bind the screenTexture texture as the main texture
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture);
 
-// 	/* ACTIVE TEXTURE: screenTexture */
+	/* ACTIVE TEXTURE: screenTexture */
 
-// 	// create the actual texture for image with res: screenWidth x screenHeight
-// 	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB, screenWidth, screenHeight, false);
+	// create the actual texture for image with res: screenWidth x screenHeight
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB, window.framebufferWidth(), window.framebufferHeight(), false);
+	printf("%d, %d\n", window.width(), window.height());
+
+	// set the texture filters for mipmaps
+	glDeleteTextures(1, &this->screenDepthTexture);
+	glGenTextures(1, &this->screenDepthTexture);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture);
+
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_DEPTH_STENCIL, window.framebufferWidth(), window.framebufferHeight(), false);
+
+	glDeleteTextures(1, &this->outlineTextureMask);
+	glGenTextures(1, &this->outlineTextureMask);
+	glBindTexture(GL_TEXTURE_2D, this->outlineTextureMask);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, window.framebufferWidth(), window.framebufferHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 
-// 	// set the texture filters for mipmaps
-// 	glDeleteTextures(1, &this->screenDepthTexture);
-// 	glGenTextures(1, &this->screenDepthTexture);
-// 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture);
+	glDeleteTextures(1, &this->postProcessingTexture);
+	glGenTextures(1, &this->postProcessingTexture);
+	glBindTexture(GL_TEXTURE_2D, this->postProcessingTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, window.framebufferWidth(), window.framebufferHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-// 	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_DEPTH_STENCIL, screenWidth, screenHeight, false);
+	glDeleteTextures(1, &this->postProcessingDepthTexture);
+	glGenTextures(1, &this->postProcessingDepthTexture);
+	glBindTexture(GL_TEXTURE_2D, this->postProcessingDepthTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, window.framebufferWidth(), window.framebufferHeight(), 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
 
-// 	glDeleteTextures(1, &this->outlineTextureMask);
-// 	glGenTextures(1, &this->outlineTextureMask);
-// 	glBindTexture(GL_TEXTURE_2D, this->outlineTextureMask);
-// 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glDeleteFramebuffers(1, &this->postProcessingFBO);
+	glGenFramebuffers(1, &this->postProcessingFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, this->postProcessingFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->postProcessingTexture, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, this->postProcessingDepthTexture, 0);
 
+	// create the screenFBO (used for rendering the screen view to a texture)
+	glDeleteFramebuffers(1, &this->screenFBO);
+	glGenFramebuffers(1, &this->screenFBO);
+	// bind the screenFBO to be the default FBO
+	glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
 
-// 	glDeleteTextures(1, &this->postProcessingTexture);
-// 	glGenTextures(1, &this->postProcessingTexture);
-// 	glBindTexture(GL_TEXTURE_2D, this->postProcessingTexture);
-// 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	/* ACTIVE FRAMEBUFFER: screenFBO */
 
-// 	glDeleteTextures(1, &this->postProcessingDepthTexture);
-// 	glGenTextures(1, &this->postProcessingDepthTexture);
-// 	glBindTexture(GL_TEXTURE_2D, this->postProcessingDepthTexture);
-// 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, screenWidth, screenHeight, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
+	// attach the screenTexture to the screenFBO, so that the stuff rendered on the screenFBO can be saved to the screenTexture
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture, 0);
 
-// 	glDeleteFramebuffers(1, &this->postProcessingFBO);
-// 	glGenFramebuffers(1, &this->postProcessingFBO);
-// 	glBindFramebuffer(GL_FRAMEBUFFER, this->postProcessingFBO);
-// 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->postProcessingTexture, 0);
-// 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, this->postProcessingDepthTexture, 0);
+	// glViewport(0, 0, window.width(), window.height());
 
-// 	// create the screenFBO (used for rendering the screen view to a texture)
-// 	glDeleteFramebuffers(1, &this->screenFBO);
-// 	glGenFramebuffers(1, &this->screenFBO);
-// 	// bind the screenFBO to be the default FBO
-// 	glBindFramebuffer(GL_FRAMEBUFFER, this->screenFBO);
-
-// 	/* ACTIVE FRAMEBUFFER: screenFBO */
-
-// 	// attach the screenTexture to the screenFBO, so that the stuff rendered on the screenFBO can be saved to the screenTexture
-// 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture, 0);
-// 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture, 0);
-
-// 	glViewport(0, 0, screenWidth, screenHeight);
-
-// 	projectionBuffer[0] = glm::perspective(glm::radians(45.0f), (float)screenWidth / (float)screenHeight, 0.1f, 10000.0f);
-// 	updated = true;
+	// projectionBuffer[0] = glm::perspective(glm::radians(45.0f), (float)screenWidth / (float)screenHeight, 0.1f, 10000.0f);
+	RM.projection(glm::perspective(glm::radians(45.0f), (float)window.framebufferWidth() / (float)window.framebufferHeight(), 0.1f, 10000.0f));
+	updated = true;
+	// updateResolution = false;
 }
 
 void Renderer::displayBoundingBox() {
@@ -965,13 +916,13 @@ void Renderer::attachUniforms(DrawingEntity* entity, std::vector<uniform_t> unif
 			// if the entity we're rendering is the skybox, 
 			if (entity == RM.drawingEntity(RM.skybox())) {
 			// 	// this process removes all the translations from the camera, this way camera movement is not taken into account
-				glm::mat4 staticCameraView = glm::mat4(glm::mat3(RM.camera()->getViewMatrix()));
+				glm::mat4 staticCameraView = glm::mat4(glm::mat3(RM.camera()->viewMatrix()));
 				glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(staticCameraView[0][0]));
 			}
 			// otherwise pass the camera view matrix, including all translations
 			else {
 				// glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(cameraBuffer[defaultCamera]->getViewMatrix()[0][0]));
-				glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(RM.camera()->getViewMatrix()[0][0]));
+				glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(RM.camera()->viewMatrix()[0][0]));
 			}
 		}
 
@@ -989,7 +940,7 @@ void Renderer::attachUniforms(DrawingEntity* entity, std::vector<uniform_t> unif
 
 		// if the uniform is "eyePosition", pass the camera position (x, y, z)
 		else if (strcmp(uniformBuffer[i].name, "eyePosition") == 0) {
-			glUniform3f(uniformBuffer[i].id, RM.camera()->getPosition().x, RM.camera()->getPosition().y, RM.camera()->getPosition().z);
+			glUniform3f(uniformBuffer[i].id, RM.camera()->position().x, RM.camera()->position().y, RM.camera()->position().z);
 		}
 	}
 }

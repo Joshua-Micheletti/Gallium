@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <GLAD/glad.h>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
@@ -24,12 +25,12 @@ class DrawingEntity {
         glm::mat4 rotationMatrix();
         glm::mat4 scaleMatrix();
 
-        void translate(glm::vec3);
-        void rotate(glm::vec3);
-        void scale(glm::vec3);
+        DrawingEntity* translate(glm::vec3);
+        DrawingEntity* rotate(glm::vec3);
+        DrawingEntity* scale(glm::vec3);
 
         glm::vec3 position();
-        void position(glm::vec3);
+        DrawingEntity* position(glm::vec3);
 
         glm::vec3 lightColor();
         void lightColor(glm::vec3);

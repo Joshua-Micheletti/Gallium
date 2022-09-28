@@ -3,6 +3,10 @@
 #define PI 3.1415926535
 #define Em 2.71828
 
+#include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
+
 class Kernel {
 	public:
 		Kernel();

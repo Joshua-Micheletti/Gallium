@@ -2,6 +2,7 @@
 
 // CONSTRUCTOR
 Model::Model() {
+    drawingMode_ = GL_TRIANGLES;
 }
 
 // function for loading 3D models from file to OpenGL buffers
@@ -32,6 +33,7 @@ void Model::loadNormals(std::vector<float> n) {
     createBuffer(this->normals_, &this->normalBuffer_);
 }
 
+
 std::vector<float> Model::vertices() {
     return(this->vertices_);
 }
@@ -55,6 +57,17 @@ unsigned int Model::uvBuffer() {
 unsigned int Model::normalBuffer() {
     return(this->normalBuffer_);
 }
+
+
+GLenum Model::drawingMode() {
+    return(this->drawingMode_);
+}
+
+Model* Model::drawingMode(GLenum mode) {
+    this->drawingMode_ = mode;
+    return(this);
+}
+
 
 void Model::printVertices() {
     int length = maxLength(this->vertices_);

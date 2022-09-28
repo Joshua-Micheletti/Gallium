@@ -2,6 +2,13 @@
 #define __SHADER__
 
 #include <vector>
+#include "glad/glad.h"
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 // struct for saving the informations about shader uniforms
 typedef struct {

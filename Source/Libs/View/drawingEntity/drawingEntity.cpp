@@ -5,7 +5,6 @@ DrawingEntity::DrawingEntity() {
     this->translationMatrix_ = glm::mat4(1);
     this->rotationMatrix_ = glm::mat4(1);
     this->scaleMatrix_ = glm::mat4(1);
-
     this->position_ = glm::vec3(0);
 }
 
@@ -28,25 +27,30 @@ std::string DrawingEntity::material() {
 }
 
 
-void DrawingEntity::translate(glm::vec3 translation) {
+DrawingEntity* DrawingEntity::translate(glm::vec3 translation) {
     this->position_ += translation;
     this->translationMatrix_ = glm::translate(this->translationMatrix_, translation);
+    return(this);
 }
 
-void DrawingEntity::rotate(glm::vec3 rotation) {
+DrawingEntity* DrawingEntity::rotate(glm::vec3 rotation) {
     this->rotationMatrix_ = glm::rotate(this->rotationMatrix_, rotation.x, glm::vec3(1, 0, 0));
     this->rotationMatrix_ = glm::rotate(this->rotationMatrix_, rotation.y, glm::vec3(0, 1, 0));
     this->rotationMatrix_ = glm::rotate(this->rotationMatrix_, rotation.z, glm::vec3(0, 0, 1));
+    return(this);
 }
 
-void DrawingEntity::scale(glm::vec3 scale) {
+DrawingEntity* DrawingEntity::scale(glm::vec3 scale) {
     this->scaleMatrix_ = glm::scale(this->scaleMatrix_, scale);
+    return(this);
 }
 
 
-void DrawingEntity::position(glm::vec3 position) {
+DrawingEntity* DrawingEntity::position(glm::vec3 position) {
     this->position_ = position;
     this->translationMatrix_ = glm::translate(glm::mat4(1), position);
+
+    return(this);
 }
 
 glm::vec3 DrawingEntity::position() {

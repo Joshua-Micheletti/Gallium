@@ -1,21 +1,18 @@
 #include <string>
 #include "imgui.h"
-#include "renderer.h"
-#include "../Controller/eventHandler.h"
+#include "../renderer/renderer.h"
+#include "../../Controller/eventHandler.h"
+#include "../../global.h"
 
 // class that shows onscreen informations
 class UI {
 	public:
 		// constructor method which takes the window reference
-		UI(GLFWwindow *, Renderer *, EventHandler *);
+		UI(Renderer *, EventHandler *);
 		// method to draw the information on the screen
 		void drawInfo();
-
-		void setReferenceWindow(GLFWwindow*);
 		
 	private:
-		// window reference
-		GLFWwindow* window;
 		// renderer reference
 		Renderer *renderer;
 		// event handler reference

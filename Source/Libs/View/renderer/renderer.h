@@ -1,15 +1,23 @@
 #ifndef __RENDERER__
 #define __RENDERER__
 #include <vector>
-#include "../Model/entity.h"
-#include "shader.h"
-#include "kernel.h"
+#include <iostream>
+#include <string>
+#include <map>
+#include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
+#include "../../Model/entity.h"
+#include "../drawingEntity/material/shader/shader.h"
+#include "kernel/kernel.h"
+#include "../camera/camera.h"
+#include "../drawingEntity/material/shader/shader.h"
+#include "../../init.h"
+#include "../../global.h"
 
-#include <map>
-#include "../global.h"
 
 // class for rendering entities using shaders (mainly openGL)
 class Renderer {

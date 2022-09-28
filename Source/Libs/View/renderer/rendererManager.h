@@ -3,12 +3,12 @@
 
 #include <map>
 #include <string>
-#include "drawingEntity.h"
-#include "model.h"
-#include "material.h"
-#include "shader.h"
-#include "texture.h"
-#include "camera.h"
+#include "../drawingEntity/drawingEntity.h"
+#include "../drawingEntity/model/model.h"
+#include "../drawingEntity/material/material.h"
+#include "../drawingEntity/material/shader/shader.h"
+#include "../drawingEntity/material/texture/texture.h"
+#include "../camera/camera.h"
 #include <cstdlib>
 #include <algorithm>
 #include <iterator>
@@ -31,7 +31,11 @@ class RendererManager {
         std::vector<Shader*> shaders();
         std::vector<Texture*> textures();
 
+        std::vector<std::string> drawingEntityNames();
         std::vector<std::string> modelNames();
+        std::vector<std::string> materialNames();
+        std::vector<std::string> shaderNames();
+        std::vector<std::string> textureNames();
 
         DrawingEntity* drawingEntity(std::string);
         Model* model(std::string);
@@ -53,6 +57,7 @@ class RendererManager {
 
         Camera* camera();
         glm::mat4 projection();
+        void projection(glm::mat4);
 
         std::string skybox();
         void skybox(std::string);
