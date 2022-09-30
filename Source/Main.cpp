@@ -9,17 +9,11 @@ void testFunc() {
 	RM.newDrawingEntity("DE_Test")->model("M_Test")->material("MA_Test");
 
 	RM.drawingEntity("DE_Test")->translate(glm::vec3(0.0f, 0.0f, 0.0f))->scale(glm::vec3(2.0, 2.0, 2.0));
-
-	RM.newModel("M_Light")->loadModel("../Models/sphere7.obj");
-	RM.newShader("S_Light")->loadShader("../Shader/white/white.vert", "../Shader/white/white.frag");
-	RM.newMaterial("MA_Light")->shader("S_Light");
-	RM.newDrawingEntity("DE_Light")->model("M_Light")->material("MA_Light");
 }
 
 int main(void) {
 	Renderer renderer;
 	EventHandler eventHandler(window.window());
-	// //UI interface(window, &renderer, &eventHandler);
 	UI interface(&renderer, &eventHandler);
 
 	testFunc();
@@ -27,6 +21,9 @@ int main(void) {
 		eventHandler.routine();
 		renderer.render();
 		interface.drawInfo();
+
+		printf("new frame\n");
+
 		glfwPollEvents();
 		glfwSwapBuffers(window.window());
 	}

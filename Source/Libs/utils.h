@@ -20,6 +20,7 @@ extern std::string strBlue;
 extern std::string strNoColor;
 
 extern bool updateResolution;
+extern bool updated;
 
 
 #endif

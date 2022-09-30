@@ -93,7 +93,7 @@ Renderer::Renderer() {
 	/* ACTIVE TEXTURE: screenTexture */
 
 	// create the actual texture for image with res: screenWidth x screenHeight
-	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB, screenWidth, screenHeight, false);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, RM.samples(), GL_RGB, screenWidth, screenHeight, false);
 
 	// create an empty texture for the depth texture
 	glGenTextures(1, &this->screenDepthTexture);
@@ -103,7 +103,7 @@ Renderer::Renderer() {
 	/* ACTIVE TEXTURE: screenDepthTexture */
 
 	// create the actual texture for image with res: screenWidth x screenHeight
-	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_DEPTH_STENCIL, screenWidth, screenHeight, false);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, RM.samples(), GL_DEPTH_STENCIL, screenWidth, screenHeight, false);
 	//glTextureParameteri(this->screenDepthTexture, GL_DEPTH_STENCIL_TEXTURE_MODE, GL_STENCIL_INDEX);
 	// create the screenFBO (used for rendering the screen view to a texture)
 	glGenFramebuffers(1, &this->screenFBO);
@@ -222,22 +222,6 @@ Renderer::Renderer() {
 	RM.newShader("RS_PostProcessingShader");
 	RM.shader("RS_PostProcessingShader")->loadShader("../Shader/postProcessing/postProcessing.vert", "../Shader/postProcessing/postProcessing.frag");
 
-	/*
-	// create the shader object to hold the post processing shader
-	this->screenShader = new Shader((char*)"screen shader");
-	// load the post processing shader
-	this->screenShader->loadShader("../Shader/screen/screen.vert", "../Shader/screen/screen.frag");
-
-	// create the shader object to hold the post processing depth buffer display shader
-	this->depthShader = new Shader((char*)"depth shader");
-	// load the post processing depth buffer display shader
-	this->depthShader->loadShader("../Shader/depth/depth.vert", "../Shader/depth/depth.frag");
-
-	this->postProcessingShader = new Shader((char*)"post-processing shader");
-	this->postProcessingShader->loadShader("../Shader/postProcessing/postProcessing.vert", "../Shader/postProcessing/postProcessing.frag");
-	*/
-
-
 	int maxSamples;
 	glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
 	printf("max samples: %d\n", maxSamples);
@@ -282,7 +266,7 @@ void Renderer::render() {
 	this->renderSkybox();
 
 	this->renderEntities(false);
-
+	
 	// draw the bounding box for each entity
 	// this->displayBoundingBox();
 
@@ -299,8 +283,8 @@ void Renderer::render() {
 
 	this->postProcessingPassTime = glfwGetTime();
 
-	if (this->highlightedEntity >= 0 && (outlineType == 0 || outlineType == 1)) {
-		// this->renderOutline();
+	if (RM.selectedEntity().size() != 0 && (outlineType == 0 || outlineType == 1)) {
+		this->renderOutline();
 	}
 
 	// ---------------------------------- OUT FRAMEBUFFER RENDERING --------------------------------- //
@@ -362,10 +346,10 @@ void Renderer::renderEntities(bool reflection) {
 	glStencilFunc(GL_ALWAYS, 1, 255);
 
 	std::vector<DrawingEntity*> drawingEntities = RM.drawingEntities(); 
-
 	// render entities
 	for (int i = 0; i < drawingEntities.size(); i++) {
-		if (drawingEntities[i] != RM.drawingEntity(RM.skybox())) {
+		// CAREFUL
+		if (drawingEntities[i] != RM.drawingEntity(RM.skybox())) { //&& drawingEntities[i] != RM.drawingEntity(RM.selectedEntity())) {
 			DrawingEntity* currentDE = drawingEntities[i];
 			Model* currentM = RM.model(currentDE->model());
 			Material* currentMA = RM.material(currentDE->material());
@@ -419,7 +403,6 @@ void Renderer::renderEntities(bool reflection) {
 		// }
 
 		// else {
-			// printf("about to go into highlighted\n");
 			// if (i != this->highlightedEntity) {
 				// printf("got into the highlighted part\n");
 				// if (entityBuffer[i]->getName().compare("skybox") == 0) {
@@ -474,94 +457,107 @@ void Renderer::renderEntities(bool reflection) {
 			glDisableVertexAttribArray(2);
 		}
 	}
-
+	
 	// render highlighted entity
-	if (this->highlightedEntity >= 0 && reflection == false) {
+	// printf("%s\n", RM.selectedEntity().c_str());
+	if (RM.selectedEntity().size() != 0 && reflection == false) {
+		printf("rendering selected entity!\n");
 		glStencilFunc(GL_ALWAYS, 1, 255);
 		glStencilMask(255);
-		this->renderEntity(entityBuffer[this->highlightedEntity]);
+		this->renderEntity(RM.selectedEntity());
 
 		glStencilMask(0);
 		glStencilFunc(GL_NOTEQUAL, 1, 255);
 
 		glDisable(GL_DEPTH_TEST);
-		int previousShader = entityBuffer[this->highlightedEntity]->getShader();
-		entityBuffer[this->highlightedEntity]->setShader(11);
-		this->renderEntity(entityBuffer[this->highlightedEntity]);
-		entityBuffer[this->highlightedEntity]->setShader(previousShader);
+		// int previousShader = entityBuffer[this->highlightedEntity]->getShader();
+		// entityBuffer[this->highlightedEntity]->setShader(11);
+		// this->renderEntity(RM.selectedEntity());
+		// entityBuffer[this->highlightedEntity]->setShader(previousShader);
+
+		std::string previousShader = RM.material(RM.drawingEntity(RM.selectedEntity())->material())->shader();
+		RM.material(RM.drawingEntity(RM.selectedEntity())->material())->shader(RM.highlightShader());
+		this->renderEntity(RM.selectedEntity());
+		RM.material(RM.drawingEntity(RM.selectedEntity())->material())->shader(previousShader);
+
 		glEnable(GL_DEPTH_TEST);
 
 		// wireframe outline implementation
-		if (outlineType == 2) {
-			glDisable(GL_DEPTH_TEST);
-			glPolygonMode(GL_FRONT, GL_LINE);
-			glLineWidth(10.0f);
-			int previousShader = entityBuffer[this->highlightedEntity]->getShader();
-			entityBuffer[this->highlightedEntity]->setShader(11);
-			this->renderEntity(entityBuffer[this->highlightedEntity]);
-			entityBuffer[this->highlightedEntity]->setShader(previousShader);
-			glLineWidth(1.0f);
-			glPolygonMode(GL_FRONT, GL_FILL);
-			glEnable(GL_DEPTH_TEST);
-		}
+		// if (outlineType == 2) {
+		// 	glDisable(GL_DEPTH_TEST);
+		// 	glPolygonMode(GL_FRONT, GL_LINE);
+		// 	glLineWidth(10.0f);
+		// 	int previousShader = entityBuffer[this->highlightedEntity]->getShader();
+		// 	entityBuffer[this->highlightedEntity]->setShader(11);
+		// 	this->renderEntity(entityBuffer[this->highlightedEntity]);
+		// 	entityBuffer[this->highlightedEntity]->setShader(previousShader);
+		// 	glLineWidth(1.0f);
+		// 	glPolygonMode(GL_FRONT, GL_FILL);
+		// 	glEnable(GL_DEPTH_TEST);
+		// }
 	}
+	printf("ELEMENTS: %d\n", RM.drawingEntities().size());
 }
 
-void Renderer::renderEntity(Entity* entity) {
-// 	if (entity->getName().compare("skybox") == 0) {
-// 		glDepthMask(GL_FALSE);
-// 	}
+void Renderer::renderEntity(std::string entity) {
+	DrawingEntity* currentDE = RM.drawingEntity(entity);
+	Model* currentM = RM.model(currentDE->model());
+	Material* currentMA = RM.material(currentDE->material());
+	Shader* currentS = RM.shader(currentMA->shader());
+	Texture* currentT = RM.texture(currentMA->texture());
 
-// 	glUseProgram(shaderBuffer[entity->getShader()].getID());
+	glUseProgram(currentS->id());
 
-// 	attachUniforms(entity, shaderBuffer[entity->getShader()].getUniformBuffer());
+	attachUniforms(currentDE, currentS->uniformBuffer());
 
-// 	linkLayouts(entity, shaderBuffer[entity->getShader()].getLayoutBuffer());
+	linkLayouts(currentM, currentS->layoutBuffer());
 
-// 	if (entity->getTexture() != 0) {
-// 		glBindTexture(entity->getTextureType(), entity->getTexture());
-// 	}
+	// if (entity->getTexture() != 0) {
+		glBindTexture(GL_TEXTURE_2D, currentT->id());
+	// }
 
-// 	if (strcmp(shaderBuffer[entity->getShader()].getName(), "reflection") == 0 ||
-// 		strcmp(shaderBuffer[entity->getShader()].getName(), "refraction/glass") == 0 ||
-// 		strcmp(shaderBuffer[entity->getShader()].getName(), "reflection/diamond") == 0) {
-// 		if (doReflection) {
-// 			glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
-// 		}
-// 		else {
-// 			glBindTexture(GL_TEXTURE_CUBE_MAP, entityBuffer[0]->getTexture());
-// 		}
-// 	}
+	// if (strcmp(shaderBuffer[entity->getShader()].getName(), "reflection") == 0 ||
+	// 	strcmp(shaderBuffer[entity->getShader()].getName(), "refraction/glass") == 0 ||
+	// 	strcmp(shaderBuffer[entity->getShader()].getName(), "reflection/diamond") == 0) {
+	// 	if (doReflection) {
+	// 		glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
+	// 	}
+	// 	else {
+	// 		glBindTexture(GL_TEXTURE_CUBE_MAP, entityBuffer[0]->getTexture());
+	// 	}
+	// }
 
 
-// 	// check which mode things should be rendered as
-// 	if (entity->getName().compare("skybox") == 0) {
-// 		// render the skybox
-// 		glDrawArrays(GL_TRIANGLES, 0, entity->getVertices().size());
-// 		// re-enable the depth mask (now rendering also affects the depth buffer as well)
-// 		glDepthMask(GL_TRUE);
-// 	}
+	// check which mode things should be rendered as
+	// if (entity->getName().compare("skybox") == 0) {
+	// 	// render the skybox
+	// 	glDrawArrays(GL_TRIANGLES, 0, entity->getVertices().size());
+	// 	// re-enable the depth mask (now rendering also affects the depth buffer as well)
+	// 	glDepthMask(GL_TRUE);
+	// }
 
-// 	else {
-// 		switch (renderMode) {
-// 		case wireframe:
-// 			glDrawArrays(GL_LINES, 0, entity->getVertices().size());
-// 			break;
+	// else {
+	// 	switch (renderMode) {
+	// 	case wireframe:
+	// 		glDrawArrays(GL_LINES, 0, entity->getVertices().size());
+	// 		break;
 
-// 		case vertices:
-// 			glPointSize(2.0f);
-// 			glDrawArrays(GL_POINTS, 0, entity->getVertices().size());
-// 			break;
+	// 	case vertices:
+	// 		glPointSize(2.0f);
+	// 		glDrawArrays(GL_POINTS, 0, entity->getVertices().size());
+	// 		break;
 
-// 		default:
-// 			glDrawArrays(entity->getElements(), 0, entity->getVertices().size());
+	// 	default:
+	// 		glDrawArrays(entity->getElements(), 0, entity->getVertices().size());
 
-// 		}
-// 	}
+	// 	}
+	// }
 
-// 	glDisableVertexAttribArray(0);
-// 	glDisableVertexAttribArray(1);
-// 	glDisableVertexAttribArray(2);
+	glDrawArrays(currentM->drawingMode(), 0, currentM->vertices().size() / 3);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
 }
 
 void Renderer::renderSkybox() {
@@ -594,61 +590,61 @@ void Renderer::renderSkybox() {
 }
 
 void Renderer::renderOutline() {
-// 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->outlineTextureMask, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->outlineTextureMask, 0);
 
-// 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-// 	glClear(GL_COLOR_BUFFER_BIT);
-// 	glDisable(GL_DEPTH_TEST);
-// 	glDisable(GL_STENCIL_TEST);
-// 	int previousShader = entityBuffer[this->highlightedEntity]->getShader();
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_STENCIL_TEST);
 
-// 	entityBuffer[this->highlightedEntity]->setShader(13);
-	
-// 	this->renderEntity(entityBuffer[this->highlightedEntity]);
-// 	entityBuffer[this->highlightedEntity]->setShader(previousShader);
-// 	glEnable(GL_DEPTH_TEST);
-// 	glEnable(GL_STENCIL_TEST);
-// 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	std::string previousShader = RM.material(RM.drawingEntity(RM.selectedEntity())->material())->shader();
+	RM.material(RM.drawingEntity(RM.selectedEntity())->material())->shader("S_Light");
+	this->renderEntity(RM.selectedEntity());
+	RM.material(RM.drawingEntity(RM.selectedEntity())->material())->shader(previousShader);
 
-// 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->postProcessingTexture, 0);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_STENCIL_TEST);
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
-// 	glDisable(GL_DEPTH_TEST);
-// 	glDisable(GL_STENCIL_TEST);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->postProcessingTexture, 0);
 
-// 	int shaderOutline;
-// 	if (outlineType == 0) {
-// 		shaderOutline = 12;
-// 	}
-// 	else if (outlineType == 1) {
-// 		shaderOutline = 14;
-// 	}
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_STENCIL_TEST);
 
-// 	glUseProgram(shaderBuffer[shaderOutline].getID());
+	int shaderOutline;
+	if (outlineType == 0) {
+		shaderOutline = 12;
+	}
+	else if (outlineType == 1) {
+		shaderOutline = 14;
+	}
 
-// 	int screenTexUniformID = glGetUniformLocation(shaderBuffer[shaderOutline].getID(), "screenTexture");
-// 	int outlineMaskUniformID = glGetUniformLocation(shaderBuffer[shaderOutline].getID(), "outlineMask");
+	glUseProgram(RM.shader(RM.outlineShader())->id());
 
-// 	glUniform1i(screenTexUniformID, 0);
-// 	glUniform1i(outlineMaskUniformID, 1);
+	int screenTexUniformID = glGetUniformLocation(RM.shader(RM.outlineShader())->id(), "screenTexture");
+	int outlineMaskUniformID = glGetUniformLocation(RM.shader(RM.outlineShader())->id(), "outlineMask");
 
-// 	glActiveTexture(GL_TEXTURE0);
-// 	glBindTexture(GL_TEXTURE_2D, this->postProcessingTexture);
+	glUniform1i(screenTexUniformID, 0);
+	glUniform1i(outlineMaskUniformID, 1);
 
-// 	glActiveTexture(GL_TEXTURE1);
-// 	glBindTexture(GL_TEXTURE_2D, this->outlineTextureMask);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, this->postProcessingTexture);
 
-// 	glEnableVertexAttribArray(0);
-// 	glBindBuffer(GL_ARRAY_BUFFER, this->screenVBO);
-// 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, this->outlineTextureMask);
 
-// 	glEnableVertexAttribArray(1);
-// 	glBindBuffer(GL_ARRAY_BUFFER, this->screenUVVBO);
-// 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, this->screenVBO);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-// 	glDrawArrays(GL_TRIANGLES, 0, 6);
-// 	glActiveTexture(GL_TEXTURE0);
-// 	glEnable(GL_DEPTH_TEST);
-// 	glEnable(GL_STENCIL_TEST);
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, this->screenUVVBO);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glActiveTexture(GL_TEXTURE0);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_STENCIL_TEST);
 }
 
 
@@ -658,15 +654,15 @@ void Renderer::renderMultisamplePostProcessing() {
 
 	glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
 
-	if (depthBuffer) {
+	if (RM.depth()) {
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture);
 		glUseProgram(RM.shader("RS_DepthShader")->id());
-		glUniform1i(glGetUniformLocation(RM.shader("RS_DepthShader")->id(), "samples"), 1);
+		glUniform1i(glGetUniformLocation(RM.shader("RS_DepthShader")->id(), "samples"), RM.samples());
 	}
 	else {
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenTexture);
 		glUseProgram(RM.shader("RS_ScreenShader")->id());
-		glUniform1i(glGetUniformLocation(RM.shader("RS_ScreenShader")->id(), "samples"), samples);
+		glUniform1i(glGetUniformLocation(RM.shader("RS_ScreenShader")->id(), "samples"), RM.samples());
 
 		glUniform1i(glGetUniformLocation(RM.shader("RS_ScreenShader")->id(), "effect"), this->postProcessingEffect);
 
@@ -760,7 +756,7 @@ void Renderer::resizeScreen() {
 	/* ACTIVE TEXTURE: screenTexture */
 
 	// create the actual texture for image with res: screenWidth x screenHeight
-	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB, window.framebufferWidth(), window.framebufferHeight(), false);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, RM.samples(), GL_RGB, window.framebufferWidth(), window.framebufferHeight(), false);
 	printf("%d, %d\n", window.width(), window.height());
 
 	// set the texture filters for mipmaps
@@ -768,7 +764,7 @@ void Renderer::resizeScreen() {
 	glGenTextures(1, &this->screenDepthTexture);
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, this->screenDepthTexture);
 
-	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_DEPTH_STENCIL, window.framebufferWidth(), window.framebufferHeight(), false);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, RM.samples(), GL_DEPTH_STENCIL, window.framebufferWidth(), window.framebufferHeight(), false);
 
 	glDeleteTextures(1, &this->outlineTextureMask);
 	glGenTextures(1, &this->outlineTextureMask);
@@ -896,11 +892,6 @@ void Renderer::displayBoundingBox() {
 // 	}
 }
 
-
-void Renderer::setHighlightedEntity(int index) {
-// 	this->highlightedEntity = index;
-}
-
 // // pass the correct values to the corresponding uniforms in the shader
 void Renderer::attachUniforms(DrawingEntity* entity, std::vector<uniform_t> uniformBuffer) {
 	// cycle through the uniformBuffer of the shader
@@ -928,19 +919,19 @@ void Renderer::attachUniforms(DrawingEntity* entity, std::vector<uniform_t> unif
 
 		// if the uniform is "projectionMatrix", set it to the main camera projection matrix in the projectionBuffer
 		else if (strcmp(uniformBuffer[i].name, "projectionMatrix") == 0) {
-			// glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(projectionBuffer[defaultCamera][0][0]));
 			glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(RM.projection()[0][0]));
 		}
 
 		// if the uniform is "lightPosition", pass the light position (x, y, z)
 		else if (strcmp(uniformBuffer[i].name, "lightPosition") == 0) {
-			glm::vec3 lightPosition = RM.drawingEntity("DE_Light")->position();
+			glm::vec3 lightPosition = RM.drawingEntity(RM.mainLight())->position();
 			glUniform3f(uniformBuffer[i].id, lightPosition.x, lightPosition.y, lightPosition.z);
 		}
 
 		// if the uniform is "eyePosition", pass the camera position (x, y, z)
 		else if (strcmp(uniformBuffer[i].name, "eyePosition") == 0) {
-			glUniform3f(uniformBuffer[i].id, RM.camera()->position().x, RM.camera()->position().y, RM.camera()->position().z);
+			glm::vec3 cameraPosition = RM.camera()->position();
+			glUniform3f(uniformBuffer[i].id, cameraPosition.x, cameraPosition.y, cameraPosition.z);
 		}
 	}
 }
@@ -1249,11 +1240,11 @@ unsigned int Renderer::getOutlineMaskTexture() {
 }
 
 unsigned int Renderer::getDepthBufferTexture() {
-	bool tmpVar = depthBuffer;
+	bool tmpVar = RM.depth();
 
-	depthBuffer = true;
+	RM.depth(true);
 	this->renderMultisamplePostProcessing();
-	depthBuffer = tmpVar;
+	RM.depth(tmpVar);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

@@ -15,9 +15,7 @@ unsigned int screenHeight = 720;
 unsigned int windowWidth = 1280;
 unsigned int windowHeight = 720;
 
-int samples = 16;
 bool vsync = true;
-bool fullscreen = false;
 
 glm::mat4 Projection;
 glm::mat4 Projection2;
@@ -38,12 +36,6 @@ bool drawBS2;
 bool drawBS3;
 bool doReflection;
 
-// bool updateResolution;
-
-bool updated;
-
-bool depthBuffer;
-
 int defaultCamera;
 
 int outlineType;
@@ -62,24 +54,6 @@ Camera camera2(glm::vec3(0.0f, 0.0f, 0.0f),
 			   glm::vec3(0.0f, -1.0f, 0.0f));
 
 Entity* light = new Entity("light");
-
-// void resizeCallback(GLFWwindow* window, int x, int y) {
-// 	int width;
-// 	int height;
-// 	glfwGetFramebufferSize(window, &width, &height);
-
-// 	glViewport(0, 0, width, height);
-
-// 	screenWidth = width;
-// 	screenHeight = height;
-
-// 	if (!fullscreen) {
-// 		windowWidth = screenWidth;
-// 		windowHeight = screenHeight;
-// 	}
-
-// 	updateResolution = true;
-// }
 
 
 GLFWwindow* initGLFW_OpenGL(std::string name) {
@@ -379,9 +353,6 @@ GLFWwindow* setup() {
 	drawBS2 = false;
 	drawBS3 = false;
 	doReflection = false;
-	// updateResolution = false;
-	updated = true;
-	depthBuffer = false;
 	outlineType = 0;
 
 	defaultCamera = 0;

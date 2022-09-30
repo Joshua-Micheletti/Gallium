@@ -1,24 +1,8 @@
 #include "ui.h"
-#include "../../init.h"
-#include "../../Model/entity.h"
-#include <stdlib.h>
-#include <vector>
-#include <string>
-#include <math.h>
-#include <sstream>
-#include <iomanip>
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-#include "../renderer/renderer.h"
-#include "../../Controller/eventHandler.h"
-#include "GLFW/glfw3.h"
-#include <stdio.h>
-#include <algorithm>
+
 
 // initialize the fields and formats the texts styles
 UI::UI(Renderer* renderer, EventHandler* eventHandler) {
-	// get the window reference
 	this->renderer = renderer;
 	this->eventHandler = eventHandler;
 
@@ -161,13 +145,14 @@ void UI::drawLeftColumn() {
 	if (ImGui::CollapsingHeader("Entities")) {
         std::vector<std::string> entities = RM.drawingEntityNames();
 		for (int i = 0; i < entities.size(); i++) {
-			if (ImGui::Selectable(entities[i].c_str(), selected == i)) {
+			// if (ImGui::Selectable("test", false));
+			if (ImGui::Selectable(entities[i].c_str(), false)) {
 				if (selected == i) {
 					selected = -1;
-					selectedEntity = "";
+					RM.selectedEntity("");
 				}
 				else {
-					selectedEntity = entities[i];
+					RM.selectedEntity(entities[i]);
 					selected = i;
 				}
 			}
@@ -176,22 +161,22 @@ void UI::drawLeftColumn() {
 
 	ImGui::Separator();
 
-	if (selectedEntity.size() != 0) {
-		ImGui::Text(std::string("Entity: ").append(selectedEntity).c_str());
-		if (ImGui::CollapsingHeader("Properties")) {
+	// if (RM.selectedEntity().size() != 0) {
+	// 	ImGui::Text(std::string("Entity: ").append(selectedEntity).c_str());
+	// 	if (ImGui::CollapsingHeader("Properties")) {
 			
-			if (ImGui::TreeNode("Position")) {
-				float x = RM.drawingEntity(selectedEntity)->position().x;
-				ImGui::DragFloat("X", &x, 0.005f);
-				float y = RM.drawingEntity(selectedEntity)->position().y;
-				ImGui::DragFloat("Y", &y, 0.005f);
-				float z = RM.drawingEntity(selectedEntity)->position().z;
-				ImGui::DragFloat("Z", &z, 0.005f);
+	// 		if (ImGui::TreeNode("Position")) {
+	// 			float x = RM.drawingEntity(selectedEntity)->position().x;
+	// 			ImGui::DragFloat("X", &x, 0.005f);
+	// 			float y = RM.drawingEntity(selectedEntity)->position().y;
+	// 			ImGui::DragFloat("Y", &y, 0.005f);
+	// 			float z = RM.drawingEntity(selectedEntity)->position().z;
+	// 			ImGui::DragFloat("Z", &z, 0.005f);
 
-				RM.drawingEntity(selectedEntity)->position(glm::vec3(x, y, z));
+	// 			RM.drawingEntity(selectedEntity)->position(glm::vec3(x, y, z));
 
-				ImGui::TreePop();
-			}
+	// 			ImGui::TreePop();
+	// 		}
 
 			// if (ImGui::TreeNode("Rotation")) {
 			// 	float x = selectedEntity->getRotationFactor().x;
@@ -255,8 +240,8 @@ void UI::drawLeftColumn() {
 			// ImGui::Combo("###OutlineDropdown", &outlineCurrent, outlineCarray, outlineArraySize);
 
 			// outlineType = outlineCurrent;
-		}
-	}
+	// 	}
+	// }
 
 	ImGui::PushStyleColor(ImGuiCol_ResizeGrip, 0);
 
@@ -271,7 +256,8 @@ void UI::drawLeftColumn() {
 
 	this->leftColumnSize = ImGui::GetWindowSize();
 
-	this->renderer->setHighlightedEntity(selected);
+	// this->renderer->setHighlightedEntity(selected);
+	
 	
 	ImGui::SetWindowPos(ImVec2(0, this->menuBarSize.y));
 
@@ -316,48 +302,24 @@ void UI::drawRightColumn() {
 			}
 		}
 
-		tmp = fullscreen;
-		if (ImGui::MenuItem("Fullscreen", NULL, &fullscreen)) {
-			if (tmp != fullscreen) {
-				if (fullscreen == true) {
-					GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-					const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-					glfwSetWindowMonitor(window.window(), monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+		tmp = window.fullscreen();
+		if (ImGui::MenuItem("Fullscreen", NULL, &tmp));
+		window.fullscreen(tmp);
 
-					int width;
-					int height;
-					glfwGetFramebufferSize(window.window(), &width, &height);
-					glViewport(0, 0, mode->width, mode->height);
-					screenWidth = mode->width;
-					screenHeight = mode->height;
-					updateResolution = true;
-				}
-				else {
-					glfwSetWindowMonitor(window.window(), NULL, 0, 0, windowWidth, windowHeight, 60);
-					glfwSetWindowPos(window.window(), 40, 40);
+		tmp = RM.depth();
+		if (ImGui::MenuItem("Depth Buffer", NULL, &tmp));
+		RM.depth(tmp);
 
-					int width;
-					int height;
-					glfwGetFramebufferSize(window.window(), &width, &height);
-					glViewport(0, 0, width, height);
-					screenWidth = width;
-					screenHeight = height;
-					updateResolution = true;
-				}
-			}
+		item_current = log2(RM.samples());
 
-		}
-
-		if (ImGui::MenuItem("Depth Buffer", NULL, &depthBuffer));
-
-		const char* items[] = {"1", "2", "4", "8", "16"};
+		const char* items[] = {"1", "2", "4", "8", "16", "32"};
 		
 		ImGui::Text("MSAA");
 		ImGui::SameLine();
 		ImGui::Combo("###MSAADropdown", &item_current, items, IM_ARRAYSIZE(items));
-	}
 
-	samples = pow(2, item_current + 1);
+		RM.samples((int)pow(2, item_current));
+	}
 
 	if (ImGui::CollapsingHeader("Bounding Box Display")) {
 		if (ImGui::MenuItem("Object Bounding Box", NULL, &drawOBB));
@@ -760,6 +722,11 @@ void UI::drawMenuBar() {
 	}
 }
 
+void UI::drawCrosshair() {
+	// TO IMPLEMENT
+}
+
+
 void UI::drawImGui() {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -780,6 +747,8 @@ void UI::drawImGui() {
 	}
 
 	this->drawFPSWindow();
+
+	this->drawCrosshair();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -24,6 +24,15 @@ class Window {
         void width(int);
         void height(int);
 
+        bool fullscreen();
+        void fullscreen(bool);
+
+        bool updateResolution();
+        void updateResolution(bool);
+
+        bool resolutionUpdated();
+        void resolutionUpdated(bool);
+
     private:
         GLFWwindow* window_;
         int width_;
@@ -32,6 +41,11 @@ class Window {
         int frameHeight_;
         int framebufferWidth_;
         int framebufferHeight_;
+
+        bool fullscreen_;
+
+        bool updateResolution_;
+        bool resolutionUpdated_;
 
         void updateWindowSize();
         void updateFrameSize();

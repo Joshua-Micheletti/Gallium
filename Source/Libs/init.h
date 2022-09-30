@@ -57,9 +57,7 @@ extern unsigned int screenWidth;
 extern unsigned int screenHeight;
 extern unsigned int windowWidth;
 extern unsigned int windowHeight;
-extern int samples;
 extern bool vsync;
-extern bool fullscreen;
 
 extern glm::mat4 Projection;
 extern glm::mat4 Projection2;
@@ -82,9 +80,6 @@ extern bool drawBS;
 extern bool drawBS2;
 extern bool drawBS3;
 extern bool doReflection;
-// extern bool updateResolution;
-extern bool updated;
-extern bool depthBuffer;
 
 extern int defaultCamera;
 

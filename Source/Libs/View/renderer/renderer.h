@@ -86,7 +86,7 @@ class Renderer {
 		void resizeScreen();
 		void renderEntities(bool);
 		void renderSkybox();
-		void renderEntity(Entity *);
+		void renderEntity(std::string);
 		void attachUniforms(DrawingEntity *, std::vector<uniform_t>);
 		void linkLayouts(Model*, std::vector<std::string>);
 		void renderOutline();

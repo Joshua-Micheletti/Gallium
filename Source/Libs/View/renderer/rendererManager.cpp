@@ -73,6 +73,9 @@ RendererManager::RendererManager() {
 
     this->projection_ = glm::perspective(glm::radians(45.0f), (float)1280 / (float)720, 0.1f, 10000.0f);
 
+    this->samples_ = 16;
+    this->depth_ = false;
+
     this->newShader("S_Default")->loadShader("../Shader/default/default.vert", "../Shader/default/default.frag");
     this->newTexture("T_Default")->loadTexture("../Textures/default2.jpg");
     this->newMaterial("MA_Default")->shader("S_Default")->texture("T_Default");
@@ -96,7 +99,23 @@ RendererManager::RendererManager() {
     this->newShader("S_Axis")->loadShader("../Shader/color/color.vert", "../Shader/color/color.frag");
     this->newMaterial("MA_Axis")->shader("S_Axis");
     this->newDrawingEntity("DE_Axis")->model("M_Axis")->material("MA_Axis");
+
+    this->newModel("M_Light")->loadModel("../Models/sphere7.obj");
+	this->newShader("S_Light")->loadShader("../Shader/white/white.vert", "../Shader/white/white.frag");
+	this->newMaterial("MA_Light")->shader("S_Light");
+	this->newDrawingEntity("DE_Light")->model("M_Light")->material("MA_Light");
+    this->mainLight_ = "DE_Light";
+
+    this->newShader("S_Highlight")->loadShader("../Shader/highlight/highlight.vert", "../Shader/highlight/highlight.frag");
+
+    this->newShader("S_Outline")->loadShader("../Shader/outline/outline.vert", "../Shader/outline/outline.frag");
+
+    this->outlineShader_ = "S_Outline";
+    this->highlightShader_ = "S_Highlight";
+
+    this->selectedEntity_ = "";
 }
+
 
 void RendererManager::skybox(std::string name) {
     this->skybox_ = name;
@@ -106,6 +125,41 @@ std::string RendererManager::skybox() {
     return(this->skybox_);
 }
 
+
+void RendererManager::mainLight(std::string name) {
+    this->mainLight_ = name;
+}
+
+std::string RendererManager::mainLight() {
+    return(this->mainLight_);
+}
+
+
+void RendererManager::selectedEntity(std::string name) {
+    this->selectedEntity_ = name;
+}
+
+std::string RendererManager::selectedEntity() {
+    return(this->selectedEntity_);
+}
+
+
+void RendererManager::outlineShader(std::string name) {
+    this->outlineShader_ = name;
+}
+
+std::string RendererManager::outlineShader() {
+    return(this->outlineShader_);
+}
+
+
+void RendererManager::highlightShader(std::string name) {
+    this->highlightShader_ = name;
+}
+
+std::string RendererManager::highlightShader() {
+    return(this->highlightShader_);
+}
 
 // RETURN BUFFERS
 std::map<std::string, DrawingEntity*> RendererManager::drawingEntityBuffer() {
@@ -153,6 +207,7 @@ std::vector<DrawingEntity*> RendererManager::drawingEntities() {
 std::vector<std::string> RendererManager::drawingEntityNames() {
     return(extractKeys(this->drawingEntityBuffer_));
 }
+
 
 // MODEL
 Model* RendererManager::model(std::string name) {
@@ -210,6 +265,7 @@ std::vector<std::string> RendererManager::shaderNames() {
     return(extractKeys(this->shaderBuffer_));
 }
 
+
 // TEXTURE
 Texture* RendererManager::texture(std::string name) {
     return(this->textureBuffer_[name]);
@@ -226,6 +282,7 @@ std::vector<Texture*> RendererManager::textures() {
 }
 
 
+
 Camera* RendererManager::camera() {
     return(this->camera_);
 }
@@ -238,6 +295,22 @@ void RendererManager::projection(glm::mat4 p) {
     this->projection_ = p;
 }
 
+
+int RendererManager::samples() {
+    return(this->samples_);
+}
+
+RendererManager* RendererManager::samples(int s) {
+    this->samples_ = s;
+}
+
+bool RendererManager::depth() {
+    return(this->depth_);
+}
+
+RendererManager* RendererManager::depth(bool d) {
+    this->depth_ = d;
+}
 
 // PRINTS
 void RendererManager::printFullDE(std::string name) {

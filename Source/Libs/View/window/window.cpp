@@ -10,11 +10,7 @@ void resizeCallback(GLFWwindow* windowObj, int x, int y) {
 	glfwGetFramebufferSize(windowObj, &width, &height);
 
 	glViewport(0, 0, width, height);
-
-	// if (!fullscreen) {
-	// 	windowWidth = screenWidth;
-	// 	windowHeight = screenHeight;
-	// }
+	
 	updateResolution = true;
 }
 
@@ -78,4 +74,35 @@ void Window::updateWindowSize() {
 
 void Window::updateFramebufferSize() {
 	glfwGetFramebufferSize(this->window_, &this->framebufferWidth_, &this->framebufferHeight_);
+}
+
+
+void Window::fullscreen(bool f) {
+	if (this->fullscreen_ != f) {
+		if (f == true) {
+			GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+			const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+			glfwSetWindowMonitor(this->window_, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+			int width;
+			int height;
+			glfwGetFramebufferSize(this->window_, &width, &height);
+			glViewport(0, 0, mode->width, mode->height);
+			this->updateResolution_ = true;
+		}
+		else {
+			glfwSetWindowMonitor(this->window_, NULL, 0, 0, 1280, 720, 60);
+			glfwSetWindowPos(this->window_, 40, 40);
+			int width;
+			int height;
+			glfwGetFramebufferSize(this->window_, &width, &height);
+			glViewport(0, 0, width, height);
+			this->updateResolution_ = true;
+		}
+	}
+
+	this->fullscreen_ = f;
+}
+
+bool Window::fullscreen() {
+	return(this->fullscreen_);
 }

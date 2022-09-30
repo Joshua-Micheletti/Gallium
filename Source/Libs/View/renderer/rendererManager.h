@@ -49,6 +49,12 @@ class RendererManager {
         Shader* newShader(std::string);
         Texture* newTexture(std::string);
 
+        int samples();
+        RendererManager* samples(int);
+
+        bool depth();
+        RendererManager* depth(bool);
+
         void printFullDE(std::string);
         void printFullM(std::string);
         void printFullMA(std::string);    
@@ -62,6 +68,18 @@ class RendererManager {
         std::string skybox();
         void skybox(std::string);
 
+        std::string mainLight();
+        void mainLight(std::string);
+
+        std::string selectedEntity();
+        void selectedEntity(std::string);
+
+        std::string outlineShader();
+        void outlineShader(std::string);
+
+        std::string highlightShader();
+        void highlightShader(std::string);
+
     private:
         std::map<std::string, DrawingEntity*> drawingEntityBuffer_;
         std::map<std::string, Model*> modelBuffer_;
@@ -72,6 +90,13 @@ class RendererManager {
         Camera* camera_;
         glm::mat4 projection_;
         std::string skybox_;
+        std::string mainLight_;
+        std::string selectedEntity_;
+        std::string outlineShader_;
+        std::string highlightShader_;
+
+        int samples_;
+        bool depth_;
 };
 
 #endif

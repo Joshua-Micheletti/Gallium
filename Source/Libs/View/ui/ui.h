@@ -1,8 +1,20 @@
+#include "../../global.h"
+#include "../../init.h"
+#include "../../Model/entity.h"
+#include <stdlib.h>
+#include <vector>
 #include <string>
+#include <math.h>
+#include <sstream>
+#include <iomanip>
 #include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 #include "../renderer/renderer.h"
 #include "../../Controller/eventHandler.h"
-#include "../../global.h"
+#include "GLFW/glfw3.h"
+#include <stdio.h>
+#include <algorithm>
 
 // class that shows onscreen informations
 class UI {
@@ -56,6 +68,8 @@ class UI {
 		void drawRightColumn();
 
 		void drawBottomRow();
+
+		void drawCrosshair();
 
 		void drawImGui();
 

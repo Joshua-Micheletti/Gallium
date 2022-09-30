@@ -7,6 +7,7 @@ std::string strNoColor = "\033[0m";
 
 
 bool updateResolution = false;
+bool updated = true;
 
 
 int maxLength(std::vector<float> vector) {
