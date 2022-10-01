@@ -260,11 +260,12 @@ void Renderer::render() {
 				GL_KEEP,	   // stencil pass, depth fail
 				GL_REPLACE);   // stencil pass, depth pass
 	
-	glStencilMask(0xFF);
+	glStencilMask(255);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
+	glStencilMask(0);
+	glStencilFunc(GL_ALWAYS, 1, 255);
 	this->renderSkybox();
-
 	this->renderEntities(false);
 	
 	// draw the bounding box for each entity
@@ -342,14 +343,10 @@ void Renderer::renderReflectionCubemap() {
 
 // render all entities with their corresponding shader (forward rendering)
 void Renderer::renderEntities(bool reflection) {
-	glStencilMask(0);
-	glStencilFunc(GL_ALWAYS, 1, 255);
-
 	std::vector<DrawingEntity*> drawingEntities = RM.drawingEntities(); 
 	// render entities
 	for (int i = 0; i < drawingEntities.size(); i++) {
-		// CAREFUL
-		if (drawingEntities[i] != RM.drawingEntity(RM.skybox())) { //&& drawingEntities[i] != RM.drawingEntity(RM.selectedEntity())) {
+		if (drawingEntities[i] != RM.drawingEntity(RM.skybox()) && drawingEntities[i] != RM.drawingEntity(RM.selectedEntity())) {
 			DrawingEntity* currentDE = drawingEntities[i];
 			Model* currentM = RM.model(currentDE->model());
 			Material* currentMA = RM.material(currentDE->material());
@@ -461,25 +458,17 @@ void Renderer::renderEntities(bool reflection) {
 	// render highlighted entity
 	// printf("%s\n", RM.selectedEntity().c_str());
 	if (RM.selectedEntity().size() != 0 && reflection == false) {
-		printf("rendering selected entity!\n");
 		glStencilFunc(GL_ALWAYS, 1, 255);
 		glStencilMask(255);
 		this->renderEntity(RM.selectedEntity());
-
 		glStencilMask(0);
 		glStencilFunc(GL_NOTEQUAL, 1, 255);
 
 		glDisable(GL_DEPTH_TEST);
-		// int previousShader = entityBuffer[this->highlightedEntity]->getShader();
-		// entityBuffer[this->highlightedEntity]->setShader(11);
-		// this->renderEntity(RM.selectedEntity());
-		// entityBuffer[this->highlightedEntity]->setShader(previousShader);
-
 		std::string previousShader = RM.material(RM.drawingEntity(RM.selectedEntity())->material())->shader();
 		RM.material(RM.drawingEntity(RM.selectedEntity())->material())->shader(RM.highlightShader());
 		this->renderEntity(RM.selectedEntity());
 		RM.material(RM.drawingEntity(RM.selectedEntity())->material())->shader(previousShader);
-
 		glEnable(GL_DEPTH_TEST);
 
 		// wireframe outline implementation
@@ -496,7 +485,6 @@ void Renderer::renderEntities(bool reflection) {
 		// 	glEnable(GL_DEPTH_TEST);
 		// }
 	}
-	printf("ELEMENTS: %d\n", RM.drawingEntities().size());
 }
 
 void Renderer::renderEntity(std::string entity) {
@@ -932,6 +920,30 @@ void Renderer::attachUniforms(DrawingEntity* entity, std::vector<uniform_t> unif
 		else if (strcmp(uniformBuffer[i].name, "eyePosition") == 0) {
 			glm::vec3 cameraPosition = RM.camera()->position();
 			glUniform3f(uniformBuffer[i].id, cameraPosition.x, cameraPosition.y, cameraPosition.z);
+		}
+
+		else if (strcmp(uniformBuffer[i].name, "lightColor") == 0) {
+			glm::vec3 lightColor = RM.drawingEntity(RM.mainLight())->lightColor();
+			glUniform3f(uniformBuffer[i].id, lightColor.x, lightColor.y, lightColor.z);
+		}
+
+		else if (strcmp(uniformBuffer[i].name, "ambient") == 0) {
+			glm::vec3 ambient = RM.material(entity->material())->ambient();
+			glUniform3f(uniformBuffer[i].id, ambient.x, ambient.y, ambient.z);
+		}
+
+		else if (strcmp(uniformBuffer[i].name, "diffuse") == 0) {
+			glm::vec3 diffuse = RM.material(entity->material())->diffuse();
+			glUniform3f(uniformBuffer[i].id, diffuse.x, diffuse.y, diffuse.z);
+		}
+
+		else if (strcmp(uniformBuffer[i].name, "specular") == 0) {
+			glm::vec3 specular = RM.material(entity->material())->specular();
+			glUniform3f(uniformBuffer[i].id, specular.x, specular.y, specular.z);
+		}
+
+		else if (strcmp(uniformBuffer[i].name, "shininess") == 0) {
+			glUniform1f(uniformBuffer[i].id, RM.material(entity->material())->shininess());
 		}
 	}
 }

@@ -13,6 +13,7 @@ extern int countFaces(std::vector<float>);
 extern void createBuffer(std::vector<float>, unsigned int*);
 extern void readOBJ(std::string, std::vector<float>&, std::vector<float>&, std::vector<float>&);
 extern void polarToCartesian(float, float, float*, float*);
+extern int find(std::string, std::vector<std::string>);
 
 extern std::string strRed;
 extern std::string strGreen;

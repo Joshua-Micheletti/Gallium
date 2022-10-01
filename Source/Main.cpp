@@ -2,10 +2,9 @@
 #include "Libs/lib.h"
 
 void testFunc() {
-	RM.newModel("M_Test")->loadModel("../Models/sphere7.obj");
-	RM.newShader("S_Test")->loadShader("../Shader/lightingTex/lightVertexTexture.c", "../Shader/lightingTex/lightFragmentTexture.c");
-	RM.newTexture("T_Test")->loadTexture("../Textures/default2.jpg");
-	RM.newMaterial("MA_Test")->shader("S_Test")->texture("T_Test");
+	RM.newModel("M_Test")->loadModel("../Models/guy7.obj");
+	RM.newShader("S_Test")->loadShader("../Shader/lightingTex/lightingTex.vert", "../Shader/lightingTex/lightingTex.frag");
+	RM.newMaterial("MA_Test")->shader("S_Test");
 	RM.newDrawingEntity("DE_Test")->model("M_Test")->material("MA_Test");
 
 	RM.drawingEntity("DE_Test")->translate(glm::vec3(0.0f, 0.0f, 0.0f))->scale(glm::vec3(2.0, 2.0, 2.0));
@@ -21,8 +20,6 @@ int main(void) {
 		eventHandler.routine();
 		renderer.render();
 		interface.drawInfo();
-
-		printf("new frame\n");
 
 		glfwPollEvents();
 		glfwSwapBuffers(window.window());

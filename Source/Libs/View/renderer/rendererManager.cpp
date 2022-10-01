@@ -103,11 +103,10 @@ RendererManager::RendererManager() {
     this->newModel("M_Light")->loadModel("../Models/sphere7.obj");
 	this->newShader("S_Light")->loadShader("../Shader/white/white.vert", "../Shader/white/white.frag");
 	this->newMaterial("MA_Light")->shader("S_Light");
-	this->newDrawingEntity("DE_Light")->model("M_Light")->material("MA_Light");
+	this->newDrawingEntity("DE_Light")->model("M_Light")->material("MA_Light")->isLight(true)->lightColor(glm::vec3(1));
     this->mainLight_ = "DE_Light";
 
     this->newShader("S_Highlight")->loadShader("../Shader/highlight/highlight.vert", "../Shader/highlight/highlight.frag");
-
     this->newShader("S_Outline")->loadShader("../Shader/outline/outline.vert", "../Shader/outline/outline.frag");
 
     this->outlineShader_ = "S_Outline";
@@ -185,7 +184,11 @@ std::map<std::string, Texture*> RendererManager::textureBuffer() {
 
 // DRAWING ENTITY
 DrawingEntity* RendererManager::drawingEntity(std::string name) {
-    return(this->drawingEntityBuffer_[name]);
+    if (this->drawingEntityBuffer_.find(name) != this->drawingEntityBuffer_.end()) {
+        return(this->drawingEntityBuffer_[name]);
+    } else {
+        return(NULL);
+    }
 }
 
 DrawingEntity* RendererManager::newDrawingEntity(std::string name) {
@@ -245,6 +248,10 @@ std::vector<Material*> RendererManager::materials() {
     return(extractValues(this->materialBuffer_));
 }
 
+std::vector<std::string> RendererManager::materialNames() {
+    return(extractKeys(this->materialBuffer_));
+}
+
 
 // SHADER
 Shader* RendererManager::shader(std::string name) {
@@ -281,6 +288,9 @@ std::vector<Texture*> RendererManager::textures() {
     return(extractValues(this->textureBuffer_));
 }
 
+std::vector<std::string> RendererManager::textureNames() {
+    return(extractKeys(this->textureBuffer_));
+}
 
 
 Camera* RendererManager::camera() {

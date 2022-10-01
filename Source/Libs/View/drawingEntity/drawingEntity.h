@@ -33,10 +33,10 @@ class DrawingEntity {
         DrawingEntity* position(glm::vec3);
 
         glm::vec3 lightColor();
-        void lightColor(glm::vec3);
+        DrawingEntity* lightColor(glm::vec3);
 
         bool isLight();
-        void isLight(bool);
+        DrawingEntity* isLight(bool);
 
         void printFull();
 

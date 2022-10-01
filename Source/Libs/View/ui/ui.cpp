@@ -161,22 +161,22 @@ void UI::drawLeftColumn() {
 
 	ImGui::Separator();
 
-	// if (RM.selectedEntity().size() != 0) {
-	// 	ImGui::Text(std::string("Entity: ").append(selectedEntity).c_str());
-	// 	if (ImGui::CollapsingHeader("Properties")) {
+	if (RM.selectedEntity().size() != 0) {
+		ImGui::Text(std::string("Entity: ").append(selectedEntity).c_str());
+		if (ImGui::CollapsingHeader("Properties")) {
 			
-	// 		if (ImGui::TreeNode("Position")) {
-	// 			float x = RM.drawingEntity(selectedEntity)->position().x;
-	// 			ImGui::DragFloat("X", &x, 0.005f);
-	// 			float y = RM.drawingEntity(selectedEntity)->position().y;
-	// 			ImGui::DragFloat("Y", &y, 0.005f);
-	// 			float z = RM.drawingEntity(selectedEntity)->position().z;
-	// 			ImGui::DragFloat("Z", &z, 0.005f);
+			if (ImGui::TreeNode("Position")) {
+				float x = RM.drawingEntity(selectedEntity)->position().x;
+				ImGui::DragFloat("X", &x, 0.005f);
+				float y = RM.drawingEntity(selectedEntity)->position().y;
+				ImGui::DragFloat("Y", &y, 0.005f);
+				float z = RM.drawingEntity(selectedEntity)->position().z;
+				ImGui::DragFloat("Z", &z, 0.005f);
 
-	// 			RM.drawingEntity(selectedEntity)->position(glm::vec3(x, y, z));
+				RM.drawingEntity(selectedEntity)->position(glm::vec3(x, y, z));
 
-	// 			ImGui::TreePop();
-	// 		}
+				ImGui::TreePop();
+			}
 
 			// if (ImGui::TreeNode("Rotation")) {
 			// 	float x = selectedEntity->getRotationFactor().x;
@@ -204,24 +204,41 @@ void UI::drawLeftColumn() {
 
 			ImGui::Separator();
 
-			// std::vector<std::string> shaderNames = RM.shaderNames();
-            // std::vector<char*> cShaderNames;
-			// for (int i = 0; i < shaderNames.size(); i++) {
-			// 	shaderNames.push_back(shaderNames[i].c_str());
-			// }
+			std::vector<std::string> materialNames = RM.materialNames();
+            std::vector<char*> cMaterialNames;
+			for (int i = 0; i < materialNames.size(); i++) {
+				cMaterialNames.push_back((char*)materialNames[i].c_str());
+			}
 
-			// static int item_current;
-			// char** Carray = cShaderNames.data();
+			static int item_current;
+			char** Carray = cMaterialNames.data();
 
-			// size_t arraySize = shaderNames.size();
+			size_t arraySize = materialNames.size();
 
-			// item_current = RM.material(RM.drawingEntity(selectedEntity)->material())->shader();
+			item_current = find(RM.drawingEntity(RM.selectedEntity())->material(), materialNames);
 
-			// ImGui::Text("Shader");
-			// ImGui::SameLine();
-			// ImGui::Combo("###ShaderDropdown", &item_current, Carray, arraySize);
+			ImGui::Text("Material");
+			ImGui::SameLine();
+			ImGui::Combo("###MaterialDropdown", &item_current, Carray, arraySize);
 
-			// selectedEntity->setShader(item_current);
+			RM.drawingEntity(RM.selectedEntity())->material(materialNames[item_current]);
+
+			if (RM.drawingEntity(RM.selectedEntity())->isLight()) {
+				ImGui::Separator();
+
+				static float lightColor[3] = { 1.0, 1.0, 1.0 };
+
+				lightColor[0] = RM.drawingEntity(RM.selectedEntity())->lightColor().x;
+				lightColor[1] = RM.drawingEntity(RM.selectedEntity())->lightColor().y;
+				lightColor[2] = RM.drawingEntity(RM.selectedEntity())->lightColor().z;
+
+				ImGui::ColorEdit3("Light Color", lightColor);
+
+				RM.drawingEntity(RM.selectedEntity())->lightColor(glm::vec3(lightColor[0], lightColor[1], lightColor[2]));
+			}
+			
+
+		
 
 			// std::vector<char*> outlineNames;
 
@@ -240,8 +257,8 @@ void UI::drawLeftColumn() {
 			// ImGui::Combo("###OutlineDropdown", &outlineCurrent, outlineCarray, outlineArraySize);
 
 			// outlineType = outlineCurrent;
-	// 	}
-	// }
+		}
+	}
 
 	ImGui::PushStyleColor(ImGuiCol_ResizeGrip, 0);
 
@@ -321,16 +338,16 @@ void UI::drawRightColumn() {
 		RM.samples((int)pow(2, item_current));
 	}
 
-	if (ImGui::CollapsingHeader("Bounding Box Display")) {
-		if (ImGui::MenuItem("Object Bounding Box", NULL, &drawOBB));
-		if (ImGui::MenuItem("External Axis Aligned Bounding Box", NULL, &drawAABB1));
-		if (ImGui::MenuItem("Internal Axis Aligned Bounding Box", NULL, &drawAABB2));
-		if (ImGui::MenuItem("Average Axis Aligned Bounding Box", NULL, &drawAABB3));
-		if (ImGui::MenuItem("True Axis Aligned Bounding Box", NULL, &drawAABB4));
-		if (ImGui::MenuItem("Internal Bounding Sphere", NULL, &drawBS));
-		if (ImGui::MenuItem("External Bounding Sphere", NULL, &drawBS2));
-		if (ImGui::MenuItem("True Bounding Sphere", NULL, &drawBS3));
-	}
+	// if (ImGui::CollapsingHeader("Bounding Box Display")) {
+	// 	if (ImGui::MenuItem("Object Bounding Box", NULL, &drawOBB));
+	// 	if (ImGui::MenuItem("External Axis Aligned Bounding Box", NULL, &drawAABB1));
+	// 	if (ImGui::MenuItem("Internal Axis Aligned Bounding Box", NULL, &drawAABB2));
+	// 	if (ImGui::MenuItem("Average Axis Aligned Bounding Box", NULL, &drawAABB3));
+	// 	if (ImGui::MenuItem("True Axis Aligned Bounding Box", NULL, &drawAABB4));
+	// 	if (ImGui::MenuItem("Internal Bounding Sphere", NULL, &drawBS));
+	// 	if (ImGui::MenuItem("External Bounding Sphere", NULL, &drawBS2));
+	// 	if (ImGui::MenuItem("True Bounding Sphere", NULL, &drawBS3));
+	// }
 
 	if (ImGui::CollapsingHeader("Post Processing Effect")) {
 		static int selectedEffect = 0;
@@ -502,20 +519,105 @@ void UI::drawBottomRow() {
 			height = std::min(ImGui::GetWindowSize().y - 20.0f, 200.0f);
 		}
 
-		float imageWidth = (float)window.width() / (float)window.height() * height;
-		float imageHeight = (float)height;
+		ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
+		if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags)) {
+			if (ImGui::BeginTabItem("Textures")) {
+				float imageWidth = (float)window.width() / (float)window.height() * height;
+				float imageHeight = (float)height;
 
-		ImGui::BeginChild("OutlineMask", ImVec2((float)window.width() / (float)window.height() * height, 0));
-		this->drawImage(this->renderer->getOutlineMaskTexture(), imageWidth, imageHeight);
-		ImGui::EndChild();
+				ImGui::BeginChild("OutlineMask", ImVec2((float)window.width() / (float)window.height() * height, 0));
+				this->drawImage(this->renderer->getOutlineMaskTexture(), imageWidth, imageHeight);
+				ImGui::EndChild();
 
-		ImGui::SameLine();
+				ImGui::SameLine();
 
-		ImGui::BeginChild("Depth", ImVec2((float)window.width() / (float)window.height() * height, 0));
-		this->drawImage(this->renderer->getDepthBufferTexture(), imageWidth, imageHeight);
-		ImGui::EndChild();
+				ImGui::BeginChild("Depth", ImVec2((float)window.width() / (float)window.height() * height, 0));
+				this->drawImage(this->renderer->getDepthBufferTexture(), imageWidth, imageHeight);
+				ImGui::EndChild();
 
-		ImGui::SameLine();
+				std::vector<std::string> textureNames = RM.textureNames();
+
+				for (int i = 0; i < textureNames.size(); i++) {
+					if (RM.texture(textureNames[i])->type() == GL_TEXTURE_2D) {
+						ImGui::SameLine();
+						ImGui::BeginChild(textureNames[i].c_str(), ImVec2((float)window.width() / (float)window.height() * height, 0));
+						this->drawImage(RM.texture(textureNames[i])->id(), imageWidth, imageHeight);
+						ImGui::EndChild();
+					}			
+				}
+				ImGui::EndTabItem();
+			}
+
+			if (ImGui::BeginTabItem("Materials")) {
+				ImGui::Separator();
+
+				std::vector<std::string> materialNames = RM.materialNames();
+				std::vector<char*> cMaterialNames;
+				for (int i = 0; i < materialNames.size(); i++) {
+					cMaterialNames.push_back((char*)materialNames[i].c_str());
+				}
+
+				static int currentMaterial = 0;
+				char** Carray = cMaterialNames.data();
+
+				size_t arraySize = materialNames.size();
+
+				// currentMaterial = find(RM.material(RM.drawingEntity(RM.selectedEntity())->material())->shader(), materialNames);
+
+				ImGui::Text("Material");
+				ImGui::SameLine();
+				ImGui::Combo("###MaterialDropdown", &currentMaterial, Carray, arraySize);
+
+				float shininess = RM.material(materialNames[currentMaterial])->shininess();
+				ImGui::DragFloat("Shininess", &shininess, 0.005f);
+				RM.material(materialNames[currentMaterial])->shininess(shininess);
+
+
+				static float ambient[3] = {1.0, 1.0, 1.0};
+
+				ambient[0] = RM.material(materialNames[currentMaterial])->ambient().x;
+				ambient[1] = RM.material(materialNames[currentMaterial])->ambient().y;
+				ambient[2] = RM.material(materialNames[currentMaterial])->ambient().z;
+
+				ImGui::ColorEdit3("Ambient", ambient);
+
+				RM.material(materialNames[currentMaterial])->ambient(glm::vec3(ambient[0], ambient[1], ambient[2]));
+
+
+				static float diffuse[3] = {1.0, 1.0, 1.0};
+
+				diffuse[0] = RM.material(materialNames[currentMaterial])->diffuse().x;
+				diffuse[1] = RM.material(materialNames[currentMaterial])->diffuse().y;
+				diffuse[2] = RM.material(materialNames[currentMaterial])->diffuse().z;
+
+				ImGui::ColorEdit3("Diffuse", diffuse);
+
+				RM.material(materialNames[currentMaterial])->diffuse(glm::vec3(diffuse[0], diffuse[1], diffuse[2]));
+
+
+				static float specular[3] = {1.0, 1.0, 1.0};
+
+				specular[0] = RM.material(materialNames[currentMaterial])->specular().x;
+				specular[1] = RM.material(materialNames[currentMaterial])->specular().y;
+				specular[2] = RM.material(materialNames[currentMaterial])->specular().z;
+
+				ImGui::ColorEdit3("Specular", specular);
+
+				RM.material(materialNames[currentMaterial])->specular(glm::vec3(specular[0], specular[1], specular[2]));
+
+
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Cucumber"))
+			{
+				ImGui::Text("This is the Cucumber tab!\nblah blah blah blah blah");
+				ImGui::EndTabItem();
+			}
+			ImGui::EndTabBar();
+		}
+		
+
+		
 
 		// ImGui::BeginChild("Texture", ImVec2((float)window.width() / (float)window.height() * height, 0));
 		// this->drawImage(entityBuffer[3]->getTexture(), imageWidth, imageHeight);

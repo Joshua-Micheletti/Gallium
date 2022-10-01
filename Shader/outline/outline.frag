@@ -38,11 +38,12 @@ void main() {
 
     if (hit == true) {
 //        FragColor = vec4(1.0, 0.2, 0.0, 1.0);
-        float r = map(209, 0, 255, 0, 1);
-        float g = map(154, 0, 255, 0, 1);
-        float b = map(102, 0, 255, 0, 1);
+        // vec3(1.0, 0.6, 0.0);
+        // float r = map(255, 0, 255, 0, 1);
+        // float g = map(153, 0, 255, 0, 1);
+        // float b = map(0, 0, 255, 0, 1);
 //        FragColor = vec4(1.0, 0.2, 0.0, 1.0);
-        FragColor = vec4(r, g, b, 1.0);
+        FragColor = vec4(vec3(1.0, 0.6, 0.0), 1.0);
         
     } else {
         FragColor = texelFetch(screenTexture, newTexCoord, 0);

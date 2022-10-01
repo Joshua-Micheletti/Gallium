@@ -140,3 +140,13 @@ void polarToCartesian(float r, float teta, float* x, float* y) {
 	*x = r * cos(teta);
 	*y = r * sin(teta);
 }
+
+int find(std::string s, std::vector<std::string> v) {
+	for (int i = 0; i < v.size(); i++) {
+		if (v[i] == s) {
+			return(i);
+		}
+	}
+
+	return(-1);
+}

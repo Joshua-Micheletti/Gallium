@@ -6,6 +6,8 @@ DrawingEntity::DrawingEntity() {
     this->rotationMatrix_ = glm::mat4(1);
     this->scaleMatrix_ = glm::mat4(1);
     this->position_ = glm::vec3(0);
+    this->isLight_ = false;
+    this->lightColor_ = glm::vec3(1);
 }
 
 DrawingEntity* DrawingEntity::model(std::string name) {
@@ -69,8 +71,9 @@ bool DrawingEntity::isLight() {
     return(this->isLight_);
 }
 
-void DrawingEntity::isLight(bool flag) {
+DrawingEntity* DrawingEntity::isLight(bool flag) {
     this->isLight_ = flag;
+    return(this);
 }
 
 
@@ -78,8 +81,9 @@ glm::vec3 DrawingEntity::lightColor() {
     return(this->lightColor_);
 }
 
-void DrawingEntity::lightColor(glm::vec3 color) {
+DrawingEntity* DrawingEntity::lightColor(glm::vec3 color) {
     this->lightColor_ = color;
+    return(this);
 }
 
 
