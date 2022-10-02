@@ -17,14 +17,11 @@ in vec3 fragLightSpecular;
 
 out vec3 color;
 
-uniform sampler2D texture0;
+float map(float value, float min1, float max1, float min2, float max2) {
+  return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
+}
 
 void main() {
-  // vec3 lightColor = fragLightColor;
-  // float ambientStrength = 0.2;
-  // ambient
-  // vec3 ambient = ambientStrength * lightColor;
-  // vec3 ambient = lightColor * fragAmbient;
   vec3 ambient = fragLightAmbient * fragAmbient * 0.2;
 
   // diffuse
@@ -42,6 +39,8 @@ void main() {
   // vec3 specular = lightColor * (spec * fragSpecular);
   vec3 specular = fragLightSpecular * (spec * fragSpecular);
 
-  color = (ambient + diffuse + specular) * texture(texture0, uvs).rgb;
-  // color = (ambient + diffuse + specular) * vec3(0.1, 0.3, 1.0);
+  color = (ambient + diffuse + specular);
+  // outColor = min(max(trueDistance, 0), 1) * color;
+  // outColor = vec3(clamp(trueDistance, 0, 1), clamp(trueDistance, 0, 1), clamp(trueDistance, 0, 1));
+  // outColor = color;
 }

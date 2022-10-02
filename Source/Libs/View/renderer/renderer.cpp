@@ -945,6 +945,21 @@ void Renderer::attachUniforms(DrawingEntity* entity, std::vector<uniform_t> unif
 		else if (strcmp(uniformBuffer[i].name, "shininess") == 0) {
 			glUniform1f(uniformBuffer[i].id, RM.material(entity->material())->shininess());
 		}
+
+		else if (strcmp(uniformBuffer[i].name, "lightAmbient") == 0) {
+			glm::vec3 ambient = RM.material(RM.drawingEntity(RM.mainLight())->material())->ambient();
+			glUniform3f(uniformBuffer[i].id, ambient.x, ambient.y, ambient.z);
+		}
+
+		else if (strcmp(uniformBuffer[i].name, "lightDiffuse") == 0) {
+			glm::vec3 diffuse = RM.material(RM.drawingEntity(RM.mainLight())->material())->diffuse();
+			glUniform3f(uniformBuffer[i].id, diffuse.x, diffuse.y, diffuse.z);
+		}
+
+		else if (strcmp(uniformBuffer[i].name, "lightSpecular") == 0) {
+			glm::vec3 specular = RM.material(RM.drawingEntity(RM.mainLight())->material())->specular();
+			glUniform3f(uniformBuffer[i].id, specular.x, specular.y, specular.z);
+		}
 	}
 }
 

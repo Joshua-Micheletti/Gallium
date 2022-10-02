@@ -3,7 +3,7 @@
 
 void testFunc() {
 	RM.newModel("M_Test")->loadModel("../Models/guy7.obj");
-	RM.newShader("S_Test")->loadShader("../Shader/lightingTex/lightingTex.vert", "../Shader/lightingTex/lightingTex.frag");
+	RM.newShader("S_Test")->loadShader("../Shader/lighting/lighting.vert", "../Shader/lighting/lighting.frag");
 	RM.newMaterial("MA_Test")->shader("S_Test");
 	RM.newDrawingEntity("DE_Test")->model("M_Test")->material("MA_Test");
 

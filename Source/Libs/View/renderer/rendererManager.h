@@ -49,6 +49,12 @@ class RendererManager {
         Shader* newShader(std::string);
         Texture* newTexture(std::string);
 
+        std::string drawingEntity(DrawingEntity*);
+        std::string model(Model*);
+        std::string material(Material*);
+        std::string shader(Shader*);
+        std::string texture(Texture*);
+
         int samples();
         RendererManager* samples(int);
 

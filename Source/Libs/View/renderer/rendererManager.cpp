@@ -191,6 +191,16 @@ DrawingEntity* RendererManager::drawingEntity(std::string name) {
     }
 }
 
+std::string RendererManager::drawingEntity(DrawingEntity *d) {
+    for (auto it = this->drawingEntityBuffer_.begin(); it != this->drawingEntityBuffer_.end(); it++) {
+        if (it->second == d) {
+            return(it->first);
+        }
+    }
+
+    return("");
+}
+
 DrawingEntity* RendererManager::newDrawingEntity(std::string name) {
     DrawingEntity* de = new DrawingEntity();
 
@@ -217,6 +227,16 @@ Model* RendererManager::model(std::string name) {
     return(this->modelBuffer_[name]);
 }
 
+std::string RendererManager::model(Model *m) {
+    for (auto it = this->modelBuffer_.begin(); it != this->modelBuffer_.end(); it++) {
+        if (it->second == m) {
+            return(it->first);
+        }
+    }
+
+    return("");
+}
+
 Model* RendererManager::newModel(std::string name) {
     Model* m = new Model();
     this->modelBuffer_[name] = m;
@@ -235,6 +255,16 @@ std::vector<std::string> RendererManager::modelNames() {
 // MATERIAL
 Material* RendererManager::material(std::string name) {
     return(this->materialBuffer_[name]);
+}
+
+std::string RendererManager::material(Material *ma) {
+    for (auto it = this->materialBuffer_.begin(); it != this->materialBuffer_.end(); it++) {
+        if (it->second == ma) {
+            return(it->first);
+        }
+    }
+
+    return("");
 }
 
 Material* RendererManager::newMaterial(std::string name) {
@@ -258,6 +288,16 @@ Shader* RendererManager::shader(std::string name) {
     return(this->shaderBuffer_[name]);
 }
 
+std::string RendererManager::shader(Shader *s) {
+    for (auto it = this->shaderBuffer_.begin(); it != this->shaderBuffer_.end(); it++) {
+        if (it->second == s) {
+            return(it->first);
+        }
+    }
+
+    return("");
+}
+
 Shader* RendererManager::newShader(std::string name) {
     Shader* s = new Shader();
     this->shaderBuffer_[name] = s;
@@ -278,6 +318,16 @@ Texture* RendererManager::texture(std::string name) {
     return(this->textureBuffer_[name]);
 }
 
+std::string RendererManager::texture(Texture *t) {
+    for (auto it = this->textureBuffer_.begin(); it != this->textureBuffer_.end(); it++) {
+        if (it->second == t) {
+            return(it->first);
+        }
+    }
+
+    return("");
+}
+
 Texture* RendererManager::newTexture(std::string name) {
     Texture* s = new Texture();
     this->textureBuffer_[name] = s;
@@ -291,6 +341,7 @@ std::vector<Texture*> RendererManager::textures() {
 std::vector<std::string> RendererManager::textureNames() {
     return(extractKeys(this->textureBuffer_));
 }
+
 
 
 Camera* RendererManager::camera() {

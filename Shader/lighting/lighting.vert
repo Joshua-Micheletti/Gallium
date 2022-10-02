@@ -17,6 +17,7 @@ out vec3 fragLightAmbient;
 out vec3 fragLightDiffuse;
 out vec3 fragLightSpecular;
 
+
 uniform mat4 modelMatrix ;
 uniform mat4 viewMatrix ;
 uniform mat4 projectionMatrix ;
@@ -31,6 +32,7 @@ uniform float shininess ;
 uniform vec3 lightAmbient ;
 uniform vec3 lightDiffuse ;
 uniform vec3 lightSpecular ;
+
 
 void main() {
   gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertex, 1);
