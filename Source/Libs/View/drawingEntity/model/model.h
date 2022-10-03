@@ -8,6 +8,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "../../../utils.h"
+#include "mesh/mesh.h"
+#include <tinyobjloader.h>
 
 class Model {
     public:
@@ -29,6 +31,9 @@ class Model {
         GLenum drawingMode();
         Model* drawingMode(GLenum);
 
+        std::vector<Mesh*> meshes();
+        Model* meshes(std::vector<Mesh*>);
+
         void printVertices();
         void printUVs();
         void printNormals();
@@ -41,6 +46,8 @@ class Model {
         std::vector<float> vertices_;
         std::vector<float> uvs_;
         std::vector<float> normals_;
+
+        std::vector<Mesh*> meshes_;
 
         unsigned int vertexBuffer_;
         unsigned int uvBuffer_;

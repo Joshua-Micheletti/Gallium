@@ -7,11 +7,13 @@
 #include <GLFW/glfw3.h>
 #include <map>
 #include "View/drawingEntity/drawingEntity.h"
+#include "View/drawingEntity/model/mesh/mesh.h"
 
 extern int maxLength(std::vector<float>);
 extern int countFaces(std::vector<float>);
 extern void createBuffer(std::vector<float>, unsigned int*);
 extern void readOBJ(std::string, std::vector<float>&, std::vector<float>&, std::vector<float>&);
+extern void readMTL(std::string);
 extern void polarToCartesian(float, float, float*, float*);
 extern int find(std::string, std::vector<std::string>);
 

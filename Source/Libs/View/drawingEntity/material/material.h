@@ -28,6 +28,8 @@ class Material {
         float shininess();
         Material* shininess(float);
 
+        void loadMaterial(std::string);
+
         void printFull();
 
     private:

@@ -48,7 +48,7 @@ void readOBJ(std::string filepath, std::vector<float>& v, std::vector<float>& t,
         return;
 	}
 
-	char buffer[255];
+	char buffer[256];
 
 	std::vector<float> vertices;
 	std::vector<float> tex;
@@ -63,6 +63,9 @@ void readOBJ(std::string filepath, std::vector<float>& v, std::vector<float>& t,
 	int read = 0;
 	int verticesNumber = 0;
 	int readingNormals = 0;
+	int newMesh = 0;
+
+	int i = 0;
 
 	while (fscanf(model, "%s", buffer) != EOF) {
 		if (!readingVertex && !readingFaces && !readingTex && !readingNormals) {
@@ -78,6 +81,9 @@ void readOBJ(std::string filepath, std::vector<float>& v, std::vector<float>& t,
 			}
 			else if (buffer[0] == 'f') {
 				readingFaces = 3;
+			}
+			else if (strcmp(buffer, "usemtl") == 0) {
+				newMesh = 1;
 			}
 		}
 
@@ -122,19 +128,162 @@ void readOBJ(std::string filepath, std::vector<float>& v, std::vector<float>& t,
 
 			readingFaces--;
 		}
-	}
 
+		else if (newMesh) {
+			
+		}
+
+		i++;
+	}
+	printf("ABOUT TO STORE THE VALUES\n");
 	for (int i = 0; i < faces.size(); i++) {
 		v.push_back(vertices[(faces[i] - 1) * 3]);
 		v.push_back(vertices[(faces[i] - 1) * 3 + 1]);
 		v.push_back(vertices[(faces[i] - 1) * 3 + 2]);
-		t.push_back(tex[(facesTex[i] - 1) * 2]);
-		t.push_back(tex[(facesTex[i] - 1) * 2 + 1]);
-		n.push_back(normals[(facesNormals[i] - 1) * 3]);
-		n.push_back(normals[(facesNormals[i] - 1) * 3 + 1]);
-		n.push_back(normals[(facesNormals[i] - 1) * 3 + 2]);
+		if (facesTex.size() != 0) {
+			t.push_back(tex[(facesTex[i] - 1) * 2]);
+			t.push_back(tex[(facesTex[i] - 1) * 2 + 1]);
+		}
+		if (facesNormals.size() != 0) {
+			n.push_back(normals[(facesNormals[i] - 1) * 3]);
+			n.push_back(normals[(facesNormals[i] - 1) * 3 + 1]);
+			n.push_back(normals[(facesNormals[i] - 1) * 3 + 2]);
+		}
+	}
+
+	printf("STORED THE VALUES\n");
+}
+
+void readOBJ(std::string filepath, std::vector<Mesh*> meshes) {
+	FILE* model = fopen(filepath.c_str(), "r");
+
+    if (model == NULL) {
+		printf("COULD NOT LOAD MODEL\n");
+        return;
+	}
+
+	char buffer[256];
+
+	std::vector<float> vertices;
+	std::vector<float> tex;
+	std::vector<float> normals;
+	std::vector<int> faces;
+	std::vector<int> facesTex;
+	std::vector<int> facesNormals;
+
+	int readingVertex = 0;
+	int readingFaces = 0;
+	int readingTex = 0;
+	int read = 0;
+	int verticesNumber = 0;
+	int readingNormals = 0;
+	int newMesh = 0;
+
+	int i = 0;
+
+	while (fscanf(model, "%s", buffer) != EOF) {
+		if (!readingVertex && !readingFaces && !readingTex && !readingNormals) {
+			if (buffer[0] == 'v' && buffer[1] == '\0') {
+				readingVertex = 3;
+				verticesNumber++;
+			}
+			else if (buffer[0] == 'v' && buffer[1] == 't') {
+				readingTex = 2;
+			}
+			else if (buffer[0] == 'v' && buffer[1] == 'n') {
+				readingNormals = 3;
+			}
+			else if (buffer[0] == 'f') {
+				readingFaces = 3;
+			}
+			else if (strcmp(buffer, "usemtl") == 0) {
+				newMesh = 1;
+			}
+		}
+
+		else if (readingVertex) {
+			vertices.push_back(atof(buffer));
+			readingVertex--;
+		}
+
+		else if (readingTex) {
+			tex.push_back(atof(buffer));
+			readingTex--;
+		}
+
+		else if (readingNormals) {
+			normals.push_back(atof(buffer));
+			readingNormals--;
+		}
+
+		else if (readingFaces) {
+			read = 2;
+			// vertex
+			faces.push_back(atoi(buffer));
+
+			for (int i = 0; buffer[i] != '\0'; i++) {
+				if (buffer[i] == '/' && buffer[i + 1] != '/' && buffer[i + 1] != '\0' && read > 0) {
+					// uv
+					if (read == 2) {
+						facesTex.push_back(atoi(&buffer[i + 1]));
+					}
+					// normal
+					else if (read == 1) {
+						facesNormals.push_back(atoi(&buffer[i + 1]));
+					}
+
+					read--;
+				}
+
+				else if (buffer[i] == '/' && (buffer[i + 1] == '/' || buffer[i + 1] == '\0')) {
+					read--;
+				}
+			}
+
+			readingFaces--;
+		}
+
+		else if (newMesh) {
+			
+		}
+
+		i++;
+	}
+	printf("ABOUT TO STORE THE VALUES\n");
+	for (int i = 0; i < faces.size(); i++) {
+		v.push_back(vertices[(faces[i] - 1) * 3]);
+		v.push_back(vertices[(faces[i] - 1) * 3 + 1]);
+		v.push_back(vertices[(faces[i] - 1) * 3 + 2]);
+		if (facesTex.size() != 0) {
+			t.push_back(tex[(facesTex[i] - 1) * 2]);
+			t.push_back(tex[(facesTex[i] - 1) * 2 + 1]);
+		}
+		if (facesNormals.size() != 0) {
+			n.push_back(normals[(facesNormals[i] - 1) * 3]);
+			n.push_back(normals[(facesNormals[i] - 1) * 3 + 1]);
+			n.push_back(normals[(facesNormals[i] - 1) * 3 + 2]);
+		}
+	}
+
+	printf("STORED THE VALUES\n");
+}
+
+void readMTL(std::string filepath) {
+	FILE* material = fopen(filepath.c_str(), "r");
+
+    if (material == NULL) {
+		printf("COULD NOT LOAD MATERIAL\n");
+        return;
+	}
+
+	char buffer[256];
+
+	while (fscanf(material, "%s", buffer) != EOF) {
+
+
 	}
 }
+
 
 void polarToCartesian(float r, float teta, float* x, float* y) {
 	*x = r * cos(teta);

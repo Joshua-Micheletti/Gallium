@@ -11,6 +11,8 @@ glmI = ${extLibs}/glm
 imgui = ${extLibs}/imgui-1.88
 imguiBE = ${imgui}/backends
 stbimage = ${extLibs}/stb-master
+# OBJLoader = ${extLibs}/OBJLoader
+tinyobjloader = ${extLibs}/tinyobjloader
 
 ifeq ($(OS),Windows_NT)
 	glfwL = ${extLibs}/glfw/lib-mingw
@@ -29,12 +31,12 @@ else
 	noColor = ${escape}[0m
 endif
 
-extLibI = ${gladI} -I ${glfwI} -I ${glmI} -I ${imgui} -I ${imguiBE} -I ${stbimage}
+extLibI = ${gladI} -I ${glfwI} -I ${glmI} -I ${imgui} -I ${imguiBE} -I ${stbimage} -I ${tinyobjloader}
 
 flags = -w -std=c++11 -Ofast
 
 objectsPath = ./bin/objects
-objects = ${objectsPath}/main.o ${objectsPath}/global.o ${objectsPath}/window.o ${objectsPath}/utils.o ${objectsPath}/glad.o ${objectsPath}/init.o ${objectsPath}/renderer.o ${objectsPath}/rendererManager.o ${objectsPath}/drawingEntity.o ${objectsPath}/model.o ${objectsPath}/material.o ${objectsPath}/texture.o ${objectsPath}/eventHandler.o ${objectsPath}/ui.o ${objectsPath}/entity.o ${objectsPath}/shader.o ${objectsPath}/camera.o ${objectsPath}/kernel.o ${objectsPath}/imgui.o ${objectsPath}/imgui_impl_glfw.o ${objectsPath}/imgui_impl_opengl3.o ${objectsPath}/imgui_demo.o ${objectsPath}/imgui_draw.o ${objectsPath}/imgui_widgets.o ${objectsPath}/imgui_tables.o
+objects = ${objectsPath}/main.o ${objectsPath}/global.o ${objectsPath}/window.o ${objectsPath}/utils.o ${objectsPath}/glad.o ${objectsPath}/init.o ${objectsPath}/renderer.o ${objectsPath}/rendererManager.o ${objectsPath}/drawingEntity.o ${objectsPath}/model.o ${objectsPath}/mesh.o ${objectsPath}/material.o ${objectsPath}/texture.o ${objectsPath}/eventHandler.o ${objectsPath}/ui.o ${objectsPath}/entity.o ${objectsPath}/shader.o ${objectsPath}/camera.o ${objectsPath}/kernel.o ${objectsPath}/imgui.o ${objectsPath}/imgui_impl_glfw.o ${objectsPath}/imgui_impl_opengl3.o ${objectsPath}/imgui_demo.o ${objectsPath}/imgui_draw.o ${objectsPath}/imgui_widgets.o ${objectsPath}/imgui_tables.o
 
 main: ${objects} makefile
 	@echo ${marks}${escape}[31m============= COMPILING MAIN PROGRAM =============${noColor}${marks}
@@ -85,6 +87,11 @@ ${objectsPath}/drawingEntity.o: ${view}/drawingEntity/drawingEntity.cpp ${view}/
 ${objectsPath}/model.o: ${view}/drawingEntity/model/model.cpp ${view}/drawingEntity/model/model.h makefile
 	@echo ${marks}${escape}[31m============= model.cpp (source) =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/model.o ${view}/drawingEntity/model/model.cpp -I ${extLibI} ${flags}
+
+# MESH
+${objectsPath}/mesh.o: ${view}/drawingEntity/model/mesh/mesh.cpp ${view}/drawingEntity/model/mesh/mesh.h makefile
+	@echo ${marks}${escape}[31m============= mesh.cpp (source) =============${noColor}${marks}
+	g++ -c -o ${objectsPath}/mesh.o ${view}/drawingEntity/model/mesh/mesh.cpp -I ${extLibI} ${flags}
 
 # MATERIAL
 ${objectsPath}/material.o: ${view}/drawingEntity/material/material.cpp ${view}/drawingEntity/material/material.h makefile

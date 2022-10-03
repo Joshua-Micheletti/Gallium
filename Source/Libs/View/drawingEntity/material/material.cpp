@@ -59,6 +59,9 @@ Material* Material::shininess(float s) {
 }
 
 
+void Material::loadMaterial(std::string filepath) {
+    // readMTL(filepath);
+}
 
 void Material::printFull() {
     printf("\tShader: %s\n", this->shader_.c_str());

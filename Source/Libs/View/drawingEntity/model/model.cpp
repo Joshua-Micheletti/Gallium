@@ -9,10 +9,12 @@ Model::Model() {
 void Model::loadModel(std::string filepath) {
     this->source_ = filepath;
     readOBJ(filepath, this->vertices_, this->uvs_, this->normals_);
+
     
-    createBuffer(this->vertices_, &this->vertexBuffer_);
-    createBuffer(this->uvs_, &this->uvBuffer_);
-    createBuffer(this->normals_, &this->normalBuffer_);
+    
+    // createBuffer(this->vertices_, &this->vertexBuffer_);
+    // createBuffer(this->uvs_, &this->uvBuffer_);
+    // createBuffer(this->normals_, &this->normalBuffer_);
 }
 
 // manually load the vertices into the model
