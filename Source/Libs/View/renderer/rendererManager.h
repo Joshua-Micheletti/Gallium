@@ -86,6 +86,8 @@ class RendererManager {
         std::string highlightShader();
         void highlightShader(std::string);
 
+        void loadMTL(std::string);
+
     private:
         std::map<std::string, DrawingEntity*> drawingEntityBuffer_;
         std::map<std::string, Model*> modelBuffer_;

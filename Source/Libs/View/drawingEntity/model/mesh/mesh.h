@@ -7,6 +7,8 @@
 
 class Mesh {
     public:
+        Mesh();
+
         std::string name();
 
         Mesh* vertices(std::vector<float>);
@@ -20,6 +22,16 @@ class Mesh {
         unsigned int uvBuffer();
         unsigned int normalBuffer();
 
+        std::string material();
+        Mesh* material(std::string);
+
+        void printVertices();
+        void printUVs();
+        void printNormals();
+        void printFull();
+        void print();
+        void printFace(int);
+
     private:
         std::string name_;
 
@@ -30,6 +42,8 @@ class Mesh {
         unsigned int vertexBuffer_;
         unsigned int uvBuffer_;
         unsigned int normalBuffer_;
+
+        std::string material_;
 };
 
 #endif

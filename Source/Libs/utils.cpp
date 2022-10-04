@@ -154,7 +154,7 @@ void readOBJ(std::string filepath, std::vector<float>& v, std::vector<float>& t,
 	printf("STORED THE VALUES\n");
 }
 
-void readOBJ(std::string filepath, std::vector<Mesh*> meshes) {
+void readOBJ(std::string filepath, std::vector<std::vector<float>*>* v, std::vector<std::vector<float>*>* t, std::vector<std::vector<float>*>* n, std::vector<std::string>* m) {
 	FILE* model = fopen(filepath.c_str(), "r");
 
     if (model == NULL) {
@@ -164,6 +164,7 @@ void readOBJ(std::string filepath, std::vector<Mesh*> meshes) {
 
 	char buffer[256];
 
+	std::string tmpMaterial;
 	std::vector<float> vertices;
 	std::vector<float> tex;
 	std::vector<float> normals;
@@ -174,15 +175,29 @@ void readOBJ(std::string filepath, std::vector<Mesh*> meshes) {
 	int readingVertex = 0;
 	int readingFaces = 0;
 	int readingTex = 0;
+	int readingMaterial = 0;
 	int read = 0;
 	int verticesNumber = 0;
 	int readingNormals = 0;
 	int newMesh = 0;
+	bool firstMesh = true;
 
 	int i = 0;
 
+	if (v->size() == 0) {
+		v->push_back(new std::vector<float>);
+	}
+	if (t->size() == 0) {
+		t->push_back(new std::vector<float>);
+	}
+	if (n->size() == 0) {
+		n->push_back(new std::vector<float>);
+	}
+	
+	printf("%d\n", v->size());
+
 	while (fscanf(model, "%s", buffer) != EOF) {
-		if (!readingVertex && !readingFaces && !readingTex && !readingNormals) {
+		if (!readingVertex && !readingFaces && !readingTex && !readingNormals && !readingMaterial) {
 			if (buffer[0] == 'v' && buffer[1] == '\0') {
 				readingVertex = 3;
 				verticesNumber++;
@@ -197,7 +212,13 @@ void readOBJ(std::string filepath, std::vector<Mesh*> meshes) {
 				readingFaces = 3;
 			}
 			else if (strcmp(buffer, "usemtl") == 0) {
-				newMesh = 1;
+				readingMaterial = 1;
+
+				if (!firstMesh) {
+					newMesh = 1;
+				}
+
+				firstMesh = false;
 			}
 		}
 
@@ -243,32 +264,76 @@ void readOBJ(std::string filepath, std::vector<Mesh*> meshes) {
 			readingFaces--;
 		}
 
-		else if (newMesh) {
-			
+		else if (readingMaterial) {
+			m->push_back(std::string(buffer));
+			readingMaterial--;
+		}
+
+		if (newMesh) {
+			printf("storing the values!\n");
+			for (int i = 0; i < faces.size(); i++) {
+				(*v)[v->size() - 1]->push_back(vertices[(faces[i] - 1) * 3]);
+				(*v)[v->size() - 1]->push_back(vertices[(faces[i] - 1) * 3 + 1]);
+				(*v)[v->size() - 1]->push_back(vertices[(faces[i] - 1) * 3 + 2]);
+				if (facesTex.size() != 0) {
+					(*t)[t->size() - 1]->push_back(tex[(facesTex[i] - 1) * 2]);
+					(*t)[t->size() - 1]->push_back(tex[(facesTex[i] - 1) * 2 + 1]);
+				}
+				if (facesNormals.size() != 0) {
+					(*n)[n->size() - 1]->push_back(normals[(facesNormals[i] - 1) * 3]);
+					(*n)[n->size() - 1]->push_back(normals[(facesNormals[i] - 1) * 3 + 1]);
+					(*n)[n->size() - 1]->push_back(normals[(facesNormals[i] - 1) * 3 + 2]);
+				}
+			}
+
+			faces.clear();
+			facesTex.clear();
+			facesNormals.clear();
+
+			v->push_back(new std::vector<float>);
+			t->push_back(new std::vector<float>);
+			n->push_back(new std::vector<float>);
+
+			newMesh--;
 		}
 
 		i++;
 	}
-	printf("ABOUT TO STORE THE VALUES\n");
+
 	for (int i = 0; i < faces.size(); i++) {
-		v.push_back(vertices[(faces[i] - 1) * 3]);
-		v.push_back(vertices[(faces[i] - 1) * 3 + 1]);
-		v.push_back(vertices[(faces[i] - 1) * 3 + 2]);
+		(*v)[v->size() - 1]->push_back(vertices[(faces[i] - 1) * 3]);
+		(*v)[v->size() - 1]->push_back(vertices[(faces[i] - 1) * 3 + 1]);
+		(*v)[v->size() - 1]->push_back(vertices[(faces[i] - 1) * 3 + 2]);
 		if (facesTex.size() != 0) {
-			t.push_back(tex[(facesTex[i] - 1) * 2]);
-			t.push_back(tex[(facesTex[i] - 1) * 2 + 1]);
+			(*t)[t->size() - 1]->push_back(tex[(facesTex[i] - 1) * 2]);
+			(*t)[t->size() - 1]->push_back(tex[(facesTex[i] - 1) * 2 + 1]);
 		}
 		if (facesNormals.size() != 0) {
-			n.push_back(normals[(facesNormals[i] - 1) * 3]);
-			n.push_back(normals[(facesNormals[i] - 1) * 3 + 1]);
-			n.push_back(normals[(facesNormals[i] - 1) * 3 + 2]);
+			(*n)[n->size() - 1]->push_back(normals[(facesNormals[i] - 1) * 3]);
+			(*n)[n->size() - 1]->push_back(normals[(facesNormals[i] - 1) * 3 + 1]);
+			(*n)[n->size() - 1]->push_back(normals[(facesNormals[i] - 1) * 3 + 2]);
 		}
 	}
 
-	printf("STORED THE VALUES\n");
+	// for (int i = 0; i < faces.size(); i++) {
+	// 	v.push_back(vertices[(faces[i] - 1) * 3]);
+	// 	v.push_back(vertices[(faces[i] - 1) * 3 + 1]);
+	// 	v.push_back(vertices[(faces[i] - 1) * 3 + 2]);
+	// 	if (facesTex.size() != 0) {
+	// 		t.push_back(tex[(facesTex[i] - 1) * 2]);
+	// 		t.push_back(tex[(facesTex[i] - 1) * 2 + 1]);
+	// 	}
+	// 	if (facesNormals.size() != 0) {
+	// 		n.push_back(normals[(facesNormals[i] - 1) * 3]);
+	// 		n.push_back(normals[(facesNormals[i] - 1) * 3 + 1]);
+	// 		n.push_back(normals[(facesNormals[i] - 1) * 3 + 2]);
+	// 	}
+	// }
+
+	// printf("STORED THE VALUES\n");
 }
 
-void readMTL(std::string filepath) {
+void readMTL(std::string filepath, std::vector<std::string> *names, std::vector<std::vector<float>*> *ambient, std::vector<std::vector<float>*> *diffuse, std::vector<std::vector<float>*> *specular, std::vector<float> *shininess) {
 	FILE* material = fopen(filepath.c_str(), "r");
 
     if (material == NULL) {
@@ -276,12 +341,122 @@ void readMTL(std::string filepath) {
         return;
 	}
 
+	int readingAmbient = 0;
+	int readingDiffuse = 0;
+	int readingSpecular = 0;
+	int readingShininess = 0;
+	int readingMaterialName = 0;
+
+	std::string namesBuffer;
+	std::vector<float> ambientBuffer;
+	std::vector<float> diffuseBuffer;
+	std::vector<float> specularBuffer;
+	float tmpShininess;
+
+	bool firstMaterial = true;
+	bool newMaterial = false;
+
 	char buffer[256];
 
-	while (fscanf(material, "%s", buffer) != EOF) {
-
-
+	if (ambient->size() == 0) {
+		ambient->push_back(new std::vector<float>);
 	}
+	if (diffuse->size() == 0) {
+		diffuse->push_back(new std::vector<float>);
+	}
+	if (specular->size() == 0) {
+		specular->push_back(new std::vector<float>);
+	}
+
+	while (fscanf(material, "%s", buffer) != EOF) {
+		if (!readingAmbient && !readingDiffuse && !readingSpecular && !readingShininess && !readingMaterialName) {
+			if (buffer[0] == 'K' && buffer[1] == 'a') {
+				readingAmbient = 3;
+			}
+			else if (buffer[0] == 'K' && buffer[1] == 'd') {
+				readingDiffuse = 3;
+			}
+			else if (buffer[0] == 'K' && buffer[1] == 's') {
+				readingSpecular = 3;
+			}
+			else if (buffer[0] == 'N' && buffer[1] == 's') {
+				readingShininess = 1;
+			}
+			else if (strcmp(buffer, "newmtl") == 0) {
+				readingMaterialName = 1;
+
+				if (!firstMaterial) {
+					newMaterial = true;
+				}
+
+				firstMaterial = false;
+			}
+		}
+
+		else if (readingAmbient) {
+			ambientBuffer.push_back(atof(buffer));
+			readingAmbient--;
+		}
+		else if (readingDiffuse) {
+			diffuseBuffer.push_back(atof(buffer));
+			readingDiffuse--;
+		}
+		else if (readingSpecular) {
+			specularBuffer.push_back(atof(buffer));
+			readingSpecular--;
+		}
+		else if (readingShininess) {
+			tmpShininess = atof(buffer);
+			readingShininess--;
+		}
+		else if (readingMaterialName) {
+			printf("reading a new material name: %s\n", buffer);
+			namesBuffer = std::string(buffer);
+			readingMaterialName--;
+		}
+
+		if (newMaterial) {
+			names->push_back(namesBuffer);
+
+			for (int i = 0; i < ambientBuffer.size(); i++) {
+				(*ambient)[ambient->size() - 1]->push_back(ambientBuffer[i]);
+				(*diffuse)[diffuse->size() - 1]->push_back(diffuseBuffer[i]);
+				(*specular)[specular->size() - 1]->push_back(specularBuffer[i]);
+			}
+
+			shininess->push_back(tmpShininess);
+
+			ambientBuffer.clear();
+			diffuseBuffer.clear();
+			specularBuffer.clear();
+
+			ambient->push_back(new std::vector<float>);
+			diffuse->push_back(new std::vector<float>);
+			specular->push_back(new std::vector<float>);
+
+			newMaterial = false;
+		}
+	}
+
+	names->push_back(namesBuffer);
+
+	for (int i = 0; i < ambientBuffer.size(); i++) {
+		(*ambient)[ambient->size() - 1]->push_back(ambientBuffer[i]);
+		(*diffuse)[diffuse->size() - 1]->push_back(diffuseBuffer[i]);
+		(*specular)[specular->size() - 1]->push_back(specularBuffer[i]);
+	}
+
+	shininess->push_back(tmpShininess);
+
+	ambientBuffer.clear();
+	diffuseBuffer.clear();
+	specularBuffer.clear();
+
+	ambient->push_back(new std::vector<float>);
+	diffuse->push_back(new std::vector<float>);
+	specular->push_back(new std::vector<float>);
+
+	newMaterial = false;
 }
 
 

@@ -1,17 +1,17 @@
 #define GLFW_DLL
 #include "Libs/lib.h"
-#define TINYOBJLOADER_IMPLEMENTATION
-#include <tinyobjloader.h>
 
 void testFunc() {
 	// RM.newModel("M_Test")->loadModel("../Models/guy7.obj");
-	RM.newModel("M_Test")->loadModel("../Models/bugatti2.obj");
-	printf("loaded bugatti\n");
+	RM.newModel("M_Test")->loadModel("../Models/low_poly_tree/processed/untitled.obj");
+	// RM.newModel("M_Test")->loadModel("../Models/box2.obj");
 	RM.newShader("S_Test")->loadShader("../Shader/lighting/lighting.vert", "../Shader/lighting/lighting.frag");
 	RM.newMaterial("MA_Test")->shader("S_Test");
 	RM.newDrawingEntity("DE_Test")->model("M_Test")->material("MA_Test");
 
 	RM.drawingEntity("DE_Test")->translate(glm::vec3(0.0f, 0.0f, 0.0f))->scale(glm::vec3(2.0, 2.0, 2.0));
+
+	RM.loadMTL("../Models/low_poly_tree/processed/untitled.mtl");
 }
 
 int main(void) {

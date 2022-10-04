@@ -3,12 +3,39 @@
 // CONSTRUCTOR
 Model::Model() {
     drawingMode_ = GL_TRIANGLES;
+    this->meshes_.push_back(new Mesh);
 }
 
 // function for loading 3D models from file to OpenGL buffers
 void Model::loadModel(std::string filepath) {
     this->source_ = filepath;
-    readOBJ(filepath, this->vertices_, this->uvs_, this->normals_);
+    // readOBJ(filepath, this->vertices_, this->uvs_, this->normals_);
+    std::vector<std::vector<float>*> v;
+    std::vector<std::vector<float>*> t;
+    std::vector<std::vector<float>*> n;
+    std::vector<std::string> m;
+
+    // readOBJ(filepath, this->meshes_);
+    readOBJ(filepath, &v, &t, &n, &m);
+
+    // for (int i = 0; i < v.size(); i++) {
+    //     printf("%d\n", v[0]->size());
+    //     for (int j = 0; j < v[v.size() - 1]->size(); j++) {
+    //         printf("v: %f\n", v[i][j]);
+    //     }
+    // }
+
+    this->meshes_.clear();
+
+    for (int i = 0; i < v.size(); i++) {
+        this->meshes_.push_back(new Mesh());
+        this->meshes_[this->meshes_.size() - 1]->vertices(*v[i]);
+        this->meshes_[this->meshes_.size() - 1]->uvs(*t[i]);
+        this->meshes_[this->meshes_.size() - 1]->normals(*n[i]);
+        this->meshes_[this->meshes_.size() - 1]->material(m[i]);
+
+        this->meshes_[this->meshes_.size() - 1]->print();
+    }
 
     
     
@@ -67,6 +94,16 @@ GLenum Model::drawingMode() {
 
 Model* Model::drawingMode(GLenum mode) {
     this->drawingMode_ = mode;
+    return(this);
+}
+
+
+std::vector<Mesh*> Model::meshes() {
+    return(this->meshes_);
+}
+
+Model* Model::meshes(std::vector<Mesh*> mesh) {
+    this->meshes_ = mesh;
     return(this);
 }
 

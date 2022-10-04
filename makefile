@@ -11,8 +11,6 @@ glmI = ${extLibs}/glm
 imgui = ${extLibs}/imgui-1.88
 imguiBE = ${imgui}/backends
 stbimage = ${extLibs}/stb-master
-# OBJLoader = ${extLibs}/OBJLoader
-tinyobjloader = ${extLibs}/tinyobjloader
 
 ifeq ($(OS),Windows_NT)
 	glfwL = ${extLibs}/glfw/lib-mingw
@@ -31,7 +29,7 @@ else
 	noColor = ${escape}[0m
 endif
 
-extLibI = ${gladI} -I ${glfwI} -I ${glmI} -I ${imgui} -I ${imguiBE} -I ${stbimage} -I ${tinyobjloader}
+extLibI = ${gladI} -I ${glfwI} -I ${glmI} -I ${imgui} -I ${imguiBE} -I ${stbimage}
 
 flags = -w -std=c++11 -Ofast
 

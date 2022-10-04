@@ -9,7 +9,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "../../../utils.h"
 #include "mesh/mesh.h"
-#include <tinyobjloader.h>
 
 class Model {
     public:

@@ -265,7 +265,7 @@ void Renderer::render() {
 
 	glStencilMask(0);
 	glStencilFunc(GL_ALWAYS, 1, 255);
-	this->renderSkybox();
+	// this->renderSkybox();
 	this->renderEntities(false);
 	
 	// draw the bounding box for each entity
@@ -285,7 +285,7 @@ void Renderer::render() {
 	this->postProcessingPassTime = glfwGetTime();
 
 	if (RM.selectedEntity().size() != 0 && (outlineType == 0 || outlineType == 1)) {
-		this->renderOutline();
+		// this->renderOutline();
 	}
 
 	// ---------------------------------- OUT FRAMEBUFFER RENDERING --------------------------------- //
@@ -353,6 +353,34 @@ void Renderer::renderEntities(bool reflection) {
 			Shader* currentS = RM.shader(currentMA->shader());
 			Texture* currentT = RM.texture(currentMA->texture());
 
+			std::vector<Mesh*> currentMeshes = currentM->meshes();
+			
+			printf("printing entity!\n");
+			printf("%s\n", RM.drawingEntity(currentDE).c_str());
+			for (int j = 0; j < currentMeshes.size(); j++) {
+				if (currentMeshes[j]->material().size() != 0) {
+					printf("mesh material\n");
+					currentMA = RM.material(currentMeshes[j]->material());
+					printf("%s\n", currentMeshes[j]->material().c_str());
+					currentS = RM.shader("S_Test");
+				}
+
+				printf("printing meshes\n");
+				
+				glUseProgram(currentS->id());
+				attachUniforms(currentDE, currentMeshes[j], currentS->uniformBuffer());
+				linkLayouts(currentMeshes[j], currentS->layoutBuffer());
+				printf("linked layouts\n");
+				glBindTexture(GL_TEXTURE_2D, currentT->id());
+				printf("bound texture\n");
+				glDrawArrays(currentM->drawingMode(), 0, currentMeshes[j]->vertices().size() / 3);
+				printf("drawn arrays\n");
+				glDisableVertexAttribArray(0);
+				glDisableVertexAttribArray(1);
+				glDisableVertexAttribArray(2);
+				printf("finished printing mesh\n");
+			}
+
 		// if it's rendering entities to be displayed in the reflection:
 		// if (reflection) {
 		// 	// check what entities are supposed to be rendered in the reflection
@@ -406,14 +434,14 @@ void Renderer::renderEntities(bool reflection) {
 				// 	glDepthMask(GL_FALSE);
 				// }
 
-				glUseProgram(currentS->id());
-				attachUniforms(currentDE, currentS->uniformBuffer());
-				linkLayouts(currentM, currentS->layoutBuffer());
+				// glUseProgram(currentS->id());
+				// attachUniforms(currentDE, currentS->uniformBuffer());
+				// linkLayouts(currentM, currentS->layoutBuffer());
 
 				// THINK IF BINDING A PLACEHOLDER TEX EVERY FRAME IS HEAVY
 				// if (entityBuffer[i]->getTexture() != 0) {
 					// glBindTexture(entityBuffer[i]->getTextureType(), entityBuffer[i]->getTexture());
-				glBindTexture(GL_TEXTURE_2D, currentT->id());
+				// glBindTexture(GL_TEXTURE_2D, currentT->id());
 				// }
 
 				// if (strcmp(shaderBuffer[entityBuffer[i]->getShader()].getName(), "reflection") == 0 ||
@@ -445,18 +473,17 @@ void Renderer::renderEntities(bool reflection) {
 				// 		glDrawArrays(entityBuffer[i]->getElements(), 0, entityBuffer[i]->getVertices().size());
 				// 	}
 				// }
-				glDrawArrays(currentM->drawingMode(), 0, currentM->vertices().size() / 3);
+				// glDrawArrays(currentM->drawingMode(), 0, currentM->vertices().size() / 3);
 			// }
 		// }
 
-			glDisableVertexAttribArray(0);
-			glDisableVertexAttribArray(1);
-			glDisableVertexAttribArray(2);
+			
 		}
 	}
 	
 	// render highlighted entity
 	// printf("%s\n", RM.selectedEntity().c_str());
+	/*
 	if (RM.selectedEntity().size() != 0 && reflection == false) {
 		glStencilFunc(GL_ALWAYS, 1, 255);
 		glStencilMask(255);
@@ -484,7 +511,8 @@ void Renderer::renderEntities(bool reflection) {
 		// 	glPolygonMode(GL_FRONT, GL_FILL);
 		// 	glEnable(GL_DEPTH_TEST);
 		// }
-	}
+		*/
+	
 }
 
 void Renderer::renderEntity(std::string entity) {
@@ -493,59 +521,61 @@ void Renderer::renderEntity(std::string entity) {
 	Material* currentMA = RM.material(currentDE->material());
 	Shader* currentS = RM.shader(currentMA->shader());
 	Texture* currentT = RM.texture(currentMA->texture());
+	std::vector<Mesh*> currentMeshes = currentM->meshes();
 
-	glUseProgram(currentS->id());
-
-	attachUniforms(currentDE, currentS->uniformBuffer());
-
-	linkLayouts(currentM, currentS->layoutBuffer());
-
-	// if (entity->getTexture() != 0) {
+	for (int i = 0; i < currentMeshes.size(); i++) {
+		// Material* meshMaterial = RM.material(currentMeshes[i]->material());
+		// currentS = RM.shader(meshMaterial->shader());
+		glUseProgram(currentS->id());
+		attachUniforms(currentDE, currentMeshes[i], currentS->uniformBuffer());
+		linkLayouts(currentMeshes[i], currentS->layoutBuffer());
+		// if (entity->getTexture() != 0) {
 		glBindTexture(GL_TEXTURE_2D, currentT->id());
-	// }
+		// }
 
-	// if (strcmp(shaderBuffer[entity->getShader()].getName(), "reflection") == 0 ||
-	// 	strcmp(shaderBuffer[entity->getShader()].getName(), "refraction/glass") == 0 ||
-	// 	strcmp(shaderBuffer[entity->getShader()].getName(), "reflection/diamond") == 0) {
-	// 	if (doReflection) {
-	// 		glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
-	// 	}
-	// 	else {
-	// 		glBindTexture(GL_TEXTURE_CUBE_MAP, entityBuffer[0]->getTexture());
-	// 	}
-	// }
+		// if (strcmp(shaderBuffer[entity->getShader()].getName(), "reflection") == 0 ||
+		// 	strcmp(shaderBuffer[entity->getShader()].getName(), "refraction/glass") == 0 ||
+		// 	strcmp(shaderBuffer[entity->getShader()].getName(), "reflection/diamond") == 0) {
+		// 	if (doReflection) {
+		// 		glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
+		// 	}
+		// 	else {
+		// 		glBindTexture(GL_TEXTURE_CUBE_MAP, entityBuffer[0]->getTexture());
+		// 	}
+		// }
 
 
-	// check which mode things should be rendered as
-	// if (entity->getName().compare("skybox") == 0) {
-	// 	// render the skybox
-	// 	glDrawArrays(GL_TRIANGLES, 0, entity->getVertices().size());
-	// 	// re-enable the depth mask (now rendering also affects the depth buffer as well)
-	// 	glDepthMask(GL_TRUE);
-	// }
+		// check which mode things should be rendered as
+		// if (entity->getName().compare("skybox") == 0) {
+		// 	// render the skybox
+		// 	glDrawArrays(GL_TRIANGLES, 0, entity->getVertices().size());
+		// 	// re-enable the depth mask (now rendering also affects the depth buffer as well)
+		// 	glDepthMask(GL_TRUE);
+		// }
 
-	// else {
-	// 	switch (renderMode) {
-	// 	case wireframe:
-	// 		glDrawArrays(GL_LINES, 0, entity->getVertices().size());
-	// 		break;
+		// else {
+		// 	switch (renderMode) {
+		// 	case wireframe:
+		// 		glDrawArrays(GL_LINES, 0, entity->getVertices().size());
+		// 		break;
 
-	// 	case vertices:
-	// 		glPointSize(2.0f);
-	// 		glDrawArrays(GL_POINTS, 0, entity->getVertices().size());
-	// 		break;
+		// 	case vertices:
+		// 		glPointSize(2.0f);
+		// 		glDrawArrays(GL_POINTS, 0, entity->getVertices().size());
+		// 		break;
 
-	// 	default:
-	// 		glDrawArrays(entity->getElements(), 0, entity->getVertices().size());
+		// 	default:
+		// 		glDrawArrays(entity->getElements(), 0, entity->getVertices().size());
 
-	// 	}
-	// }
+		// 	}
+		// }
 
-	glDrawArrays(currentM->drawingMode(), 0, currentM->vertices().size() / 3);
+		glDrawArrays(currentM->drawingMode(), 0, currentMeshes[i]->vertices().size() / 3);
 
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glDisableVertexAttribArray(2);
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+	}
 }
 
 void Renderer::renderSkybox() {
@@ -560,17 +590,18 @@ void Renderer::renderSkybox() {
 	Material* skyboxMA = RM.material(skyboxDE->material());
 	Shader* skyboxS = RM.shader(skyboxMA->shader());
 	Texture* skyboxT = RM.texture(skyboxMA->texture());
+	Mesh* skyboxMesh = skyboxM->meshes()[0];
 
 	// bind the shader
 	glUseProgram(skyboxS->id());
 	// attach the shader uniforms
-	attachUniforms(skyboxDE, skyboxS->uniformBuffer());
+	// attachUniforms(skyboxDE, skyboxS->uniformBuffer());
 	// link the shader layouts
-	linkLayouts(skyboxM, skyboxS->layoutBuffer());
+	linkLayouts(skyboxMesh, skyboxS->layoutBuffer());
 	// bind the skybox texture
 	glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxT->id());
 	// render the skybox
-	glDrawArrays(skyboxM->drawingMode(), 0, skyboxM->vertices().size() / 3);
+	glDrawArrays(skyboxM->drawingMode(), 0, skyboxMesh->vertices().size() / 3);
 
 	// re-enable the depth mask (now rendering also affects the depth buffer as well)
 	glDepthMask(GL_TRUE);
@@ -881,7 +912,7 @@ void Renderer::displayBoundingBox() {
 }
 
 // // pass the correct values to the corresponding uniforms in the shader
-void Renderer::attachUniforms(DrawingEntity* entity, std::vector<uniform_t> uniformBuffer) {
+void Renderer::attachUniforms(DrawingEntity* entity, Mesh* mesh, std::vector<uniform_t> uniformBuffer) {
 	// cycle through the uniformBuffer of the shader
 	for (int i = 0; i < uniformBuffer.size(); i++) {
 		// if the uniform is "modelMatrix", set it to the entity modelMatrix
@@ -928,22 +959,22 @@ void Renderer::attachUniforms(DrawingEntity* entity, std::vector<uniform_t> unif
 		}
 
 		else if (strcmp(uniformBuffer[i].name, "ambient") == 0) {
-			glm::vec3 ambient = RM.material(entity->material())->ambient();
+			glm::vec3 ambient = RM.material(mesh->material())->ambient();
 			glUniform3f(uniformBuffer[i].id, ambient.x, ambient.y, ambient.z);
 		}
 
 		else if (strcmp(uniformBuffer[i].name, "diffuse") == 0) {
-			glm::vec3 diffuse = RM.material(entity->material())->diffuse();
+			glm::vec3 diffuse = RM.material(mesh->material())->diffuse();
 			glUniform3f(uniformBuffer[i].id, diffuse.x, diffuse.y, diffuse.z);
 		}
 
 		else if (strcmp(uniformBuffer[i].name, "specular") == 0) {
-			glm::vec3 specular = RM.material(entity->material())->specular();
+			glm::vec3 specular = RM.material(mesh->material())->specular();
 			glUniform3f(uniformBuffer[i].id, specular.x, specular.y, specular.z);
 		}
 
 		else if (strcmp(uniformBuffer[i].name, "shininess") == 0) {
-			glUniform1f(uniformBuffer[i].id, RM.material(entity->material())->shininess());
+			glUniform1f(uniformBuffer[i].id, RM.material(mesh->material())->shininess());
 		}
 
 		else if (strcmp(uniformBuffer[i].name, "lightAmbient") == 0) {
@@ -964,7 +995,7 @@ void Renderer::attachUniforms(DrawingEntity* entity, std::vector<uniform_t> unif
 }
 
 // // link layouts to the data origin (mainly VAO)
-void Renderer::linkLayouts(Model* model, std::vector<std::string> layoutBuffer) {
+void Renderer::linkLayouts(Mesh* mesh, std::vector<std::string> layoutBuffer) {
 	// cycle all the layouts in the layout buffer of the shader
 	for (int i = 0; i < layoutBuffer.size(); i++) {
 		// if the layout is named "vertex" (contains the entity vertices that make the geometry of the entity)
@@ -972,7 +1003,7 @@ void Renderer::linkLayouts(Model* model, std::vector<std::string> layoutBuffer) 
 			// enable the VAO in position 0
 			glEnableVertexAttribArray(0);
 			// bind the geometry VBO of the entity
-			glBindBuffer(GL_ARRAY_BUFFER, model->vertexBuffer());
+			glBindBuffer(GL_ARRAY_BUFFER, mesh->vertexBuffer());
 			// setup the VAO to reference the VBO (needs more study)
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 		}
@@ -981,7 +1012,7 @@ void Renderer::linkLayouts(Model* model, std::vector<std::string> layoutBuffer) 
 			// enable the VAO in position 1
 			glEnableVertexAttribArray(1);
 			// bind the UV VBO of the entity
-			glBindBuffer(GL_ARRAY_BUFFER, model->uvBuffer());
+			glBindBuffer(GL_ARRAY_BUFFER, mesh->uvBuffer());
 			// setup the VAO to reference the VBO (needs more study)
 			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 		}
@@ -990,7 +1021,7 @@ void Renderer::linkLayouts(Model* model, std::vector<std::string> layoutBuffer) 
 			// enable the VAO in position 1
 			glEnableVertexAttribArray(1);
 			// bind the color VBO of the entity
-			glBindBuffer(GL_ARRAY_BUFFER, model->uvBuffer());
+			glBindBuffer(GL_ARRAY_BUFFER, mesh->uvBuffer());
 			// setup the VAO to reference the VBO (needs more study)
 			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 		}
@@ -999,7 +1030,7 @@ void Renderer::linkLayouts(Model* model, std::vector<std::string> layoutBuffer) 
 			// enable the VAO in position 1
 			glEnableVertexAttribArray(2);
 			// bind the normal VBO of the entity
-			glBindBuffer(GL_ARRAY_BUFFER, model->normalBuffer());
+			glBindBuffer(GL_ARRAY_BUFFER, mesh->normalBuffer());
 			// setup the VAO to reference the VBO (needs more study)
 			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 		}

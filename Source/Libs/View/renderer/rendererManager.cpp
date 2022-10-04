@@ -19,7 +19,7 @@ std::vector<TK> extractKeys(std::map<TK, TV> const& input_map) {
     return retval;
 }
 
-void createAxis(Model* axis) {
+void createAxis(Mesh* axis) {
 	std::vector<float> axisColor;
 	axisColor.push_back(1.0f);
 	axisColor.push_back(0.0f);
@@ -40,7 +40,7 @@ void createAxis(Model* axis) {
 	axisColor.push_back(0.0f);
 	axisColor.push_back(1.0f);
 
-	axis->loadUVs(axisColor);
+	axis->uvs(axisColor);
 
 	std::vector<float> axisVertices;
 	axisVertices.push_back(100.0f);
@@ -62,7 +62,7 @@ void createAxis(Model* axis) {
 	axisVertices.push_back(0.0f);
 	axisVertices.push_back(-100.0f);
 
-	axis->loadVertices(axisVertices);
+	axis->vertices(axisVertices);
 }
 
 
@@ -76,7 +76,7 @@ RendererManager::RendererManager() {
     this->samples_ = 16;
     this->depth_ = false;
 
-    this->newShader("S_Default")->loadShader("../Shader/default/default.vert", "../Shader/default/default.frag");
+    this->newShader("S_Default")->loadShader("../Shader/lighting/lighting.vert", "../Shader/lighting/lighting.frag");
     this->newTexture("T_Default")->loadTexture("../Textures/default2.jpg");
     this->newMaterial("MA_Default")->shader("S_Default")->texture("T_Default");
     this->newModel("M_Default")->loadModel("../Models/box2.obj");
@@ -95,12 +95,13 @@ RendererManager::RendererManager() {
     this->newDrawingEntity("DE_Skybox")->model("M_Default")->material("MA_Skybox");
     this->skybox_ = "DE_Skybox";
 
-    createAxis(this->newModel("M_Axis")->drawingMode(GL_LINES));
+    createAxis(this->newModel("M_Axis")->drawingMode(GL_LINES)->meshes()[0]);
     this->newShader("S_Axis")->loadShader("../Shader/color/color.vert", "../Shader/color/color.frag");
     this->newMaterial("MA_Axis")->shader("S_Axis");
-    this->newDrawingEntity("DE_Axis")->model("M_Axis")->material("MA_Axis");
+    // this->newDrawingEntity("DE_Axis")->model("M_Axis")->material("MA_Axis");
 
     this->newModel("M_Light")->loadModel("../Models/sphere7.obj");
+    this->model("M_Light")->meshes()[0]->material("MA_Default");
 	this->newShader("S_Light")->loadShader("../Shader/white/white.vert", "../Shader/white/white.frag");
 	this->newMaterial("MA_Light")->shader("S_Light");
 	this->newDrawingEntity("DE_Light")->model("M_Light")->material("MA_Light")->isLight(true)->lightColor(glm::vec3(1));
@@ -372,6 +373,32 @@ bool RendererManager::depth() {
 RendererManager* RendererManager::depth(bool d) {
     this->depth_ = d;
 }
+
+
+void RendererManager::loadMTL(std::string filepath) {
+    std::vector<std::string> names;
+    std::vector<std::vector<float>*> ambient;
+    std::vector<std::vector<float>*> diffuse;
+    std::vector<std::vector<float>*> specular;
+    std::vector<float> shininess;
+
+    readMTL(filepath, &names, &ambient, &diffuse, &specular, &shininess);
+
+    for (int i = 0; i < names.size(); i++) {
+        printf("name: %s\n", names[i].c_str());
+        printf("ambient: %f %f %f\n", (*ambient[i])[0], (*ambient[i])[1], (*ambient[i])[2]);
+        printf("diffuse: %f %f %f\n", (*diffuse[i])[0], (*diffuse[i])[1], (*diffuse[i])[2]);
+        printf("specular: %f %f %f\n", (*specular[i])[0], (*specular[i])[1], (*specular[i])[2]);
+        printf("%f\n", shininess[i]);
+
+        this->newMaterial(names[i])->ambient(glm::vec3((*ambient[i])[0], (*ambient[i])[1], (*ambient[i])[2]))->
+                                     diffuse(glm::vec3((*diffuse[i])[0], (*diffuse[i])[1], (*diffuse[i])[2]))->
+                                     specular(glm::vec3((*specular[i])[0], (*specular[i])[1], (*specular[i])[2]))->
+                                     shininess(shininess[i]);
+    }
+}
+
+
 
 // PRINTS
 void RendererManager::printFullDE(std::string name) {

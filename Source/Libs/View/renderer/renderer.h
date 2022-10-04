@@ -12,9 +12,9 @@
 #include <glm/gtx/string_cast.hpp>
 #include "../../Model/entity.h"
 #include "../drawingEntity/material/shader/shader.h"
+#include "../drawingEntity/model/mesh/mesh.h"
 #include "kernel/kernel.h"
 #include "../camera/camera.h"
-#include "../drawingEntity/material/shader/shader.h"
 #include "../../init.h"
 #include "../../global.h"
 
@@ -87,8 +87,8 @@ class Renderer {
 		void renderEntities(bool);
 		void renderSkybox();
 		void renderEntity(std::string);
-		void attachUniforms(DrawingEntity *, std::vector<uniform_t>);
-		void linkLayouts(Model*, std::vector<std::string>);
+		void attachUniforms(DrawingEntity *, Mesh*, std::vector<uniform_t>);
+		void linkLayouts(Mesh*, std::vector<std::string>);
 		void renderOutline();
 
 		void displayBoundingBox();
