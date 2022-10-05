@@ -15,42 +15,19 @@ class Model {
         Model();
         void loadModel(std::string);
 
-        void loadVertices(std::vector<float>);
-        void loadUVs(std::vector<float>);
-        void loadNormals(std::vector<float>);
-
-        std::vector<float> vertices();
-        std::vector<float> UVs();
-        std::vector<float> normals();
-
-        unsigned int vertexBuffer();
-        unsigned int uvBuffer();
-        unsigned int normalBuffer();
-
         GLenum drawingMode();
         Model* drawingMode(GLenum);
 
-        std::vector<Mesh*> meshes();
-        Model* meshes(std::vector<Mesh*>);
+        std::vector<std::string> meshes();
+        Model* meshes(std::vector<std::string>);
 
-        void printVertices();
-        void printUVs();
-        void printNormals();
-        void printFull();
-        void print();
-        void printFace(int);
+        std::string source();
+        Model* source(std::string);
 
     private:
         std::string source_;
-        std::vector<float> vertices_;
-        std::vector<float> uvs_;
-        std::vector<float> normals_;
 
-        std::vector<Mesh*> meshes_;
-
-        unsigned int vertexBuffer_;
-        unsigned int uvBuffer_;
-        unsigned int normalBuffer_;
+        std::vector<std::string> meshes_;
 
         GLenum drawingMode_;
 };

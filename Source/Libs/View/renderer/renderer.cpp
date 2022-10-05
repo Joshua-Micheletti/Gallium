@@ -266,6 +266,7 @@ void Renderer::render() {
 	glStencilMask(0);
 	glStencilFunc(GL_ALWAYS, 1, 255);
 	// this->renderSkybox();
+	printf("about to render entities\n");
 	this->renderEntities(false);
 	
 	// draw the bounding box for each entity
@@ -344,36 +345,38 @@ void Renderer::renderReflectionCubemap() {
 // render all entities with their corresponding shader (forward rendering)
 void Renderer::renderEntities(bool reflection) {
 	std::vector<DrawingEntity*> drawingEntities = RM.drawingEntities(); 
+
 	// render entities
 	for (int i = 0; i < drawingEntities.size(); i++) {
 		if (drawingEntities[i] != RM.drawingEntity(RM.skybox()) && drawingEntities[i] != RM.drawingEntity(RM.selectedEntity())) {
 			DrawingEntity* currentDE = drawingEntities[i];
 			Model* currentM = RM.model(currentDE->model());
-			Material* currentMA = RM.material(currentDE->material());
-			Shader* currentS = RM.shader(currentMA->shader());
-			Texture* currentT = RM.texture(currentMA->texture());
-
-			std::vector<Mesh*> currentMeshes = currentM->meshes();
+			std::vector<std::string> currentMeshes = currentM->meshes();
 			
 			printf("printing entity!\n");
 			printf("%s\n", RM.drawingEntity(currentDE).c_str());
 			for (int j = 0; j < currentMeshes.size(); j++) {
-				if (currentMeshes[j]->material().size() != 0) {
-					printf("mesh material\n");
-					currentMA = RM.material(currentMeshes[j]->material());
-					printf("%s\n", currentMeshes[j]->material().c_str());
-					currentS = RM.shader("S_Test");
-				}
+				Mesh* currentMesh = RM.mesh(currentMeshes[j]);
+				Material* currentMA = RM.material(currentMesh->material());
+				Shader* currentS = RM.shader(currentMA->shader());
+				Texture* currentT = RM.texture(currentMA->texture());
+
+				// if (currentMeshes[j]->material().size() != 0) {
+				// 	printf("mesh material\n");
+				// 	currentMA = RM.material(currentMeshes[j]->material());
+				// 	printf("%s\n", currentMeshes[j]->material().c_str());
+				// 	currentS = RM.shader("S_Test");
+				// }
 
 				printf("printing meshes\n");
 				
 				glUseProgram(currentS->id());
-				attachUniforms(currentDE, currentMeshes[j], currentS->uniformBuffer());
-				linkLayouts(currentMeshes[j], currentS->layoutBuffer());
+				attachUniforms(currentDE, currentMesh, currentS->uniformBuffer());
+				linkLayouts(currentMesh, currentS->layoutBuffer());
 				printf("linked layouts\n");
 				glBindTexture(GL_TEXTURE_2D, currentT->id());
 				printf("bound texture\n");
-				glDrawArrays(currentM->drawingMode(), 0, currentMeshes[j]->vertices().size() / 3);
+				glDrawArrays(currentM->drawingMode(), 0, currentMesh->vertices().size() / 3);
 				printf("drawn arrays\n");
 				glDisableVertexAttribArray(0);
 				glDisableVertexAttribArray(1);
@@ -514,7 +517,7 @@ void Renderer::renderEntities(bool reflection) {
 		*/
 	
 }
-
+/*
 void Renderer::renderEntity(std::string entity) {
 	DrawingEntity* currentDE = RM.drawingEntity(entity);
 	Model* currentM = RM.model(currentDE->model());
@@ -577,7 +580,8 @@ void Renderer::renderEntity(std::string entity) {
 		glDisableVertexAttribArray(2);
 	}
 }
-
+*/
+/*
 void Renderer::renderSkybox() {
 	// disable depth
 	glDepthMask(GL_FALSE);
@@ -607,7 +611,7 @@ void Renderer::renderSkybox() {
 	glDepthMask(GL_TRUE);
 	glEnable(GL_CULL_FACE);
 }
-
+*/
 void Renderer::renderOutline() {
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->outlineTextureMask, 0);
 
@@ -618,7 +622,7 @@ void Renderer::renderOutline() {
 	glDisable(GL_CULL_FACE);
 	std::string previousShader = RM.material(RM.drawingEntity(RM.selectedEntity())->material())->shader();
 	RM.material(RM.drawingEntity(RM.selectedEntity())->material())->shader("S_Light");
-	this->renderEntity(RM.selectedEntity());
+	// this->renderEntity(RM.selectedEntity());
 	RM.material(RM.drawingEntity(RM.selectedEntity())->material())->shader(previousShader);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);

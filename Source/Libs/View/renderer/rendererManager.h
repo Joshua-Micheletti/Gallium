@@ -24,36 +24,42 @@ class RendererManager {
         std::map<std::string, Material*> materialBuffer();
         std::map<std::string, Shader*> shaderBuffer();
         std::map<std::string, Texture*> textureBuffer();
+        std::map<std::string, Mesh*> meshBuffer();
 
         std::vector<DrawingEntity*> drawingEntities();
         std::vector<Model*> models();
         std::vector<Material*> materials();
         std::vector<Shader*> shaders();
         std::vector<Texture*> textures();
+        std::vector<Mesh*> meshes();
 
         std::vector<std::string> drawingEntityNames();
         std::vector<std::string> modelNames();
         std::vector<std::string> materialNames();
         std::vector<std::string> shaderNames();
         std::vector<std::string> textureNames();
+        std::vector<std::string> meshNames();
 
         DrawingEntity* drawingEntity(std::string);
         Model* model(std::string);
         Material* material(std::string);
         Shader* shader(std::string);
         Texture* texture(std::string);
+        Mesh* mesh(std::string);
 
         DrawingEntity* newDrawingEntity(std::string);
         Model* newModel(std::string);
         Material* newMaterial(std::string);
         Shader* newShader(std::string);
         Texture* newTexture(std::string);
+        Mesh* newMesh(std::string);
 
         std::string drawingEntity(DrawingEntity*);
         std::string model(Model*);
         std::string material(Material*);
         std::string shader(Shader*);
         std::string texture(Texture*);
+        std::string mesh(Mesh*);
 
         int samples();
         RendererManager* samples(int);
@@ -86,7 +92,13 @@ class RendererManager {
         std::string highlightShader();
         void highlightShader(std::string);
 
-        void loadMTL(std::string);
+        std::vector<std::string> loadMTL(std::string);
+        void loadModel(std::string);
+        void loadModel(std::string, std::string);
+
+
+        void material(std::string, std::string);
+        void applyMaterials(std::vector<std::string>, std::vector<std::string>);
 
     private:
         std::map<std::string, DrawingEntity*> drawingEntityBuffer_;
@@ -94,6 +106,7 @@ class RendererManager {
         std::map<std::string, Material*> materialBuffer_;
         std::map<std::string, Shader*> shaderBuffer_;
         std::map<std::string, Texture*> textureBuffer_;
+        std::map<std::string, Mesh*> meshBuffer_;
 
         Camera* camera_;
         glm::mat4 projection_;
