@@ -428,29 +428,38 @@ void RendererManager::loadModel(std::string filepath) {
 }
 
 
-void RendererManager::loadModel(std::string filepath, std::string name) {
+Model* RendererManager::loadModel(std::string filepath, std::string name) {
     std::vector<std::vector<float>*> v;
     std::vector<std::vector<float>*> t;
     std::vector<std::vector<float>*> n;
     std::vector<std::string> m;
 
     readOBJ(filepath, &v, &t, &n, &m);
+    printf("loaded the file\n");
 
     std::vector<std::string> meshes;
+    std::vector<component_t*> components;
 
     for (int i = 0; i < v.size(); i++) {
         std::string fullName = name + "_" + std::to_string(i);
         this->newMesh(fullName)->vertices(*v[i])->uvs(*t[i])->normals(*n[i]);
 
         if (m.size() != 0) {
-            this->mesh(fullName);
+            // this->mesh(fullName);
         }
 
         meshes.push_back(fullName);
+
+        component_t* tmp = new component_t;
+        tmp->mesh = fullName;
+        components.push_back(tmp);
     }
 
     // this->newModel(name)->source(filepath)->meshes(meshes);
-    this->newModel(name)->meshes(meshes);
+
+    
+    printf("about to store the result\n");
+    return(this->newModel(name)->components(components));
 }
 
 

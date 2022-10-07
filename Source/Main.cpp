@@ -24,6 +24,15 @@ void testFunc() {
 	RM.newModel("M_Guy")->components()[0]->mesh = "ME_Guy";
 	RM.model("M_Guy")->components()[0]->shader = "S_Lighting";
 
+	RM.loadModel("../Models/low_poly_tree/processed/untitled.obj", "M_Tree");
+	
+	std::vector<std::string> materials = RM.loadMTL("../Models/low_poly_tree/processed/untitled.mtl");
+
+	RM.model("M_Tree")->shaders("S_Lighting");
+	RM.model("M_Tree")->components()[0]->material = materials[0];
+	RM.model("M_Tree")->components()[1]->material = materials[1];
+
+
 	// printf("%s\n", RM.newDrawingEntity("DE_Test")->model().c_str());
 	// RM.model(RM.newDrawingEntity("DE_Test")->model())->meshes()[0]->shader = "S_Lighting";
 	// RM.model(RM.drawingEntity("DE_Test")->model())->meshes()[0]->mesh = "ME_Guy";

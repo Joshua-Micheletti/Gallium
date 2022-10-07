@@ -38,6 +38,8 @@ class Model {
         std::vector<component_t*> components();
         // getter for the component at the specified index
         component_t* component(int);
+        // setter for all the components in the model
+        Model* components(std::vector<component_t*>);
 
         // setter for the meshes in the model
         Model* meshes(std::vector<std::string>);

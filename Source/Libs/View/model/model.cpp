@@ -51,7 +51,9 @@ std::vector<component_t*> Model::components() {
 component_t* Model::component(int index) {
     return(this->components_[index]);
 }
-
+Model* Model::components(std::vector<component_t*> c) {
+    this->components_ = c;
+}
 
 Model* Model::meshes(std::vector<std::string> m) {
     this->components_.clear();
