@@ -4,9 +4,8 @@
 #include <string>
 #include <stdlib.h>
 #include "init.h"
-#include "View/drawingEntity/drawingEntity.h"
 #include "View/renderer/renderer.h"
-#include "View/drawingEntity/model/model.h"
+#include "View/model/model.h"
 #include "Controller/eventHandler.h"
 #include "View/ui/ui.h"
 #include "imgui.h"

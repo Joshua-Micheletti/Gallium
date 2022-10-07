@@ -3,11 +3,10 @@
 
 #include <map>
 #include <string>
-#include "../drawingEntity/drawingEntity.h"
-#include "../drawingEntity/model/model.h"
-#include "../drawingEntity/material/material.h"
-#include "../drawingEntity/material/shader/shader.h"
-#include "../drawingEntity/material/texture/texture.h"
+#include "../model/model.h"
+#include "../model/material/material.h"
+#include "../model/shader/shader.h"
+#include "../model/texture/texture.h"
 #include "../camera/camera.h"
 #include <cstdlib>
 #include <algorithm>
@@ -17,44 +16,47 @@
 
 class RendererManager {
     public:
+        // CONSTRUCTOR
         RendererManager();
 
-        std::map<std::string, DrawingEntity*> drawingEntityBuffer();
+        // getters for the various maps
         std::map<std::string, Model*> modelBuffer();
         std::map<std::string, Material*> materialBuffer();
         std::map<std::string, Shader*> shaderBuffer();
         std::map<std::string, Texture*> textureBuffer();
         std::map<std::string, Mesh*> meshBuffer();
 
-        std::vector<DrawingEntity*> drawingEntities();
+        // getters for the various lists
         std::vector<Model*> models();
         std::vector<Material*> materials();
         std::vector<Shader*> shaders();
         std::vector<Texture*> textures();
         std::vector<Mesh*> meshes();
 
-        std::vector<std::string> drawingEntityNames();
+        // getters for the various lists of names
         std::vector<std::string> modelNames();
         std::vector<std::string> materialNames();
         std::vector<std::string> shaderNames();
         std::vector<std::string> textureNames();
         std::vector<std::string> meshNames();
 
-        DrawingEntity* drawingEntity(std::string);
+        // getters for singular elements
         Model* model(std::string);
         Material* material(std::string);
         Shader* shader(std::string);
         Texture* texture(std::string);
         Mesh* mesh(std::string);
 
-        DrawingEntity* newDrawingEntity(std::string);
+        // methods for creating new elements
         Model* newModel(std::string);
         Material* newMaterial(std::string);
         Shader* newShader(std::string);
         Texture* newTexture(std::string);
         Mesh* newMesh(std::string);
+        // method for creating a new mesh loaded from an obj file
+        Mesh* newMesh(std::string, std::string);
 
-        std::string drawingEntity(DrawingEntity*);
+        // getters for element names starting from the object itself
         std::string model(Model*);
         std::string material(Material*);
         std::string shader(Shader*);
@@ -67,7 +69,6 @@ class RendererManager {
         bool depth();
         RendererManager* depth(bool);
 
-        void printFullDE(std::string);
         void printFullM(std::string);
         void printFullMA(std::string);    
         void printFullS(std::string);
@@ -92,6 +93,9 @@ class RendererManager {
         std::string highlightShader();
         void highlightShader(std::string);
 
+        std::string whiteShader();
+        void whiteShader(std::string);
+
         std::vector<std::string> loadMTL(std::string);
         void loadModel(std::string);
         void loadModel(std::string, std::string);
@@ -101,7 +105,6 @@ class RendererManager {
         void applyMaterials(std::vector<std::string>, std::vector<std::string>);
 
     private:
-        std::map<std::string, DrawingEntity*> drawingEntityBuffer_;
         std::map<std::string, Model*> modelBuffer_;
         std::map<std::string, Material*> materialBuffer_;
         std::map<std::string, Shader*> shaderBuffer_;
@@ -115,6 +118,7 @@ class RendererManager {
         std::string selectedEntity_;
         std::string outlineShader_;
         std::string highlightShader_;
+        std::string whiteShader_;
 
         int samples_;
         bool depth_;

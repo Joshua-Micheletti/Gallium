@@ -265,8 +265,7 @@ void Renderer::render() {
 
 	glStencilMask(0);
 	glStencilFunc(GL_ALWAYS, 1, 255);
-	// this->renderSkybox();
-	printf("about to render entities\n");
+	this->renderSkybox();
 	this->renderEntities(false);
 	
 	// draw the bounding box for each entity
@@ -286,7 +285,7 @@ void Renderer::render() {
 	this->postProcessingPassTime = glfwGetTime();
 
 	if (RM.selectedEntity().size() != 0 && (outlineType == 0 || outlineType == 1)) {
-		// this->renderOutline();
+		this->renderOutline();
 	}
 
 	// ---------------------------------- OUT FRAMEBUFFER RENDERING --------------------------------- //
@@ -344,45 +343,13 @@ void Renderer::renderReflectionCubemap() {
 
 // render all entities with their corresponding shader (forward rendering)
 void Renderer::renderEntities(bool reflection) {
-	std::vector<DrawingEntity*> drawingEntities = RM.drawingEntities(); 
+	std::vector<std::string> models = RM.modelNames(); 
 
 	// render entities
-	for (int i = 0; i < drawingEntities.size(); i++) {
-		if (drawingEntities[i] != RM.drawingEntity(RM.skybox()) && drawingEntities[i] != RM.drawingEntity(RM.selectedEntity())) {
-			DrawingEntity* currentDE = drawingEntities[i];
-			Model* currentM = RM.model(currentDE->model());
-			std::vector<std::string> currentMeshes = currentM->meshes();
-			
-			printf("printing entity!\n");
-			printf("%s\n", RM.drawingEntity(currentDE).c_str());
-			for (int j = 0; j < currentMeshes.size(); j++) {
-				Mesh* currentMesh = RM.mesh(currentMeshes[j]);
-				Material* currentMA = RM.material(currentMesh->material());
-				Shader* currentS = RM.shader(currentMA->shader());
-				Texture* currentT = RM.texture(currentMA->texture());
-
-				// if (currentMeshes[j]->material().size() != 0) {
-				// 	printf("mesh material\n");
-				// 	currentMA = RM.material(currentMeshes[j]->material());
-				// 	printf("%s\n", currentMeshes[j]->material().c_str());
-				// 	currentS = RM.shader("S_Test");
-				// }
-
-				printf("printing meshes\n");
-				
-				glUseProgram(currentS->id());
-				attachUniforms(currentDE, currentMesh, currentS->uniformBuffer());
-				linkLayouts(currentMesh, currentS->layoutBuffer());
-				printf("linked layouts\n");
-				glBindTexture(GL_TEXTURE_2D, currentT->id());
-				printf("bound texture\n");
-				glDrawArrays(currentM->drawingMode(), 0, currentMesh->vertices().size() / 3);
-				printf("drawn arrays\n");
-				glDisableVertexAttribArray(0);
-				glDisableVertexAttribArray(1);
-				glDisableVertexAttribArray(2);
-				printf("finished printing mesh\n");
-			}
+	for (int i = 0; i < models.size(); i++) {
+		if (models[i] != RM.skybox() && models[i] != RM.selectedEntity()) {
+			this->renderEntity(models[i]);
+		}
 
 		// if it's rendering entities to be displayed in the reflection:
 		// if (reflection) {
@@ -479,26 +446,24 @@ void Renderer::renderEntities(bool reflection) {
 				// glDrawArrays(currentM->drawingMode(), 0, currentM->vertices().size() / 3);
 			// }
 		// }
-
-			
-		}
 	}
 	
-	// render highlighted entity
-	// printf("%s\n", RM.selectedEntity().c_str());
-	/*
 	if (RM.selectedEntity().size() != 0 && reflection == false) {
 		glStencilFunc(GL_ALWAYS, 1, 255);
 		glStencilMask(255);
+
 		this->renderEntity(RM.selectedEntity());
+
 		glStencilMask(0);
 		glStencilFunc(GL_NOTEQUAL, 1, 255);
 
 		glDisable(GL_DEPTH_TEST);
-		std::string previousShader = RM.material(RM.drawingEntity(RM.selectedEntity())->material())->shader();
-		RM.material(RM.drawingEntity(RM.selectedEntity())->material())->shader(RM.highlightShader());
+		std::vector<std::string> previousShaders;
+
+		previousShaders = RM.model(RM.selectedEntity())->shaders(RM.highlightShader());
 		this->renderEntity(RM.selectedEntity());
-		RM.material(RM.drawingEntity(RM.selectedEntity())->material())->shader(previousShader);
+		RM.model(RM.selectedEntity())->shaders(previousShaders);
+
 		glEnable(GL_DEPTH_TEST);
 
 		// wireframe outline implementation
@@ -514,27 +479,35 @@ void Renderer::renderEntities(bool reflection) {
 		// 	glPolygonMode(GL_FRONT, GL_FILL);
 		// 	glEnable(GL_DEPTH_TEST);
 		// }
-		*/
-	
-}
-/*
-void Renderer::renderEntity(std::string entity) {
-	DrawingEntity* currentDE = RM.drawingEntity(entity);
-	Model* currentM = RM.model(currentDE->model());
-	Material* currentMA = RM.material(currentDE->material());
-	Shader* currentS = RM.shader(currentMA->shader());
-	Texture* currentT = RM.texture(currentMA->texture());
-	std::vector<Mesh*> currentMeshes = currentM->meshes();
 
-	for (int i = 0; i < currentMeshes.size(); i++) {
+	}
+}
+
+
+void Renderer::renderEntity(std::string entity) {
+	// DrawingEntity* currentDE = RM.drawingEntity(entity);
+	Model* currentM = RM.model(entity);
+	std::vector<component_t*> currentComponents = currentM->components();
+	// std::vector<std::string> currentMeshes = currentM->meshes();
+
+	for (int i = 0; i < currentComponents.size(); i++) {
+		Mesh* currentMesh = RM.mesh(currentComponents[i]->mesh);
+		Material* currentMA = RM.material(currentComponents[i]->material);
+		Shader* currentS = RM.shader(currentComponents[i]->shader);
+		Texture* currentT = RM.texture(currentComponents[i]->texture);
+		
+		glUseProgram(currentS->id());
+		attachUniforms(currentM, currentMA, currentS->uniformBuffer());
+		linkLayouts(currentMesh, currentS->layoutBuffer());
+		glBindTexture(GL_TEXTURE_2D, currentT->id());
+		glDrawArrays(currentM->drawingMode(), 0, currentMesh->vertices().size() / 3);
+
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+
 		// Material* meshMaterial = RM.material(currentMeshes[i]->material());
 		// currentS = RM.shader(meshMaterial->shader());
-		glUseProgram(currentS->id());
-		attachUniforms(currentDE, currentMeshes[i], currentS->uniformBuffer());
-		linkLayouts(currentMeshes[i], currentS->layoutBuffer());
-		// if (entity->getTexture() != 0) {
-		glBindTexture(GL_TEXTURE_2D, currentT->id());
-		// }
 
 		// if (strcmp(shaderBuffer[entity->getShader()].getName(), "reflection") == 0 ||
 		// 	strcmp(shaderBuffer[entity->getShader()].getName(), "refraction/glass") == 0 ||
@@ -572,16 +545,10 @@ void Renderer::renderEntity(std::string entity) {
 
 		// 	}
 		// }
-
-		glDrawArrays(currentM->drawingMode(), 0, currentMeshes[i]->vertices().size() / 3);
-
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-		glDisableVertexAttribArray(2);
 	}
 }
-*/
-/*
+
+
 void Renderer::renderSkybox() {
 	// disable depth
 	glDepthMask(GL_FALSE);
@@ -589,17 +556,17 @@ void Renderer::renderSkybox() {
 	glDisable(GL_CULL_FACE);
 
 	// extract the skybox components
-	DrawingEntity* skyboxDE = RM.drawingEntity(RM.skybox());
-	Model* skyboxM = RM.model(skyboxDE->model());
-	Material* skyboxMA = RM.material(skyboxDE->material());
-	Shader* skyboxS = RM.shader(skyboxMA->shader());
-	Texture* skyboxT = RM.texture(skyboxMA->texture());
-	Mesh* skyboxMesh = skyboxM->meshes()[0];
+	Model* skyboxM = RM.model(RM.skybox());
+	component_t* skyboxComponents = skyboxM->components()[0];
+	Mesh* skyboxMesh = RM.mesh(skyboxComponents->mesh);
+	Material* skyboxMA = RM.material(skyboxComponents->material);
+	Shader* skyboxS = RM.shader(skyboxComponents->shader);
+	Texture* skyboxT = RM.texture(skyboxComponents->texture);
 
 	// bind the shader
 	glUseProgram(skyboxS->id());
 	// attach the shader uniforms
-	// attachUniforms(skyboxDE, skyboxS->uniformBuffer());
+	attachUniforms(skyboxM, skyboxMA, skyboxS->uniformBuffer());
 	// link the shader layouts
 	linkLayouts(skyboxMesh, skyboxS->layoutBuffer());
 	// bind the skybox texture
@@ -611,7 +578,8 @@ void Renderer::renderSkybox() {
 	glDepthMask(GL_TRUE);
 	glEnable(GL_CULL_FACE);
 }
-*/
+
+
 void Renderer::renderOutline() {
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->outlineTextureMask, 0);
 
@@ -620,10 +588,13 @@ void Renderer::renderOutline() {
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_CULL_FACE);
-	std::string previousShader = RM.material(RM.drawingEntity(RM.selectedEntity())->material())->shader();
-	RM.material(RM.drawingEntity(RM.selectedEntity())->material())->shader("S_Light");
-	// this->renderEntity(RM.selectedEntity());
-	RM.material(RM.drawingEntity(RM.selectedEntity())->material())->shader(previousShader);
+	
+	std::vector<std::string> previousShaders;
+
+	previousShaders = RM.model(RM.selectedEntity())->shaders("S_White");
+	this->renderEntity(RM.selectedEntity());
+	RM.model(RM.selectedEntity())->shaders(previousShaders);
+	
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_STENCIL_TEST);
@@ -915,8 +886,8 @@ void Renderer::displayBoundingBox() {
 // 	}
 }
 
-// // pass the correct values to the corresponding uniforms in the shader
-void Renderer::attachUniforms(DrawingEntity* entity, Mesh* mesh, std::vector<uniform_t> uniformBuffer) {
+// pass the correct values to the corresponding uniforms in the shader
+void Renderer::attachUniforms(Model* entity, Material* material, std::vector<uniform_t> uniformBuffer) {
 	// cycle through the uniformBuffer of the shader
 	for (int i = 0; i < uniformBuffer.size(); i++) {
 		// if the uniform is "modelMatrix", set it to the entity modelMatrix
@@ -928,7 +899,7 @@ void Renderer::attachUniforms(DrawingEntity* entity, Mesh* mesh, std::vector<uni
 		// if the uniform is "viewMatrix", set it to the camera viewMatrix
 		else if (strcmp(uniformBuffer[i].name, "viewMatrix") == 0) {
 			// if the entity we're rendering is the skybox, 
-			if (entity == RM.drawingEntity(RM.skybox())) {
+			if (entity == RM.model(RM.skybox())) {
 			// 	// this process removes all the translations from the camera, this way camera movement is not taken into account
 				glm::mat4 staticCameraView = glm::mat4(glm::mat3(RM.camera()->viewMatrix()));
 				glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(staticCameraView[0][0]));
@@ -947,7 +918,7 @@ void Renderer::attachUniforms(DrawingEntity* entity, Mesh* mesh, std::vector<uni
 
 		// if the uniform is "lightPosition", pass the light position (x, y, z)
 		else if (strcmp(uniformBuffer[i].name, "lightPosition") == 0) {
-			glm::vec3 lightPosition = RM.drawingEntity(RM.mainLight())->position();
+			glm::vec3 lightPosition = RM.model(RM.mainLight())->position();
 			glUniform3f(uniformBuffer[i].id, lightPosition.x, lightPosition.y, lightPosition.z);
 		}
 
@@ -957,48 +928,49 @@ void Renderer::attachUniforms(DrawingEntity* entity, Mesh* mesh, std::vector<uni
 			glUniform3f(uniformBuffer[i].id, cameraPosition.x, cameraPosition.y, cameraPosition.z);
 		}
 
-		else if (strcmp(uniformBuffer[i].name, "lightColor") == 0) {
-			glm::vec3 lightColor = RM.drawingEntity(RM.mainLight())->lightColor();
-			glUniform3f(uniformBuffer[i].id, lightColor.x, lightColor.y, lightColor.z);
-		}
+		// else if (strcmp(uniformBuffer[i].name, "lightColor") == 0) {
+		// 	glm::vec3 lightColor = RM.drawingEntity(RM.mainLight())->lightColor();
+		// 	glUniform3f(uniformBuffer[i].id, lightColor.x, lightColor.y, lightColor.z);
+		// }
 
 		else if (strcmp(uniformBuffer[i].name, "ambient") == 0) {
-			glm::vec3 ambient = RM.material(mesh->material())->ambient();
+			glm::vec3 ambient = material->ambient();
 			glUniform3f(uniformBuffer[i].id, ambient.x, ambient.y, ambient.z);
 		}
 
 		else if (strcmp(uniformBuffer[i].name, "diffuse") == 0) {
-			glm::vec3 diffuse = RM.material(mesh->material())->diffuse();
+			glm::vec3 diffuse = material->diffuse();
 			glUniform3f(uniformBuffer[i].id, diffuse.x, diffuse.y, diffuse.z);
 		}
 
 		else if (strcmp(uniformBuffer[i].name, "specular") == 0) {
-			glm::vec3 specular = RM.material(mesh->material())->specular();
+			glm::vec3 specular = material->specular();
 			glUniform3f(uniformBuffer[i].id, specular.x, specular.y, specular.z);
 		}
 
 		else if (strcmp(uniformBuffer[i].name, "shininess") == 0) {
-			glUniform1f(uniformBuffer[i].id, RM.material(mesh->material())->shininess());
+			glUniform1f(uniformBuffer[i].id, material->shininess());
 		}
 
 		else if (strcmp(uniformBuffer[i].name, "lightAmbient") == 0) {
-			glm::vec3 ambient = RM.material(RM.drawingEntity(RM.mainLight())->material())->ambient();
+			// glm::vec3 ambient = RM.material(RM.model(RM.drawingEntity(RM.mainLight())->model())->material())->ambient();
+			glm::vec3 ambient = RM.material(RM.model(RM.mainLight())->components()[0]->material)->ambient();
 			glUniform3f(uniformBuffer[i].id, ambient.x, ambient.y, ambient.z);
 		}
 
 		else if (strcmp(uniformBuffer[i].name, "lightDiffuse") == 0) {
-			glm::vec3 diffuse = RM.material(RM.drawingEntity(RM.mainLight())->material())->diffuse();
+			glm::vec3 diffuse = RM.material(RM.model(RM.mainLight())->components()[0]->material)->diffuse();
 			glUniform3f(uniformBuffer[i].id, diffuse.x, diffuse.y, diffuse.z);
 		}
 
 		else if (strcmp(uniformBuffer[i].name, "lightSpecular") == 0) {
-			glm::vec3 specular = RM.material(RM.drawingEntity(RM.mainLight())->material())->specular();
+			glm::vec3 specular = RM.material(RM.model(RM.mainLight())->components()[0]->material)->specular();
 			glUniform3f(uniformBuffer[i].id, specular.x, specular.y, specular.z);
 		}
 	}
 }
 
-// // link layouts to the data origin (mainly VAO)
+// link layouts to the data origin (mainly VAO)
 void Renderer::linkLayouts(Mesh* mesh, std::vector<std::string> layoutBuffer) {
 	// cycle all the layouts in the layout buffer of the shader
 	for (int i = 0; i < layoutBuffer.size(); i++) {

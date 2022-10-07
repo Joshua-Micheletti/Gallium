@@ -76,11 +76,13 @@ RendererManager::RendererManager() {
     this->samples_ = 16;
     this->depth_ = false;
 
-    this->newShader("S_Default")->loadShader("../Shader/lighting/lighting.vert", "../Shader/lighting/lighting.frag");
+    this->newMesh("ME_Default", "../Models/box2.obj");
+    this->newShader("S_Default")->loadShader("../Shader/default/default.vert", "../Shader/default/default.frag");
+    this->newShader("S_White")->loadShader("../Shader/white/white.vert", "../Shader/white/white.frag");
+    this->newShader("S_Highlight")->loadShader("../Shader/highlight/highlight.vert", "../Shader/highlight/highlight.frag");
+    this->newShader("S_Outline")->loadShader("../Shader/outline/outline.vert", "../Shader/outline/outline.frag");
     this->newTexture("T_Default")->loadTexture("../Textures/default2.jpg");
-    this->newMaterial("MA_Default")->shader("S_Default")->texture("T_Default");
-    // this->newModel("M_Default")->loadModel("../Models/box2.obj");
-    this->loadModel("../Models/box2.obj");
+    this->newMaterial("MA_Default");
 
     this->newShader("S_Skybox")->loadShader("../Shader/skybox/skybox.vert", "../Shader/skybox/skybox.frag");
     std::vector<std::string> faces;
@@ -92,38 +94,24 @@ RendererManager::RendererManager() {
 	faces.push_back("../Textures/Skybox/" + directory + "/front.png"); //front
 	faces.push_back("../Textures/Skybox/" + directory + "/back.png");  //back
     this->newTexture("T_Skybox")->loadCubemap(faces);
-    this->newMaterial("MA_Skybox")->shader("S_Skybox")->texture("T_Skybox");
-    this->newDrawingEntity("DE_Skybox")->model("M_Default")->material("MA_Skybox");
-    this->skybox_ = "DE_Skybox";
+    this->newModel("M_Skybox")->shader("S_Skybox")->texture("T_Skybox");
 
-    printf("about to create axis\n");
+    this->newModel("M_Axis");
+    createAxis(this->newMesh("ME_Axis"));
+    this->newShader("S_Color")->loadShader("../Shader/color/color.vert", "../Shader/color/color.frag");
+    // RENDERING THE AXIS WITH LINES IS REALLY SLOW FOR SOME REASON
+    this->model("M_Axis")->mesh("ME_Axis")->shader("S_Color")->drawingMode(GL_LINES);
 
-    // createAxis(this->mesh(this->newModel("M_Axis")->drawingMode(GL_LINES)->meshes()[0]));
-    printf("created axis\n");
-    // this->model("M_Axis")->meshes()[0]->printVertices();
-    // this->mesh(this->model("M_Axis")->meshes()[0])->material("MA_Axis");
-    printf("setup the mesh material\n");
-    this->newShader("S_Axis")->loadShader("../Shader/color/color.vert", "../Shader/color/color.frag");
-    this->newMaterial("MA_Axis")->shader("S_Axis");
-    // this->newDrawingEntity("DE_Axis")->model("M_Axis")->material("MA_Axis");
-    printf("about to load the sphere model\n");
-    // this->newModel("M_Light")->loadModel("../Models/sphere7.obj");
-    this->loadModel("../Models/sphere7.obj", "M_Light");
-    printf("loaded the sphere model\n");
-    printf("%s\n", this->model("M_Light"));
-    this->mesh(this->model("M_Light")->meshes()[0])->material("MA_Default");
-    printf("set the mesh material\n");
-    // this->model("M_Light")->meshes()[0]->material("MA_Default");
-	this->newShader("S_Light")->loadShader("../Shader/white/white.vert", "../Shader/white/white.frag");
-	this->newMaterial("MA_Light")->shader("S_Light");
-	this->newDrawingEntity("DE_Light")->model("M_Light")->material("MA_Light")->isLight(true)->lightColor(glm::vec3(1))->scale(glm::vec3(10.0f, 10.0f, 10.0f));
-    this->mainLight_ = "DE_Light";
-
-    this->newShader("S_Highlight")->loadShader("../Shader/highlight/highlight.vert", "../Shader/highlight/highlight.frag");
-    this->newShader("S_Outline")->loadShader("../Shader/outline/outline.vert", "../Shader/outline/outline.frag");
-
+    this->newModel("M_Light");
+    this->newMesh("ME_Sphere", "../Models/sphere7.obj");
+    this->newMaterial("MA_Light");
+    this->model("M_Light")->mesh("ME_Sphere")->material("MA_Light")->shader("S_White");
+    
     this->outlineShader_ = "S_Outline";
     this->highlightShader_ = "S_Highlight";
+    this->whiteShader_ = "S_White";
+    this->mainLight_ = "M_Light";
+    this->skybox_ = "M_Skybox";
 
     this->selectedEntity_ = "";
 
@@ -171,10 +159,15 @@ std::string RendererManager::highlightShader() {
 }
 
 
-// RETURN BUFFERS
-std::map<std::string, DrawingEntity*> RendererManager::drawingEntityBuffer() {
-    return(this->drawingEntityBuffer_);
+void RendererManager::whiteShader(std::string name) {
+    this->whiteShader_ = name;
 }
+std::string RendererManager::whiteShader() {
+    return(this->whiteShader_);
+}
+
+
+// RETURN BUFFERS
 std::map<std::string, Model*> RendererManager::modelBuffer() {
     return(this->modelBuffer_);
 }
@@ -192,45 +185,13 @@ std::map<std::string, Mesh*> RendererManager::meshBuffer() {
 }
 
 
-// DRAWING ENTITY
-DrawingEntity* RendererManager::drawingEntity(std::string name) {
-    if (this->drawingEntityBuffer_.find(name) != this->drawingEntityBuffer_.end()) {
-        return(this->drawingEntityBuffer_[name]);
+// MODEL
+Model* RendererManager::model(std::string name) {
+    if (this->modelBuffer_.find(name) != this->modelBuffer_.end()) {
+        return(this->modelBuffer_[name]);
     } else {
         return(NULL);
     }
-}
-std::string RendererManager::drawingEntity(DrawingEntity *d) {
-    for (auto it = this->drawingEntityBuffer_.begin(); it != this->drawingEntityBuffer_.end(); it++) {
-        if (it->second == d) {
-            return(it->first);
-        }
-    }
-
-    return("");
-}
-DrawingEntity* RendererManager::newDrawingEntity(std::string name) {
-    DrawingEntity* de = new DrawingEntity();
-
-    de->model("M_Default")->material("MA_Default");
-
-    this->drawingEntityBuffer_[name] = de;
-    return(this->drawingEntityBuffer_[name]);
-}
-std::vector<DrawingEntity*> RendererManager::drawingEntities() {
-    // DrawingEntity* tmpSkybox = this->drawingEntityBuffer_[this->skybox_];
-    // this->drawingEntityBuffer_.erase(this->skybox_);
-    return(extractValues(this->drawingEntityBuffer_));
-    // this->drawingEntityBuffer_[this->skybox_] = tmpSkybox;
-}
-std::vector<std::string> RendererManager::drawingEntityNames() {
-    return(extractKeys(this->drawingEntityBuffer_));
-}
-
-
-// MODEL
-Model* RendererManager::model(std::string name) {
-    return(this->modelBuffer_[name]);
 }
 std::string RendererManager::model(Model *m) {
     for (auto it = this->modelBuffer_.begin(); it != this->modelBuffer_.end(); it++) {
@@ -269,7 +230,6 @@ std::string RendererManager::material(Material *ma) {
 }
 Material* RendererManager::newMaterial(std::string name) {
     Material* ma = new Material();
-    ma->shader("S_Default")->texture("T_Default");
     this->materialBuffer_[name] = ma;
     return(this->materialBuffer_[name]);
 }
@@ -351,29 +311,21 @@ Mesh* RendererManager::newMesh(std::string name) {
     this->meshBuffer_[name] = m;
     return(this->meshBuffer_[name]);
 }
+Mesh* RendererManager::newMesh(std::string name, std::string filepath) {
+    std::vector<float> v;
+    std::vector<float> t;
+    std::vector<float> n;
+
+    readOBJMesh(filepath, &v, &t, &n);
+
+    this->newMesh(name)->vertices(v)->uvs(t)->normals(n);
+}
 std::vector<Mesh*> RendererManager::meshes() {
     return(extractValues(this->meshBuffer_));
 }
 std::vector<std::string> RendererManager::meshNames() {
     return(extractKeys(this->meshBuffer_));
 }
-
-
-
-void RendererManager::material(std::string m, std::string ma) {
-    Model* model = this->model(m);
-
-    for (int i = 0; i < model->meshes().size(); i++) {
-        this->mesh(model->meshes()[i])->material(ma);
-    }
-}
-
-void RendererManager::applyMaterials(std::vector<std::string> meshes, std::vector<std::string> materials) {
-    for (int i = 0; i < meshes.size(); i++) {
-        this->mesh(meshes[i])->material(materials[i]);
-    }
-}
-
 
 
 Camera* RendererManager::camera() {
@@ -449,7 +401,12 @@ void RendererManager::loadModel(std::string filepath) {
 
     for (int i = 0; i < v.size(); i++) {
         std::string fullName = filepath + "_" + std::to_string(i);
-        this->newMesh(fullName)->vertices(*v[i])->uvs(*t[i])->normals(*n[i])->material(m[i]);
+        this->newMesh(fullName)->vertices(*v[i])->uvs(*t[i])->normals(*n[i]);
+        
+        if (m.size() != 0) {
+            this->mesh(fullName)->expectedMaterial(m[i]);
+        }
+
         meshes.push_back(fullName);
         // this->meshes_.push_back(new Mesh());
         // this->meshes_[this->meshes_.size() - 1]->vertices(*v[i]);
@@ -460,7 +417,10 @@ void RendererManager::loadModel(std::string filepath) {
         // this->meshes_[this->meshes_.size() - 1]->print();
     }
 
-    this->newModel(filepath)->source(filepath)->meshes(meshes);
+
+
+    // this->newModel(filepath)->source(filepath)->meshes(meshes);
+    this->newModel(filepath)->meshes(meshes);
 
     // createBuffer(this->vertices_, &this->vertexBuffer_);
     // createBuffer(this->uvs_, &this->uvBuffer_);
@@ -469,65 +429,33 @@ void RendererManager::loadModel(std::string filepath) {
 
 
 void RendererManager::loadModel(std::string filepath, std::string name) {
-    // readOBJ(filepath, this->vertices_, this->uvs_, this->normals_);
     std::vector<std::vector<float>*> v;
     std::vector<std::vector<float>*> t;
     std::vector<std::vector<float>*> n;
     std::vector<std::string> m;
 
-    // readOBJ(filepath, this->meshes_);
     readOBJ(filepath, &v, &t, &n, &m);
-
-    // for (int i = 0; i < v.size(); i++) {
-    //     printf("%d\n", v[0]->size());
-    //     for (int j = 0; j < v[v.size() - 1]->size(); j++) {
-    //         printf("v: %f\n", v[i][j]);
-    //     }
-    // }
 
     std::vector<std::string> meshes;
 
     for (int i = 0; i < v.size(); i++) {
         std::string fullName = name + "_" + std::to_string(i);
-        this->newMesh(fullName)->vertices(*v[i])->uvs(*t[i])->normals(*n[i])->material(m[i]);
-        meshes.push_back(fullName);
-        // this->meshes_.push_back(new Mesh());
-        // this->meshes_[this->meshes_.size() - 1]->vertices(*v[i]);
-        // this->meshes_[this->meshes_.size() - 1]->uvs(*t[i]);
-        // this->meshes_[this->meshes_.size() - 1]->normals(*n[i]);
-        // this->meshes_[this->meshes_.size() - 1]->material(m[i]);
+        this->newMesh(fullName)->vertices(*v[i])->uvs(*t[i])->normals(*n[i]);
 
-        // this->meshes_[this->meshes_.size() - 1]->print();
+        if (m.size() != 0) {
+            this->mesh(fullName);
+        }
+
+        meshes.push_back(fullName);
     }
 
-    this->newModel(name)->source(filepath)->meshes(meshes);
-
-    // createBuffer(this->vertices_, &this->vertexBuffer_);
-    // createBuffer(this->uvs_, &this->uvBuffer_);
-    // createBuffer(this->normals_, &this->normalBuffer_);
+    // this->newModel(name)->source(filepath)->meshes(meshes);
+    this->newModel(name)->meshes(meshes);
 }
 
 
 // PRINTS
-void RendererManager::printFullDE(std::string name) {
-    printf("Drawing Entity: %s\n", name.c_str());
-    this->drawingEntityBuffer_[name]->printFull();
-    printf("\n");
-
-    std::string model = this->drawingEntityBuffer_[name]->model();
-
-    if (model.size() != 0) {
-        this->printFullM(model);
-    }
-
-    printf("\n");
-
-    std::string material = this->drawingEntityBuffer_[name]->material();
-
-    if (material.size() != 0) {
-        this->printFullMA(material);
-    }
-}
+/*
 void RendererManager::printFullM(std::string name) {
     printf("Model: %s\n", name.c_str());
     // this->modelBuffer_[name]->print();
@@ -555,3 +483,4 @@ void RendererManager::printFullT(std::string name) {
     printf("Texture: %s\n", name.c_str());
     this->textureBuffer_[name]->printFull();
 }
+*/

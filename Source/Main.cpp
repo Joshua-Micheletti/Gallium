@@ -2,32 +2,31 @@
 #include "Libs/lib.h"
 
 void testFunc() {
-	// RM.newModel("M_Test")->loadModel("../Models/guy7.obj");
-	// RM.newModel("M_Test")->loadModel("../Models/low_poly_tree/processed/untitled.obj");
-	// RM.newModel("M_Test")->loadModel("../Models/box2.obj");
-	// RM.newShader("S_Test")->loadShader("../Shader/lighting/lighting.vert", "../Shader/lighting/lighting.frag");
-	RM.newShader("S_Test")->loadShader("../Shader/white/white.vert", "../Shader/white/white.frag");
-	RM.newMaterial("MA_Test")->shader("S_Test");
+	// RM.loadModel("../Models/guy7.obj", "M_Guy");
+	// RM.newDrawingEntity("DE_Guy")->model("M_Guy")->translate(glm::vec3(-20.0f, 0.0f, 0.0f));
 
-	RM.loadModel("../Models/low_poly_tree/processed/untitled.obj", "M_Tree");
-	RM.loadModel("../Models/guy7.obj", "M_Tree");
+	// RM.loadModel("../Models/low_poly_tree/processed/untitled.obj", "M_Tree");
+	// RM.loadMTL("../Models/low_poly_tree/processed/untitled.mtl");
 
-	RM.mesh(RM.model("M_Tree")->meshes()[0])->material("MA_Test");
+	// RM.newDrawingEntity("DE_Tree")->model("M_Tree");
 
-	// for (int i = 0; i < RM.model("M_Tree")->meshes().size(); i++) {
-	// 	RM.mesh(RM.model("M_Tree")->meshes()[i])->material("MA_Test");
-	// }
+	std::vector<std::vector<float>*> v;
+    std::vector<std::vector<float>*> t;
+    std::vector<std::vector<float>*> n;
+    std::vector<std::string> m;
 
-	// RM.material("M_Tree", "MA_Test");
+    readOBJ("../Models/guy7.obj", &v, &t, &n, &m);
 
-	RM.newDrawingEntity("DE_Tree")->model("M_Tree");
-	// RM.mesh(RM.model("M_Tree")->meshes()[0])->material("Bark");
-	// RM.mesh(RM.model("M_Tree")->meshes()[1])->material("Tree");
-	// RM.newDrawingEntity("DE_Test")->model("M_Test")->material("MA_Test");
+    RM.newMesh("ME_Guy")->vertices((*v[0]))->uvs((*t[0]))->normals((*n[0]));
+	RM.newShader("S_Lighting")->loadShader("../Shader/lighting/lighting.vert", "../Shader/lighting/lighting.frag");
+	RM.newShader("S_White")->loadShader("../Shader/white/white.vert", "../Shader/white/white.frag");
 
-	// RM.drawingEntity("DE_Test")->translate(glm::vec3(0.0f, 0.0f, 0.0f))->scale(glm::vec3(2.0, 2.0, 2.0));
+	RM.newModel("M_Guy")->components()[0]->mesh = "ME_Guy";
+	RM.model("M_Guy")->components()[0]->shader = "S_Lighting";
 
-	// RM.applyMaterials(RM.model("M_Tree")->meshes(), RM.loadMTL("../Models/low_poly_tree/processed/untitled.mtl"));
+	// printf("%s\n", RM.newDrawingEntity("DE_Test")->model().c_str());
+	// RM.model(RM.newDrawingEntity("DE_Test")->model())->meshes()[0]->shader = "S_Lighting";
+	// RM.model(RM.drawingEntity("DE_Test")->model())->meshes()[0]->mesh = "ME_Guy";
 }
 
 int main(void) {
@@ -38,7 +37,6 @@ int main(void) {
 	testFunc();
 	while (!glfwWindowShouldClose(window.window())) {
 		eventHandler.routine();
-		printf("about to render\n");
 		renderer.render();
 		interface.drawInfo();
 

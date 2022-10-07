@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "../../../../utils.h"
+#include "../../../utils.h"
 
 class Mesh {
     public:
@@ -22,8 +22,8 @@ class Mesh {
         unsigned int uvBuffer();
         unsigned int normalBuffer();
 
-        std::string material();
-        Mesh* material(std::string);
+        Mesh* expectedMaterial(std::string);
+        std::string expectedMaterial();
 
         void printVertices();
         void printUVs();
@@ -35,6 +35,8 @@ class Mesh {
     private:
         std::string name_;
 
+        std::string expectedMaterial_;
+
         std::vector<float> vertices_;
         std::vector<float> uvs_;
         std::vector<float> normals_;
@@ -42,8 +44,6 @@ class Mesh {
         unsigned int vertexBuffer_;
         unsigned int uvBuffer_;
         unsigned int normalBuffer_;
-
-        std::string material_;
 };
 
 #endif

@@ -6,12 +6,12 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <map>
-#include "View/drawingEntity/drawingEntity.h"
+#include <cmath>
 
 extern int maxLength(std::vector<float>);
 extern int countFaces(std::vector<float>);
 extern void createBuffer(std::vector<float>, unsigned int*);
-extern void readOBJ(std::string, std::vector<float>&, std::vector<float>&, std::vector<float>&);
+extern void readOBJMesh(std::string, std::vector<float>*, std::vector<float>*, std::vector<float>*);
 extern void readOBJ(std::string, std::vector<std::vector<float>*>*, std::vector<std::vector<float>*>*, std::vector<std::vector<float>*>*, std::vector<std::string>*);
 extern void readMTL(std::string, std::vector<std::string>*, std::vector<std::vector<float>*>*, std::vector<std::vector<float>*>*, std::vector<std::vector<float>*>*, std::vector<float>*);
 extern void polarToCartesian(float, float, float*, float*);

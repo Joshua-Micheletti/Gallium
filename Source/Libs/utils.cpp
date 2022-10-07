@@ -40,7 +40,7 @@ void createBuffer(std::vector<float> data, unsigned int* buffer) {
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
 }
 
-void readOBJ(std::string filepath, std::vector<float>& v, std::vector<float>& t, std::vector<float>& n) {
+void readOBJMesh(std::string filepath, std::vector<float>* v, std::vector<float>* t, std::vector<float>* n) {
 	FILE* model = fopen(filepath.c_str(), "r");
 
     if (model == NULL) {
@@ -63,7 +63,6 @@ void readOBJ(std::string filepath, std::vector<float>& v, std::vector<float>& t,
 	int read = 0;
 	int verticesNumber = 0;
 	int readingNormals = 0;
-	int newMesh = 0;
 
 	int i = 0;
 
@@ -81,9 +80,6 @@ void readOBJ(std::string filepath, std::vector<float>& v, std::vector<float>& t,
 			}
 			else if (buffer[0] == 'f') {
 				readingFaces = 3;
-			}
-			else if (strcmp(buffer, "usemtl") == 0) {
-				newMesh = 1;
 			}
 		}
 
@@ -129,25 +125,21 @@ void readOBJ(std::string filepath, std::vector<float>& v, std::vector<float>& t,
 			readingFaces--;
 		}
 
-		else if (newMesh) {
-			
-		}
-
 		i++;
 	}
 	printf("ABOUT TO STORE THE VALUES\n");
 	for (int i = 0; i < faces.size(); i++) {
-		v.push_back(vertices[(faces[i] - 1) * 3]);
-		v.push_back(vertices[(faces[i] - 1) * 3 + 1]);
-		v.push_back(vertices[(faces[i] - 1) * 3 + 2]);
+		v->push_back(vertices[(faces[i] - 1) * 3]);
+		v->push_back(vertices[(faces[i] - 1) * 3 + 1]);
+		v->push_back(vertices[(faces[i] - 1) * 3 + 2]);
 		if (facesTex.size() != 0) {
-			t.push_back(tex[(facesTex[i] - 1) * 2]);
-			t.push_back(tex[(facesTex[i] - 1) * 2 + 1]);
+			t->push_back(tex[(facesTex[i] - 1) * 2]);
+			t->push_back(tex[(facesTex[i] - 1) * 2 + 1]);
 		}
 		if (facesNormals.size() != 0) {
-			n.push_back(normals[(facesNormals[i] - 1) * 3]);
-			n.push_back(normals[(facesNormals[i] - 1) * 3 + 1]);
-			n.push_back(normals[(facesNormals[i] - 1) * 3 + 2]);
+			n->push_back(normals[(facesNormals[i] - 1) * 3]);
+			n->push_back(normals[(facesNormals[i] - 1) * 3 + 1]);
+			n->push_back(normals[(facesNormals[i] - 1) * 3 + 2]);
 		}
 	}
 

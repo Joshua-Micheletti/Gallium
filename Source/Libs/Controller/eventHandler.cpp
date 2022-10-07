@@ -128,7 +128,7 @@ void EventHandler::updateEntities() {
 
 	polarToCartesian(r, teta, &x, &y);
 
-	RM.drawingEntity("DE_Light")->position(glm::vec3(x, 10.0f, y));
+	RM.model("M_Light")->position(glm::vec3(x, 10.0f, y));
 }
 
 void EventHandler::handleUserEvents() {

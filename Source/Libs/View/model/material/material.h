@@ -10,11 +10,6 @@
 class Material {
     public:
         Material();
-        std::string shader();
-        Material* shader(std::string);
-        
-        std::string texture();
-        Material* texture(std::string);
 
         glm::vec3 ambient();
         Material* ambient(glm::vec3);
@@ -28,14 +23,9 @@ class Material {
         float shininess();
         Material* shininess(float);
 
-        void loadMaterial(std::string);
-
         void printFull();
 
     private:
-        std::string shader_;
-        std::string texture_;
-
         glm::vec3 ambient_;
         glm::vec3 diffuse_;
         glm::vec3 specular_;

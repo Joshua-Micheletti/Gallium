@@ -10,7 +10,7 @@
 
 #include <vector>
 #include "Model/entity.h"
-#include "View/drawingEntity/material/shader/shader.h"
+#include "View/model/shader/shader.h"
 #include "View/camera/camera.h"
 
 typedef struct buttons{

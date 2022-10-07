@@ -1,7 +1,7 @@
 #include "mesh.h"
 
 Mesh::Mesh() {
-    this->material_ = "MA_Default";
+    this->expectedMaterial_ = "MA_Default";
 }
 
 
@@ -56,13 +56,12 @@ unsigned int Mesh::normalBuffer() {
 }
 
 
-std::string Mesh::material() {
-    return(this->material_);
-}
-
-Mesh* Mesh::material(std::string ma) {
-    this->material_ = ma;
+Mesh* Mesh::expectedMaterial(std::string ma) {
+    this->expectedMaterial_ = ma;
     return(this);
+}
+std::string Mesh::expectedMaterial() {
+    return(this->expectedMaterial_);
 }
 
 
@@ -203,11 +202,10 @@ void Mesh::printFace(int face) {
 }
 
 void Mesh::print() {
-    printf("Source = %s\nVertices = %d\nUVs = %d\nNormals = %d\nFaces = %d\nMaterial = %s\n",
+    printf("Source = %s\nVertices = %d\nUVs = %d\nNormals = %d\nFaces = %d\n",
             "this->source_.c_str()",
             (int)(this->vertices_.size() / 3),
             (int)(this->uvs_.size() / 2),
             (int)(this->normals_.size() / 3),
-            (int)(this->vertices_.size() / 9),
-            this->material_.c_str());
+            (int)(this->vertices_.size() / 9));
 }

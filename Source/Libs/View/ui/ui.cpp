@@ -143,7 +143,7 @@ void UI::drawLeftColumn() {
 	ImGui::Begin("Left Column", NULL, leftColumnWindowFlags);
 
 	if (ImGui::CollapsingHeader("Entities")) {
-        std::vector<std::string> entities = RM.drawingEntityNames();
+        std::vector<std::string> entities = RM.modelNames();
 		for (int i = 0; i < entities.size(); i++) {
 			// if (ImGui::Selectable("test", false));
 			if (ImGui::Selectable(entities[i].c_str(), false)) {
@@ -162,18 +162,18 @@ void UI::drawLeftColumn() {
 	ImGui::Separator();
 
 	if (RM.selectedEntity().size() != 0) {
-		ImGui::Text(std::string("Entity: ").append(selectedEntity).c_str());
+		ImGui::Text(std::string("Entity: ").append(RM.selectedEntity()).c_str());
 		if (ImGui::CollapsingHeader("Properties")) {
 			
 			if (ImGui::TreeNode("Position")) {
-				float x = RM.drawingEntity(selectedEntity)->position().x;
+				float x = RM.model(RM.selectedEntity())->position().x;
 				ImGui::DragFloat("X", &x, 0.005f);
-				float y = RM.drawingEntity(selectedEntity)->position().y;
+				float y = RM.model(RM.selectedEntity())->position().y;
 				ImGui::DragFloat("Y", &y, 0.005f);
-				float z = RM.drawingEntity(selectedEntity)->position().z;
+				float z = RM.model(RM.selectedEntity())->position().z;
 				ImGui::DragFloat("Z", &z, 0.005f);
 
-				RM.drawingEntity(selectedEntity)->position(glm::vec3(x, y, z));
+				RM.model(RM.selectedEntity())->position(glm::vec3(x, y, z));
 
 				ImGui::TreePop();
 			}
@@ -203,7 +203,7 @@ void UI::drawLeftColumn() {
 			// }
 
 			ImGui::Separator();
-
+			/*
 			std::vector<std::string> materialNames = RM.materialNames();
             std::vector<char*> cMaterialNames;
 			for (int i = 0; i < materialNames.size(); i++) {
@@ -236,6 +236,8 @@ void UI::drawLeftColumn() {
 
 				RM.drawingEntity(RM.selectedEntity())->lightColor(glm::vec3(lightColor[0], lightColor[1], lightColor[2]));
 			}
+
+			*/
 			
 
 		
