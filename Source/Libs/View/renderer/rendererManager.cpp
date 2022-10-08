@@ -365,12 +365,6 @@ std::vector<std::string> RendererManager::loadMTL(std::string filepath) {
     readMTL(filepath, &names, &ambient, &diffuse, &specular, &shininess);
 
     for (int i = 0; i < names.size(); i++) {
-        printf("name: %s\n", names[i].c_str());
-        printf("ambient: %f %f %f\n", (*ambient[i])[0], (*ambient[i])[1], (*ambient[i])[2]);
-        printf("diffuse: %f %f %f\n", (*diffuse[i])[0], (*diffuse[i])[1], (*diffuse[i])[2]);
-        printf("specular: %f %f %f\n", (*specular[i])[0], (*specular[i])[1], (*specular[i])[2]);
-        printf("%f\n", shininess[i]);
-
         this->newMaterial(names[i])->ambient(glm::vec3((*ambient[i])[0], (*ambient[i])[1], (*ambient[i])[2]))->
                                      diffuse(glm::vec3((*diffuse[i])[0], (*diffuse[i])[1], (*diffuse[i])[2]))->
                                      specular(glm::vec3((*specular[i])[0], (*specular[i])[1], (*specular[i])[2]))->
@@ -381,21 +375,12 @@ std::vector<std::string> RendererManager::loadMTL(std::string filepath) {
 }
 
 void RendererManager::loadModel(std::string filepath) {
-    // readOBJ(filepath, this->vertices_, this->uvs_, this->normals_);
     std::vector<std::vector<float>*> v;
     std::vector<std::vector<float>*> t;
     std::vector<std::vector<float>*> n;
     std::vector<std::string> m;
 
-    // readOBJ(filepath, this->meshes_);
     readOBJ(filepath, &v, &t, &n, &m);
-
-    // for (int i = 0; i < v.size(); i++) {
-    //     printf("%d\n", v[0]->size());
-    //     for (int j = 0; j < v[v.size() - 1]->size(); j++) {
-    //         printf("v: %f\n", v[i][j]);
-    //     }
-    // }
 
     std::vector<std::string> meshes;
 
@@ -408,34 +393,19 @@ void RendererManager::loadModel(std::string filepath) {
         }
 
         meshes.push_back(fullName);
-        // this->meshes_.push_back(new Mesh());
-        // this->meshes_[this->meshes_.size() - 1]->vertices(*v[i]);
-        // this->meshes_[this->meshes_.size() - 1]->uvs(*t[i]);
-        // this->meshes_[this->meshes_.size() - 1]->normals(*n[i]);
-        // this->meshes_[this->meshes_.size() - 1]->material(m[i]);
-
-        // this->meshes_[this->meshes_.size() - 1]->print();
     }
 
-
-
-    // this->newModel(filepath)->source(filepath)->meshes(meshes);
     this->newModel(filepath)->meshes(meshes);
-
-    // createBuffer(this->vertices_, &this->vertexBuffer_);
-    // createBuffer(this->uvs_, &this->uvBuffer_);
-    // createBuffer(this->normals_, &this->normalBuffer_);
 }
 
 
-Model* RendererManager::loadModel(std::string filepath, std::string name) {
+std::string RendererManager::loadModel(std::string filepath, std::string name) {
     std::vector<std::vector<float>*> v;
     std::vector<std::vector<float>*> t;
     std::vector<std::vector<float>*> n;
     std::vector<std::string> m;
 
     readOBJ(filepath, &v, &t, &n, &m);
-    printf("loaded the file\n");
 
     std::vector<std::string> meshes;
     std::vector<component_t*> components;
@@ -444,22 +414,23 @@ Model* RendererManager::loadModel(std::string filepath, std::string name) {
         std::string fullName = name + "_" + std::to_string(i);
         this->newMesh(fullName)->vertices(*v[i])->uvs(*t[i])->normals(*n[i]);
 
+        component_t* tmp = new component_t;
+
         if (m.size() != 0) {
-            // this->mesh(fullName);
+            this->mesh(fullName)->expectedMaterial(m[i]);
+            if (find(m[i], this->materialNames()) != -1) {
+                tmp->material = m[i];
+            }
         }
 
         meshes.push_back(fullName);
-
-        component_t* tmp = new component_t;
         tmp->mesh = fullName;
         components.push_back(tmp);
     }
 
-    // this->newModel(name)->source(filepath)->meshes(meshes);
+    this->newModel(name)->components(components);
 
-    
-    printf("about to store the result\n");
-    return(this->newModel(name)->components(components));
+    return(name);
 }
 
 

@@ -13,6 +13,7 @@
 #include <iterator>
 #include <vector>
 #include <iostream>
+#include "../../utils.h"
 
 class RendererManager {
     public:
@@ -98,7 +99,7 @@ class RendererManager {
 
         std::vector<std::string> loadMTL(std::string);
         void loadModel(std::string);
-        Model* loadModel(std::string, std::string);
+        std::string loadModel(std::string, std::string);
 
 
         void material(std::string, std::string);

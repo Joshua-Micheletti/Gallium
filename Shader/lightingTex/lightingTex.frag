@@ -25,7 +25,7 @@ void main() {
   // ambient
   // vec3 ambient = ambientStrength * lightColor;
   // vec3 ambient = lightColor * fragAmbient;
-  vec3 ambient = fragLightAmbient * fragAmbient * 0.2;
+  vec3 ambient = fragLightAmbient * fragAmbient * 0.3;
 
   // diffuse
   vec3 norm = normalize(fragNormal);

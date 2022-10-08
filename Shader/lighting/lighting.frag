@@ -22,7 +22,7 @@ float map(float value, float min1, float max1, float min2, float max2) {
 }
 
 void main() {
-  vec3 ambient = fragLightAmbient * fragAmbient * 0.2;
+  vec3 ambient = fragLightAmbient * fragAmbient * 0.3;
 
   // diffuse
   vec3 norm = normalize(fragNormal);
