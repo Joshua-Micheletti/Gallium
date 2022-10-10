@@ -76,8 +76,11 @@ class RendererManager {
         void printFullT(std::string);
 
         Camera* camera();
+        RendererManager* camera(std::string);
+
         glm::mat4 projection();
-        void projection(glm::mat4);
+        RendererManager* projection(std::string);
+        void setProjection(std::string, glm::mat4);
 
         std::string skybox();
         void skybox(std::string);
@@ -112,8 +115,12 @@ class RendererManager {
         std::map<std::string, Texture*> textureBuffer_;
         std::map<std::string, Mesh*> meshBuffer_;
 
-        Camera* camera_;
-        glm::mat4 projection_;
+        std::map<std::string, Camera*> cameras_;
+        std::map<std::string, glm::mat4> projections_;
+
+        std::string currentCamera_;
+        std::string currentProjection_;
+
         std::string skybox_;
         std::string mainLight_;
         std::string selectedEntity_;

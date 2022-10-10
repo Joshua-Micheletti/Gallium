@@ -127,7 +127,7 @@ void readOBJMesh(std::string filepath, std::vector<float>* v, std::vector<float>
 
 		i++;
 	}
-	printf("ABOUT TO STORE THE VALUES\n");
+
 	for (int i = 0; i < faces.size(); i++) {
 		v->push_back(vertices[(faces[i] - 1) * 3]);
 		v->push_back(vertices[(faces[i] - 1) * 3 + 1]);
@@ -142,8 +142,6 @@ void readOBJMesh(std::string filepath, std::vector<float>* v, std::vector<float>
 			n->push_back(normals[(facesNormals[i] - 1) * 3 + 2]);
 		}
 	}
-
-	printf("STORED THE VALUES\n");
 }
 
 void readOBJ(std::string filepath, std::vector<std::vector<float>*>* v, std::vector<std::vector<float>*>* t, std::vector<std::vector<float>*>* n, std::vector<std::string>* m) {
@@ -185,8 +183,6 @@ void readOBJ(std::string filepath, std::vector<std::vector<float>*>* v, std::vec
 	if (n->size() == 0) {
 		n->push_back(new std::vector<float>);
 	}
-	
-	printf("%d\n", v->size());
 
 	while (fscanf(model, "%s", buffer) != EOF) {
 		if (!readingVertex && !readingFaces && !readingTex && !readingNormals && !readingMaterial) {
@@ -262,7 +258,6 @@ void readOBJ(std::string filepath, std::vector<std::vector<float>*>* v, std::vec
 		}
 
 		if (newMesh) {
-			printf("storing the values!\n");
 			for (int i = 0; i < faces.size(); i++) {
 				(*v)[v->size() - 1]->push_back(vertices[(faces[i] - 1) * 3]);
 				(*v)[v->size() - 1]->push_back(vertices[(faces[i] - 1) * 3 + 1]);
@@ -306,23 +301,6 @@ void readOBJ(std::string filepath, std::vector<std::vector<float>*>* v, std::vec
 			(*n)[n->size() - 1]->push_back(normals[(facesNormals[i] - 1) * 3 + 2]);
 		}
 	}
-
-	// for (int i = 0; i < faces.size(); i++) {
-	// 	v.push_back(vertices[(faces[i] - 1) * 3]);
-	// 	v.push_back(vertices[(faces[i] - 1) * 3 + 1]);
-	// 	v.push_back(vertices[(faces[i] - 1) * 3 + 2]);
-	// 	if (facesTex.size() != 0) {
-	// 		t.push_back(tex[(facesTex[i] - 1) * 2]);
-	// 		t.push_back(tex[(facesTex[i] - 1) * 2 + 1]);
-	// 	}
-	// 	if (facesNormals.size() != 0) {
-	// 		n.push_back(normals[(facesNormals[i] - 1) * 3]);
-	// 		n.push_back(normals[(facesNormals[i] - 1) * 3 + 1]);
-	// 		n.push_back(normals[(facesNormals[i] - 1) * 3 + 2]);
-	// 	}
-	// }
-
-	// printf("STORED THE VALUES\n");
 }
 
 void readMTL(std::string filepath, std::vector<std::string> *names, std::vector<std::vector<float>*> *ambient, std::vector<std::vector<float>*> *diffuse, std::vector<std::vector<float>*> *specular, std::vector<float> *shininess) {
@@ -402,7 +380,6 @@ void readMTL(std::string filepath, std::vector<std::string> *names, std::vector<
 			readingShininess--;
 		}
 		else if (readingMaterialName) {
-			printf("reading a new material name: %s\n", buffer);
 			namesBuffer = std::string(buffer);
 			readingMaterialName--;
 		}

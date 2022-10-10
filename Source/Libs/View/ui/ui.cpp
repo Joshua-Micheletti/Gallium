@@ -146,7 +146,7 @@ void UI::drawLeftColumn() {
         std::vector<std::string> entities = RM.modelNames();
 		for (int i = 0; i < entities.size(); i++) {
 			// if (ImGui::Selectable("test", false));
-			if (ImGui::Selectable(entities[i].c_str(), false)) {
+			if (ImGui::Selectable(entities[i].c_str(), RM.selectedEntity() == entities[i])) {
 				if (selected == i) {
 					selected = -1;
 					RM.selectedEntity("");
@@ -203,6 +203,9 @@ void UI::drawLeftColumn() {
 			// }
 
 			ImGui::Separator();
+
+			
+
 			/*
 			std::vector<std::string> materialNames = RM.materialNames();
             std::vector<char*> cMaterialNames;
@@ -259,6 +262,93 @@ void UI::drawLeftColumn() {
 			// ImGui::Combo("###OutlineDropdown", &outlineCurrent, outlineCarray, outlineArraySize);
 
 			// outlineType = outlineCurrent;
+		}
+
+		static int selectedMesh = -1;
+
+		std::vector<component_t*> components = RM.model(RM.selectedEntity())->components();
+
+		if (ImGui::CollapsingHeader("Meshes")) {
+			for (int i = 0; i < components.size(); i++) {
+				if (ImGui::Selectable(components[i]->mesh.c_str(), selectedMesh == i)) {
+					if (selectedMesh == i) {
+						selectedMesh = -1;
+					}
+					else {
+						selectedMesh = i;
+					}
+				}
+			}
+		}
+
+		if (selectedMesh != -1) {
+			ImGui::Separator();
+			ImGui::Text(std::string("Mesh: ").append(components[selectedMesh]->mesh).c_str());
+			if (ImGui::CollapsingHeader("Mesh Properties")) {
+				std::vector<std::string> materialNames = RM.materialNames();
+				std::vector<char*> cMaterialNames;
+				for (int i = 0; i < materialNames.size(); i++) {
+					cMaterialNames.push_back((char*)materialNames[i].c_str());
+				}
+
+				std::vector<std::string> shaderNames = RM.shaderNames();
+				std::vector<char*> cShaderNames;
+				for (int i = 0; i < shaderNames.size(); i++) {
+					cShaderNames.push_back((char*)shaderNames[i].c_str());
+				}
+
+				std::vector<std::string> textureNames = RM.textureNames();
+				std::vector<char*> cTextureNames;
+				for (int i = 0; i < textureNames.size(); i++) {
+					cTextureNames.push_back((char*)textureNames[i].c_str());
+				}
+
+				static int currentMaterial;
+				static int currentShader;
+				static int currentTexture;
+
+				currentMaterial = find(components[selectedMesh]->material, materialNames);
+				currentShader = find(components[selectedMesh]->shader, shaderNames);
+				currentTexture = find(components[selectedMesh]->texture, textureNames);
+
+				char** CArrayMaterial = cMaterialNames.data();
+				char** CArrayShader = cShaderNames.data();
+				char** CArrayTexture = cTextureNames.data();
+
+				size_t materialArraySize = materialNames.size();
+				size_t shaderArraySize = shaderNames.size();
+				size_t textureArraySize = textureNames.size();
+
+				ImGui::Text("Material");
+				ImGui::SameLine();
+				ImGui::Combo("###MaterialDropdown", &currentMaterial, CArrayMaterial, materialArraySize);
+
+				ImGui::Text("Shader");
+				ImGui::SameLine();
+				ImGui::Combo("###ShaderDropdown", &currentShader, CArrayShader, shaderArraySize);
+
+				ImGui::Text("Texture");
+				ImGui::SameLine();
+				ImGui::Combo("###TextureDropdown", &currentTexture, CArrayTexture, textureArraySize);
+
+				components[selectedMesh]->material = materialNames[currentMaterial];
+				components[selectedMesh]->shader = shaderNames[currentShader];
+				components[selectedMesh]->texture = textureNames[currentTexture];
+
+				/*
+				if (ImGui::TreeNode("Material")) {
+					ImGui::TreePop();
+				}
+
+				if (ImGui::TreeNode("Shader")) {
+					ImGui::TreePop();
+				}
+
+				if (ImGui::TreeNode("Texture")) {
+					ImGui::TreePop();
+				}*/
+			}
+
 		}
 	}
 

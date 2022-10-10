@@ -299,46 +299,42 @@ void Renderer::render() {
 
 // render the cubemap view from the reflection camera to later calculate reflections on
 void Renderer::renderReflectionCubemap() {
-	
-// 	// set the current camera to the camera inside the reflective object
-// 	defaultCamera = 1;
+	RM.camera("reflection");
+	RM.projection("reflection");
 
-// 	/* ACTIVE CAMERA: camera2 */
-// 	// set the viewport to fit the reflection texture resolution
-	
-// 	glViewport(0, 0, reflectionRes, reflectionRes);
+	// set the viewport to fit the reflection texture resolution
+	glViewport(0, 0, reflectionRes, reflectionRes);
 
-// 	// cycle all the faces of the cubemap
-// 	for (int i = 0; i < 6; i++) {
-// 		// attach the positive X texture of the reflectionCubemap to the color buffer of the reflectionFBO
-// 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, this->reflectionCubemap, 0);
-// 		// aim the camera to face the correct direction
-// 		if (i == 0)      // FRONT
-// 			camera2.setOrientation(glm::vec3(0.0, 0.0, 0.0));
-// 		else if (i == 1) // BACK
-// 			camera2.setOrientation(glm::vec3(0.0, 180.0, 0.0));
-// 		else if (i == 2) // TOP
-// 			camera2.setOrientation(glm::vec3(0.0, -90.0, 90.0));
-// 		else if (i == 3) // BOTTOM
-// 			camera2.setOrientation(glm::vec3(0.0, -90.0, -90.0));
-// 		else if (i == 4) // RIGHT
-// 			camera2.setOrientation(glm::vec3(0.0, 90.0, 0.0));
-// 		else             // LEFT
-// 			camera2.setOrientation(glm::vec3(0.0, 270.0, 0.0));
+	// cycle all the faces of the cubemap
+	for (int i = 0; i < 6; i++) {
+		// attach the positive X texture of the reflectionCubemap to the color buffer of the reflectionFBO
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, this->reflectionCubemap, 0);
+		// aim the camera to face the correct direction
+		if (i == 0)      // FRONT
+			RM.camera()->orientation(glm::vec3(0.0, 0.0, 0.0));
+		else if (i == 1) // BACK
+			RM.camera()->orientation(glm::vec3(0.0, 180.0, 0.0));
+		else if (i == 2) // TOP
+			RM.camera()->orientation(glm::vec3(0.0, 90.0, 90.0));
+		else if (i == 3) // BOTTOM
+			RM.camera()->orientation(glm::vec3(0.0, 90.0, -90.0));
+		else if (i == 4) // RIGHT
+			RM.camera()->orientation(glm::vec3(0.0, 90.0, 0.0));
+		else             // LEFT
+			RM.camera()->orientation(glm::vec3(0.0, 270.0, 0.0));
 
-// 		// render all entities except for the ones that shouldn't be rendered in the reflection
-// 		this->renderEntities(true);
-// 		// clear the depth buffers from the reflectionFBO
-// 		glClear(GL_DEPTH_BUFFER_BIT);
-// 	}
+		this->renderSkybox();
+		this->renderEntities(true);
+		// clear the depth buffers from the reflectionFBO
+		glClear(GL_DEPTH_BUFFER_BIT);
+	}
 
-// 	// reset the viewport
-// 	glViewport(0, 0, screenWidth, screenHeight);
+	// reset the viewport
+	glViewport(0, 0, window.width(), window.height());
 
-// 	// set the render camera to the default camera
-// 	defaultCamera = 0;
-
-// 	/* ACTIVE CAMERA: camera1 */
+	// set the render camera to the default camera
+	RM.camera("default");
+	RM.projection("default");
 }
 
 // render all entities with their corresponding shader (forward rendering)
@@ -485,10 +481,8 @@ void Renderer::renderEntities(bool reflection) {
 
 
 void Renderer::renderEntity(std::string entity) {
-	// DrawingEntity* currentDE = RM.drawingEntity(entity);
 	Model* currentM = RM.model(entity);
 	std::vector<component_t*> currentComponents = currentM->components();
-	// std::vector<std::string> currentMeshes = currentM->meshes();
 
 	for (int i = 0; i < currentComponents.size(); i++) {
 		Mesh* currentMesh = RM.mesh(currentComponents[i]->mesh);
@@ -497,9 +491,11 @@ void Renderer::renderEntity(std::string entity) {
 		Texture* currentT = RM.texture(currentComponents[i]->texture);
 		
 		glUseProgram(currentS->id());
+		glBindTexture(GL_TEXTURE_2D, currentT->id());
+
 		attachUniforms(currentM, currentMA, currentS->uniformBuffer());
 		linkLayouts(currentMesh, currentS->layoutBuffer());
-		glBindTexture(GL_TEXTURE_2D, currentT->id());
+		
 		glDrawArrays(currentM->drawingMode(), 0, currentMesh->vertices().size() / 3);
 
 		glDisableVertexAttribArray(0);
@@ -801,7 +797,9 @@ void Renderer::resizeScreen() {
 	// glViewport(0, 0, window.width(), window.height());
 
 	// projectionBuffer[0] = glm::perspective(glm::radians(45.0f), (float)screenWidth / (float)screenHeight, 0.1f, 10000.0f);
-	RM.projection(glm::perspective(glm::radians(45.0f), (float)window.framebufferWidth() / (float)window.framebufferHeight(), 0.1f, 10000.0f));
+	RM.setProjection("default", glm::perspective(glm::radians(45.0f), (float)window.framebufferWidth() / (float)window.framebufferHeight(), 0.1f, 10000.0f));
+	RM.setProjection("reflection", glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10000.0f));
+	// RM.projection(glm::perspective(glm::radians(45.0f), (float)window.framebufferWidth() / (float)window.framebufferHeight(), 0.1f, 10000.0f));
 	updated = true;
 	// updateResolution = false;
 }
@@ -928,10 +926,9 @@ void Renderer::attachUniforms(Model* entity, Material* material, std::vector<uni
 			glUniform3f(uniformBuffer[i].id, cameraPosition.x, cameraPosition.y, cameraPosition.z);
 		}
 
-		// else if (strcmp(uniformBuffer[i].name, "lightColor") == 0) {
-		// 	glm::vec3 lightColor = RM.drawingEntity(RM.mainLight())->lightColor();
-		// 	glUniform3f(uniformBuffer[i].id, lightColor.x, lightColor.y, lightColor.z);
-		// }
+		else if (strcmp(uniformBuffer[i].name, "skybox") == 0) {
+			glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
+		}
 
 		else if (strcmp(uniformBuffer[i].name, "ambient") == 0) {
 			glm::vec3 ambient = material->ambient();
@@ -1292,6 +1289,3 @@ void Renderer::setPostProcessingEffect(int effect) {
 void Renderer::setFilterColor(float r, float g, float b) {
 	this->filterColor = glm::vec3(r, g, b);
 }
-
-// */
-

@@ -14,7 +14,12 @@ void testFunc() {
 	RM.loadMTL("../Models/gally/untitled.mtl");
 	RM.model(RM.loadModel("../Models/gally/untitled.obj", "M_Gally"))->translate(glm::vec3(0.0f, 0.0f, -20.0f))->shaders("S_Lighting");
 
-	// RM.model("M_Gally")->shaders("S_Lighting");
+	RM.loadMTL("../Models/iryo/untitled.mtl");
+	RM.model(RM.loadModel("../Models/iryo/untitled.obj", "M_Iryo"))->translate(glm::vec3(0.0f, 30.0f, 0.0f))->shaders("S_Lighting");
+
+	RM.newShader("S_Reflection")->loadShader("../Shader/reflection/reflection.vert", "../Shader/reflection/reflection.frag");
+	RM.shader("S_Reflection")->printFull();
+	RM.newModel("M_Test")->mesh("ME_Sphere")->shaders("S_Reflection");
 }
 
 int main(void) {

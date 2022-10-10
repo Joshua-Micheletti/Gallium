@@ -1,5 +1,6 @@
 #include "eventHandler.h"
-#include "../init.h"
+// #include "../init.h"
+#include "../global.h"
 #include "../View/camera/camera.h"
 #include "../Model/entity.h"
 #include <glm/glm.hpp>
@@ -132,7 +133,7 @@ void EventHandler::updateEntities() {
 }
 
 void EventHandler::handleUserEvents() {
-	float cameraSpeed = 0.02f;
+	float cameraSpeed = 0.005f;
 	float sensitivity = 0.08f;
 
 	// look movement

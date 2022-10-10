@@ -15,7 +15,7 @@
 #include "../model/mesh/mesh.h"
 #include "kernel/kernel.h"
 #include "../camera/camera.h"
-#include "../../init.h"
+// #include "../../init.h"
 #include "../../global.h"
 
 

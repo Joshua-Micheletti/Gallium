@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include "GLFW/glfw3.h"
 #include <glm/glm.hpp>
-#include "../init.h"
+// #include "../init.h"
 #include "../global.h"
 
 // class for handling keyboard, window and entity events

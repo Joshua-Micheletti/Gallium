@@ -3,7 +3,6 @@
 #include "GLFW/glfw3.h"
 #include <string>
 #include <stdlib.h>
-#include "init.h"
 #include "View/renderer/renderer.h"
 #include "View/model/model.h"
 #include "Controller/eventHandler.h"

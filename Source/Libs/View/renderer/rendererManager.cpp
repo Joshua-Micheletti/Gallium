@@ -67,11 +67,20 @@ void createAxis(Mesh* axis) {
 
 
 RendererManager::RendererManager() {
-    this->camera_ = new Camera(glm::vec3(30.0f, 30.0f, 30.0f),   // position
-                               glm::vec3(0.0f, 225.0f, -35.0f),  // direction
-                               glm::vec3(0.0f, 1.0f, 0.0f));
+    this->cameras_["default"] = new Camera(glm::vec3(30.0f, 30.0f, 30.0f),   // position
+                                           glm::vec3(0.0f, 225.0f, -35.0f),  // direction
+                                           glm::vec3(0.0f, 1.0f, 0.0f));
 
-    this->projection_ = glm::perspective(glm::radians(45.0f), (float)1280 / (float)720, 0.1f, 10000.0f);
+    this->cameras_["reflection"] = new Camera(glm::vec3(0.0f, 0.0f, 0.0f),   // position
+                                              glm::vec3(0.0f, 0.0f, 0.0f),  // direction
+                                              glm::vec3(0.0f, -1.0f, 0.0f));
+
+    this->currentCamera_ = "default";
+
+    this->projections_["default"] = glm::perspective(glm::radians(45.0f), (float)1280 / (float)720, 0.1f, 10000.0f);
+    this->projections_["reflection"] = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10000.0f);
+
+    this->currentProjection_ = "default";
 
     this->samples_ = 16;
     this->depth_ = false;
@@ -329,14 +338,23 @@ std::vector<std::string> RendererManager::meshNames() {
 
 
 Camera* RendererManager::camera() {
-    return(this->camera_);
+    return(this->cameras_[this->currentCamera_]);
+}
+RendererManager* RendererManager::camera(std::string s) {
+    this->currentCamera_ = s;
+    return(this);
 }
 
+
 glm::mat4 RendererManager::projection() {
-    return(this->projection_);
+    return(this->projections_[this->currentProjection_]);
 }
-void RendererManager::projection(glm::mat4 p) {
-    this->projection_ = p;
+RendererManager* RendererManager::projection(std::string p) {
+    this->currentProjection_ = p;
+}
+
+void RendererManager::setProjection(std::string name, glm::mat4 m) {
+    this->projections_[name] = m;
 }
 
 
