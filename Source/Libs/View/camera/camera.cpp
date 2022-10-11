@@ -8,7 +8,6 @@ Camera::Camera(glm::vec3 position, glm::vec3 orientation, glm::vec3 up) {
   this->position_ = position;
   this->orientation_ = orientation;
   this->up_ = up;
-  this->mainCamera = false;
   calculateViewMatrix();
 }
 
@@ -19,14 +18,12 @@ void Camera::position(glm::vec3 position) {
 
 void Camera::orientation(glm::vec3 orientation) {
   this->orientation_ = orientation;
-  if (this->mainCamera == true) {
-    if (this->orientation_.z > 89.0f) {
-      this->orientation_.z = 89.0f;
-    }
+  if (this->orientation_.z > 89.0f) {
+    this->orientation_.z = 89.0f;
+  }
 
-    if (this->orientation_.z < -89.0f) {
-      this->orientation_.z = -89.0f;
-    }
+  if (this->orientation_.z < -89.0f) {
+    this->orientation_.z = -89.0f;
   }
   calculateViewMatrix();
 }

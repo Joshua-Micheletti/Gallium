@@ -133,7 +133,7 @@ void EventHandler::updateEntities() {
 }
 
 void EventHandler::handleUserEvents() {
-	float cameraSpeed = 0.005f;
+	float cameraSpeed = 0.02f;
 	float sensitivity = 0.08f;
 
 	// look movement

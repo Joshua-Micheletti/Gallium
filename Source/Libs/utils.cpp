@@ -5,10 +5,8 @@ std::string strGreen = "\033[0;32m";
 std::string strBlue = "\033[0;34m";
 std::string strNoColor = "\033[0m";
 
-
 bool updateResolution = false;
 bool updated = true;
-
 
 int maxLength(std::vector<float> vector) {
     int maxLength = 0;

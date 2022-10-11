@@ -268,16 +268,20 @@ void UI::drawLeftColumn() {
 
 		std::vector<component_t*> components = RM.model(RM.selectedEntity())->components();
 
-		if (ImGui::CollapsingHeader("Meshes")) {
+		if (ImGui::CollapsingHeader("Components")) {
 			for (int i = 0; i < components.size(); i++) {
-				if (ImGui::Selectable(components[i]->mesh.c_str(), selectedMesh == i)) {
-					if (selectedMesh == i) {
-						selectedMesh = -1;
-					}
-					else {
-						selectedMesh = i;
-					}
+				if (ImGui::TreeNode(std::to_string(i).c_str())) {
+					
+					ImGui::TreePop();
 				}
+				// if (ImGui::Selectable(components[i]->mesh.c_str(), selectedMesh == i)) {
+				// 	if (selectedMesh == i) {
+				// 		selectedMesh = -1;
+				// 	}
+				// 	else {
+				// 		selectedMesh = i;
+				// 	}
+				// }
 			}
 		}
 

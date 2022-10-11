@@ -14,8 +14,6 @@ class Camera {
     glm::vec3 orientationCartesian();
     glm::vec3 up();
     glm::mat4 viewMatrix();
-    
-    bool mainCamera;
 
   private:
     glm::vec3 position_;
