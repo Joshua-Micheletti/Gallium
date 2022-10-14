@@ -1,9 +1,12 @@
 /Debug
 /Release
-/Textures
+
+/Textures/*
+!/Textures/Default/
 /Models
+!/Models/Default
 /.vs
 /Portable
-/bin
 /.vscode
 /x64
+/bin/objects/*.o
