@@ -1,9 +1,8 @@
 /Debug
 /Release
-
 /Textures/*
 !/Textures/Default/
-/Models
+/Models/*
 !/Models/Default
 /.vs
 /Portable

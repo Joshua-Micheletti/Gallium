@@ -1,6 +1,7 @@
 #include "sandbox.h"
 
 void sandbox() {
+    // REPLACE THIS CODE WITH ANYTHING YOU WANT TO BE LOADED IN THE ENGINE
     RM.newShader("S_Lighting")->loadShader("../Shader/lighting/lighting.vert", "../Shader/lighting/lighting.frag");
     RM.newShader("S_LightingTex")->loadShader("../Shader/lightingTex/lightingTex.vert", "../Shader/lightingTex/lightingTex.frag");
 
