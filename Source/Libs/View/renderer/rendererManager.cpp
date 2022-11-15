@@ -65,15 +65,16 @@ void createAxis(Mesh* axis) {
 	axis->vertices(axisVertices);
 }
 
-
+// CONSTRUCTOR
 RendererManager::RendererManager() {
+    // initialize the default camera
     this->cameras_["default"] = new Camera(glm::vec3(30.0f, 30.0f, 30.0f),   // position
                                            glm::vec3(0.0f, 225.0f, -35.0f),  // direction
-                                           glm::vec3(0.0f, 1.0f, 0.0f));
-
+                                           glm::vec3(0.0f, 1.0f, 0.0f));     // up
+    // initialize the reflection camera
     this->cameras_["reflection"] = new Camera(glm::vec3(0.0f, 0.0f, 0.0f),   // position
-                                              glm::vec3(0.0f, 0.0f, 0.0f),  // direction
-                                              glm::vec3(0.0f, -1.0f, 0.0f));
+                                              glm::vec3(0.0f, 0.0f, 0.0f),   // direction
+                                              glm::vec3(0.0f, -1.0f, 0.0f)); // up
 
     this->currentCamera_ = "default";
 
@@ -85,23 +86,24 @@ RendererManager::RendererManager() {
     this->samples_ = 16;
     this->depth_ = false;
 
-    this->newMesh("ME_Default", "../Models/box2.obj");
+    this->newMesh("ME_Default", "../Models/Default/box2.obj");
     this->newShader("S_Default")->loadShader("../Shader/default/default.vert", "../Shader/default/default.frag");
     this->newShader("S_White")->loadShader("../Shader/white/white.vert", "../Shader/white/white.frag");
     this->newShader("S_Highlight")->loadShader("../Shader/highlight/highlight.vert", "../Shader/highlight/highlight.frag");
     this->newShader("S_Outline")->loadShader("../Shader/outline/outline.vert", "../Shader/outline/outline.frag");
-    this->newTexture("T_Default")->loadTexture("../Textures/default2.jpg");
+    this->newTexture("T_Default")->loadTexture("../Textures/Default/default2.jpg");
     this->newMaterial("MA_Default");
 
     this->newShader("S_Skybox")->loadShader("../Shader/skybox/skybox.vert", "../Shader/skybox/skybox.frag");
     std::vector<std::string> faces;
 	std::string directory = "Epic_BlueSunset";
-	faces.push_back("../Textures/Skybox/" + directory + "/right.png"); //right
-	faces.push_back("../Textures/Skybox/" + directory + "/left.png");  //left
-	faces.push_back("../Textures/Skybox/" + directory + "/top.png");   //top
-	faces.push_back("../Textures/Skybox/" + directory + "/bottom.png");//bottom
-	faces.push_back("../Textures/Skybox/" + directory + "/front.png"); //front
-	faces.push_back("../Textures/Skybox/" + directory + "/back.png");  //back
+    std::string location = "../Textures/Default/";
+	faces.push_back(location + directory + "/right.png"); //right
+	faces.push_back(location + directory + "/left.png");  //left
+	faces.push_back(location + directory + "/top.png");   //top
+	faces.push_back(location + directory + "/bottom.png");//bottom
+	faces.push_back(location + directory + "/front.png"); //front
+	faces.push_back(location + directory + "/back.png");  //back
     this->newTexture("T_Skybox")->loadCubemap(faces);
     this->newModel("M_Skybox")->shader("S_Skybox")->texture("T_Skybox");
 
@@ -112,7 +114,7 @@ RendererManager::RendererManager() {
     this->model("M_Axis")->mesh("ME_Axis")->shader("S_Color")->drawingMode(GL_LINES);
 
     this->newModel("M_Light");
-    this->newMesh("ME_Sphere", "../Models/sphere7.obj");
+    this->newMesh("ME_Sphere", "../Models/Default/sphere7.obj");
     this->newMaterial("MA_Light");
     this->model("M_Light")->mesh("ME_Sphere")->material("MA_Light")->shader("S_White");
     
@@ -226,7 +228,11 @@ std::vector<std::string> RendererManager::modelNames() {
 
 // MATERIAL
 Material* RendererManager::material(std::string name) {
-    return(this->materialBuffer_[name]);
+    if (this->materialBuffer_.count(name) == 0) {
+        return(this->materialBuffer_["MA_Default"]);
+    } else {
+        return(this->materialBuffer_[name]);
+    }
 }
 std::string RendererManager::material(Material *ma) {
     for (auto it = this->materialBuffer_.begin(); it != this->materialBuffer_.end(); it++) {
@@ -278,7 +284,12 @@ std::vector<std::string> RendererManager::shaderNames() {
 
 // TEXTURE
 Texture* RendererManager::texture(std::string name) {
-    return(this->textureBuffer_[name]);
+    if (this->textureBuffer_.count(name) == 0) {
+        return(this->meshBuffer_["T_Default"]);
+    } else {
+        return(this->textureBuffer_[name]);
+    }
+    
 }
 std::string RendererManager::texture(Texture *t) {
     for (auto it = this->textureBuffer_.begin(); it != this->textureBuffer_.end(); it++) {
@@ -304,7 +315,11 @@ std::vector<std::string> RendererManager::textureNames() {
 
 // MESH
 Mesh* RendererManager::mesh(std::string name) {
-    return(this->meshBuffer_[name]);
+    if (this->meshBuffer_.count(name) == 0) {
+        return(this->meshBuffer_["ME_Default"]);
+    } else {
+        return(this->meshBuffer_[name]);
+    }    
 }
 std::string RendererManager::mesh(Mesh *t) {
     for (auto it = this->meshBuffer_.begin(); it != this->meshBuffer_.end(); it++) {
@@ -325,9 +340,12 @@ Mesh* RendererManager::newMesh(std::string name, std::string filepath) {
     std::vector<float> t;
     std::vector<float> n;
 
-    readOBJMesh(filepath, &v, &t, &n);
-
-    this->newMesh(name)->vertices(v)->uvs(t)->normals(n);
+    if (readOBJMesh(filepath, &v, &t, &n)) {
+        this->newMesh(name)->vertices(v)->uvs(t)->normals(n);
+        return(this->meshBuffer_[name]);
+    } else {
+        return(NULL);
+    }
 }
 std::vector<Mesh*> RendererManager::meshes() {
     return(extractValues(this->meshBuffer_));
