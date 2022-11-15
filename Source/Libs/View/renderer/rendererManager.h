@@ -100,6 +100,21 @@ class RendererManager {
         std::string whiteShader();
         void whiteShader(std::string);
 
+        std::string defaultModel();
+        RendererManager* defaultModel(std::string);
+
+        std::string defaultTexture();
+        RendererManager* defaultTexture(std::string);
+
+        std::string defaultShader();
+        RendererManager* defaultShader(std::string);
+
+        std::string defaultMesh();
+        RendererManager* defaultMesh(std::string);
+
+        std::string defaultMaterial();
+        RendererManager* defaultMaterial(std::string);
+
         std::vector<std::string> loadMTL(std::string);
         void loadModel(std::string);
         std::string loadModel(std::string, std::string);
@@ -127,6 +142,12 @@ class RendererManager {
         std::string outlineShader_;
         std::string highlightShader_;
         std::string whiteShader_;
+
+        std::string defaultModel_;
+        std::string defaultMaterial_;
+        std::string defaultShader_;
+        std::string defaultMesh_;
+        std::string defaultTexture_;
 
         int samples_;
         bool depth_;

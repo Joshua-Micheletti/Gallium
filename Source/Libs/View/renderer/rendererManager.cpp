@@ -67,6 +67,7 @@ void createAxis(Mesh* axis) {
 
 // CONSTRUCTOR
 RendererManager::RendererManager() {
+    // SETUP CAMERAS
     // initialize the default camera
     this->cameras_["default"] = new Camera(glm::vec3(30.0f, 30.0f, 30.0f),   // position
                                            glm::vec3(0.0f, 225.0f, -35.0f),  // direction
@@ -75,26 +76,57 @@ RendererManager::RendererManager() {
     this->cameras_["reflection"] = new Camera(glm::vec3(0.0f, 0.0f, 0.0f),   // position
                                               glm::vec3(0.0f, 0.0f, 0.0f),   // direction
                                               glm::vec3(0.0f, -1.0f, 0.0f)); // up
-
+    // set the current camera to the default one
     this->currentCamera_ = "default";
 
+    // SETUP PROJECTIONS
+    // initialize the default projection
     this->projections_["default"] = glm::perspective(glm::radians(45.0f), (float)1280 / (float)720, 0.1f, 10000.0f);
+    // intialize the reflection projection
     this->projections_["reflection"] = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10000.0f);
-
+    // set the current projection to the default one
     this->currentProjection_ = "default";
 
+    // SETUP RENDER
+    // initialize the samples for multisampling
     this->samples_ = 16;
+    // disable the depth buffer view
     this->depth_ = false;
 
-    this->newMesh("ME_Default", "../Models/Default/box2.obj");
-    this->newShader("S_Default")->loadShader("../Shader/default/default.vert", "../Shader/default/default.frag");
+    // SETUP DEFAULTS
+    // these values will be used when the called component is not found or when a model is initialized
+    this->defaultMesh_ = "ME_Default";
+    this->defaultTexture_ = "T_Default";
+    this->defaultShader_ = "S_Default";
+    this->defaultModel_ = "M_Default";
+    this->defaultMaterial_ = "MA_Default";
+    // load the respective default components
+    this->newMesh(this->defaultMesh_, "../Models/Default/box2.obj");
+    this->newShader(this->defaultShader_)->loadShader("../Shader/default/default.vert", "../Shader/default/default.frag");
+    this->newTexture(this->defaultTexture_)->loadTexture("../Textures/Default/default2.jpg");
+    this->newMaterial(this->defaultMaterial_);
+
+    // SETUP GLOBAL ENTITIES
+    // shader for rendering a model's outline when selected
+    this->outlineShader_ = "S_Outline";
+    // shader for rendering a model's geometry through other models when selected
+    this->highlightShader_ = "S_Highlight";
+    // shader for rendering white objects (used for stencil mask and for light)
+    this->whiteShader_ = "S_White";
+    // main light model
+    this->mainLight_ = "M_Light";
+    // skybox model
+    this->skybox_ = "M_Skybox";
+
+    // load the built-in shaders
     this->newShader("S_White")->loadShader("../Shader/white/white.vert", "../Shader/white/white.frag");
     this->newShader("S_Highlight")->loadShader("../Shader/highlight/highlight.vert", "../Shader/highlight/highlight.frag");
     this->newShader("S_Outline")->loadShader("../Shader/outline/outline.vert", "../Shader/outline/outline.frag");
-    this->newTexture("T_Default")->loadTexture("../Textures/Default/default2.jpg");
-    this->newMaterial("MA_Default");
-
+    
+    // SETUP SKYBOX
+    // load the skybox shader
     this->newShader("S_Skybox")->loadShader("../Shader/skybox/skybox.vert", "../Shader/skybox/skybox.frag");
+    // load a cubemap with the textures coming from the skybox location
     std::vector<std::string> faces;
 	std::string directory = "Epic_BlueSunset";
     std::string location = "../Textures/Default/";
@@ -105,25 +137,28 @@ RendererManager::RendererManager() {
 	faces.push_back(location + directory + "/front.png"); //front
 	faces.push_back(location + directory + "/back.png");  //back
     this->newTexture("T_Skybox")->loadCubemap(faces);
+    // create the skybox model
     this->newModel("M_Skybox")->shader("S_Skybox")->texture("T_Skybox");
 
+    // SETUP AXIS
+    // create a new axis model
     this->newModel("M_Axis");
     createAxis(this->newMesh("ME_Axis"));
+    // load the shader to render the axis
     this->newShader("S_Color")->loadShader("../Shader/color/color.vert", "../Shader/color/color.frag");
     // RENDERING THE AXIS WITH LINES IS REALLY SLOW FOR SOME REASON
     this->model("M_Axis")->mesh("ME_Axis")->shader("S_Color")->drawingMode(GL_LINES);
 
+    // SETUP LIGHT
+    // create a new light model
     this->newModel("M_Light");
+    // load the sphere model
     this->newMesh("ME_Sphere", "../Models/Default/sphere7.obj");
+    // create a material for the light (this will interact with every light calculation)
     this->newMaterial("MA_Light");
     this->model("M_Light")->mesh("ME_Sphere")->material("MA_Light")->shader("S_White");
     
-    this->outlineShader_ = "S_Outline";
-    this->highlightShader_ = "S_Highlight";
-    this->whiteShader_ = "S_White";
-    this->mainLight_ = "M_Light";
-    this->skybox_ = "M_Skybox";
-
+    // initialize the selected entity (none)
     this->selectedEntity_ = "";
 
     printf("setup the renderer manager\n");
@@ -201,7 +236,7 @@ Model* RendererManager::model(std::string name) {
     if (this->modelBuffer_.find(name) != this->modelBuffer_.end()) {
         return(this->modelBuffer_[name]);
     } else {
-        return(NULL);
+        return(this->modelBuffer_[this->defaultModel_]);
     }
 }
 std::string RendererManager::model(Model *m) {
@@ -229,7 +264,7 @@ std::vector<std::string> RendererManager::modelNames() {
 // MATERIAL
 Material* RendererManager::material(std::string name) {
     if (this->materialBuffer_.count(name) == 0) {
-        return(this->materialBuffer_["MA_Default"]);
+        return(this->materialBuffer_[this->defaultMaterial_]);
     } else {
         return(this->materialBuffer_[name]);
     }
@@ -258,7 +293,12 @@ std::vector<std::string> RendererManager::materialNames() {
 
 // SHADER
 Shader* RendererManager::shader(std::string name) {
-    return(this->shaderBuffer_[name]);
+    if (this->shaderBuffer_.count(name) == 0) {
+        return(this->shaderBuffer_[this->defaultShader_]);
+    } else {
+        return(this->shaderBuffer_[name]);
+    }
+    
 }
 std::string RendererManager::shader(Shader *s) {
     for (auto it = this->shaderBuffer_.begin(); it != this->shaderBuffer_.end(); it++) {
@@ -285,7 +325,7 @@ std::vector<std::string> RendererManager::shaderNames() {
 // TEXTURE
 Texture* RendererManager::texture(std::string name) {
     if (this->textureBuffer_.count(name) == 0) {
-        return(this->meshBuffer_["T_Default"]);
+        return(this->textureBuffer_[this->defaultTexture_]);
     } else {
         return(this->textureBuffer_[name]);
     }
@@ -316,7 +356,7 @@ std::vector<std::string> RendererManager::textureNames() {
 // MESH
 Mesh* RendererManager::mesh(std::string name) {
     if (this->meshBuffer_.count(name) == 0) {
-        return(this->meshBuffer_["ME_Default"]);
+        return(this->meshBuffer_[this->defaultMesh_]);
     } else {
         return(this->meshBuffer_[name]);
     }    
@@ -389,6 +429,62 @@ bool RendererManager::depth() {
 RendererManager* RendererManager::depth(bool d) {
     this->depth_ = d;
 }
+
+std::string RendererManager::defaultModel() {
+    return(this->defaultModel_);
+}
+RendererManager* RendererManager::defaultModel(std::string s) {
+    if (this->modelBuffer_.count(s) != 0) {
+        this->defaultModel_ = s;
+    }
+
+    return(this);
+}
+
+std::string RendererManager::defaultMaterial() {
+    return(this->defaultMaterial_);
+}
+RendererManager* RendererManager::defaultMaterial(std::string s) {
+    if (this->materialBuffer_.count(s) != 0) {
+        this->defaultMaterial_ = s;
+    }
+
+    return(this);
+}
+
+std::string RendererManager::defaultTexture() {
+    return(this->defaultTexture_);
+}
+RendererManager* RendererManager::defaultTexture(std::string s) {
+    if (this->textureBuffer_.count(s) != 0) {
+        this->defaultTexture_ = s;
+    }
+
+    return(this);
+}
+
+std::string RendererManager::defaultShader() {
+    return(this->defaultShader_);
+}
+RendererManager* RendererManager::defaultShader(std::string s) {
+    if (this->shaderBuffer_.count(s) != 0) {
+        this->defaultShader_ = s;
+    }
+
+    return(this);
+}
+
+std::string RendererManager::defaultMesh() {
+    return(this->defaultMesh_);
+}
+RendererManager* RendererManager::defaultMesh(std::string s) {
+    if (this->meshBuffer_.count(s) != 0) {
+        this->defaultMesh_ = s;
+    }
+
+    return(this);
+}
+
 
 
 std::vector<std::string> RendererManager::loadMTL(std::string filepath) {
