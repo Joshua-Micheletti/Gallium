@@ -447,3 +447,15 @@ int find(std::string s, std::vector<std::string> v) {
 
 	return(-1);
 }
+
+const char** stringVectorToCArray(std::vector<std::string> v) {
+	int size = v.size();
+
+	std::vector<const char*> charVector;
+
+	for (int i = 0; i < v.size(); i++) {
+		charVector.push_back(v[i].c_str());
+	}
+
+	return(&charVector[0]);
+}

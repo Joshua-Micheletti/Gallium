@@ -329,7 +329,6 @@ Texture* RendererManager::texture(std::string name) {
     } else {
         return(this->textureBuffer_[name]);
     }
-    
 }
 std::string RendererManager::texture(Texture *t) {
     for (auto it = this->textureBuffer_.begin(); it != this->textureBuffer_.end(); it++) {

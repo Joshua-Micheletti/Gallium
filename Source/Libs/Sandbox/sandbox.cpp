@@ -4,6 +4,7 @@ void sandbox() {
     // REPLACE THIS CODE WITH ANYTHING YOU WANT TO BE LOADED IN THE ENGINE
     RM.newShader("S_Lighting")->loadShader("../Shader/lighting/lighting.vert", "../Shader/lighting/lighting.frag");
     RM.newShader("S_LightingTex")->loadShader("../Shader/lightingTex/lightingTex.vert", "../Shader/lightingTex/lightingTex.frag");
+    RM.newShader("S_Reflection")->loadShader("../Shader/reflection/reflection.vert", "../Shader/reflection/reflection.frag");
 
     RM.newMesh("ME_Guy", "../Models/Default/sphere7.obj");
     RM.newModel("M_Guy")->mesh("ME_Guy")->shader("S_LightingTex")->translate(glm::vec3(-10.0f, 0.0f, 0.0f));
