@@ -20,8 +20,6 @@ std::vector<TK> extractKeys(std::map<TK, TV> const& input_map) {
 }
 
 
-
-
 // CONSTRUCTOR
 Model::Model() {
     drawingMode_ = GL_TRIANGLES;
@@ -70,10 +68,10 @@ Model* Model::mesh(std::string m) {
 }
 
 
-Model* Model::texture(std::string t) {
-    this->components_[0]->texture = t;
-    return(this);
-}
+// Model* Model::texture(std::string t) {
+//     this->components_[0]->texture_ = t;
+//     return(this);
+// }
 
 Model* Model::shader(std::string s) {
     this->components_[0]->shader = s;
@@ -105,6 +103,16 @@ Model* Model::material(std::string m) {
 std::string Model::material() {
     return(this->components_[0]->material);
 }
+
+
+Model* Model::texture(std::string t) {
+    this->components_[0]->texture.general(t);
+    return(this);
+}
+std::string Model::texture() {
+    return(this->components_[0]->texture.general());
+}
+
 
 
 /*

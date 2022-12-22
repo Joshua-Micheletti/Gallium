@@ -9,6 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "../../utils.h"
+#include "texture/renderTexture.h"
 #include "mesh/mesh.h"
 
 // structure containing all the info for all the components of the model
@@ -16,7 +17,7 @@ typedef struct {
     std::string mesh = "ME_Default";
     std::string shader = "S_Default";
     std::string material = "MA_Default";
-    std::string texture = "T_Default";
+    RenderTexture texture;
     glm::mat4 translation = glm::mat4(1);
     glm::mat4 rotation = glm::mat4(1);
     glm::mat4 scale = glm::mat4(1);

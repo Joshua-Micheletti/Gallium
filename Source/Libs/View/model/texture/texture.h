@@ -5,7 +5,6 @@
 #include <vector>
 #include <GLAD/glad.h>
 
-
 class Texture {
     public:
         void loadTexture(std::string);
@@ -18,7 +17,5 @@ class Texture {
         unsigned int id_;
         GLenum type_;
 };
-
-
 
 #endif

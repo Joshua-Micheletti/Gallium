@@ -313,7 +313,7 @@ void UI::drawLeftColumn() {
 
 				currentMaterial = find(components[selectedMesh]->material, materialNames);
 				currentShader = find(components[selectedMesh]->shader, shaderNames);
-				currentTexture = find(components[selectedMesh]->texture, textureNames);
+				currentTexture = find(components[selectedMesh]->texture.general(), textureNames);
 
 				char** CArrayMaterial = cMaterialNames.data();
 				char** CArrayShader = cShaderNames.data();
@@ -337,7 +337,7 @@ void UI::drawLeftColumn() {
 
 				components[selectedMesh]->material = materialNames[currentMaterial];
 				components[selectedMesh]->shader = shaderNames[currentShader];
-				components[selectedMesh]->texture = textureNames[currentTexture];
+				components[selectedMesh]->texture.general() = textureNames[currentTexture];
 
 				/*
 				if (ImGui::TreeNode("Material")) {
@@ -621,24 +621,26 @@ void UI::drawBottomRow() {
 				float imageWidth = (float)window.width() / (float)window.height() * height;
 				float imageHeight = (float)height;
 
-				ImGui::BeginChild("OutlineMask", ImVec2((float)window.width() / (float)window.height() * height, 0));
 				this->drawImage(this->renderer->getOutlineMaskTexture(), imageWidth, imageHeight);
-				ImGui::EndChild();
 
 				ImGui::SameLine();
 
-				ImGui::BeginChild("Depth", ImVec2((float)window.width() / (float)window.height() * height, 0));
 				this->drawImage(this->renderer->getDepthBufferTexture(), imageWidth, imageHeight);
-				ImGui::EndChild();
 
 				std::vector<std::string> textureNames = RM.textureNames();
 
+				int newLineIndex = (int)(ImGui::GetWindowSize().x / imageWidth);
+				if (newLineIndex == 0) {
+					newLineIndex = 1;
+				}
+				
 				for (int i = 0; i < textureNames.size(); i++) {
 					if (RM.texture(textureNames[i])->type() == GL_TEXTURE_2D) {
-						ImGui::SameLine();
-						ImGui::BeginChild(textureNames[i].c_str(), ImVec2((float)window.width() / (float)window.height() * height, 0));
+						if (i % newLineIndex != 0) {
+							ImGui::SameLine();
+						}
+
 						this->drawImage(RM.texture(textureNames[i])->id(), imageWidth, imageHeight);
-						ImGui::EndChild();
 					}			
 				}
 				ImGui::EndTabItem();

@@ -85,23 +85,23 @@ RendererManager::RendererManager() {
     this->samples_ = 16;
     this->depth_ = false;
 
-    this->newMesh("ME_Default", "../Models/box2.obj");
+    this->newMesh("ME_Default", "../Models/Default/box2.obj");
     this->newShader("S_Default")->loadShader("../Shader/default/default.vert", "../Shader/default/default.frag");
     this->newShader("S_White")->loadShader("../Shader/white/white.vert", "../Shader/white/white.frag");
     this->newShader("S_Highlight")->loadShader("../Shader/highlight/highlight.vert", "../Shader/highlight/highlight.frag");
     this->newShader("S_Outline")->loadShader("../Shader/outline/outline.vert", "../Shader/outline/outline.frag");
-    this->newTexture("T_Default")->loadTexture("../Textures/default2.jpg");
+    this->newTexture("T_Default")->loadTexture("../Textures/Default/default2.jpg");
     this->newMaterial("MA_Default");
 
     this->newShader("S_Skybox")->loadShader("../Shader/skybox/skybox.vert", "../Shader/skybox/skybox.frag");
     std::vector<std::string> faces;
 	std::string directory = "Epic_BlueSunset";
-	faces.push_back("../Textures/Skybox/" + directory + "/right.png"); //right
-	faces.push_back("../Textures/Skybox/" + directory + "/left.png");  //left
-	faces.push_back("../Textures/Skybox/" + directory + "/top.png");   //top
-	faces.push_back("../Textures/Skybox/" + directory + "/bottom.png");//bottom
-	faces.push_back("../Textures/Skybox/" + directory + "/front.png"); //front
-	faces.push_back("../Textures/Skybox/" + directory + "/back.png");  //back
+	faces.push_back("../Textures/Default/" + directory + "/right.png"); //right
+	faces.push_back("../Textures/Default/" + directory + "/left.png");  //left
+	faces.push_back("../Textures/Default/" + directory + "/top.png");   //top
+	faces.push_back("../Textures/Default/" + directory + "/bottom.png");//bottom
+	faces.push_back("../Textures/Default/" + directory + "/front.png"); //front
+	faces.push_back("../Textures/Default/" + directory + "/back.png");  //back
     this->newTexture("T_Skybox")->loadCubemap(faces);
     this->newModel("M_Skybox")->shader("S_Skybox")->texture("T_Skybox");
 
@@ -112,7 +112,7 @@ RendererManager::RendererManager() {
     this->model("M_Axis")->mesh("ME_Axis")->shader("S_Color")->drawingMode(GL_LINES);
 
     this->newModel("M_Light");
-    this->newMesh("ME_Sphere", "../Models/sphere7.obj");
+    this->newMesh("ME_Sphere", "../Models/Default/sphere7.obj");
     this->newMaterial("MA_Light");
     this->model("M_Light")->mesh("ME_Sphere")->material("MA_Light")->shader("S_White");
     

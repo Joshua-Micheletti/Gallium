@@ -346,102 +346,6 @@ void Renderer::renderEntities(bool reflection) {
 		if (models[i] != RM.skybox() && models[i] != RM.selectedEntity()) {
 			this->renderEntity(models[i]);
 		}
-
-		// if it's rendering entities to be displayed in the reflection:
-		// if (reflection) {
-		// 	// check what entities are supposed to be rendered in the reflection
-		// 	if (entityBuffer[i]->getToReflect() == true) {
-
-		// 		// installs the shader to render the entity (it gets the shader from the entity)
-		// 		glUseProgram(shaderBuffer[entityBuffer[i]->getShader()].getID());
-
-		// 		// pass the values for the shader uniforms.
-		// 		// shader uniforms are global variables for shaders that can be set by the user.
-		// 		// uniforms are global to all shaders, so they don't need to be set by every shader call if the value doesn't change
-		// 		// for example matrices for 3D rendering usually don't change between shaders (some optimization is possible)
-		// 		this->attachUniforms(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getUniformBuffer());
-
-		// 		// link the layouts to the data origin.
-		// 		// layouts define where the data for a certain variable comes from
-		// 		this->linkLayouts(entityBuffer[i], shaderBuffer[entityBuffer[i]->getShader()].getLayoutBuffer());
-
-		// 		// if the entity has a texture attached to it
-		// 		if (entityBuffer[i]->getTexture() != 0) {
-		// 			// bind it as the current active texture
-		// 			glBindTexture(entityBuffer[i]->getTextureType(), entityBuffer[i]->getTexture());
-		// 		}
-
-		// 		// check which mode things should be rendered as
-		// 		else {
-		// 			switch (renderMode) {
-		// 				// draw lines
-		// 			case wireframe:
-		// 				glDrawArrays(GL_LINES, 0, entityBuffer[i]->getVertices().size());
-		// 				break;
-
-		// 				// draw points
-		// 			case vertices:
-		// 				glPointSize(2.0f);
-		// 				glDrawArrays(GL_POINTS, 0, entityBuffer[i]->getVertices().size());
-		// 				break;
-
-		// 				// draw in the element's primitive (mainly triangles)
-		// 			default:
-		// 				glDrawArrays(entityBuffer[i]->getElements(), 0, entityBuffer[i]->getVertices().size());
-		// 			}
-		// 		}
-		// 	}
-		// }
-
-		// else {
-			// if (i != this->highlightedEntity) {
-				// printf("got into the highlighted part\n");
-				// if (entityBuffer[i]->getName().compare("skybox") == 0) {
-				// 	glDepthMask(GL_FALSE);
-				// }
-
-				// glUseProgram(currentS->id());
-				// attachUniforms(currentDE, currentS->uniformBuffer());
-				// linkLayouts(currentM, currentS->layoutBuffer());
-
-				// THINK IF BINDING A PLACEHOLDER TEX EVERY FRAME IS HEAVY
-				// if (entityBuffer[i]->getTexture() != 0) {
-					// glBindTexture(entityBuffer[i]->getTextureType(), entityBuffer[i]->getTexture());
-				// glBindTexture(GL_TEXTURE_2D, currentT->id());
-				// }
-
-				// if (strcmp(shaderBuffer[entityBuffer[i]->getShader()].getName(), "reflection") == 0 ||
-				// 	strcmp(shaderBuffer[entityBuffer[i]->getShader()].getName(), "refraction/glass") == 0 ||
-				// 	strcmp(shaderBuffer[entityBuffer[i]->getShader()].getName(), "reflection/diamond") == 0) {
-				// 	if (doReflection) {
-				// 		glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
-				// 	}
-				// 	else {
-				// 		glBindTexture(GL_TEXTURE_CUBE_MAP, entityBuffer[0]->getTexture());
-				// 	}
-					
-				// }
-
-				// check which mode things should be rendered as
-				// else {
-				// 	switch (renderMode) {
-				// 	case wireframe:
-				// 		glLineWidth(5.0f);
-				// 		glDrawArrays(GL_LINES, 0, entityBuffer[i]->getVertices().size());
-				// 		break;
-
-				// 	case vertices:
-				// 		glPointSize(2.0f);
-				// 		glDrawArrays(GL_POINTS, 0, entityBuffer[i]->getVertices().size());
-				// 		break;
-
-				// 	default:
-				// 		glDrawArrays(entityBuffer[i]->getElements(), 0, entityBuffer[i]->getVertices().size());
-				// 	}
-				// }
-				// glDrawArrays(currentM->drawingMode(), 0, currentM->vertices().size() / 3);
-			// }
-		// }
 	}
 	
 	if (RM.selectedEntity().size() != 0 && reflection == false) {
@@ -488,12 +392,12 @@ void Renderer::renderEntity(std::string entity) {
 		Mesh* currentMesh = RM.mesh(currentComponents[i]->mesh);
 		Material* currentMA = RM.material(currentComponents[i]->material);
 		Shader* currentS = RM.shader(currentComponents[i]->shader);
-		Texture* currentT = RM.texture(currentComponents[i]->texture);
+		RenderTexture currentT = currentComponents[i]->texture;
 		
 		glUseProgram(currentS->id());
-		glBindTexture(GL_TEXTURE_2D, currentT->id());
+		glBindTexture(GL_TEXTURE_2D, RM.texture(currentT.general())->id());
 
-		attachUniforms(currentM, currentMA, currentS->uniformBuffer());
+		attachUniforms(currentM, currentMA, currentT, currentS->uniformBuffer());
 		linkLayouts(currentMesh, currentS->layoutBuffer());
 		
 		glDrawArrays(currentM->drawingMode(), 0, currentMesh->vertices().size() / 3);
@@ -502,45 +406,6 @@ void Renderer::renderEntity(std::string entity) {
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 
-		// Material* meshMaterial = RM.material(currentMeshes[i]->material());
-		// currentS = RM.shader(meshMaterial->shader());
-
-		// if (strcmp(shaderBuffer[entity->getShader()].getName(), "reflection") == 0 ||
-		// 	strcmp(shaderBuffer[entity->getShader()].getName(), "refraction/glass") == 0 ||
-		// 	strcmp(shaderBuffer[entity->getShader()].getName(), "reflection/diamond") == 0) {
-		// 	if (doReflection) {
-		// 		glBindTexture(GL_TEXTURE_CUBE_MAP, this->reflectionCubemap);
-		// 	}
-		// 	else {
-		// 		glBindTexture(GL_TEXTURE_CUBE_MAP, entityBuffer[0]->getTexture());
-		// 	}
-		// }
-
-
-		// check which mode things should be rendered as
-		// if (entity->getName().compare("skybox") == 0) {
-		// 	// render the skybox
-		// 	glDrawArrays(GL_TRIANGLES, 0, entity->getVertices().size());
-		// 	// re-enable the depth mask (now rendering also affects the depth buffer as well)
-		// 	glDepthMask(GL_TRUE);
-		// }
-
-		// else {
-		// 	switch (renderMode) {
-		// 	case wireframe:
-		// 		glDrawArrays(GL_LINES, 0, entity->getVertices().size());
-		// 		break;
-
-		// 	case vertices:
-		// 		glPointSize(2.0f);
-		// 		glDrawArrays(GL_POINTS, 0, entity->getVertices().size());
-		// 		break;
-
-		// 	default:
-		// 		glDrawArrays(entity->getElements(), 0, entity->getVertices().size());
-
-		// 	}
-		// }
 	}
 }
 
@@ -557,16 +422,16 @@ void Renderer::renderSkybox() {
 	Mesh* skyboxMesh = RM.mesh(skyboxComponents->mesh);
 	Material* skyboxMA = RM.material(skyboxComponents->material);
 	Shader* skyboxS = RM.shader(skyboxComponents->shader);
-	Texture* skyboxT = RM.texture(skyboxComponents->texture);
+	RenderTexture skyboxT = skyboxComponents->texture;
 
 	// bind the shader
 	glUseProgram(skyboxS->id());
 	// attach the shader uniforms
-	attachUniforms(skyboxM, skyboxMA, skyboxS->uniformBuffer());
+	attachUniforms(skyboxM, skyboxMA, skyboxT, skyboxS->uniformBuffer());
 	// link the shader layouts
 	linkLayouts(skyboxMesh, skyboxS->layoutBuffer());
 	// bind the skybox texture
-	glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxT->id());
+	glBindTexture(GL_TEXTURE_CUBE_MAP, RM.texture(skyboxT.general())->id());
 	// render the skybox
 	glDrawArrays(skyboxM->drawingMode(), 0, skyboxMesh->vertices().size() / 3);
 
@@ -885,7 +750,7 @@ void Renderer::displayBoundingBox() {
 }
 
 // pass the correct values to the corresponding uniforms in the shader
-void Renderer::attachUniforms(Model* entity, Material* material, std::vector<uniform_t> uniformBuffer) {
+void Renderer::attachUniforms(Model* entity, Material* material, RenderTexture texture, std::vector<uniform_t> uniformBuffer) {
 	// cycle through the uniformBuffer of the shader
 	for (int i = 0; i < uniformBuffer.size(); i++) {
 		// if the uniform is "modelMatrix", set it to the entity modelMatrix
@@ -940,9 +805,22 @@ void Renderer::attachUniforms(Model* entity, Material* material, std::vector<uni
 			glUniform3f(uniformBuffer[i].id, diffuse.x, diffuse.y, diffuse.z);
 		}
 
+		else if (strcmp(uniformBuffer[i].name, "diffuseTex") == 0) {
+			glUniform1i(uniformBuffer[i].id, 0);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, RM.texture(texture.diffuse())->id());
+		}
+
 		else if (strcmp(uniformBuffer[i].name, "specular") == 0) {
 			glm::vec3 specular = material->specular();
 			glUniform3f(uniformBuffer[i].id, specular.x, specular.y, specular.z);
+		}
+
+		else if (strcmp(uniformBuffer[i].name, "specularTex") == 0) {
+			glUniform1i(uniformBuffer[i].id, 1);
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, RM.texture(texture.specular())->id());
+			glActiveTexture(GL_TEXTURE0);
 		}
 
 		else if (strcmp(uniformBuffer[i].name, "shininess") == 0) {
@@ -950,7 +828,6 @@ void Renderer::attachUniforms(Model* entity, Material* material, std::vector<uni
 		}
 
 		else if (strcmp(uniformBuffer[i].name, "lightAmbient") == 0) {
-			// glm::vec3 ambient = RM.material(RM.model(RM.drawingEntity(RM.mainLight())->model())->material())->ambient();
 			glm::vec3 ambient = RM.material(RM.model(RM.mainLight())->components()[0]->material)->ambient();
 			glUniform3f(uniformBuffer[i].id, ambient.x, ambient.y, ambient.z);
 		}

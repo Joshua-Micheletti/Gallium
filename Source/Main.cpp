@@ -10,9 +10,10 @@ int main(void) {
 
 	while (!glfwWindowShouldClose(window.window())) {
 		eventHandler.routine();
+		PW.step(1.0f / 60.0f);
+		engine.update(RM, PW);
 		renderer.render();
 		interface.drawInfo();
-
 		glfwPollEvents();
 		glfwSwapBuffers(window.window());
 	}

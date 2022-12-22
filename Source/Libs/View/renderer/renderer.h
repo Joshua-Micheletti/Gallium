@@ -87,7 +87,7 @@ class Renderer {
 		void renderEntities(bool);
 		void renderSkybox();
 		void renderEntity(std::string);
-		void attachUniforms(Model*, Material*, std::vector<uniform_t>);
+		void attachUniforms(Model*, Material*, RenderTexture, std::vector<uniform_t>);
 		void linkLayouts(Mesh*, std::vector<std::string>);
 		void renderOutline();
 

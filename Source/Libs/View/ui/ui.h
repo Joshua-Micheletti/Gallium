@@ -15,6 +15,8 @@
 #include "GLFW/glfw3.h"
 #include <stdio.h>
 #include <algorithm>
+#include <stdio.h>
+#include <iostream>
 
 // class that shows onscreen informations
 class UI {

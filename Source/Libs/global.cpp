@@ -2,6 +2,8 @@
 
 Window window;
 RendererManager RM;
+PhysicsWorld PW;
+Engine engine;
 
 bool displayInfo = true;
 bool vsync = true;

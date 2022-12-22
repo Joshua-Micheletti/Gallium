@@ -34,7 +34,7 @@ extLibI = ${gladI} -I ${glfwI} -I ${glmI} -I ${imgui} -I ${imguiBE} -I ${stbimag
 flags = -w -std=c++11 -Ofast
 
 objectsPath = ./bin/objects
-objects = ${objectsPath}/main.o ${objectsPath}/sandbox.o ${objectsPath}/global.o ${objectsPath}/window.o ${objectsPath}/utils.o ${objectsPath}/glad.o ${objectsPath}/renderer.o ${objectsPath}/rendererManager.o ${objectsPath}/model.o ${objectsPath}/mesh.o ${objectsPath}/material.o ${objectsPath}/texture.o ${objectsPath}/eventHandler.o ${objectsPath}/ui.o ${objectsPath}/entity.o ${objectsPath}/shader.o ${objectsPath}/camera.o ${objectsPath}/kernel.o ${objectsPath}/imgui.o ${objectsPath}/imgui_impl_glfw.o ${objectsPath}/imgui_impl_opengl3.o ${objectsPath}/imgui_demo.o ${objectsPath}/imgui_draw.o ${objectsPath}/imgui_widgets.o ${objectsPath}/imgui_tables.o
+objects = ${objectsPath}/main.o ${objectsPath}/engine.o ${objectsPath}/sandbox.o ${objectsPath}/global.o ${objectsPath}/window.o ${objectsPath}/utils.o ${objectsPath}/glad.o ${objectsPath}/renderer.o ${objectsPath}/rendererManager.o ${objectsPath}/model.o ${objectsPath}/mesh.o ${objectsPath}/material.o ${objectsPath}/texture.o ${objectsPath}/renderTexture.o ${objectsPath}/eventHandler.o ${objectsPath}/ui.o ${objectsPath}/physicsWorld.o ${objectsPath}/physicsBody.o ${objectsPath}/entity.o ${objectsPath}/shader.o ${objectsPath}/camera.o ${objectsPath}/kernel.o ${objectsPath}/imgui.o ${objectsPath}/imgui_impl_glfw.o ${objectsPath}/imgui_impl_opengl3.o ${objectsPath}/imgui_demo.o ${objectsPath}/imgui_draw.o ${objectsPath}/imgui_widgets.o ${objectsPath}/imgui_tables.o
 
 main: ${objects} makefile
 	@echo ${marks}${escape}[31m============= COMPILING MAIN PROGRAM =============${noColor}${marks}
@@ -45,6 +45,11 @@ main: ${objects} makefile
 ${objectsPath}/main.o: ${source}/Main.cpp makefile
 	@echo ${marks}${escape}[31m============= Main.cpp (source) =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/main.o ${source}/Main.cpp -I ${extLibI} -I ${source}/Libs/ ${flags} ${libraries}
+
+# ENGINE
+${objectsPath}/engine.o: ${source}/Libs/Engine/engine.cpp ${source}/Libs/Engine/engine.h makefile
+	@echo ${marks}${escape}[31m============= engine.cpp (source) =============${noColor}${marks}
+	g++ -c -o ${objectsPath}/engine.o ${source}/Libs/Engine/engine.cpp -I ${extLibI} ${flags} ${libraries}
 
 # SANDBOX
 ${objectsPath}/sandbox.o: ${source}/Libs/Sandbox/sandbox.cpp ${source}/Libs/Sandbox/sandbox.h makefile
@@ -101,6 +106,11 @@ ${objectsPath}/texture.o: ${view}/model/texture/texture.cpp ${view}/model/textur
 	@echo ${marks}${escape}[31m============= texture.cpp (source) =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/texture.o ${view}/model/texture/texture.cpp -I ${extLibI} ${flags}
 
+# RENDER TEXTURE
+${objectsPath}/renderTexture.o: ${view}/model/texture/renderTexture.cpp ${view}/model/texture/renderTexture.h makefile
+	@echo ${marks}${escape}[31m============= renderTexture.cpp (source) =============${noColor}${marks}
+	g++ -c -o ${objectsPath}/renderTexture.o ${view}/model/texture/renderTexture.cpp -I ${extLibI} ${flags}
+
 # EVENT HANDLER
 ${objectsPath}/eventHandler.o:  ${controller}/eventHandler.cpp ${controller}/eventHandler.h makefile
 	@echo ${marks}${escape}[31m============= eventHandler.cpp (source) =============${noColor}${marks}
@@ -110,6 +120,16 @@ ${objectsPath}/eventHandler.o:  ${controller}/eventHandler.cpp ${controller}/eve
 ${objectsPath}/ui.o: ${view}/ui/ui.cpp ${view}/ui/ui.h makefile
 	@echo ${marks}${escape}[31m============= ui.cpp (source) =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/ui.o ${view}/ui/ui.cpp -I ${extLibI} ${flags}
+
+# PHYSICS WORLD
+${objectsPath}/physicsWorld.o: ${model}/physics/physicsWorld.cpp ${model}/physics/physicsWorld.h makefile
+	@echo ${marks}${escape}[31m============= physicsWorld.cpp (source) =============${noColor}${marks}
+	g++ -c -o ${objectsPath}/physicsWorld.o ${model}/physics/physicsWorld.cpp -I ${extLibI} ${flags}
+
+# PHYSICS BODY
+${objectsPath}/physicsBody.o: ${model}/physics/physicsBody/physicsBody.cpp ${model}/physics/physicsBody/physicsBody.h makefile
+	@echo ${marks}${escape}[31m============= physicsBody.cpp (source) =============${noColor}${marks}
+	g++ -c -o ${objectsPath}/physicsBody.o ${model}/physics/physicsBody/physicsBody.cpp -I ${extLibI} ${flags}
 
 # ENTITY
 ${objectsPath}/entity.o: ${model}/entity.cpp ${model}/entity.h makefile
