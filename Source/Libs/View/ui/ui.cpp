@@ -271,7 +271,45 @@ void UI::drawLeftColumn() {
 		if (ImGui::CollapsingHeader("Components")) {
 			for (int i = 0; i < components.size(); i++) {
 				if (ImGui::TreeNode(std::to_string(i).c_str())) {
-					
+					std::vector<std::string> meshes = RM.meshNames();
+					const char** meshItems = stringVectorToCArray(meshes);
+					static int selectedMesh = find(RM.model(RM.selectedEntity())->components()[i]->mesh, meshes);
+					ImGui::Text("Mesh");
+					ImGui::SameLine();
+					ImGui::Combo(std::string("###MeshDropdown" + std::to_string(i)).c_str(), &selectedMesh, meshItems, meshes.size());
+
+					RM.model(RM.selectedEntity())->mesh(std::string(meshItems[selectedMesh]));
+
+
+					std::vector<std::string> materials = RM.materialNames();
+					const char** materialItems = stringVectorToCArray(materials);
+					static int selectedMaterial = find(RM.model(RM.selectedEntity())->components()[i]->material, materials);
+					ImGui::Text("Material");
+					ImGui::SameLine();
+					ImGui::Combo(std::string("###MaterialDropdown" + std::to_string(i)).c_str(), &selectedMaterial, materialItems, materials.size());
+
+					RM.model(RM.selectedEntity())->material(std::string(materialItems[selectedMaterial]));
+
+
+					std::vector<std::string> shaders = RM.shaderNames();
+					const char** shaderItems = stringVectorToCArray(shaders);
+					static int selectedShader = find(RM.model(RM.selectedEntity())->components()[i]->shader, shaders);
+					ImGui::Text("Shader");
+					ImGui::SameLine();
+					ImGui::Combo(std::string("###ShaderDropdown" + std::to_string(i)).c_str(), &selectedShader, shaderItems, shaders.size());
+
+					RM.model(RM.selectedEntity())->shader(std::string(shaderItems[selectedShader]));
+
+
+					std::vector<std::string> textures = RM.textureNames();
+					const char** textureItems = stringVectorToCArray(textures);
+					static int selectedTexture = find(RM.model(RM.selectedEntity())->components()[i]->texture, textures);
+					ImGui::Text("Texture");
+					ImGui::SameLine();
+					ImGui::Combo(std::string("###TextureDropdown" + std::to_string(i)).c_str(), &selectedTexture, textureItems, textures.size());
+
+					RM.model(RM.selectedEntity())->texture(std::string(textureItems[selectedTexture]));
+
 					ImGui::TreePop();
 				}
 				// if (ImGui::Selectable(components[i]->mesh.c_str(), selectedMesh == i)) {

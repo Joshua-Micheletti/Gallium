@@ -43,7 +43,7 @@ main: ${objects} makefile
 
 # MAIN
 ${objectsPath}/main.o: ${source}/Main.cpp makefile
-	@echo ${marks}${escape}[31m============= Main.cpp (source) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= main.cpp "(source)" ============${noColor} ${marks}
 	g++ -c -o ${objectsPath}/main.o ${source}/Main.cpp -I ${extLibI} -I ${source}/Libs/ ${flags} ${libraries}
 
 # ENGINE
@@ -53,57 +53,57 @@ ${objectsPath}/engine.o: ${source}/Libs/Engine/engine.cpp ${source}/Libs/Engine/
 
 # SANDBOX
 ${objectsPath}/sandbox.o: ${source}/Libs/Sandbox/sandbox.cpp ${source}/Libs/Sandbox/sandbox.h makefile
-	@echo ${marks}${escape}[31m============= sandbox.cpp (source) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= sandbox.cpp "(source)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/sandbox.o ${source}/Libs/Sandbox/sandbox.cpp -I ${extLibI} ${flags} ${libraries}
 
 # INIT
 ${objectsPath}/init.o: ${source}/Libs/init.cpp ${source}/Libs/init.h makefile
-	@echo ${marks}${escape}[31m============= init.cpp (source) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= init.cpp "(source)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/init.o ${source}/Libs/init.cpp -I ${extLibI} ${flags} ${libraries}
 
 # UTILS
 ${objectsPath}/utils.o: ${source}/Libs/utils.cpp ${source}/Libs/utils.h makefile
-	@echo ${marks}${escape}[31m============= utils.cpp (source) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= utils.cpp "(source)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/utils.o ${source}/Libs/utils.cpp -I ${extLibI} ${flags} ${libraries}
 
 # GLOBAL
 ${objectsPath}/global.o: ${source}/Libs/global.cpp ${source}/Libs/global.h makefile
-	@echo ${marks}${escape}[31m============= global.cpp (source) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= global.cpp "(source)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/global.o ${source}/Libs/global.cpp -I ${extLibI} ${flags} ${libraries}
 
 # WINDOW
 ${objectsPath}/window.o: ${view}/window/window.cpp ${view}/window/window.h makefile
-	@echo ${marks}${escape}[31m============= window.cpp (source) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= window.cpp "(source)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/window.o ${view}/window/window.cpp -I ${extLibI} ${flags}
 
 # RENDERER
 ${objectsPath}/renderer.o: ${view}/renderer/renderer.cpp ${view}/renderer/renderer.h makefile
-	@echo ${marks}${escape}[31m============= renderer.cpp (source) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= renderer.cpp "(source)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/renderer.o ${view}/renderer/renderer.cpp -I ${extLibI} ${flags}
 
 # RENDERERMANAGER
 ${objectsPath}/rendererManager.o: ${view}/renderer/rendererManager.cpp ${view}/renderer/rendererManager.h makefile
-	@echo ${marks}${escape}[31m============= rendererManager.cpp (source) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= rendererManager.cpp "(source)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/rendererManager.o ${view}/renderer/rendererManager.cpp -I ${extLibI} ${flags}
 
 # MODEL
 ${objectsPath}/model.o: ${view}/model/model.cpp ${view}/model/model.h makefile
-	@echo ${marks}${escape}[31m============= model.cpp (source) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= model.cpp "(source)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/model.o ${view}/model/model.cpp -I ${extLibI} ${flags}
 
 # MESH
 ${objectsPath}/mesh.o: ${view}/model/mesh/mesh.cpp ${view}/model/mesh/mesh.h makefile
-	@echo ${marks}${escape}[31m============= mesh.cpp (source) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= mesh.cpp "(source)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/mesh.o ${view}/model/mesh/mesh.cpp -I ${extLibI} ${flags}
 
 # MATERIAL
 ${objectsPath}/material.o: ${view}/model/material/material.cpp ${view}/model/material/material.h makefile
-	@echo ${marks}${escape}[31m============= material.cpp (source) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= material.cpp "(source)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/material.o ${view}/model/material/material.cpp -I ${extLibI} ${flags}
 
 # TEXTURE
 ${objectsPath}/texture.o: ${view}/model/texture/texture.cpp ${view}/model/texture/texture.h makefile
-	@echo ${marks}${escape}[31m============= texture.cpp (source) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= texture.cpp "(source)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/texture.o ${view}/model/texture/texture.cpp -I ${extLibI} ${flags}
 
 # RENDER TEXTURE
@@ -113,12 +113,12 @@ ${objectsPath}/renderTexture.o: ${view}/model/texture/renderTexture.cpp ${view}/
 
 # EVENT HANDLER
 ${objectsPath}/eventHandler.o:  ${controller}/eventHandler.cpp ${controller}/eventHandler.h makefile
-	@echo ${marks}${escape}[31m============= eventHandler.cpp (source) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= eventHandler.cpp "(source)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/eventHandler.o ${controller}/eventHandler.cpp -I ${extLibI} ${flags} ${libraries}
 
 # UI
 ${objectsPath}/ui.o: ${view}/ui/ui.cpp ${view}/ui/ui.h makefile
-	@echo ${marks}${escape}[31m============= ui.cpp (source) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= ui.cpp "(source)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/ui.o ${view}/ui/ui.cpp -I ${extLibI} ${flags}
 
 # PHYSICS WORLD
@@ -133,55 +133,55 @@ ${objectsPath}/physicsBody.o: ${model}/physics/physicsBody/physicsBody.cpp ${mod
 
 # ENTITY
 ${objectsPath}/entity.o: ${model}/entity.cpp ${model}/entity.h makefile
-	@echo ${marks}${escape}[31m============= entity.cpp (source) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= entity.cpp "(source)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/entity.o ${model}/entity.cpp -I ${extLibI} ${flags}
 
 # SHADER
 ${objectsPath}/shader.o: ${view}/model/shader/shader.cpp ${view}/model/shader/shader.h makefile
-	@echo ${marks}${escape}[31m============= shader.cpp (source) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= shader.cpp "(source)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/shader.o ${view}/model/shader/shader.cpp -I ${extLibI} ${flags}
 
 # CAMERA
 ${objectsPath}/camera.o: ${view}/camera/camera.cpp ${view}/camera/camera.h makefile
-	@echo ${marks}${escape}[31m============= camera.cpp (source) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= camera.cpp "(source)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/camera.o ${view}/camera/camera.cpp -I ${extLibI} ${flags}
 
 # KERNEL
 ${objectsPath}/kernel.o: ${view}/renderer/kernel/kernel.cpp ${view}/renderer/kernel/kernel.h makefile
-	@echo ${marks}${escape}[31m============= kernel.cpp (source) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= kernel.cpp "(source)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/kernel.o ${view}/renderer/kernel/kernel.cpp -I ${extLibI} ${flags}
 
 # IMGUI
 ${objectsPath}/imgui.o: ${imgui}/imgui.cpp makefile
-	@echo ${marks}${escape}[31m============= imgui.cpp (extLib) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= imgui.cpp "(extLib)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/imgui.o ${imgui}/imgui.cpp -I ${extLibI} ${flags}
 
 ${objectsPath}/imgui_impl_glfw.o: ${imguiBE}/imgui_impl_glfw.cpp makefile
-	@echo ${marks}${escape}[31m============= imgui_impl_glfw.cpp (extLib) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= imgui_impl_glfw.cpp "(extLib)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/imgui_impl_glfw.o ${imguiBE}/imgui_impl_glfw.cpp -I ${extLibI} ${flags}
 
 ${objectsPath}/imgui_impl_opengl3.o: ${imguiBE}/imgui_impl_opengl3.cpp makefile
-	@echo ${marks}${escape}[31m============= imgui_impl_opengl3.cpp (extLib) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= imgui_impl_opengl3.cpp "(extLib)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/imgui_impl_opengl3.o ${imguiBE}/imgui_impl_opengl3.cpp -I ${extLibI} ${flags}
 
 ${objectsPath}/imgui_demo.o: ${imgui}/imgui_demo.cpp makefile
-	@echo ${marks}${escape}[31m============= imgui_demo.cpp (extLib) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= imgui_demo.cpp "(extLib)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/imgui_demo.o ${imgui}/imgui_demo.cpp -I ${extLibI} ${flags}
 
 ${objectsPath}/imgui_draw.o: ${imgui}/imgui_draw.cpp makefile
-	@echo ${marks}${escape}[31m============= imgui_draw.cpp (extLib) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= imgui_draw.cpp "(extLib)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/imgui_draw.o ${imgui}/imgui_draw.cpp -I ${extLibI} ${flags}
 
 ${objectsPath}/imgui_widgets.o: ${imgui}/imgui_widgets.cpp makefile
-	@echo ${marks}${escape}[31m============= imgui_widgets.cpp (extLib) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= imgui_widgets.cpp "(extLib)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/imgui_widgets.o ${imgui}/imgui_widgets.cpp -I ${extLibI} ${flags}
 
 ${objectsPath}/imgui_tables.o: ${imgui}/imgui_tables.cpp makefile
-	@echo ${marks}${escape}[31m============= imgui_tables.cpp (extLib) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============= imgui_tables.cpp "(extLib)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/imgui_tables.o ${imgui}/imgui_tables.cpp -I ${extLibI} ${flags}
 
 ${objectsPath}/glad.o: ${extLibs}/GLAD/src/glad.c makefile
-	@echo ${marks}${escape}[31m============ glad.c (extLib) =============${noColor}${marks}
+	@echo ${marks}${escape}[31m============ glad.c "(extLib)" =============${noColor}${marks}
 	g++ -c -o ${objectsPath}/glad.o ${extLibs}/GLAD/src/glad.c -I ${extLibs}/GLAD/include ${flags}
 
 run:

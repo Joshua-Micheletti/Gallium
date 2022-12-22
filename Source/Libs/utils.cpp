@@ -38,12 +38,12 @@ void createBuffer(std::vector<float> data, unsigned int* buffer) {
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
 }
 
-void readOBJMesh(std::string filepath, std::vector<float>* v, std::vector<float>* t, std::vector<float>* n) {
+bool readOBJMesh(std::string filepath, std::vector<float>* v, std::vector<float>* t, std::vector<float>* n) {
 	FILE* model = fopen(filepath.c_str(), "r");
 
     if (model == NULL) {
-		printf("COULD NOT LOAD MODEL\n");
-        return;
+		printf("COULD NOT LOAD MODEL: %s\n", filepath.c_str());
+        return(false);
 	}
 
 	char buffer[256];
@@ -140,14 +140,16 @@ void readOBJMesh(std::string filepath, std::vector<float>* v, std::vector<float>
 			n->push_back(normals[(facesNormals[i] - 1) * 3 + 2]);
 		}
 	}
+
+	return(true);
 }
 
-void readOBJ(std::string filepath, std::vector<std::vector<float>*>* v, std::vector<std::vector<float>*>* t, std::vector<std::vector<float>*>* n, std::vector<std::string>* m) {
+bool readOBJ(std::string filepath, std::vector<std::vector<float>*>* v, std::vector<std::vector<float>*>* t, std::vector<std::vector<float>*>* n, std::vector<std::string>* m) {
 	FILE* model = fopen(filepath.c_str(), "r");
 
     if (model == NULL) {
-		printf("COULD NOT LOAD MODEL\n");
-        return;
+		printf("COULD NOT LOAD MODEL: %s\n", filepath.c_str());
+        return(false);
 	}
 
 	char buffer[256];
@@ -299,14 +301,16 @@ void readOBJ(std::string filepath, std::vector<std::vector<float>*>* v, std::vec
 			(*n)[n->size() - 1]->push_back(normals[(facesNormals[i] - 1) * 3 + 2]);
 		}
 	}
+
+	return(true);
 }
 
-void readMTL(std::string filepath, std::vector<std::string> *names, std::vector<std::vector<float>*> *ambient, std::vector<std::vector<float>*> *diffuse, std::vector<std::vector<float>*> *specular, std::vector<float> *shininess) {
+bool readMTL(std::string filepath, std::vector<std::string> *names, std::vector<std::vector<float>*> *ambient, std::vector<std::vector<float>*> *diffuse, std::vector<std::vector<float>*> *specular, std::vector<float> *shininess) {
 	FILE* material = fopen(filepath.c_str(), "r");
 
     if (material == NULL) {
-		printf("COULD NOT LOAD MATERIAL\n");
-        return;
+		printf("COULD NOT LOAD MATERIAL: %s\n", filepath.c_str());
+        return(false);
 	}
 
 	int readingAmbient = 0;
@@ -424,6 +428,8 @@ void readMTL(std::string filepath, std::vector<std::string> *names, std::vector<
 	specular->push_back(new std::vector<float>);
 
 	newMaterial = false;
+
+	return(true);
 }
 
 
@@ -440,4 +446,16 @@ int find(std::string s, std::vector<std::string> v) {
 	}
 
 	return(-1);
+}
+
+const char** stringVectorToCArray(std::vector<std::string> v) {
+	int size = v.size();
+
+	std::vector<const char*> charVector;
+
+	for (int i = 0; i < v.size(); i++) {
+		charVector.push_back(v[i].c_str());
+	}
+
+	return(&charVector[0]);
 }
