@@ -178,30 +178,32 @@ void UI::drawLeftColumn() {
 				ImGui::TreePop();
 			}
 
-			// if (ImGui::TreeNode("Rotation")) {
-			// 	float x = selectedEntity->getRotationFactor().x;
-			// 	ImGui::DragFloat("X", &x, 0.02f);
-			// 	float y = selectedEntity->getRotationFactor().y;
-			// 	ImGui::DragFloat("Y", &y, 0.02f);
-			// 	float z = selectedEntity->getRotationFactor().z;
-			// 	ImGui::DragFloat("Z", &z, 0.02f);
+			if (ImGui::TreeNode("Rotation")) {
+				float x = RM.model(RM.selectedEntity())->rotation().x;
+				ImGui::DragFloat("X", &x, 0.02f);
+				float y = RM.model(RM.selectedEntity())->rotation().y;
+				ImGui::DragFloat("Y", &y, 0.02f);
+				float z = RM.model(RM.selectedEntity())->rotation().z;
+				ImGui::DragFloat("Z", &z, 0.02f);
 
-			// 	selectedEntity->setRotation(x, y, z);
+				RM.model(RM.selectedEntity())->rotation(glm::vec3(x, y, z));
 
-			// 	ImGui::TreePop();
-			// }
+				ImGui::TreePop();
+			}
+			
+			if (ImGui::TreeNode("Scale")) {
+				float x = RM.model(RM.selectedEntity())->scale().x;
+				if (ImGui::DragFloat("X", &x, 0.005f));
+				float y = RM.model(RM.selectedEntity())->scale().y;
+				if (ImGui::DragFloat("Y", &y, 0.005f));
+				float z = RM.model(RM.selectedEntity())->scale().z;
+				if (ImGui::DragFloat("Z", &z, 0.005f));
 
-			// if (ImGui::TreeNode("Scale")) {
-			// 	float x = selectedEntity->getScalingFactor().x;
-			// 	if (ImGui::DragFloat("X", &x, 0.005f));
-			// 	float y = selectedEntity->getScalingFactor().y;
-			// 	if (ImGui::DragFloat("Y", &y, 0.005f));
-			// 	float z = selectedEntity->getScalingFactor().z;
-			// 	if (ImGui::DragFloat("Z", &z, 0.005f));
+				RM.model(RM.selectedEntity())->scale(glm::vec3(x, y, z));
 
-			// 	selectedEntity->setScale(glm::vec3(x, y, z));
-			// }
-
+				ImGui::TreePop();
+			}
+			
 			ImGui::Separator();
 
 			
@@ -300,15 +302,16 @@ void UI::drawLeftColumn() {
 
 					RM.model(RM.selectedEntity())->shader(std::string(shaderItems[selectedShader]));
 
-
+					/*
 					std::vector<std::string> textures = RM.textureNames();
 					const char** textureItems = stringVectorToCArray(textures);
 					static int selectedTexture = find(RM.model(RM.selectedEntity())->components()[i]->texture, textures);
 					ImGui::Text("Texture");
 					ImGui::SameLine();
 					ImGui::Combo(std::string("###TextureDropdown" + std::to_string(i)).c_str(), &selectedTexture, textureItems, textures.size());
-
+					
 					RM.model(RM.selectedEntity())->texture(std::string(textureItems[selectedTexture]));
+					*/
 
 					ImGui::TreePop();
 				}

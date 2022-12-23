@@ -29,6 +29,8 @@ Model::Model() {
     this->rotationMatrix_ = glm::mat4(1);
     this->scaleMatrix_ = glm::mat4(1);
     this->position_ = glm::vec3(0);
+    this->rotation_ = glm::vec3(0);
+    this->scale_ = glm::vec3(1);
 
     component_t* options = new component_t;
     this->components_.push_back(options);
@@ -158,11 +160,14 @@ Model* Model::rotate(glm::vec3 rotation) {
     this->rotationMatrix_ = glm::rotate(this->rotationMatrix_, rotation.x, glm::vec3(1, 0, 0));
     this->rotationMatrix_ = glm::rotate(this->rotationMatrix_, rotation.y, glm::vec3(0, 1, 0));
     this->rotationMatrix_ = glm::rotate(this->rotationMatrix_, rotation.z, glm::vec3(0, 0, 1));
+    this->rotation_ += rotation;
+
     return(this);
 }
 
 Model* Model::scale(glm::vec3 scale) {
-    this->scaleMatrix_ = glm::scale(this->scaleMatrix_, scale);
+    this->scaleMatrix_ = glm::scale(glm::mat4(1), scale);
+    this->scale_ = scale;
     return(this);
 }
 
@@ -182,3 +187,21 @@ Model* Model::position(glm::vec3 position) {
     return(this);
 }
 
+glm::vec3 Model::rotation() {
+    return(this->rotation_);
+}
+Model* Model::rotation(glm::vec3 rotation) {
+    this->rotation_ = rotation;
+    glm::mat4 tmpRotationMatrix = glm::mat4(1);
+    tmpRotationMatrix = glm::rotate(tmpRotationMatrix, rotation.x, glm::vec3(1, 0, 0));
+    tmpRotationMatrix = glm::rotate(tmpRotationMatrix, rotation.y, glm::vec3(0, 1, 0));
+    tmpRotationMatrix = glm::rotate(tmpRotationMatrix, rotation.z, glm::vec3(0, 0, 1));
+
+    this->rotationMatrix_ = tmpRotationMatrix;
+
+    return(this);
+}
+
+glm::vec3 Model::scale() {
+    return(this->scale_);
+}

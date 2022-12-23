@@ -93,16 +93,6 @@ RendererManager::RendererManager() {
     // disable the depth buffer view
     this->depth_ = false;
 
-<<<<<<< HEAD
-    this->newMesh("ME_Default", "../Models/Default/box2.obj");
-    this->newShader("S_Default")->loadShader("../Shader/default/default.vert", "../Shader/default/default.frag");
-    this->newShader("S_White")->loadShader("../Shader/white/white.vert", "../Shader/white/white.frag");
-    this->newShader("S_Highlight")->loadShader("../Shader/highlight/highlight.vert", "../Shader/highlight/highlight.frag");
-    this->newShader("S_Outline")->loadShader("../Shader/outline/outline.vert", "../Shader/outline/outline.frag");
-    this->newTexture("T_Default")->loadTexture("../Textures/Default/default2.jpg");
-    this->newMaterial("MA_Default");
-
-=======
     // SETUP DEFAULTS
     // these values will be used when the called component is not found or when a model is initialized
     this->defaultMesh_ = "ME_Default";
@@ -135,19 +125,10 @@ RendererManager::RendererManager() {
     
     // SETUP SKYBOX
     // load the skybox shader
->>>>>>> d9a6c8d136da87909cb3dfb7fe379bbae5e02320
     this->newShader("S_Skybox")->loadShader("../Shader/skybox/skybox.vert", "../Shader/skybox/skybox.frag");
     // load a cubemap with the textures coming from the skybox location
     std::vector<std::string> faces;
 	std::string directory = "Epic_BlueSunset";
-<<<<<<< HEAD
-	faces.push_back("../Textures/Default/" + directory + "/right.png"); //right
-	faces.push_back("../Textures/Default/" + directory + "/left.png");  //left
-	faces.push_back("../Textures/Default/" + directory + "/top.png");   //top
-	faces.push_back("../Textures/Default/" + directory + "/bottom.png");//bottom
-	faces.push_back("../Textures/Default/" + directory + "/front.png"); //front
-	faces.push_back("../Textures/Default/" + directory + "/back.png");  //back
-=======
     std::string location = "../Textures/Default/";
 	faces.push_back(location + directory + "/right.png"); //right
 	faces.push_back(location + directory + "/left.png");  //left
@@ -155,7 +136,6 @@ RendererManager::RendererManager() {
 	faces.push_back(location + directory + "/bottom.png");//bottom
 	faces.push_back(location + directory + "/front.png"); //front
 	faces.push_back(location + directory + "/back.png");  //back
->>>>>>> d9a6c8d136da87909cb3dfb7fe379bbae5e02320
     this->newTexture("T_Skybox")->loadCubemap(faces);
     // create the skybox model
     this->newModel("M_Skybox")->shader("S_Skybox")->texture("T_Skybox");
@@ -172,13 +152,9 @@ RendererManager::RendererManager() {
     // SETUP LIGHT
     // create a new light model
     this->newModel("M_Light");
-<<<<<<< HEAD
-    this->newMesh("ME_Sphere", "../Models/Default/sphere7.obj");
-=======
     // load the sphere model
     this->newMesh("ME_Sphere", "../Models/Default/sphere7.obj");
     // create a material for the light (this will interact with every light calculation)
->>>>>>> d9a6c8d136da87909cb3dfb7fe379bbae5e02320
     this->newMaterial("MA_Light");
     this->model("M_Light")->mesh("ME_Sphere")->material("MA_Light")->shader("S_White");
     

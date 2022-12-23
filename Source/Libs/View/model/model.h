@@ -79,6 +79,11 @@ class Model {
         // set the model position
         Model* position(glm::vec3);
 
+        glm::vec3 rotation();
+        Model* rotation(glm::vec3);
+
+        glm::vec3 scale();
+
         std::string source();
         Model* source(std::string);
 
@@ -99,6 +104,10 @@ class Model {
         glm::mat4 scaleMatrix_;
         // position vector
         glm::vec3 position_;
+        // rotation vector
+        glm::vec3 rotation_;
+        // scale vector
+        glm::vec3 scale_;
 
         // drawing mode for rendering (GL_TRIANGLES, GL_LINES...)
         GLenum drawingMode_;

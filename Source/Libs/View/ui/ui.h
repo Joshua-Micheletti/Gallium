@@ -1,6 +1,7 @@
 #include "../../global.h"
 // #include "../../init.h"
 #include "../../Model/entity.h"
+#include "../../utils.h"
 #include <stdlib.h>
 #include <vector>
 #include <string>
