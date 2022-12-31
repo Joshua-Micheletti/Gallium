@@ -1,7 +1,7 @@
 tests/CMakeFiles/msaa.dir/__/deps/getopt.c.o: \
- /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/deps/getopt.c \
+ /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/deps/getopt.c \
  /usr/include/stdc-predef.h \
- /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/deps/getopt.h \
+ /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/deps/getopt.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h /usr/include/string.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \

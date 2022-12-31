@@ -1,9 +1,9 @@
 
-if (NOT EXISTS "/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/install_manifest.txt")
-  message(FATAL_ERROR "Cannot find install manifest: \"/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/install_manifest.txt\"")
+if (NOT EXISTS "/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/install_manifest.txt")
+  message(FATAL_ERROR "Cannot find install manifest: \"/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/install_manifest.txt\"")
 endif()
 
-file(READ "/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/install_manifest.txt" files)
+file(READ "/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/install_manifest.txt" files)
 string(REGEX REPLACE "\n" ";" files "${files}")
 
 foreach (file ${files})

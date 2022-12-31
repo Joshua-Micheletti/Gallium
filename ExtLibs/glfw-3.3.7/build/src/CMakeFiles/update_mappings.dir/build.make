@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7
+CMAKE_SOURCE_DIR = /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build
+CMAKE_BINARY_DIR = /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build
 
 # Utility rule file for update_mappings.
 
@@ -67,8 +67,8 @@ include src/CMakeFiles/update_mappings.dir/compiler_depend.make
 include src/CMakeFiles/update_mappings.dir/progress.make
 
 src/CMakeFiles/update_mappings:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Updating gamepad mappings from upstream repository"
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/src && /usr/bin/cmake -P /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/CMake/GenerateMappings.cmake mappings.h.in mappings.h
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Updating gamepad mappings from upstream repository"
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/src && /usr/bin/cmake -P /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/CMake/GenerateMappings.cmake mappings.h.in mappings.h
 
 update_mappings: src/CMakeFiles/update_mappings
 update_mappings: src/CMakeFiles/update_mappings.dir/build.make
@@ -79,10 +79,10 @@ src/CMakeFiles/update_mappings.dir/build: update_mappings
 .PHONY : src/CMakeFiles/update_mappings.dir/build
 
 src/CMakeFiles/update_mappings.dir/clean:
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/src && $(CMAKE_COMMAND) -P CMakeFiles/update_mappings.dir/cmake_clean.cmake
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/src && $(CMAKE_COMMAND) -P CMakeFiles/update_mappings.dir/cmake_clean.cmake
 .PHONY : src/CMakeFiles/update_mappings.dir/clean
 
 src/CMakeFiles/update_mappings.dir/depend:
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7 /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/src /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/src /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/src/CMakeFiles/update_mappings.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7 /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/src /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/src /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/src/CMakeFiles/update_mappings.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : src/CMakeFiles/update_mappings.dir/depend
 

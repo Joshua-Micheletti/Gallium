@@ -455,7 +455,8 @@ const char** stringVectorToCArray(std::vector<std::string> v) {
 
 	for (int i = 0; i < v.size(); i++) {
 		charVector.push_back(v[i].c_str());
+		printf("%s\n", charVector.data()[i]);
 	}
 
-	return(&charVector[0]);
+	return(charVector.data());
 }

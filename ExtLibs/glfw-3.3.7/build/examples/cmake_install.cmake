@@ -1,4 +1,4 @@
-# Install script for directory: /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/examples
+# Install script for directory: /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/examples
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

@@ -1,12 +1,17 @@
 #include "sandbox.h"
 
 void sandbox() {
-     // REPLACE THIS CODE WITH ANYTHING YOU WANT TO BE LOADED IN THE ENGINE
+
+    RM.newModel("Test");
+
+    
+    // REPLACE THIS CODE WITH ANYTHING YOU WANT TO BE LOADED IN THE ENGINE
     RM.newShader("S_Lighting")->loadShader("../Shader/lighting/lighting.vert", "../Shader/lighting/lighting.frag");
     RM.newShader("S_LightingTex")->loadShader("../Shader/lightingTex/lightingTex.vert", "../Shader/lightingTex/lightingTex.frag");
     RM.newShader("S_LightingMaterialTex")->loadShader("../Shader/lightingTex/lightingMaterialTex.vert", "../Shader/lightingTex/lightingMaterialTex.frag");
 
     RM.newShader("S_Reflection")->loadShader("../Shader/reflection/reflection.vert", "../Shader/reflection/reflection.frag");
+    /*
     RM.shader("S_Reflection")->printFull();
     // RM.newModel("M_Test")->mesh("ME_Sphere")->shaders("S_Reflection");
 
@@ -49,5 +54,6 @@ void sandbox() {
 
     RM.model("M_Hammer")->components()[0]->texture.diffuse("T_Hammer");
     RM.model("M_Hammer")->components()[0]->texture.specular("T_HammerSpecular");
+    */
 }
 

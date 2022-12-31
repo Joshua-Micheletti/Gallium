@@ -267,6 +267,7 @@ void Renderer::render() {
 	glStencilFunc(GL_ALWAYS, 1, 255);
 	this->renderSkybox();
 	this->renderEntities(false);
+
 	
 	// draw the bounding box for each entity
 	// this->displayBoundingBox();
@@ -281,7 +282,6 @@ void Renderer::render() {
 
 	this->MSPostProcessingPassTime = glfwGetTime() - this->MSPostProcessingPassTime;
 
-
 	this->postProcessingPassTime = glfwGetTime();
 
 	if (RM.selectedEntity().size() != 0 && (outlineType == 0 || outlineType == 1)) {
@@ -292,7 +292,6 @@ void Renderer::render() {
 
 
 	this->renderScreen();
-
 	this->postProcessingPassTime = glfwGetTime() - this->postProcessingPassTime;
 }
 
@@ -1158,6 +1157,7 @@ unsigned int Renderer::getDepthBufferTexture() {
 
 	return(this->postProcessingTexture);
 }
+
 
 void Renderer::setPostProcessingEffect(int effect) {
 	this->postProcessingEffect = effect;

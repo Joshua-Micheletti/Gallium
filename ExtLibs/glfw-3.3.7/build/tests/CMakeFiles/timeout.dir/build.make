@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7
+CMAKE_SOURCE_DIR = /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build
+CMAKE_BINARY_DIR = /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build
 
 # Include any dependencies generated for this target.
 include tests/CMakeFiles/timeout.dir/depend.make
@@ -72,30 +72,30 @@ include tests/CMakeFiles/timeout.dir/flags.make
 tests/CMakeFiles/timeout.dir/timeout.c.o: tests/CMakeFiles/timeout.dir/flags.make
 tests/CMakeFiles/timeout.dir/timeout.c.o: ../tests/timeout.c
 tests/CMakeFiles/timeout.dir/timeout.c.o: tests/CMakeFiles/timeout.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object tests/CMakeFiles/timeout.dir/timeout.c.o"
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT tests/CMakeFiles/timeout.dir/timeout.c.o -MF CMakeFiles/timeout.dir/timeout.c.o.d -o CMakeFiles/timeout.dir/timeout.c.o -c /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/tests/timeout.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object tests/CMakeFiles/timeout.dir/timeout.c.o"
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT tests/CMakeFiles/timeout.dir/timeout.c.o -MF CMakeFiles/timeout.dir/timeout.c.o.d -o CMakeFiles/timeout.dir/timeout.c.o -c /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/tests/timeout.c
 
 tests/CMakeFiles/timeout.dir/timeout.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/timeout.dir/timeout.c.i"
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/tests/timeout.c > CMakeFiles/timeout.dir/timeout.c.i
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/tests/timeout.c > CMakeFiles/timeout.dir/timeout.c.i
 
 tests/CMakeFiles/timeout.dir/timeout.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/timeout.dir/timeout.c.s"
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/tests/timeout.c -o CMakeFiles/timeout.dir/timeout.c.s
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/tests/timeout.c -o CMakeFiles/timeout.dir/timeout.c.s
 
 tests/CMakeFiles/timeout.dir/__/deps/glad_gl.c.o: tests/CMakeFiles/timeout.dir/flags.make
 tests/CMakeFiles/timeout.dir/__/deps/glad_gl.c.o: ../deps/glad_gl.c
 tests/CMakeFiles/timeout.dir/__/deps/glad_gl.c.o: tests/CMakeFiles/timeout.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object tests/CMakeFiles/timeout.dir/__/deps/glad_gl.c.o"
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT tests/CMakeFiles/timeout.dir/__/deps/glad_gl.c.o -MF CMakeFiles/timeout.dir/__/deps/glad_gl.c.o.d -o CMakeFiles/timeout.dir/__/deps/glad_gl.c.o -c /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/deps/glad_gl.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object tests/CMakeFiles/timeout.dir/__/deps/glad_gl.c.o"
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT tests/CMakeFiles/timeout.dir/__/deps/glad_gl.c.o -MF CMakeFiles/timeout.dir/__/deps/glad_gl.c.o.d -o CMakeFiles/timeout.dir/__/deps/glad_gl.c.o -c /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/deps/glad_gl.c
 
 tests/CMakeFiles/timeout.dir/__/deps/glad_gl.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/timeout.dir/__/deps/glad_gl.c.i"
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/deps/glad_gl.c > CMakeFiles/timeout.dir/__/deps/glad_gl.c.i
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/deps/glad_gl.c > CMakeFiles/timeout.dir/__/deps/glad_gl.c.i
 
 tests/CMakeFiles/timeout.dir/__/deps/glad_gl.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/timeout.dir/__/deps/glad_gl.c.s"
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/deps/glad_gl.c -o CMakeFiles/timeout.dir/__/deps/glad_gl.c.s
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/deps/glad_gl.c -o CMakeFiles/timeout.dir/__/deps/glad_gl.c.s
 
 # Object files for target timeout
 timeout_OBJECTS = \
@@ -114,18 +114,18 @@ tests/timeout: /usr/lib/x86_64-linux-gnu/librt.a
 tests/timeout: /usr/lib/x86_64-linux-gnu/libm.so
 tests/timeout: /usr/lib/x86_64-linux-gnu/libX11.so
 tests/timeout: tests/CMakeFiles/timeout.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking C executable timeout"
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/tests && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/timeout.dir/link.txt --verbose=$(VERBOSE)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking C executable timeout"
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/tests && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/timeout.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 tests/CMakeFiles/timeout.dir/build: tests/timeout
 .PHONY : tests/CMakeFiles/timeout.dir/build
 
 tests/CMakeFiles/timeout.dir/clean:
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/tests && $(CMAKE_COMMAND) -P CMakeFiles/timeout.dir/cmake_clean.cmake
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/tests && $(CMAKE_COMMAND) -P CMakeFiles/timeout.dir/cmake_clean.cmake
 .PHONY : tests/CMakeFiles/timeout.dir/clean
 
 tests/CMakeFiles/timeout.dir/depend:
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7 /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/tests /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/tests /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/tests/CMakeFiles/timeout.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7 /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/tests /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/tests /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/tests/CMakeFiles/timeout.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : tests/CMakeFiles/timeout.dir/depend
 

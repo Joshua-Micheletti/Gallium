@@ -9,6 +9,7 @@ int main(void) {
 	sandbox();
 
 	while (!glfwWindowShouldClose(window.window())) {
+		
 		eventHandler.routine();
 		PW.step(1.0f / 60.0f);
 		engine.update(RM, PW);

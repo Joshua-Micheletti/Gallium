@@ -1,8 +1,8 @@
 examples/CMakeFiles/offscreen.dir/offscreen.c.o: \
- /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/examples/offscreen.c \
+ /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/examples/offscreen.c \
  /usr/include/stdc-predef.h \
- /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/deps/glad/gl.h \
- /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/deps/glad/khrplatform.h \
+ /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/deps/glad/gl.h \
+ /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/deps/glad/khrplatform.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -18,9 +18,9 @@ examples/CMakeFiles/offscreen.dir/offscreen.c.o: \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
- /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/include/GLFW/glfw3.h \
+ /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/include/GLFW/glfw3.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h \
- /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/deps/linmath.h \
+ /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/deps/linmath.h \
  /usr/include/math.h /usr/include/x86_64-linux-gnu/bits/math-vector.h \
  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
  /usr/include/x86_64-linux-gnu/bits/floatn.h \
@@ -62,7 +62,7 @@ examples/CMakeFiles/offscreen.dir/offscreen.c.o: \
  /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
- /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/deps/stb_image_write.h \
+ /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/deps/stb_image_write.h \
  /usr/include/string.h \
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \

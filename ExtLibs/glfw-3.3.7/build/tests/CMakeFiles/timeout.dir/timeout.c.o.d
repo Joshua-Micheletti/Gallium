@@ -1,8 +1,8 @@
 tests/CMakeFiles/timeout.dir/timeout.c.o: \
- /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/tests/timeout.c \
+ /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/tests/timeout.c \
  /usr/include/stdc-predef.h \
- /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/deps/glad/gl.h \
- /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/deps/glad/khrplatform.h \
+ /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/deps/glad/gl.h \
+ /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/deps/glad/khrplatform.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -18,7 +18,7 @@ tests/CMakeFiles/timeout.dir/timeout.c.o: \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
- /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/include/GLFW/glfw3.h \
+ /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/include/GLFW/glfw3.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h /usr/include/time.h \
  /usr/include/x86_64-linux-gnu/bits/time.h \
  /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \

@@ -4,7 +4,7 @@
 # compile C with /usr/bin/cc
 C_DEFINES = 
 
-C_INCLUDES = -I/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/deps -I/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/include
+C_INCLUDES = -I/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/deps -I/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/include
 
 C_FLAGS = -std=gnu99
 

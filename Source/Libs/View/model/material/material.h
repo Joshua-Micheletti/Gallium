@@ -1,7 +1,7 @@
 #ifndef __MATERIAL__
 #define __MATERIAL__
 
-#include "GLAD/glad.h"
+#include "glad/glad.h"
 #include <string>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

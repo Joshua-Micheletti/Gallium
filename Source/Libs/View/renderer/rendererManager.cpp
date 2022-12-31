@@ -408,6 +408,7 @@ glm::mat4 RendererManager::projection() {
 }
 RendererManager* RendererManager::projection(std::string p) {
     this->currentProjection_ = p;
+    return(this);
 }
 
 void RendererManager::setProjection(std::string name, glm::mat4 m) {
@@ -420,6 +421,7 @@ int RendererManager::samples() {
 }
 RendererManager* RendererManager::samples(int s) {
     this->samples_ = s;
+    return(this);
 }
 
 bool RendererManager::depth() {
@@ -427,6 +429,7 @@ bool RendererManager::depth() {
 }
 RendererManager* RendererManager::depth(bool d) {
     this->depth_ = d;
+    return(this);
 }
 
 std::string RendererManager::defaultModel() {

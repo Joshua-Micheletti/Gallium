@@ -54,10 +54,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7
+CMAKE_SOURCE_DIR = /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build
+CMAKE_BINARY_DIR = /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -188,14 +188,14 @@ tests/clean: tests/CMakeFiles/windows.dir/clean
 CMakeFiles/uninstall.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/uninstall.dir/build.make CMakeFiles/uninstall.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/uninstall.dir/build.make CMakeFiles/uninstall.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num= "Built target uninstall"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num= "Built target uninstall"
 .PHONY : CMakeFiles/uninstall.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/uninstall.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/uninstall.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : CMakeFiles/uninstall.dir/rule
 
 # Convenience name for target.
@@ -214,14 +214,14 @@ CMakeFiles/uninstall.dir/clean:
 src/CMakeFiles/update_mappings.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/update_mappings.dir/build.make src/CMakeFiles/update_mappings.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/update_mappings.dir/build.make src/CMakeFiles/update_mappings.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=94 "Built target update_mappings"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=94 "Built target update_mappings"
 .PHONY : src/CMakeFiles/update_mappings.dir/all
 
 # Build rule for subdir invocation for target.
 src/CMakeFiles/update_mappings.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 1
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 1
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/update_mappings.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : src/CMakeFiles/update_mappings.dir/rule
 
 # Convenience name for target.
@@ -240,14 +240,14 @@ src/CMakeFiles/update_mappings.dir/clean:
 src/CMakeFiles/glfw.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/glfw.dir/build.make src/CMakeFiles/glfw.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/glfw.dir/build.make src/CMakeFiles/glfw.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=21,22,23,24,25,26,27,28,29,30,31,32,33,34 "Built target glfw"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=21,22,23,24,25,26,27,28,29,30,31,32,33,34 "Built target glfw"
 .PHONY : src/CMakeFiles/glfw.dir/all
 
 # Build rule for subdir invocation for target.
 src/CMakeFiles/glfw.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 14
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 14
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/glfw.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : src/CMakeFiles/glfw.dir/rule
 
 # Convenience name for target.
@@ -266,14 +266,14 @@ src/CMakeFiles/glfw.dir/clean:
 examples/CMakeFiles/boing.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/boing.dir/build.make examples/CMakeFiles/boing.dir/depend
 	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/boing.dir/build.make examples/CMakeFiles/boing.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=1,2 "Built target boing"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=1,2 "Built target boing"
 .PHONY : examples/CMakeFiles/boing.dir/all
 
 # Build rule for subdir invocation for target.
 examples/CMakeFiles/boing.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 16
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 16
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 examples/CMakeFiles/boing.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : examples/CMakeFiles/boing.dir/rule
 
 # Convenience name for target.
@@ -292,14 +292,14 @@ examples/CMakeFiles/boing.dir/clean:
 examples/CMakeFiles/gears.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/gears.dir/build.make examples/CMakeFiles/gears.dir/depend
 	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/gears.dir/build.make examples/CMakeFiles/gears.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=18,19,20 "Built target gears"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=18,19,20 "Built target gears"
 .PHONY : examples/CMakeFiles/gears.dir/all
 
 # Build rule for subdir invocation for target.
 examples/CMakeFiles/gears.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 examples/CMakeFiles/gears.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : examples/CMakeFiles/gears.dir/rule
 
 # Convenience name for target.
@@ -318,14 +318,14 @@ examples/CMakeFiles/gears.dir/clean:
 examples/CMakeFiles/heightmap.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/heightmap.dir/build.make examples/CMakeFiles/heightmap.dir/depend
 	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/heightmap.dir/build.make examples/CMakeFiles/heightmap.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=39,40,41 "Built target heightmap"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=39,40,41 "Built target heightmap"
 .PHONY : examples/CMakeFiles/heightmap.dir/all
 
 # Build rule for subdir invocation for target.
 examples/CMakeFiles/heightmap.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 examples/CMakeFiles/heightmap.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : examples/CMakeFiles/heightmap.dir/rule
 
 # Convenience name for target.
@@ -344,14 +344,14 @@ examples/CMakeFiles/heightmap.dir/clean:
 examples/CMakeFiles/offscreen.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/offscreen.dir/build.make examples/CMakeFiles/offscreen.dir/depend
 	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/offscreen.dir/build.make examples/CMakeFiles/offscreen.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=61,62 "Built target offscreen"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=61,62 "Built target offscreen"
 .PHONY : examples/CMakeFiles/offscreen.dir/all
 
 # Build rule for subdir invocation for target.
 examples/CMakeFiles/offscreen.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 16
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 16
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 examples/CMakeFiles/offscreen.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : examples/CMakeFiles/offscreen.dir/rule
 
 # Convenience name for target.
@@ -370,14 +370,14 @@ examples/CMakeFiles/offscreen.dir/clean:
 examples/CMakeFiles/particles.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/particles.dir/build.make examples/CMakeFiles/particles.dir/depend
 	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/particles.dir/build.make examples/CMakeFiles/particles.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=66,67,68,69 "Built target particles"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=66,67,68,69 "Built target particles"
 .PHONY : examples/CMakeFiles/particles.dir/all
 
 # Build rule for subdir invocation for target.
 examples/CMakeFiles/particles.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 18
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 18
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 examples/CMakeFiles/particles.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : examples/CMakeFiles/particles.dir/rule
 
 # Convenience name for target.
@@ -396,14 +396,14 @@ examples/CMakeFiles/particles.dir/clean:
 examples/CMakeFiles/sharing.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/sharing.dir/build.make examples/CMakeFiles/sharing.dir/depend
 	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/sharing.dir/build.make examples/CMakeFiles/sharing.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=73,74 "Built target sharing"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=73,74 "Built target sharing"
 .PHONY : examples/CMakeFiles/sharing.dir/all
 
 # Build rule for subdir invocation for target.
 examples/CMakeFiles/sharing.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 16
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 16
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 examples/CMakeFiles/sharing.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : examples/CMakeFiles/sharing.dir/rule
 
 # Convenience name for target.
@@ -422,14 +422,14 @@ examples/CMakeFiles/sharing.dir/clean:
 examples/CMakeFiles/simple.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/simple.dir/build.make examples/CMakeFiles/simple.dir/depend
 	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/simple.dir/build.make examples/CMakeFiles/simple.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=75,76,77 "Built target simple"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=75,76,77 "Built target simple"
 .PHONY : examples/CMakeFiles/simple.dir/all
 
 # Build rule for subdir invocation for target.
 examples/CMakeFiles/simple.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 examples/CMakeFiles/simple.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : examples/CMakeFiles/simple.dir/rule
 
 # Convenience name for target.
@@ -448,14 +448,14 @@ examples/CMakeFiles/simple.dir/clean:
 examples/CMakeFiles/splitview.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/splitview.dir/build.make examples/CMakeFiles/splitview.dir/depend
 	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/splitview.dir/build.make examples/CMakeFiles/splitview.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=78,79 "Built target splitview"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=78,79 "Built target splitview"
 .PHONY : examples/CMakeFiles/splitview.dir/all
 
 # Build rule for subdir invocation for target.
 examples/CMakeFiles/splitview.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 16
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 16
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 examples/CMakeFiles/splitview.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : examples/CMakeFiles/splitview.dir/rule
 
 # Convenience name for target.
@@ -474,14 +474,14 @@ examples/CMakeFiles/splitview.dir/clean:
 examples/CMakeFiles/wave.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/wave.dir/build.make examples/CMakeFiles/wave.dir/depend
 	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/wave.dir/build.make examples/CMakeFiles/wave.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=95,96 "Built target wave"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=95,96 "Built target wave"
 .PHONY : examples/CMakeFiles/wave.dir/all
 
 # Build rule for subdir invocation for target.
 examples/CMakeFiles/wave.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 16
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 16
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 examples/CMakeFiles/wave.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : examples/CMakeFiles/wave.dir/rule
 
 # Convenience name for target.
@@ -500,14 +500,14 @@ examples/CMakeFiles/wave.dir/clean:
 tests/CMakeFiles/clipboard.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/clipboard.dir/build.make tests/CMakeFiles/clipboard.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/clipboard.dir/build.make tests/CMakeFiles/clipboard.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=3,4,5 "Built target clipboard"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=3,4,5 "Built target clipboard"
 .PHONY : tests/CMakeFiles/clipboard.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/clipboard.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/clipboard.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/clipboard.dir/rule
 
 # Convenience name for target.
@@ -526,14 +526,14 @@ tests/CMakeFiles/clipboard.dir/clean:
 tests/CMakeFiles/events.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/events.dir/build.make tests/CMakeFiles/events.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/events.dir/build.make tests/CMakeFiles/events.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=12,13,14,15 "Built target events"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=12,13,14,15 "Built target events"
 .PHONY : tests/CMakeFiles/events.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/events.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 18
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 18
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/events.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/events.dir/rule
 
 # Convenience name for target.
@@ -552,14 +552,14 @@ tests/CMakeFiles/events.dir/clean:
 tests/CMakeFiles/msaa.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/msaa.dir/build.make tests/CMakeFiles/msaa.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/msaa.dir/build.make tests/CMakeFiles/msaa.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=57,58,59,60 "Built target msaa"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=57,58,59,60 "Built target msaa"
 .PHONY : tests/CMakeFiles/msaa.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/msaa.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 18
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 18
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/msaa.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/msaa.dir/rule
 
 # Convenience name for target.
@@ -578,14 +578,14 @@ tests/CMakeFiles/msaa.dir/clean:
 tests/CMakeFiles/glfwinfo.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/glfwinfo.dir/build.make tests/CMakeFiles/glfwinfo.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/glfwinfo.dir/build.make tests/CMakeFiles/glfwinfo.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=35,36,37,38 "Built target glfwinfo"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=35,36,37,38 "Built target glfwinfo"
 .PHONY : tests/CMakeFiles/glfwinfo.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/glfwinfo.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 18
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 18
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/glfwinfo.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/glfwinfo.dir/rule
 
 # Convenience name for target.
@@ -604,14 +604,14 @@ tests/CMakeFiles/glfwinfo.dir/clean:
 tests/CMakeFiles/iconify.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/iconify.dir/build.make tests/CMakeFiles/iconify.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/iconify.dir/build.make tests/CMakeFiles/iconify.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=45,46,47 "Built target iconify"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=45,46,47 "Built target iconify"
 .PHONY : tests/CMakeFiles/iconify.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/iconify.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/iconify.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/iconify.dir/rule
 
 # Convenience name for target.
@@ -630,14 +630,14 @@ tests/CMakeFiles/iconify.dir/clean:
 tests/CMakeFiles/monitors.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/monitors.dir/build.make tests/CMakeFiles/monitors.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/monitors.dir/build.make tests/CMakeFiles/monitors.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=54,55,56 "Built target monitors"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=54,55,56 "Built target monitors"
 .PHONY : tests/CMakeFiles/monitors.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/monitors.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/monitors.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/monitors.dir/rule
 
 # Convenience name for target.
@@ -656,14 +656,14 @@ tests/CMakeFiles/monitors.dir/clean:
 tests/CMakeFiles/reopen.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/reopen.dir/build.make tests/CMakeFiles/reopen.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/reopen.dir/build.make tests/CMakeFiles/reopen.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=70,71,72 "Built target reopen"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=70,71,72 "Built target reopen"
 .PHONY : tests/CMakeFiles/reopen.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/reopen.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/reopen.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/reopen.dir/rule
 
 # Convenience name for target.
@@ -682,14 +682,14 @@ tests/CMakeFiles/reopen.dir/clean:
 tests/CMakeFiles/cursor.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/cursor.dir/build.make tests/CMakeFiles/cursor.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/cursor.dir/build.make tests/CMakeFiles/cursor.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=6,7,8 "Built target cursor"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=6,7,8 "Built target cursor"
 .PHONY : tests/CMakeFiles/cursor.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/cursor.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/cursor.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/cursor.dir/rule
 
 # Convenience name for target.
@@ -708,14 +708,14 @@ tests/CMakeFiles/cursor.dir/clean:
 tests/CMakeFiles/empty.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/empty.dir/build.make tests/CMakeFiles/empty.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/empty.dir/build.make tests/CMakeFiles/empty.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=9,10,11 "Built target empty"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=9,10,11 "Built target empty"
 .PHONY : tests/CMakeFiles/empty.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/empty.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/empty.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/empty.dir/rule
 
 # Convenience name for target.
@@ -734,14 +734,14 @@ tests/CMakeFiles/empty.dir/clean:
 tests/CMakeFiles/gamma.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/gamma.dir/build.make tests/CMakeFiles/gamma.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/gamma.dir/build.make tests/CMakeFiles/gamma.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=16,17 "Built target gamma"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=16,17 "Built target gamma"
 .PHONY : tests/CMakeFiles/gamma.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/gamma.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 16
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 16
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/gamma.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/gamma.dir/rule
 
 # Convenience name for target.
@@ -760,14 +760,14 @@ tests/CMakeFiles/gamma.dir/clean:
 tests/CMakeFiles/icon.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/icon.dir/build.make tests/CMakeFiles/icon.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/icon.dir/build.make tests/CMakeFiles/icon.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=42,43,44 "Built target icon"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=42,43,44 "Built target icon"
 .PHONY : tests/CMakeFiles/icon.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/icon.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/icon.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/icon.dir/rule
 
 # Convenience name for target.
@@ -786,14 +786,14 @@ tests/CMakeFiles/icon.dir/clean:
 tests/CMakeFiles/inputlag.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/inputlag.dir/build.make tests/CMakeFiles/inputlag.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/inputlag.dir/build.make tests/CMakeFiles/inputlag.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=48,49,50 "Built target inputlag"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=48,49,50 "Built target inputlag"
 .PHONY : tests/CMakeFiles/inputlag.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/inputlag.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/inputlag.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/inputlag.dir/rule
 
 # Convenience name for target.
@@ -812,14 +812,14 @@ tests/CMakeFiles/inputlag.dir/clean:
 tests/CMakeFiles/joysticks.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/joysticks.dir/build.make tests/CMakeFiles/joysticks.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/joysticks.dir/build.make tests/CMakeFiles/joysticks.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=51,52,53 "Built target joysticks"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=51,52,53 "Built target joysticks"
 .PHONY : tests/CMakeFiles/joysticks.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/joysticks.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/joysticks.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/joysticks.dir/rule
 
 # Convenience name for target.
@@ -838,14 +838,14 @@ tests/CMakeFiles/joysticks.dir/clean:
 tests/CMakeFiles/opacity.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/opacity.dir/build.make tests/CMakeFiles/opacity.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/opacity.dir/build.make tests/CMakeFiles/opacity.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=63,64,65 "Built target opacity"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=63,64,65 "Built target opacity"
 .PHONY : tests/CMakeFiles/opacity.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/opacity.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/opacity.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/opacity.dir/rule
 
 # Convenience name for target.
@@ -864,14 +864,14 @@ tests/CMakeFiles/opacity.dir/clean:
 tests/CMakeFiles/tearing.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/tearing.dir/build.make tests/CMakeFiles/tearing.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/tearing.dir/build.make tests/CMakeFiles/tearing.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=80,81,82 "Built target tearing"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=80,81,82 "Built target tearing"
 .PHONY : tests/CMakeFiles/tearing.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/tearing.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/tearing.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/tearing.dir/rule
 
 # Convenience name for target.
@@ -890,14 +890,14 @@ tests/CMakeFiles/tearing.dir/clean:
 tests/CMakeFiles/threads.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/threads.dir/build.make tests/CMakeFiles/threads.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/threads.dir/build.make tests/CMakeFiles/threads.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=83,84,85 "Built target threads"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=83,84,85 "Built target threads"
 .PHONY : tests/CMakeFiles/threads.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/threads.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/threads.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/threads.dir/rule
 
 # Convenience name for target.
@@ -916,14 +916,14 @@ tests/CMakeFiles/threads.dir/clean:
 tests/CMakeFiles/timeout.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/timeout.dir/build.make tests/CMakeFiles/timeout.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/timeout.dir/build.make tests/CMakeFiles/timeout.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=86,87,88 "Built target timeout"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=86,87,88 "Built target timeout"
 .PHONY : tests/CMakeFiles/timeout.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/timeout.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/timeout.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/timeout.dir/rule
 
 # Convenience name for target.
@@ -942,14 +942,14 @@ tests/CMakeFiles/timeout.dir/clean:
 tests/CMakeFiles/title.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/title.dir/build.make tests/CMakeFiles/title.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/title.dir/build.make tests/CMakeFiles/title.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=89,90 "Built target title"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=89,90 "Built target title"
 .PHONY : tests/CMakeFiles/title.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/title.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 16
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 16
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/title.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/title.dir/rule
 
 # Convenience name for target.
@@ -968,14 +968,14 @@ tests/CMakeFiles/title.dir/clean:
 tests/CMakeFiles/triangle-vulkan.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/triangle-vulkan.dir/build.make tests/CMakeFiles/triangle-vulkan.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/triangle-vulkan.dir/build.make tests/CMakeFiles/triangle-vulkan.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=91,92,93 "Built target triangle-vulkan"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=91,92,93 "Built target triangle-vulkan"
 .PHONY : tests/CMakeFiles/triangle-vulkan.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/triangle-vulkan.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/triangle-vulkan.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/triangle-vulkan.dir/rule
 
 # Convenience name for target.
@@ -994,14 +994,14 @@ tests/CMakeFiles/triangle-vulkan.dir/clean:
 tests/CMakeFiles/windows.dir/all: src/CMakeFiles/glfw.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/windows.dir/build.make tests/CMakeFiles/windows.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/windows.dir/build.make tests/CMakeFiles/windows.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=97,98,99,100 "Built target windows"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=97,98,99,100 "Built target windows"
 .PHONY : tests/CMakeFiles/windows.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/windows.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 18
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 18
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/windows.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/windows.dir/rule
 
 # Convenience name for target.

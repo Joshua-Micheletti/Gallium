@@ -4,7 +4,7 @@
 # compile C with /usr/bin/cc
 C_DEFINES = -D_GLFW_USE_CONFIG_H
 
-C_INCLUDES = -I/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/include -I/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/src -I/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/src
+C_INCLUDES = -I/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/include -I/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/src -I/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/src
 
 C_FLAGS = -fPIC -Wall -std=gnu99
 

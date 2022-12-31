@@ -1,7 +1,7 @@
 tests/CMakeFiles/threads.dir/__/deps/tinycthread.c.o: \
- /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/deps/tinycthread.c \
+ /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/deps/tinycthread.c \
  /usr/include/stdc-predef.h \
- /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/deps/tinycthread.h \
+ /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/deps/tinycthread.h \
  /usr/include/time.h /usr/include/features.h \
  /usr/include/features-time64.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \

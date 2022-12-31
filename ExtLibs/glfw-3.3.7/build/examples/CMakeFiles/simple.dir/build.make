@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7
+CMAKE_SOURCE_DIR = /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build
+CMAKE_BINARY_DIR = /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build
 
 # Include any dependencies generated for this target.
 include examples/CMakeFiles/simple.dir/depend.make
@@ -72,30 +72,30 @@ include examples/CMakeFiles/simple.dir/flags.make
 examples/CMakeFiles/simple.dir/simple.c.o: examples/CMakeFiles/simple.dir/flags.make
 examples/CMakeFiles/simple.dir/simple.c.o: ../examples/simple.c
 examples/CMakeFiles/simple.dir/simple.c.o: examples/CMakeFiles/simple.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object examples/CMakeFiles/simple.dir/simple.c.o"
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT examples/CMakeFiles/simple.dir/simple.c.o -MF CMakeFiles/simple.dir/simple.c.o.d -o CMakeFiles/simple.dir/simple.c.o -c /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/examples/simple.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object examples/CMakeFiles/simple.dir/simple.c.o"
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT examples/CMakeFiles/simple.dir/simple.c.o -MF CMakeFiles/simple.dir/simple.c.o.d -o CMakeFiles/simple.dir/simple.c.o -c /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/examples/simple.c
 
 examples/CMakeFiles/simple.dir/simple.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/simple.dir/simple.c.i"
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/examples/simple.c > CMakeFiles/simple.dir/simple.c.i
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/examples/simple.c > CMakeFiles/simple.dir/simple.c.i
 
 examples/CMakeFiles/simple.dir/simple.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/simple.dir/simple.c.s"
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/examples/simple.c -o CMakeFiles/simple.dir/simple.c.s
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/examples/simple.c -o CMakeFiles/simple.dir/simple.c.s
 
 examples/CMakeFiles/simple.dir/__/deps/glad_gl.c.o: examples/CMakeFiles/simple.dir/flags.make
 examples/CMakeFiles/simple.dir/__/deps/glad_gl.c.o: ../deps/glad_gl.c
 examples/CMakeFiles/simple.dir/__/deps/glad_gl.c.o: examples/CMakeFiles/simple.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object examples/CMakeFiles/simple.dir/__/deps/glad_gl.c.o"
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT examples/CMakeFiles/simple.dir/__/deps/glad_gl.c.o -MF CMakeFiles/simple.dir/__/deps/glad_gl.c.o.d -o CMakeFiles/simple.dir/__/deps/glad_gl.c.o -c /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/deps/glad_gl.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object examples/CMakeFiles/simple.dir/__/deps/glad_gl.c.o"
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT examples/CMakeFiles/simple.dir/__/deps/glad_gl.c.o -MF CMakeFiles/simple.dir/__/deps/glad_gl.c.o.d -o CMakeFiles/simple.dir/__/deps/glad_gl.c.o -c /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/deps/glad_gl.c
 
 examples/CMakeFiles/simple.dir/__/deps/glad_gl.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/simple.dir/__/deps/glad_gl.c.i"
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/deps/glad_gl.c > CMakeFiles/simple.dir/__/deps/glad_gl.c.i
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/deps/glad_gl.c > CMakeFiles/simple.dir/__/deps/glad_gl.c.i
 
 examples/CMakeFiles/simple.dir/__/deps/glad_gl.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/simple.dir/__/deps/glad_gl.c.s"
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/deps/glad_gl.c -o CMakeFiles/simple.dir/__/deps/glad_gl.c.s
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/deps/glad_gl.c -o CMakeFiles/simple.dir/__/deps/glad_gl.c.s
 
 # Object files for target simple
 simple_OBJECTS = \
@@ -114,18 +114,18 @@ examples/simple: /usr/lib/x86_64-linux-gnu/librt.a
 examples/simple: /usr/lib/x86_64-linux-gnu/libm.so
 examples/simple: /usr/lib/x86_64-linux-gnu/libX11.so
 examples/simple: examples/CMakeFiles/simple.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking C executable simple"
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/examples && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/simple.dir/link.txt --verbose=$(VERBOSE)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking C executable simple"
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/examples && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/simple.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 examples/CMakeFiles/simple.dir/build: examples/simple
 .PHONY : examples/CMakeFiles/simple.dir/build
 
 examples/CMakeFiles/simple.dir/clean:
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/examples && $(CMAKE_COMMAND) -P CMakeFiles/simple.dir/cmake_clean.cmake
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/examples && $(CMAKE_COMMAND) -P CMakeFiles/simple.dir/cmake_clean.cmake
 .PHONY : examples/CMakeFiles/simple.dir/clean
 
 examples/CMakeFiles/simple.dir/depend:
-	cd /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7 /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/examples /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/examples /home/joshua/Desktop/3DEngineVS/ExtLibs/glfw-3.3.7/build/examples/CMakeFiles/simple.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7 /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/examples /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/examples /home/josh/Projects/Gallium/ExtLibs/glfw-3.3.7/build/examples/CMakeFiles/simple.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : examples/CMakeFiles/simple.dir/depend
 

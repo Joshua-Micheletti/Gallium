@@ -145,7 +145,6 @@ void UI::drawLeftColumn() {
 	if (ImGui::CollapsingHeader("Entities")) {
         std::vector<std::string> entities = RM.modelNames();
 		for (int i = 0; i < entities.size(); i++) {
-			// if (ImGui::Selectable("test", false));
 			if (ImGui::Selectable(entities[i].c_str(), RM.selectedEntity() == entities[i])) {
 				if (selected == i) {
 					selected = -1;
@@ -273,18 +272,31 @@ void UI::drawLeftColumn() {
 		if (ImGui::CollapsingHeader("Components")) {
 			for (int i = 0; i < components.size(); i++) {
 				if (ImGui::TreeNode(std::to_string(i).c_str())) {
+					
+					// FIX stringVectorToCArray function
 					std::vector<std::string> meshes = RM.meshNames();
-					const char** meshItems = stringVectorToCArray(meshes);
+					// const char** meshItems = stringVectorToCArray(meshes);
+
+					std::vector<const char*> meshVector;
+					for (int i = 0; i < meshes.size(); i++) {
+						meshVector.push_back(meshes[i].c_str());
+					}
+					const char** meshItems = meshVector.data();
+
 					static int selectedMesh = find(RM.model(RM.selectedEntity())->components()[i]->mesh, meshes);
+
 					ImGui::Text("Mesh");
 					ImGui::SameLine();
 					ImGui::Combo(std::string("###MeshDropdown" + std::to_string(i)).c_str(), &selectedMesh, meshItems, meshes.size());
-
 					RM.model(RM.selectedEntity())->mesh(std::string(meshItems[selectedMesh]));
-
-
+					
 					std::vector<std::string> materials = RM.materialNames();
-					const char** materialItems = stringVectorToCArray(materials);
+					std::vector<const char*> materialVector;
+					for (int i = 0; i < materials.size(); i++) {
+						materialVector.push_back(materials[i].c_str());
+					}
+					const char** materialItems = materialVector.data();
+					// const char** materialItems = stringVectorToCArray(materials);
 					static int selectedMaterial = find(RM.model(RM.selectedEntity())->components()[i]->material, materials);
 					ImGui::Text("Material");
 					ImGui::SameLine();
@@ -292,9 +304,14 @@ void UI::drawLeftColumn() {
 
 					RM.model(RM.selectedEntity())->material(std::string(materialItems[selectedMaterial]));
 
-
+					
 					std::vector<std::string> shaders = RM.shaderNames();
-					const char** shaderItems = stringVectorToCArray(shaders);
+					std::vector<const char*> shaderVector;
+					for (int i = 0; i < shaders.size(); i++) {
+						shaderVector.push_back(shaders[i].c_str());
+					}
+					const char** shaderItems = shaderVector.data();
+					// const char** shaderItems = stringVectorToCArray(shaders);
 					static int selectedShader = find(RM.model(RM.selectedEntity())->components()[i]->shader, shaders);
 					ImGui::Text("Shader");
 					ImGui::SameLine();
@@ -302,17 +319,22 @@ void UI::drawLeftColumn() {
 
 					RM.model(RM.selectedEntity())->shader(std::string(shaderItems[selectedShader]));
 
-					/*
+					
 					std::vector<std::string> textures = RM.textureNames();
-					const char** textureItems = stringVectorToCArray(textures);
-					static int selectedTexture = find(RM.model(RM.selectedEntity())->components()[i]->texture, textures);
+					std::vector<const char*> textureVector;
+					for (int i = 0; i < textures.size(); i++) {
+						textureVector.push_back(textures[i].c_str());
+					}
+					const char** textureItems = textureVector.data();
+					// const char** textureItems = stringVectorToCArray(textures);
+					static int selectedTexture = find(RM.model(RM.selectedEntity())->components()[i]->texture.general(), textures);
 					ImGui::Text("Texture");
 					ImGui::SameLine();
 					ImGui::Combo(std::string("###TextureDropdown" + std::to_string(i)).c_str(), &selectedTexture, textureItems, textures.size());
 					
 					RM.model(RM.selectedEntity())->texture(std::string(textureItems[selectedTexture]));
-					*/
-
+					
+					
 					ImGui::TreePop();
 				}
 				// if (ImGui::Selectable(components[i]->mesh.c_str(), selectedMesh == i)) {
@@ -325,7 +347,7 @@ void UI::drawLeftColumn() {
 				// }
 			}
 		}
-
+		/*
 		if (selectedMesh != -1) {
 			ImGui::Separator();
 			ImGui::Text(std::string("Mesh: ").append(components[selectedMesh]->mesh).c_str());
@@ -391,10 +413,12 @@ void UI::drawLeftColumn() {
 
 				if (ImGui::TreeNode("Texture")) {
 					ImGui::TreePop();
-				}*/
+				}
 			}
+			
 
 		}
+		*/
 	}
 
 	ImGui::PushStyleColor(ImGuiCol_ResizeGrip, 0);
@@ -455,11 +479,11 @@ void UI::drawRightColumn() {
 				}
 			}
 		}
-
+		
 		tmp = window.fullscreen();
 		if (ImGui::MenuItem("Fullscreen", NULL, &tmp));
 		window.fullscreen(tmp);
-
+		
 		tmp = RM.depth();
 		if (ImGui::MenuItem("Depth Buffer", NULL, &tmp));
 		RM.depth(tmp);
@@ -663,11 +687,9 @@ void UI::drawBottomRow() {
 				float imageHeight = (float)height;
 
 				this->drawImage(this->renderer->getOutlineMaskTexture(), imageWidth, imageHeight);
-
 				ImGui::SameLine();
 
 				this->drawImage(this->renderer->getDepthBufferTexture(), imageWidth, imageHeight);
-
 				std::vector<std::string> textureNames = RM.textureNames();
 
 				int newLineIndex = (int)(ImGui::GetWindowSize().x / imageWidth);
@@ -686,7 +708,7 @@ void UI::drawBottomRow() {
 				}
 				ImGui::EndTabItem();
 			}
-
+			
 			if (ImGui::BeginTabItem("Materials")) {
 				ImGui::Separator();
 
@@ -747,6 +769,7 @@ void UI::drawBottomRow() {
 
 				ImGui::EndTabItem();
 			}
+			
 			if (ImGui::BeginTabItem("Cucumber"))
 			{
 				ImGui::Text("This is the Cucumber tab!\nblah blah blah blah blah");
@@ -982,7 +1005,7 @@ void UI::drawImGui() {
 	if (this->showRightColumn == true) {
 		this->drawRightColumn();
 	}
-
+	
 	if (this->showBottomRow == true) {
 		this->drawBottomRow();
 	}
@@ -995,7 +1018,7 @@ void UI::drawImGui() {
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-// // just calls all the other methods, this method is public
+// just calls all the other methods, this method is public
 void UI::drawInfo() {
 	static double tmpTime;
 	this->fpsTime = glfwGetTime() - tmpTime;
