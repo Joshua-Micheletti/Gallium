@@ -76,6 +76,7 @@ class Model {
         Model* scale(glm::vec3);
         // calculate the model matrix
         glm::mat4 modelMatrix();
+        Model* modelMatrix(float *);
 
         // get the model position
         glm::vec3 position();

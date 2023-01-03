@@ -222,3 +222,6 @@ run:
 	$(runCommand)
 
 exec: main run
+
+clean:
+	rm ./bin/objects/*.o

@@ -10,7 +10,7 @@ int main(void) {
 
 	while (!glfwWindowShouldClose(window.window())) {
 		eventHandler.routine();
-		PW.step(1.0f / 60.0f);
+		PW.step();
 		engine.update(RM, PW);
 		renderer.render();
 		interface.drawInfo();

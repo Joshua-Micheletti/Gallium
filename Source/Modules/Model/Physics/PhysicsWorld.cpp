@@ -21,9 +21,39 @@ std::vector<TK> extractKeys(std::map<TK, TV> const& input_map) {
 
 
 PhysicsWorld::PhysicsWorld() {
-    this->m_gravity = glm::vec3(0, -9.81f, 0);
+    this->m_time = glfwGetTime();
+    this->m_tick = (double)(1.0 / 60.0);
+
+    this->m_gravity = glm::vec3(0, -1.0f, 0);
+    printf("setting up physics world\n");
+    // default config for the physics algorithm
+    this->m_collisionConfig = new btDefaultCollisionConfiguration();
+    printf("setup collision config\n");
+    // default collision dispatcher
+    this->m_dispatcher = new btCollisionDispatcher(this->m_collisionConfig);
+    printf("setup dispatcher\n");
+    // dbvt algorithm
+    this->m_broadphase = new btDbvtBroadphase();
+    printf("setup broadphase\n");
+    // collision solver
+    this->m_solver = new btSequentialImpulseConstraintSolver();
+    printf("setup solver\n");
+    // world initialization
+    this->m_world = new btDiscreteDynamicsWorld(this->m_dispatcher, this->m_broadphase, this->m_solver, this->m_collisionConfig);
+    printf("setup world\n");
+    // set the gravity
+    this->m_world->setGravity(btVector3(0, -9.81f, 0));
+    printf("Setup Physics World\n");
 }
 
+void PhysicsWorld::step() {
+    while (this->m_time + this->m_tick < glfwGetTime()) {
+        this->m_world->stepSimulation(this->m_tick);
+        this->m_time += this->m_tick;
+    }
+}
+
+/*
 void PhysicsWorld::step(float dt) {
     std::vector<PhysicsBody*> bodies = extractValues(this->m_physicsBodyBuffer);
 
@@ -38,6 +68,7 @@ void PhysicsWorld::step(float dt) {
         bodies[i]->force(glm::vec3(0));
     }
 }
+*/
 
 
 PhysicsBody* PhysicsWorld::physicsBody(std::string name) {
@@ -56,8 +87,9 @@ std::string PhysicsWorld::physicsBody(PhysicsBody *pb) {
 
     return("");
 }
-PhysicsBody* PhysicsWorld::newPhysicsBody(std::string name) {
-    PhysicsBody* pb = new PhysicsBody();
+PhysicsBody* PhysicsWorld::newPhysicsBody(std::string name, std::string shape) {
+    PhysicsBody* pb = new PhysicsBody(shape);
     this->m_physicsBodyBuffer[name] = pb;
+    this->m_world->addRigidBody(this->m_physicsBodyBuffer[name]->body());
     return(this->m_physicsBodyBuffer[name]);
 }

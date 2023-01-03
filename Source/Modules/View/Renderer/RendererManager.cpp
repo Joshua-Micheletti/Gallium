@@ -70,7 +70,7 @@ RendererManager::RendererManager() {
     // SETUP CAMERAS
     // initialize the default camera
     this->m_cameras["default"] = new Camera(glm::vec3(30.0f, 30.0f, 30.0f),   // position
-                                           glm::vec3(0.0f, 225.0f, -35.0f),  // direction
+                                           glm::vec3(0.0f, 225.0f, -65.0f),  // direction
                                            glm::vec3(0.0f, 1.0f, 0.0f));     // up
     // initialize the reflection camera
     this->m_cameras["reflection"] = new Camera(glm::vec3(0.0f, 0.0f, 0.0f),   // position
@@ -89,7 +89,7 @@ RendererManager::RendererManager() {
 
     // SETUP RENDER
     // initialize the samples for multisampling
-    this->m_samples = 16;
+    this->m_samples = 1;
     // disable the depth buffer view
     this->m_depth = false;
 

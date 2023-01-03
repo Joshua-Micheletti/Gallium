@@ -168,13 +168,19 @@ Model* Model::rotate(glm::vec3 rotation) {
 Model* Model::scale(glm::vec3 scale) {
     this->m_scaleMatrix = glm::scale(glm::mat4(1), scale);
     this->m_scale = scale;
+    this->m_modelMatrix = this->m_translationMatrix * this->m_rotationMatrix * this->m_scaleMatrix;
     return(this);
 }
 
 // OPTIMIZE TO ONLY CALCULATE WHEN THERE'S A CHANGE
 glm::mat4 Model::modelMatrix() {
-    this->m_modelMatrix = this->m_translationMatrix * this->m_rotationMatrix * this->m_scaleMatrix;
+    // this->m_modelMatrix = this->m_translationMatrix * this->m_rotationMatrix * this->m_scaleMatrix;
     return(this->m_modelMatrix);
+}
+Model* Model::modelMatrix(float *m) {
+    this->m_modelMatrix = glm::make_mat4(m);
+    this->m_modelMatrix *= this->m_scaleMatrix;
+    return(this);
 }
 
 glm::vec3 Model::position() {

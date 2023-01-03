@@ -5,8 +5,8 @@ RendererManager RM;
 PhysicsWorld PW;
 Engine engine;
 
-bool displayInfo = true;
-bool vsync = true;
+bool displayInfo = false;
+bool vsync = false;
 
 bool freeMouse = false;
 bool drawOBB = false;
@@ -17,7 +17,7 @@ bool drawAABB4 = false;
 bool drawBS = false;
 bool drawBS2 = false;
 bool drawBS3 = false;
-bool doReflection = true;
+bool doReflection = false;
 int outlineType = 0;
 
 unsigned int screenWidth = 1280;

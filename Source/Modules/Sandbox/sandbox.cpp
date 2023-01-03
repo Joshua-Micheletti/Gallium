@@ -2,9 +2,8 @@
 
 void sandbox() {
 
-    RM.newModel("M_Test");
+    // RM.newModel("M_Test");
 
-    
     // REPLACE THIS CODE WITH ANYTHING YOU WANT TO BE LOADED IN THE ENGINE
     RM.newShader("S_Lighting")->loadShader("../Shader/lighting/lighting.vert", "../Shader/lighting/lighting.frag");
     RM.newShader("S_LightingTex")->loadShader("../Shader/lightingTex/lightingTex.vert", "../Shader/lightingTex/lightingTex.frag");
@@ -12,9 +11,24 @@ void sandbox() {
 
     RM.newShader("S_Reflection")->loadShader("../Shader/reflection/reflection.vert", "../Shader/reflection/reflection.frag");
     
-    PW.newPhysicsBody("P_Cube");
+    PW.newPhysicsBody("P_plane", "plane");
 
-    //engine.link("P_Cube", "M_Test");
+    for (int i = 0; i < 100; i++) {
+        PW.newPhysicsBody("P_sphere" + std::to_string(i), "sphere");
+        RM.newModel("M_Test" + std::to_string(i))->scale(glm::vec3(2, 2, 2))->mesh("ME_Sphere")->shader("S_LightingMaterialTex");
+        engine.link("P_sphere" + std::to_string(i), "M_Test" + std::to_string(i));
+    }
+
+    for (int i = 0; i < 100; i++) {
+        PW.newPhysicsBody("P_Box" + std::to_string(i), "cube");
+        RM.newModel("M_Box" + std::to_string(i))->scale(glm::vec3(0.5f, 0.5f, 0.5f))->shader("S_LightingMaterialTex");
+        engine.link("P_Box" + std::to_string(i), "M_Box" + std::to_string(i));
+    }
+
+    RM.newModel("M_Plane")->scale(glm::vec3(20.0f, 0.00001f, 20.0f))->shader("S_Lighting");
+    
+
+    // engine.link("sphere", "M_Test");
     
     /*
     RM.shader("S_Reflection")->printFull();

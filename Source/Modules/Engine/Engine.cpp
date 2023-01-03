@@ -29,7 +29,13 @@ void Engine::update(RendererManager RM, PhysicsWorld PW) {
     std::vector<std::string> models = extractValues(this->m_associations);
 
     for (int i = 0; i < physicsBodies.size(); i++) {
+        /*
         RM.model(models[i])->position(PW.physicsBody(physicsBodies[i])->position());
+        RM.model(models[i])->rotation(PW.physicsBody(physicsBodies[i])->rotation());
+        */
+        float tmp[16];
+        PW.physicsBody(physicsBodies[i])->transformMatrix(tmp);
+        RM.model(models[i])->modelMatrix(tmp);
     }
 }
 
