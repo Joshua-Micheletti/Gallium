@@ -24,6 +24,8 @@ class PhysicsWorld {
         std::string physicsBody(PhysicsBody*);
         PhysicsBody* newPhysicsBody(std::string, std::string);
 
+        double physicsTime();
+
     private:
         btDynamicsWorld* m_world;
         btDispatcher* m_dispatcher;
@@ -36,6 +38,8 @@ class PhysicsWorld {
 
         double m_time;
         double m_tick;
+
+        double m_physicsTime;
 };
 
 #endif

@@ -48,7 +48,9 @@ PhysicsWorld::PhysicsWorld() {
 
 void PhysicsWorld::step() {
     while (this->m_time + this->m_tick < glfwGetTime()) {
+        this->m_physicsTime = glfwGetTime();
         this->m_world->stepSimulation(this->m_tick);
+        this->m_physicsTime = glfwGetTime() - this->m_physicsTime;
         this->m_time += this->m_tick;
     }
 }
@@ -92,4 +94,8 @@ PhysicsBody* PhysicsWorld::newPhysicsBody(std::string name, std::string shape) {
     this->m_physicsBodyBuffer[name] = pb;
     this->m_world->addRigidBody(this->m_physicsBodyBuffer[name]->body());
     return(this->m_physicsBodyBuffer[name]);
+}
+
+double PhysicsWorld::physicsTime() {
+    return(this->m_physicsTime);
 }

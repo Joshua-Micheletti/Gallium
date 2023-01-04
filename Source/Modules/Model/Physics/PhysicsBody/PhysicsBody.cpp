@@ -17,8 +17,8 @@ PhysicsBody::PhysicsBody(std::string shape) {
 
         btRigidBody::btRigidBodyConstructionInfo info(0.0, this->m_motion, plane);
         this->m_body = new btRigidBody(info);
-        this->m_body->setFriction(0.3);
-        this->m_body->setRollingFriction(0.5);
+        // this->m_body->setFriction(0.3);
+        // this->m_body->setRollingFriction(0.5);
     }
 
     if (shape == "sphere") {
@@ -41,8 +41,8 @@ PhysicsBody::PhysicsBody(std::string shape) {
         this->m_motion = new btDefaultMotionState(t);
         btRigidBody::btRigidBodyConstructionInfo info(10, this->m_motion, sphere, inertia); // mass = 10
         this->m_body = new btRigidBody(info);
-        this->m_body->setFriction(0.3);
-        this->m_body->setRollingFriction(0.4);
+        // this->m_body->setFriction(0.3);
+        // this->m_body->setRollingFriction(0.4);
     }
 
     if (shape == "cube") {
@@ -65,8 +65,8 @@ PhysicsBody::PhysicsBody(std::string shape) {
         this->m_motion = new btDefaultMotionState(t);
         btRigidBody::btRigidBodyConstructionInfo info(10, this->m_motion, box, inertia); // mass = 10
         this->m_body = new btRigidBody(info);
-        this->m_body->setFriction(0.3);
-        this->m_body->setRollingFriction(0.4);
+        // this->m_body->setFriction(0.3);
+        // this->m_body->setRollingFriction(0.4);
     }
 }
 

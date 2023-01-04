@@ -14,18 +14,19 @@ imguiBE = $(imgui)/backends
 stbimage = $(libs)/stb-master
 bulletI = $(libs)/bullet3/src
 
+bulletLibrary = ./Libs/bullet3/build_cmake/src
 
-COLLISION3 = -L /home/josh/Libraries/bullet3/build_cmake/src/Bullet3Collision/ -lBullet3Collision
-COMMON3 = -L /home/josh/Libraries/bullet3/build_cmake/src/Bullet3Common/ -lBullet3Common
-DYNAMICS3 = -L /home/josh/Libraries/bullet3/build_cmake/src/Bullet3Dynamics/ -lBullet3Dynamics
-GEOMETRY3 = -L /home/josh/Libraries/bullet3/build_cmake/src/Bullet3Geometry/ -lBullet3Geometry
-OPENCL3 = -L /home/josh/Libraries/bullet3/build_cmake/src/Bullet3OpenCL/ -lBullet3OpenCL_clew
-SERIALIZE2 = -L /home/josh/Libraries/bullet3/build_cmake/src/Bullet3Serialize/Bullet2FileLoader/ -lBullet2FileLoader
-COLLISION = -L /home/josh/Libraries/bullet3/build_cmake/src/BulletCollision/ -lBulletCollision
-DYNAMICS = -L /home/josh/Libraries/bullet3/build_cmake/src/BulletDynamics/ -lBulletDynamics
-INVERSEDYNAMICS = -L /home/josh/Libraries/bullet3/build_cmake/src/BulletInverseDynamics/ -lBulletInverseDynamics
-SOFTBODY = -L /home/josh/Libraries/bullet3/build_cmake/src/BulletSoftBody/ -lBulletSoftBody
-LINEARMATH = -L /home/josh/Libraries/bullet3/build_cmake/src/LinearMath/ -lLinearMath
+COLLISION3 = -L $(bulletLibrary)/Bullet3Collision/ -lBullet3Collision
+COMMON3 = -L $(bulletLibrary)/Bullet3Common/ -lBullet3Common
+DYNAMICS3 = -L $(bulletLibrary)/Bullet3Dynamics/ -lBullet3Dynamics
+GEOMETRY3 = -L $(bulletLibrary)/Bullet3Geometry/ -lBullet3Geometry
+OPENCL3 = -L $(bulletLibrary)/Bullet3OpenCL/ -lBullet3OpenCL_clew
+SERIALIZE2 = -L $(bulletLibrary)/Bullet3Serialize/Bullet2FileLoader/ -lBullet2FileLoader
+COLLISION = -L $(bulletLibrary)/BulletCollision/ -lBulletCollision
+DYNAMICS = -L $(bulletLibrary)/BulletDynamics/ -lBulletDynamics
+INVERSEDYNAMICS = -L $(bulletLibrary)/BulletInverseDynamics/ -lBulletInverseDynamics
+SOFTBODY = -L $(bulletLibrary)/BulletSoftBody/ -lBulletSoftBody
+LINEARMATH = -L $(bulletLibrary)/LinearMath/ -lLinearMath
 
 bulletL = $(COLLISION3) $(COMMON3) $(DYNAMICS3) $(GEOMETRY3) $(OPENCL3) $(SERIALIZE2) $(COLLISION) $(DYNAMICS) $(INVERSEDYNAMICS) $(SOFTBODY) $(LINEARMATH)
 
@@ -38,13 +39,15 @@ ifeq ($(OS),Windows_NT)
 	marks = 
 	escape = 
 	noColor = $(escape)[0m
+	env = 
 else
 	extLibL = $(glmI) -L $(imgui) -L $(stbimage) $(bulletL)
 	libraries = -lGL -lglfw3 -ldl -lm -lGLU -lX11 -lpthread -lGLEW
-	runCommand = (cd ./bin && ./launch)
 	marks = "
 	escape = \033
 	noColor = $(escape)[0m
+	env = export LD_LIBRARY_PATH=.$(bulletLibrary)/Bullet3Collision:.$(bulletLibrary)/Bullet3Common:.$(bulletLibrary)/Bullet3Dynamics:.$(bulletLibrary)/Bullet3Geometry:.$(bulletLibrary)/Bullet3OpenCL:.$(bulletLibrary)/Bullet3Serialize:.$(bulletLibrary)/BulletCollision:.$(bulletLibrary)/BulletDynamics:.$(bulletLibrary)/BulletInverseDynamics:.$(bulletLibrary)/BulletSoftBody:.$(bulletLibrary)/LinearMath
+	runCommand = (cd ./bin && $(env) && export GALLIUM_HUD=fps && ./launch)
 endif
 
 
@@ -60,6 +63,7 @@ objects = $(objectsPath)/main.o $(objectsPath)/Engine.o $(objectsPath)/sandbox.o
 
 main: $(objects) makefile
 	@echo $(marks)$(escape)[31m============= COMPILING MAIN PROGRAM =============$(noColor)$(marks)
+	$(env)
 	g++ -o ./bin/launch $(objects) -L $(extLibL) -I $(extLibI) $(libraries) $(flags)
 	@echo $(marks)$(escape)[32mDone$(noColor)$(marks)
 
@@ -185,36 +189,36 @@ $(objectsPath)/Entity.o: $(model)/Entity.cpp $(model)/Entity.h makefile
 # LIBRARIES
 
 # IMGUI
-$(objectsPath)/imgui.o: $(imgui)/imgui.cpp makefile
+$(objectsPath)/imgui.o: $(imgui)/imgui.cpp
 	@echo $(marks)$(escape)[31m============= imgui.cpp (extLib) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/imgui.o $(imgui)/imgui.cpp -I $(extLibI) $(flags)
 
-$(objectsPath)/imgui_impl_glfw.o: $(imguiBE)/imgui_impl_glfw.cpp makefile
+$(objectsPath)/imgui_impl_glfw.o: $(imguiBE)/imgui_impl_glfw.cpp
 	@echo $(marks)$(escape)[31m============= imgui_impl_glfw.cpp (extLib) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/imgui_impl_glfw.o $(imguiBE)/imgui_impl_glfw.cpp -I $(extLibI) $(flags)
 
-$(objectsPath)/imgui_impl_opengl3.o: $(imguiBE)/imgui_impl_opengl3.cpp makefile
+$(objectsPath)/imgui_impl_opengl3.o: $(imguiBE)/imgui_impl_opengl3.cpp
 	@echo $(marks)$(escape)[31m============= imgui_impl_opengl3.cpp (extLib) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/imgui_impl_opengl3.o $(imguiBE)/imgui_impl_opengl3.cpp -I $(extLibI) $(flags)
 
-$(objectsPath)/imgui_demo.o: $(imgui)/imgui_demo.cpp makefile
+$(objectsPath)/imgui_demo.o: $(imgui)/imgui_demo.cpp
 	@echo $(marks)$(escape)[31m============= imgui_demo.cpp (extLib) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/imgui_demo.o $(imgui)/imgui_demo.cpp -I $(extLibI) $(flags)
 
-$(objectsPath)/imgui_draw.o: $(imgui)/imgui_draw.cpp makefile
+$(objectsPath)/imgui_draw.o: $(imgui)/imgui_draw.cpp
 	@echo $(marks)$(escape)[31m============= imgui_draw.cpp (extLib) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/imgui_draw.o $(imgui)/imgui_draw.cpp -I $(extLibI) $(flags)
 
-$(objectsPath)/imgui_widgets.o: $(imgui)/imgui_widgets.cpp makefile
+$(objectsPath)/imgui_widgets.o: $(imgui)/imgui_widgets.cpp
 	@echo $(marks)$(escape)[31m============= imgui_widgets.cpp (extLib) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/imgui_widgets.o $(imgui)/imgui_widgets.cpp -I $(extLibI) $(flags)
 
-$(objectsPath)/imgui_tables.o: $(imgui)/imgui_tables.cpp makefile
+$(objectsPath)/imgui_tables.o: $(imgui)/imgui_tables.cpp
 	@echo $(marks)$(escape)[31m============= imgui_tables.cpp (extLib) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/imgui_tables.o $(imgui)/imgui_tables.cpp -I $(extLibI) $(flags)
 
 # GLAD
-$(objectsPath)/glad.o: $(libs)/GLAD/src/glad.c makefile
+$(objectsPath)/glad.o: $(libs)/GLAD/src/glad.c
 	@echo $(marks)$(escape)[31m============ glad.c (extLib) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/glad.o $(libs)/GLAD/src/glad.c -I $(libs)/GLAD/include $(flags)
 

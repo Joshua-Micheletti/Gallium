@@ -833,6 +833,7 @@ void UI::drawFPSWindow() {
 		static float forwardRenderTime[90] = {};
 		static float MSPostProcessRenderTime[90] = {};
 		static float postProcessRenderTime[90] = {};
+		static float physicsTime[90] = {};
 		static int values_offset = 0;
 		static double refresh_time = 0.0;
 
@@ -842,11 +843,12 @@ void UI::drawFPSWindow() {
 
 		while (refresh_time < ImGui::GetTime()) {
 			fps[values_offset] = 1.0f / this->m_fpsTime;
-			frameTime[values_offset] = this->m_fpsTime;
+			frameTime[values_offset] = this->m_fpsTime * 1000.0f;
 			reflectionRenderTime[values_offset] = this->m_renderer->getReflectionRenderTime() * 1000.0f;
 			forwardRenderTime[values_offset] = this->m_renderer->getForwardRenderTime() * 1000.0f;
 			MSPostProcessRenderTime[values_offset] = this->m_renderer->getMSPostProcessingPassTime() * 1000.0f;
 			postProcessRenderTime[values_offset] = this->m_renderer->getPostProcessingPassTime() * 1000.0f;
+			physicsTime[values_offset] = PW.physicsTime() * 1000.0f;
 			values_offset = (values_offset + 1) % IM_ARRAYSIZE(fps);
 			refresh_time += 1.0f / 10.0f;
 		}
@@ -891,6 +893,12 @@ void UI::drawFPSWindow() {
 
 			ImGui::PushItemWidth(-1);
 			ImGui::PlotLines("###postProcessGraph", postProcessRenderTime, IM_ARRAYSIZE(postProcessRenderTime), values_offset, overlay, 0.0f, 60.0f, ImVec2(0, 40.0f));
+			ImGui::PopItemWidth();
+
+			sprintf(overlay, "Physics %.3f", physicsTime[(values_offset - 1) % IM_ARRAYSIZE(physicsTime)]);
+
+			ImGui::PushItemWidth(-1);
+			ImGui::PlotLines("###postProcessGraph", physicsTime, IM_ARRAYSIZE(physicsTime), values_offset, overlay, 0.0f, 60.0f, ImVec2(0, 40.0f));
 			ImGui::PopItemWidth();
 		}
 
