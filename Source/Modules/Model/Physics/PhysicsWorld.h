@@ -22,9 +22,12 @@ class PhysicsWorld {
 
         PhysicsBody* physicsBody(std::string);
         std::string physicsBody(PhysicsBody*);
-        PhysicsBody* newPhysicsBody(std::string, std::string);
+        PhysicsBody* newPhysicsBody(std::string);
 
         double physicsTime();
+
+        // REMOVE
+        void updateBodies();
 
     private:
         btDynamicsWorld* m_world;

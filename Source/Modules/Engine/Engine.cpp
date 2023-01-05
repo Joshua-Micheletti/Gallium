@@ -37,6 +37,8 @@ void Engine::update(RendererManager RM, PhysicsWorld PW) {
         PW.physicsBody(physicsBodies[i])->transformMatrix(tmp);
         RM.model(models[i])->modelMatrix(tmp);
     }
+
+    PW.physicsBody("P_Camera")->position(RM.camera()->position());
 }
 
 void Engine::link(std::string pb, std::string m) {

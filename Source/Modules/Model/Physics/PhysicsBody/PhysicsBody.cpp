@@ -1,75 +1,78 @@
 #include "PhysicsBody.h"
 
-PhysicsBody::PhysicsBody(std::string shape) {
+PhysicsBody::PhysicsBody() {
     this->m_position = glm::vec3(0);
     this->m_velocity = glm::vec3(0);
     this->m_force = glm::vec3(0);
     this->m_mass = 1.0f;
 
-    if (shape == "plane") {
-        // create a plane
-        btTransform t;
-        t.setIdentity();
-        t.setOrigin(btVector3(0, 0, 0));
+    btTransform t;
+    t.setIdentity();
+    t.setOrigin(btVector3(0, 1, 0));
 
-        btStaticPlaneShape* plane = new btStaticPlaneShape(btVector3(0, 1, 0), btScalar(0));
-        this->m_motion = new btDefaultMotionState(t);
+    btBoxShape* box = new btBoxShape(btVector3(1.0 / 2.0, 1.0 / 2.0, 1.0 / 2.0));
+    btVector3 inertia(0, 0, 0);
+    box->calculateLocalInertia(btScalar(this->m_mass), inertia);
 
-        btRigidBody::btRigidBodyConstructionInfo info(0.0, this->m_motion, plane);
-        this->m_body = new btRigidBody(info);
-        // this->m_body->setFriction(0.3);
-        // this->m_body->setRollingFriction(0.5);
-    }
-
-    if (shape == "sphere") {
-        srand (clock());
-        printf("create a sphere!\n");
-        // create a sphere
-        btTransform t;
-        t.setIdentity();
-
-        float x = (float)(rand() % 1000) / 100 - 5;
-        float y = (float)(rand() % 3000) / 100 + 1;
-        float z = (float)(rand() % 1000) / 100 - 5;
-
-        t.setOrigin(btVector3(x, y, z));
-
-        btSphereShape* sphere = new btSphereShape(1); // radius = 10
-        btVector3 inertia(0, 0, 0);
-        sphere->calculateLocalInertia(btScalar(10), inertia);
-
-        this->m_motion = new btDefaultMotionState(t);
-        btRigidBody::btRigidBodyConstructionInfo info(10, this->m_motion, sphere, inertia); // mass = 10
-        this->m_body = new btRigidBody(info);
-        // this->m_body->setFriction(0.3);
-        // this->m_body->setRollingFriction(0.4);
-    }
-
-    if (shape == "cube") {
-        srand (clock());
-        printf("create a box!\n");
-        // create a sphere
-        btTransform t;
-        t.setIdentity();
-
-        float x = (float)(rand() % 1000) / 100 - 5;
-        float y = (float)(rand() % 3000) / 100 + 1;
-        float z = (float)(rand() % 1000) / 100 - 5;
-
-        t.setOrigin(btVector3(x, y, z));
-
-        btBoxShape* box = new btBoxShape(btVector3(1.0 / 2.0, 1.0 / 2.0, 1.0 / 2.0)); // radius = 10
-        btVector3 inertia(0, 0, 0);
-        box->calculateLocalInertia(btScalar(10), inertia);
-
-        this->m_motion = new btDefaultMotionState(t);
-        btRigidBody::btRigidBodyConstructionInfo info(10, this->m_motion, box, inertia); // mass = 10
-        this->m_body = new btRigidBody(info);
-        // this->m_body->setFriction(0.3);
-        // this->m_body->setRollingFriction(0.4);
-    }
+    this->m_motion = new btDefaultMotionState(t);
+    btRigidBody::btRigidBodyConstructionInfo info(this->m_mass, this->m_motion, box, inertia); // mass = 10
+    this->m_body = new btRigidBody(info);
+    this->m_body->setFriction(0.3);
+    this->m_body->setSpinningFriction(0.4);
 }
 
+
+void PhysicsBody::box(float mass, float x, float y, float z, float width, float height, float depth, float friction, float spinningFriction) {
+    this->m_mass = mass;
+
+    btTransform t;
+    t.setIdentity();
+    t.setOrigin(btVector3(x, y, z));
+
+    btBoxShape* box = new btBoxShape(btVector3(width / 2.0, height / 2.0, depth / 2.0));
+    btVector3 inertia(0, 0, 0);
+    box->calculateLocalInertia(btScalar(this->m_mass), inertia);
+
+    this->m_motion = new btDefaultMotionState(t);
+    btRigidBody::btRigidBodyConstructionInfo info(this->m_mass, this->m_motion, box, inertia);
+    this->m_body = new btRigidBody(info);
+    this->m_body->setFriction(friction);
+    this->m_body->setSpinningFriction(spinningFriction);
+}
+
+void PhysicsBody::sphere(float mass, float x, float y, float z, float radius, float friction, float spinningFriction, float rollingFriction) {
+    this->m_mass = mass;
+
+    btTransform t;
+    t.setIdentity();
+    t.setOrigin(btVector3(x, y, z));
+
+    btSphereShape* sphere = new btSphereShape(radius);
+    btVector3 inertia(0, 0, 0);
+    sphere->calculateLocalInertia(btScalar(this->m_mass), inertia);
+
+    this->m_motion = new btDefaultMotionState(t);
+    btRigidBody::btRigidBodyConstructionInfo info(this->m_mass, this->m_motion, sphere, inertia);
+    this->m_body = new btRigidBody(info);
+    this->m_body->setFriction(friction);
+    this->m_body->setSpinningFriction(spinningFriction);
+    this->m_body->setRollingFriction(rollingFriction);
+}
+
+void PhysicsBody::plane(float x, float y, float z, float orientationX, float orientationY, float orientationZ, float friction, float spinningFriction, float rollingFriction) {
+    btTransform t;
+    t.setIdentity();
+    t.setOrigin(btVector3(x, y, z));
+
+    btStaticPlaneShape* plane = new btStaticPlaneShape(btVector3(orientationX, orientationY, orientationZ), btScalar(0));
+    this->m_motion = new btDefaultMotionState(t);
+
+    btRigidBody::btRigidBodyConstructionInfo info(0.0, this->m_motion, plane);
+    this->m_body = new btRigidBody(info);
+    this->m_body->setFriction(friction);
+    this->m_body->setRollingFriction(rollingFriction);
+    this->m_body->setSpinningFriction(spinningFriction);
+}
 
 glm::vec3 PhysicsBody::position() {
     btVector3 currentPosition = this->m_body->getWorldTransform().getOrigin();
@@ -77,6 +80,14 @@ glm::vec3 PhysicsBody::position() {
 }
 PhysicsBody* PhysicsBody::position(glm::vec3 newPosition) {
     this->m_position = newPosition;
+
+    btTransform initialTransform;
+
+    initialTransform.setOrigin(btVector3(btScalar(newPosition.x), btScalar(newPosition.y), btScalar(newPosition.z)));
+
+    this->m_body->setWorldTransform(initialTransform);
+    this->m_motion->setWorldTransform(initialTransform);
+
     return(this);
 }
 

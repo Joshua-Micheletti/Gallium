@@ -1,0 +1,6 @@
+Name: bullet_robotics
+Description: Bullet extras that include several utilities for robotics including a urdf parser
+Requires: bullet
+Version: 3.25
+Libs: -LC:/Program Files (x86)/BULLET_PHYSICS/ -lBulletRobotics
+Cflags:  -IC:/Program Files (x86)/BULLET_PHYSICS/ -IC:/Program Files (x86)/BULLET_PHYSICS/include/bullet_robotics

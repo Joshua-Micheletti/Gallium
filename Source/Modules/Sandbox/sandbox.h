@@ -2,6 +2,8 @@
 #define __SANDBOX__
 
 #include "../global.h"
+#include <stdlib.h>
+#include <time.h>
 
 extern void sandbox();
 

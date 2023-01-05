@@ -89,11 +89,24 @@ std::string PhysicsWorld::physicsBody(PhysicsBody *pb) {
 
     return("");
 }
-PhysicsBody* PhysicsWorld::newPhysicsBody(std::string name, std::string shape) {
-    PhysicsBody* pb = new PhysicsBody(shape);
+PhysicsBody* PhysicsWorld::newPhysicsBody(std::string name) {
+    PhysicsBody* pb = new PhysicsBody();
     this->m_physicsBodyBuffer[name] = pb;
     this->m_world->addRigidBody(this->m_physicsBodyBuffer[name]->body());
     return(this->m_physicsBodyBuffer[name]);
+}
+
+// REMOVE
+void PhysicsWorld::updateBodies() {
+    for (int i = m_world->getNumCollisionObjects() - 1; i >= 0; i--) {
+            btCollisionObject* obj = m_world->getCollisionObjectArray()[i];
+            m_world->removeCollisionObject(obj);
+            delete obj;
+    }
+
+    for (auto it = this->m_physicsBodyBuffer.begin(); it != this->m_physicsBodyBuffer.end(); it++) {
+        this->m_world->addRigidBody(it->second->body());
+    }
 }
 
 double PhysicsWorld::physicsTime() {

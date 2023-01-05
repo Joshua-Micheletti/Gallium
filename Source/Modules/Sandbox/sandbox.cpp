@@ -1,8 +1,7 @@
 #include "sandbox.h"
 
 void sandbox() {
-
-    // RM.newModel("M_Test");
+    srand(clock());
 
     // REPLACE THIS CODE WITH ANYTHING YOU WANT TO BE LOADED IN THE ENGINE
     RM.newShader("S_Lighting")->loadShader("../Shader/lighting/lighting.vert", "../Shader/lighting/lighting.frag");
@@ -11,22 +10,34 @@ void sandbox() {
 
     RM.newShader("S_Reflection")->loadShader("../Shader/reflection/reflection.vert", "../Shader/reflection/reflection.frag");
     
-    PW.newPhysicsBody("P_plane", "plane");
+    PW.newPhysicsBody("P_plane")->plane();
 
-    for (int i = 0; i < 100; i++) {
-        PW.newPhysicsBody("P_sphere" + std::to_string(i), "sphere");
+    for (int i = 0; i < 50; i++) {
+        float x = rand() % 1000 / 100 - 5;
+        float y = rand() % 3000 / 100 + 1;
+        float z = rand() % 1000 / 100 - 5;
+
+        PW.newPhysicsBody("P_sphere" + std::to_string(i))->sphere(1.0f, x, y, z);
         RM.newModel("M_Test" + std::to_string(i))->scale(glm::vec3(2, 2, 2))->mesh("ME_Sphere")->shader("S_LightingMaterialTex");
         engine.link("P_sphere" + std::to_string(i), "M_Test" + std::to_string(i));
     }
 
-    for (int i = 0; i < 100; i++) {
-        PW.newPhysicsBody("P_Box" + std::to_string(i), "cube");
+    for (int i = 0; i < 50; i++) {
+        float x = rand() % 1000 / 100 - 5;
+        float y = rand() % 3000 / 100 + 1;
+        float z = rand() % 1000 / 100 - 5;
+
+        PW.newPhysicsBody("P_Box" + std::to_string(i))->box(1.0f, x, y, z);
         RM.newModel("M_Box" + std::to_string(i))->scale(glm::vec3(0.5f, 0.5f, 0.5f))->shader("S_LightingMaterialTex");
         engine.link("P_Box" + std::to_string(i), "M_Box" + std::to_string(i));
     }
 
     RM.newModel("M_Plane")->scale(glm::vec3(20.0f, 0.00001f, 20.0f))->shader("S_Lighting");
     
+    PW.newPhysicsBody("P_Camera")->sphere();
+
+    // REMOVE
+    PW.updateBodies();
 
     // engine.link("sphere", "M_Test");
     

@@ -1,7 +1,7 @@
 #ifndef __PHYSICSBODY__
 #define __PHYSICSBODY__
 
-#define BT_USE_DOUBLE_PRECISION 1
+#define BT_USE_DOUBLE_PRECISION 0
 
 #include <string>
 #include <stdlib.h>
@@ -15,7 +15,7 @@
 
 class PhysicsBody {
     public:
-        PhysicsBody(std::string);
+        PhysicsBody();
 
         glm::vec3 position();
         PhysicsBody* position(glm::vec3);
@@ -36,6 +36,10 @@ class PhysicsBody {
 
         btRigidBody* body();
 
+        void box(float mass = 1, float x = 0, float y = 1, float z = 0, float width = 1, float height = 1, float depth = 1, float friction = 0.1, float spinningFriction = 0.1);
+        void sphere(float mass = 1, float x = 0, float y = 1, float z = 0, float radius = 1, float friction = 0.1, float spinningFriction = 0.1, float rollingFriction = 0.1);
+        void plane(float x = 0, float y = 0, float z = 0, float orientationX = 0, float orientationY = 1, float orientationZ = 0, float friction = 0.1, float spinningFriction = 0.1, float rollingFriction = 0.1);
+
     private:
         glm::vec3 m_position;
         glm::vec3 m_rotation;
@@ -44,7 +48,6 @@ class PhysicsBody {
         float m_mass;
 
         btRigidBody* m_body;
-        //btCollisionShape* m_shape;
         btMotionState* m_motion;
 };
 
