@@ -36,8 +36,8 @@ void PhysicsBody::box(float mass, float x, float y, float z, float width, float 
     this->m_motion = new btDefaultMotionState(t);
     btRigidBody::btRigidBodyConstructionInfo info(this->m_mass, this->m_motion, box, inertia);
     this->m_body = new btRigidBody(info);
-    this->m_body->setFriction(friction);
-    this->m_body->setSpinningFriction(spinningFriction);
+    this->m_body->setFriction(btScalar(friction));
+    this->m_body->setSpinningFriction(btScalar(spinningFriction));
 }
 
 void PhysicsBody::sphere(float mass, float x, float y, float z, float radius, float friction, float spinningFriction, float rollingFriction) {
@@ -54,9 +54,9 @@ void PhysicsBody::sphere(float mass, float x, float y, float z, float radius, fl
     this->m_motion = new btDefaultMotionState(t);
     btRigidBody::btRigidBodyConstructionInfo info(this->m_mass, this->m_motion, sphere, inertia);
     this->m_body = new btRigidBody(info);
-    this->m_body->setFriction(friction);
-    this->m_body->setSpinningFriction(spinningFriction);
-    this->m_body->setRollingFriction(rollingFriction);
+    this->m_body->setFriction(btScalar(friction));
+    this->m_body->setSpinningFriction(btScalar(spinningFriction));
+    this->m_body->setRollingFriction(btScalar(rollingFriction));
 }
 
 void PhysicsBody::plane(float x, float y, float z, float orientationX, float orientationY, float orientationZ, float friction, float spinningFriction, float rollingFriction) {
@@ -69,9 +69,9 @@ void PhysicsBody::plane(float x, float y, float z, float orientationX, float ori
 
     btRigidBody::btRigidBodyConstructionInfo info(0.0, this->m_motion, plane);
     this->m_body = new btRigidBody(info);
-    this->m_body->setFriction(friction);
-    this->m_body->setRollingFriction(rollingFriction);
-    this->m_body->setSpinningFriction(spinningFriction);
+    this->m_body->setFriction(btScalar(friction));
+    this->m_body->setRollingFriction(btScalar(rollingFriction));
+    this->m_body->setSpinningFriction(btScalar(spinningFriction));
 }
 
 glm::vec3 PhysicsBody::position() {

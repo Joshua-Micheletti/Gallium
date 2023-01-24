@@ -14,7 +14,7 @@ imguiBE = $(imgui)/backends
 stbimage = $(libs)/stb-master
 bulletI = $(libs)/bullet3/src
 
-makefile = 
+makefile = makefile
 
 ifeq ($(OS),Windows_NT)
 	bulletL = -L ./Libs/bullet3/build_windows/lib -lBulletDynamics -lBulletSoftBody -lBulletCollision -lLinearMath
@@ -27,7 +27,6 @@ ifeq ($(OS),Windows_NT)
 	noColor = $(escape)[0m
 	env = 
 else
-
 	extLibL = $(glmI) -L $(imgui) -L $(stbimage) $(bulletL)
 	libraries = -lGL -lglfw3 -ldl -lm -lGLU -lX11 -lpthread -lGLEW
 	marks = "
@@ -62,7 +61,7 @@ extLibI = $(gladI) -I $(glfwI) -I $(glmI) -I $(imgui) -I $(imguiBE) -I $(stbimag
 flags = -w -std=c++11 -Ofast
 
 objectsPath = ./bin/objects
-objects = $(objectsPath)/main.o $(objectsPath)/Engine.o $(objectsPath)/sandbox.o $(objectsPath)/global.o $(objectsPath)/Window.o $(objectsPath)/utils.o $(objectsPath)/glad.o $(objectsPath)/Renderer.o $(objectsPath)/RendererManager.o $(objectsPath)/Model.o $(objectsPath)/Mesh.o $(objectsPath)/Material.o $(objectsPath)/Texture.o $(objectsPath)/RenderTexture.o $(objectsPath)/EventHandler.o $(objectsPath)/Ui.o $(objectsPath)/PhysicsWorld.o $(objectsPath)/PhysicsBody.o $(objectsPath)/Entity.o $(objectsPath)/Shader.o $(objectsPath)/Camera.o $(objectsPath)/Kernel.o $(objectsPath)/imgui.o $(objectsPath)/imgui_impl_glfw.o $(objectsPath)/imgui_impl_opengl3.o $(objectsPath)/imgui_demo.o $(objectsPath)/imgui_draw.o $(objectsPath)/imgui_widgets.o $(objectsPath)/imgui_tables.o
+objects = $(objectsPath)/main.o $(objectsPath)/Engine.o $(objectsPath)/sandbox.o $(objectsPath)/global.o $(objectsPath)/vboindexer.o $(objectsPath)/Window.o $(objectsPath)/utils.o $(objectsPath)/glad.o $(objectsPath)/Renderer.o $(objectsPath)/RendererManager.o $(objectsPath)/Model.o $(objectsPath)/Mesh.o $(objectsPath)/Material.o $(objectsPath)/Texture.o $(objectsPath)/RenderTexture.o $(objectsPath)/EventHandler.o $(objectsPath)/Ui.o $(objectsPath)/PhysicsWorld.o $(objectsPath)/PhysicsBody.o $(objectsPath)/Entity.o $(objectsPath)/Shader.o $(objectsPath)/Camera.o $(objectsPath)/Kernel.o $(objectsPath)/imgui.o $(objectsPath)/imgui_impl_glfw.o $(objectsPath)/imgui_impl_opengl3.o $(objectsPath)/imgui_demo.o $(objectsPath)/imgui_draw.o $(objectsPath)/imgui_widgets.o $(objectsPath)/imgui_tables.o
 
 # LINKING
 
@@ -99,6 +98,11 @@ $(objectsPath)/utils.o: $(modules)/utils.cpp $(modules)/utils.h $(makefile)
 $(objectsPath)/global.o: $(modules)/global.cpp $(modules)/global.h $(makefile)
 	@echo $(marks)$(escape)[31m============= global.cpp (source) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/global.o $(modules)/global.cpp -I $(extLibI) $(flags) $(libraries)
+
+# VBOINDEXER
+$(objectsPath)/vboindexer.o: $(modules)/vboindexer.cpp $(modules)/vboindexer.hpp $(makefile)
+	@echo $(marks)$(escape)[31m============= vboindexer.cpp (source) =============$(noColor)$(marks)
+	g++ -c -o $(objectsPath)/vboindexer.o $(modules)/vboindexer.cpp -I $(extLibI) $(flags) $(libraries)
 
 
 # VIEW

@@ -14,6 +14,7 @@
 extern int maxLength(std::vector<float>);
 extern int countFaces(std::vector<float>);
 extern void createBuffer(std::vector<float>, unsigned int*);
+extern void createIndexBuffer(std::vector<unsigned int>, unsigned int*);
 extern bool readOBJMesh(std::string, std::vector<float>*, std::vector<float>*, std::vector<float>*);
 extern bool readOBJ(std::string, std::vector<std::vector<float>*>*, std::vector<std::vector<float>*>*, std::vector<std::vector<float>*>*, std::vector<std::string>*);
 extern bool readMTL(std::string, std::vector<std::string>*, std::vector<std::vector<float>*>*, std::vector<std::vector<float>*>*, std::vector<std::vector<float>*>*, std::vector<float>*);

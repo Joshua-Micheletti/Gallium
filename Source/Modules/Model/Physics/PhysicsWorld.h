@@ -25,8 +25,6 @@ class PhysicsWorld {
         PhysicsBody* newPhysicsBody(std::string);
 
         double physicsTime();
-
-        // REMOVE
         void updateBodies();
 
     private:
@@ -43,6 +41,8 @@ class PhysicsWorld {
         double m_tick;
 
         double m_physicsTime;
+
+        bool m_update;
 };
 
 #endif

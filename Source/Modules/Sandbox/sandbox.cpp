@@ -12,17 +12,17 @@ void sandbox() {
     
     PW.newPhysicsBody("P_plane")->plane();
 
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < 1000; i++) {
         float x = rand() % 1000 / 100 - 5;
         float y = rand() % 3000 / 100 + 1;
         float z = rand() % 1000 / 100 - 5;
 
         PW.newPhysicsBody("P_sphere" + std::to_string(i))->sphere(1.0f, x, y, z);
-        RM.newModel("M_Test" + std::to_string(i))->scale(glm::vec3(2, 2, 2))->mesh("ME_Sphere")->shader("S_LightingMaterialTex");
+        RM.newModel("M_Test" + std::to_string(i))->scale(glm::vec3(2, 2, 2))->mesh("ME_Sphere");
         engine.link("P_sphere" + std::to_string(i), "M_Test" + std::to_string(i));
     }
 
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < 0; i++) {
         float x = rand() % 1000 / 100 - 5;
         float y = rand() % 3000 / 100 + 1;
         float z = rand() % 1000 / 100 - 5;
@@ -35,6 +35,8 @@ void sandbox() {
     RM.newModel("M_Plane")->scale(glm::vec3(20.0f, 0.00001f, 20.0f))->shader("S_Lighting");
     
     PW.newPhysicsBody("P_Camera")->sphere();
+
+
 
     // REMOVE
     PW.updateBodies();

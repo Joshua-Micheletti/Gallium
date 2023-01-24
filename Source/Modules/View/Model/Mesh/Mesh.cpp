@@ -13,7 +13,6 @@ std::string Mesh::name() {
 std::vector<float> Mesh::vertices() {
     return(this->m_vertices);
 }
-
 Mesh* Mesh::vertices(std::vector<float> v) {
     this->m_vertices = v;
     createBuffer(this->m_vertices, &this->m_vertexBuffer);
@@ -24,7 +23,6 @@ Mesh* Mesh::vertices(std::vector<float> v) {
 std::vector<float> Mesh::uvs() {
     return(this->m_uvs);
 }
-
 Mesh* Mesh::uvs(std::vector<float> u) {
     this->m_uvs = u;
     createBuffer(this->m_uvs, &this->m_uvBuffer);
@@ -35,12 +33,21 @@ Mesh* Mesh::uvs(std::vector<float> u) {
 std::vector<float> Mesh::normals() {
     return(this->m_normals);
 }
-
 Mesh* Mesh::normals(std::vector<float> n) {
     this->m_normals = n;
     createBuffer(this->m_normals, &this->m_normalBuffer);
     return(this);
 } 
+
+
+std::vector<unsigned int> Mesh::indices() {
+    return(this->m_indices);
+}
+Mesh* Mesh::indices(std::vector<unsigned int> i) {
+    this->m_indices = i;
+    createIndexBuffer(this->m_indices, &this->m_indexBuffer);
+    return(this);
+}
 
 
 unsigned int Mesh::vertexBuffer() {
@@ -53,6 +60,10 @@ unsigned int Mesh::uvBuffer() {
 
 unsigned int Mesh::normalBuffer() {
     return(this->m_normalBuffer);
+}
+
+unsigned int Mesh::indexBuffer() {
+    return(this->m_indexBuffer);
 }
 
 

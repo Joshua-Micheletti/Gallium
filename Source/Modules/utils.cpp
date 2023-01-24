@@ -38,6 +38,12 @@ void createBuffer(std::vector<float> data, unsigned int* buffer) {
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
 }
 
+void createIndexBuffer(std::vector<unsigned int> data, unsigned int* buffer) {
+	glGenBuffers(1, buffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*buffer));
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, data.size() * sizeof(unsigned int), &data[0], GL_STATIC_DRAW);
+}
+
 bool readOBJMesh(std::string filepath, std::vector<float>* v, std::vector<float>* t, std::vector<float>* n) {
 	FILE* model = fopen(filepath.c_str(), "r");
 

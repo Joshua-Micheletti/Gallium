@@ -24,6 +24,8 @@ PhysicsWorld::PhysicsWorld() {
     this->m_time = glfwGetTime();
     this->m_tick = (double)(1.0 / 60.0);
 
+    this->m_update = true;
+
     this->m_gravity = glm::vec3(0, -1.0f, 0);
     printf("setting up physics world\n");
     // default config for the physics algorithm
@@ -54,23 +56,6 @@ void PhysicsWorld::step() {
         this->m_time += this->m_tick;
     }
 }
-
-/*
-void PhysicsWorld::step(float dt) {
-    std::vector<PhysicsBody*> bodies = extractValues(this->m_physicsBodyBuffer);
-
-    for (int i = 0; i < bodies.size(); i++) {
-        // F = m * a
-        bodies[i]->force(bodies[i]->force() + this->m_gravity * bodies[i]->mass());
-        // v = v0 + F/m * t
-        bodies[i]->velocity(bodies[i]->velocity() + (bodies[i]->force() / bodies[i]->mass()) * dt);
-        // (xyz) = x0 + v * t
-        bodies[i]->position(bodies[i]->position() + bodies[i]->velocity() * dt);
-
-        bodies[i]->force(glm::vec3(0));
-    }
-}
-*/
 
 
 PhysicsBody* PhysicsWorld::physicsBody(std::string name) {
@@ -108,6 +93,7 @@ void PhysicsWorld::updateBodies() {
         this->m_world->addRigidBody(it->second->body());
     }
 }
+
 
 double PhysicsWorld::physicsTime() {
     return(this->m_physicsTime);

@@ -101,7 +101,7 @@ RendererManager::RendererManager() {
     this->m_defaultModel = "M_Default";
     this->m_defaultMaterial = "MA_Default";
     // load the respective default components
-    this->newMesh(this->m_defaultMesh, "../Models/Default/box2.obj");
+    this->newMesh(this->m_defaultMesh, "../Models/Default/box2.obj")->print();
     this->newShader(this->m_defaultShader)->loadShader("../Shader/default/default.vert", "../Shader/default/default.frag");
     this->newTexture(this->m_defaultTexture)->loadTexture("../Textures/Default/default2.jpg");
     this->newMaterial(this->m_defaultMaterial);
@@ -153,7 +153,7 @@ RendererManager::RendererManager() {
     // create a new light model
     this->newModel("M_Light");
     // load the sphere model
-    this->newMesh("ME_Sphere", "../Models/Default/sphere7.obj");
+    this->newMesh("ME_Sphere", "../Models/Default/sphere7.obj")->print();
     // create a material for the light (this will interact with every light calculation)
     this->newMaterial("MA_Light");
     this->model("M_Light")->mesh("ME_Sphere")->material("MA_Light")->shader("S_White");
@@ -380,7 +380,53 @@ Mesh* RendererManager::newMesh(std::string name, std::string filepath) {
     std::vector<float> n;
 
     if (readOBJMesh(filepath, &v, &t, &n)) {
-        this->newMesh(name)->vertices(v)->uvs(t)->normals(n);
+        std::vector<glm::vec3> in_v;
+        std::vector<glm::vec2> in_t;
+        std::vector<glm::vec3> in_n;
+
+        std::vector<unsigned short> out_indices;
+        std::vector<glm::vec3> out_v;
+        std::vector<glm::vec2> out_t;
+        std::vector<glm::vec3> out_n;
+
+        for (int i = 0; i < v.size() / 3; i++) {
+            in_v.push_back(glm::vec3(v[i * 3 + 0], v[i * 3 + 1], v[i * 3 + 2]));
+        }
+
+        for (int i = 0; i < t.size() / 2; i++) {
+            in_t.push_back(glm::vec2(t[i * 2 + 0], t[i * 2 + 1]));
+        }
+
+        for (int i = 0; i < n.size() / 3; i++) {
+            in_n.push_back(glm::vec3(n[i * 3 + 0], n[i * 3 + 1], n[i * 3 + 2]));
+        }
+
+        indexVBO_slow(in_v, in_t, in_n, out_indices, out_v, out_t, out_n);
+
+        v.clear();
+        for (int i = 0; i < out_v.size(); i++) {
+            v.push_back(out_v[i].x);
+            v.push_back(out_v[i].y);
+            v.push_back(out_v[i].z);
+        }
+
+        t.clear();
+        for (int i = 0; i < out_t.size(); i++) {
+            t.push_back(out_t[i].x);
+            t.push_back(out_t[i].y);
+        }
+
+        n.clear();
+        for (int i = 0; i < out_n.size(); i++) {
+            n.push_back(out_n[i].x);
+            n.push_back(out_n[i].y);
+            n.push_back(out_n[i].z);
+        }
+
+        std::vector<unsigned int> indices(std::begin(out_indices), std::end(out_indices));
+
+        this->newMesh(name)->vertices(v)->uvs(t)->normals(n)->indices(indices);
+
         return(this->m_meshBuffer[name]);
     } else {
         return(NULL);

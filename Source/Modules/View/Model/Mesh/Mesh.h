@@ -18,10 +18,13 @@ class Mesh {
         std::vector<float> uvs();
         Mesh* normals(std::vector<float>);
         std::vector<float> normals();
+        Mesh* indices(std::vector<unsigned int>);
+        std::vector<unsigned int> indices();
 
         unsigned int vertexBuffer();
         unsigned int uvBuffer();
         unsigned int normalBuffer();
+        unsigned int indexBuffer();
 
         Mesh* expectedMaterial(std::string);
         std::string expectedMaterial();
@@ -41,10 +44,12 @@ class Mesh {
         std::vector<float> m_vertices;
         std::vector<float> m_uvs;
         std::vector<float> m_normals;
+        std::vector<unsigned int> m_indices;
 
         unsigned int m_vertexBuffer;
         unsigned int m_uvBuffer;
         unsigned int m_normalBuffer;
+        unsigned int m_indexBuffer;
 };
 
 #endif

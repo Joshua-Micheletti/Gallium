@@ -9,7 +9,10 @@
 #include <vector>
 #include <iostream>
 
+#include <glm/glm.hpp>
+
 #include "../../utils.h"
+#include "../../vboindexer.hpp"
 
 #include "../Model/Model.h"
 #include "../Model/Material/Material.h"

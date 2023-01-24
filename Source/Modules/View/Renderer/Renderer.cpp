@@ -399,7 +399,11 @@ void Renderer::renderEntity(std::string entity) {
 		attachUniforms(currentM, currentMA, currentT, currentS->uniformBuffer());
 		linkLayouts(currentMesh, currentS->layoutBuffer());
 		
-		glDrawArrays(currentM->drawingMode(), 0, currentMesh->vertices().size() / 3);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, currentMesh->indexBuffer());
+
+		glDrawElements(currentM->drawingMode(), currentMesh->indices().size(), GL_UNSIGNED_INT, (void*)0);
+
+		// glDrawArrays(currentM->drawingMode(), 0, currentMesh->vertices().size() / 3);
 
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
@@ -432,6 +436,11 @@ void Renderer::renderSkybox() {
 	// bind the skybox texture
 	glBindTexture(GL_TEXTURE_CUBE_MAP, RM.texture(skyboxT.general())->id());
 	// render the skybox
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, skyboxMesh->indexBuffer());
+
+	glDrawElements(skyboxM->drawingMode(), skyboxMesh->indices().size(), GL_UNSIGNED_INT, (void*)0);
+
 	glDrawArrays(skyboxM->drawingMode(), 0, skyboxMesh->vertices().size() / 3);
 
 	// re-enable the depth mask (now rendering also affects the depth buffer as well)
