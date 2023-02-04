@@ -10,7 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../../utils.h"
+#include "../../Utils/utils.h"
 
 #include "Texture/RenderTexture.h"
 #include "Mesh/Mesh.h"
@@ -91,6 +91,14 @@ class Model {
         std::string source();
         Model* source(std::string);
 
+        Model* center(glm::vec3);
+        glm::vec3 center();
+
+        Model* radius(float);
+        float radius();
+
+        Model* print();
+
 
     private:
         std::string source_;
@@ -112,6 +120,9 @@ class Model {
         glm::vec3 m_rotation;
         // scale vector
         glm::vec3 m_scale;
+
+        glm::vec3 m_center;
+        float m_radius;
 
         // drawing mode for rendering (GL_TRIANGLES, GL_LINES...)
         GLenum m_drawingMode;

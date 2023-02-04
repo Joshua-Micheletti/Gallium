@@ -11,8 +11,9 @@
 
 #include <glm/glm.hpp>
 
-#include "../../utils.h"
-#include "../../vboindexer.hpp"
+#include "../../Utils/utils.h"
+#include "../../Utils/vboindexer.hpp"
+#include "../../Utils/Timer.h"
 
 #include "../Model/Model.h"
 #include "../Model/Material/Material.h"
@@ -153,6 +154,8 @@ class RendererManager {
         std::string m_defaultShader;
         std::string m_defaultMesh;
         std::string m_defaultTexture;
+
+        std::string m_boundingSphere;
 
         int m_samples;
         bool m_depth;

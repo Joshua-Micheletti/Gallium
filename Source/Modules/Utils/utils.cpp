@@ -1,9 +1,23 @@
 #include "utils.h"
 
-std::string strRed = "\033[0;31m";
-std::string strGreen = "\033[0;32m";
-std::string strBlue = "\033[0;34m";
-std::string strNoColor = "\033[0m";
+
+#ifdef _WIN32
+	std::string strRed = "[0;31m";
+	std::string strGreen = "[0;32m";
+	std::string strBlue = "[0;34m";
+	std::string strYellow = "[0;33m";
+	std::string strNoColor = "[0m";
+#endif
+
+#ifdef __unix__
+	std::string strRed = "\033[0;31m";
+	std::string strGreen = "\033[0;32m";
+	std::string strBlue = "\033[0;34m";
+	std::string strYellow = "\033[0;33m";
+	std::string strNoColor = "\033[0m";
+#endif
+
+
 
 bool updateResolution = false;
 bool updated = true;
@@ -465,4 +479,35 @@ const char** stringVectorToCArray(std::vector<std::string> v) {
 	}
 
 	return(charVector.data());
+}
+
+glm::vec3 averageVector3f(std::vector<float> vertices) {
+	glm::vec3 average = glm::vec3(0);
+
+	for (int i = 0; i < vertices.size(); i += 3) {
+		average.x += vertices[i];
+		average.y += vertices[i + 1];
+		average.z += vertices[i + 2];
+	}
+
+	average.x /= (float)vertices.size() / 3.0f;
+	average.y /= (float)vertices.size() / 3.0f;
+	average.z /= (float)vertices.size() / 3.0f;
+
+	return(average);
+}
+
+float maxDistanceVector3f(glm::vec3 center, std::vector<float> vertices) {
+	float maxDistance = 0.0f;
+
+	float distance;
+
+	for (int i = 0; i < vertices.size(); i += 3) {
+		distance = sqrt(pow(center.x - vertices[i], 2) + pow(center.y - vertices[i + 1], 2) + pow(center.z - vertices[i + 2], 2));
+		if (distance > maxDistance) {
+			maxDistance = distance;
+		}
+	}
+
+	return(maxDistance);
 }

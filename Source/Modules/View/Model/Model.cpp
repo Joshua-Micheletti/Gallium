@@ -53,6 +53,7 @@ component_t* Model::component(int index) {
 }
 Model* Model::components(std::vector<component_t*> c) {
     this->components_ = c;
+    return(this);
 }
 
 Model* Model::meshes(std::vector<std::string> m) {
@@ -63,6 +64,8 @@ Model* Model::meshes(std::vector<std::string> m) {
         options->mesh = m[i];
         this->components_.push_back(options);
     }
+    
+    return(this);
 }
 Model* Model::mesh(std::string m) {
     this->components_[0]->mesh = m;
@@ -153,6 +156,9 @@ Model* Model::shader(std::string shader, std::string mesh) {
 Model* Model::translate(glm::vec3 translation) {
     this->m_position += translation;
     this->m_translationMatrix = glm::translate(this->m_translationMatrix, translation);
+
+    this->m_modelMatrix = this->m_translationMatrix * this->m_rotationMatrix * this->m_scaleMatrix;
+
     return(this);
 }
 
@@ -161,6 +167,8 @@ Model* Model::rotate(glm::vec3 rotation) {
     this->m_rotationMatrix = glm::rotate(this->m_rotationMatrix, rotation.y, glm::vec3(0, 1, 0));
     this->m_rotationMatrix = glm::rotate(this->m_rotationMatrix, rotation.z, glm::vec3(0, 0, 1));
     this->m_rotation += rotation;
+
+    this->m_modelMatrix = this->m_translationMatrix * this->m_rotationMatrix * this->m_scaleMatrix;
 
     return(this);
 }
@@ -190,6 +198,8 @@ Model* Model::position(glm::vec3 position) {
     this->m_position = position;
     this->m_translationMatrix = glm::translate(glm::mat4(1), position);
 
+    this->m_modelMatrix = this->m_translationMatrix * this->m_rotationMatrix * this->m_scaleMatrix;
+
     return(this);
 }
 
@@ -210,4 +220,31 @@ Model* Model::rotation(glm::vec3 rotation) {
 
 glm::vec3 Model::scale() {
     return(this->m_scale);
+}
+
+
+Model* Model::center(glm::vec3 center) {
+    this->m_center = center;
+    return(this);
+}
+glm::vec3 Model::center() {
+    return(this->m_center);
+}
+
+Model* Model::radius(float radius) {
+    this->m_radius = radius;
+    return(this);
+}
+float Model::radius() {
+    return(this->m_radius);
+}
+
+
+
+Model* Model::print() {
+    printf("Position:\n  %sx%s: %.2f, %sy%s: %.2f, %sz%s: %.2f\n", strRed.c_str(), strNoColor.c_str(), this->m_position.x, strGreen.c_str(), strNoColor.c_str(), this->m_position.y, strBlue.c_str(), strNoColor.c_str(), this->m_position.z);
+    printf("Rotation:\n  %sx%s: %.2f, %sy%s: %.2f, %sz%s: %.2f\n", strRed.c_str(), strNoColor.c_str(), this->m_rotation.x, strGreen.c_str(), strNoColor.c_str(), this->m_rotation.y, strBlue.c_str(), strNoColor.c_str(), this->m_rotation.z);
+    printf("Scale:\n  %sx%s: %.2f, %sy%s: %.2f, %sz%s: %.2f\n", strRed.c_str(), strNoColor.c_str(), this->m_scale.x, strGreen.c_str(), strNoColor.c_str(), this->m_scale.y, strBlue.c_str(), strNoColor.c_str(), this->m_scale.z);
+
+    return(this);
 }

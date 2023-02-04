@@ -21,31 +21,29 @@ std::vector<TK> extractKeys(std::map<TK, TV> const& input_map) {
 
 
 PhysicsWorld::PhysicsWorld() {
+    Timer PWSetupTimer;
+
     this->m_time = glfwGetTime();
-    this->m_tick = (double)(1.0 / 60.0);
+    this->m_tick = (double)(1.0 / 30.0);
 
     this->m_update = true;
 
     this->m_gravity = glm::vec3(0, -1.0f, 0);
-    printf("setting up physics world\n");
     // default config for the physics algorithm
     this->m_collisionConfig = new btDefaultCollisionConfiguration();
-    printf("setup collision config\n");
     // default collision dispatcher
     this->m_dispatcher = new btCollisionDispatcher(this->m_collisionConfig);
-    printf("setup dispatcher\n");
     // dbvt algorithm
     this->m_broadphase = new btDbvtBroadphase();
-    printf("setup broadphase\n");
     // collision solver
     this->m_solver = new btSequentialImpulseConstraintSolver();
-    printf("setup solver\n");
     // world initialization
     this->m_world = new btDiscreteDynamicsWorld(this->m_dispatcher, this->m_broadphase, this->m_solver, this->m_collisionConfig);
-    printf("setup world\n");
     // set the gravity
     this->m_world->setGravity(btVector3(0, -9.81f, 0));
-    printf("Setup Physics World\n");
+
+    printf("\n%sSetup physics world%s\n", strGreen.c_str(), strNoColor.c_str());
+    PWSetupTimer.print();
 }
 
 void PhysicsWorld::step() {

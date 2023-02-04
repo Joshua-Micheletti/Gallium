@@ -13,7 +13,8 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 
-#include "../../global.h"
+#include "../../Utils/global.h"
+#include "../../Utils/Timer.h"
 
 #include "../../Model/Entity.h"
 #include "../Model/Shader/Shader.h"
@@ -93,6 +94,7 @@ class Renderer {
 		void attachUniforms(Model*, Material*, RenderTexture, std::vector<uniform_t>);
 		void linkLayouts(Mesh*, std::vector<std::string>);
 		void renderOutline();
+		void drawBoundingSphere();
 
 		void displayBoundingBox();
 		void drawBoundingBox(bounds_t, glm::vec3);

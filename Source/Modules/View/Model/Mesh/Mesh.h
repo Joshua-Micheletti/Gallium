@@ -4,7 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "../../../utils.h"
+#include "../../../Utils/utils.h"
+#include "../../../Utils/vboindexer.hpp"
 
 class Mesh {
     public:
@@ -19,7 +20,13 @@ class Mesh {
         Mesh* normals(std::vector<float>);
         std::vector<float> normals();
         Mesh* indices(std::vector<unsigned int>);
+        Mesh* indices(std::vector<float>, std::vector<float>, std::vector<float>);
         std::vector<unsigned int> indices();
+
+        glm::vec3 center();
+        Mesh* center(glm::vec3);
+        float radius();
+        Mesh* radius(float);
 
         unsigned int vertexBuffer();
         unsigned int uvBuffer();
@@ -45,6 +52,9 @@ class Mesh {
         std::vector<float> m_uvs;
         std::vector<float> m_normals;
         std::vector<unsigned int> m_indices;
+
+        float m_radius;
+        glm::vec3 m_center;
 
         unsigned int m_vertexBuffer;
         unsigned int m_uvBuffer;

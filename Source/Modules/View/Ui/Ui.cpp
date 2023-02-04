@@ -3,6 +3,8 @@
 
 // initialize the fields and formats the texts styles
 UI::UI(Renderer* m_renderer, EventHandler* m_eventHandler) {
+	Timer UISetupTimer;
+
 	this->m_renderer = m_renderer;
 	this->m_eventHandler = m_eventHandler;
 
@@ -26,6 +28,9 @@ UI::UI(Renderer* m_renderer, EventHandler* m_eventHandler) {
 	io.FontDefault = io.Fonts->AddFontFromFileTTF("../Fonts/OpenSans/OpenSans-Regular.ttf", 18.0f);
 
 	this->setupImGuiStyle();
+
+	printf("\n%ssetup UI%s\n", strGreen.c_str(), strNoColor.c_str());
+	UISetupTimer.print();
 }
 
 void UI::HelpMarker(const char* desc) {

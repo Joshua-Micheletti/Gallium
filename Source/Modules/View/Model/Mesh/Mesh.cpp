@@ -15,6 +15,10 @@ std::vector<float> Mesh::vertices() {
 }
 Mesh* Mesh::vertices(std::vector<float> v) {
     this->m_vertices = v;
+
+    this->m_center = averageVector3f(v);
+    this->m_radius = maxDistanceVector3f(this->m_center, v);
+
     createBuffer(this->m_vertices, &this->m_vertexBuffer);
     return(this);
 } 
@@ -39,7 +43,6 @@ Mesh* Mesh::normals(std::vector<float> n) {
     return(this);
 } 
 
-
 std::vector<unsigned int> Mesh::indices() {
     return(this->m_indices);
 }
@@ -48,6 +51,74 @@ Mesh* Mesh::indices(std::vector<unsigned int> i) {
     createIndexBuffer(this->m_indices, &this->m_indexBuffer);
     return(this);
 }
+Mesh* Mesh::indices(std::vector<float> v, std::vector<float> t, std::vector<float> n) {
+    std::vector<glm::vec3> in_v;
+    std::vector<glm::vec2> in_t;
+    std::vector<glm::vec3> in_n;
+
+    std::vector<unsigned short> out_indices;
+    std::vector<glm::vec3> out_v;
+    std::vector<glm::vec2> out_t;
+    std::vector<glm::vec3> out_n;
+
+    for (int i = 0; i < v.size() / 3; i++) {
+        in_v.push_back(glm::vec3(v[i * 3 + 0], v[i * 3 + 1], v[i * 3 + 2]));
+    }
+
+    for (int i = 0; i < t.size() / 2; i++) {
+        in_t.push_back(glm::vec2(t[i * 2 + 0], t[i * 2 + 1]));
+    }
+
+    for (int i = 0; i < n.size() / 3; i++) {
+        in_n.push_back(glm::vec3(n[i * 3 + 0], n[i * 3 + 1], n[i * 3 + 2]));
+    }
+
+    indexVBO_slow(in_v, in_t, in_n, out_indices, out_v, out_t, out_n);
+
+    v.clear();
+    for (int i = 0; i < out_v.size(); i++) {
+        v.push_back(out_v[i].x);
+        v.push_back(out_v[i].y);
+        v.push_back(out_v[i].z);
+    }
+
+    t.clear();
+    for (int i = 0; i < out_t.size(); i++) {
+        t.push_back(out_t[i].x);
+        t.push_back(out_t[i].y);
+    }
+
+    n.clear();
+    for (int i = 0; i < out_n.size(); i++) {
+        n.push_back(out_n[i].x);
+        n.push_back(out_n[i].y);
+        n.push_back(out_n[i].z);
+    }
+
+    std::vector<unsigned int> indices(std::begin(out_indices), std::end(out_indices));
+
+    this->vertices(v)->uvs(t)->normals(n)->indices(indices);
+
+    return(this);
+}
+
+
+glm::vec3 Mesh::center() {
+    return(this->m_center);
+}
+Mesh* Mesh::center(glm::vec3 center) {
+    this->m_center = center;
+    return(this);
+}
+
+float Mesh::radius() {
+    return(this->m_radius);
+}
+Mesh* Mesh::radius(float radius) {
+    this->m_radius = radius;
+    return(this);
+}
+
 
 
 unsigned int Mesh::vertexBuffer() {

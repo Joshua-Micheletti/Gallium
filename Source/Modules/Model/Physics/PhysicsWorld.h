@@ -8,6 +8,9 @@
 #include <vector>
 #include <stdio.h>
 
+#include "../../Utils/utils.h"
+#include "../../Utils/Timer.h"
+
 #include <glm/glm.hpp>
 #include "btBulletDynamicsCommon.h"
 #include "GLFW/glfw3.h"

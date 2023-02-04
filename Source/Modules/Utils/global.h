@@ -1,10 +1,12 @@
 #ifndef __GLOBAL__
 #define __GLOBAL__
 
-#include "Engine/Engine.h"
-#include "View/Window/Window.h"
-#include "View/Renderer/RendererManager.h"
-#include "Model/Physics/PhysicsWorld.h"
+#include "Timer.h"
+
+#include "../Engine/Engine.h"
+#include "../View/Window/Window.h"
+#include "../View/Renderer/RendererManager.h"
+#include "../Model/Physics/PhysicsWorld.h"
 
 
 typedef struct buttons{
@@ -53,10 +55,14 @@ extern unsigned int screenHeight;
 extern unsigned int windowWidth;
 extern unsigned int windowHeight;
 
+extern Timer setupTimer;
+
 extern Engine engine;
 extern Window window;
 extern RendererManager RM;
 extern PhysicsWorld PW;
+
+
 
 extern bool displayInfo;
 

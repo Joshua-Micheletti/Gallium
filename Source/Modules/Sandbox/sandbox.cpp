@@ -1,6 +1,8 @@
 #include "sandbox.h"
 
 void sandbox() {
+    Timer sandboxSetupTimer;
+
     srand(clock());
 
     // REPLACE THIS CODE WITH ANYTHING YOU WANT TO BE LOADED IN THE ENGINE
@@ -12,17 +14,17 @@ void sandbox() {
     
     PW.newPhysicsBody("P_plane")->plane();
 
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 500; i++) {
         float x = rand() % 1000 / 100 - 5;
         float y = rand() % 3000 / 100 + 1;
         float z = rand() % 1000 / 100 - 5;
 
         PW.newPhysicsBody("P_sphere" + std::to_string(i))->sphere(1.0f, x, y, z);
-        RM.newModel("M_Test" + std::to_string(i))->scale(glm::vec3(2, 2, 2))->mesh("ME_Sphere");
+        RM.newModel("M_Test" + std::to_string(i))->scale(glm::vec3(2, 2, 2))->mesh("ME_Sphere")->shader("S_LightingMaterialTex");
         engine.link("P_sphere" + std::to_string(i), "M_Test" + std::to_string(i));
     }
 
-    for (int i = 0; i < 0; i++) {
+    for (int i = 0; i < 500; i++) {
         float x = rand() % 1000 / 100 - 5;
         float y = rand() % 3000 / 100 + 1;
         float z = rand() % 1000 / 100 - 5;
@@ -35,6 +37,25 @@ void sandbox() {
     RM.newModel("M_Plane")->scale(glm::vec3(20.0f, 0.00001f, 20.0f))->shader("S_Lighting");
     
     PW.newPhysicsBody("P_Camera")->sphere();
+
+    RM.newMesh("ME_BoundingSphere", "../Models/Default/boundingSphere.obj");
+
+    float radius = RM.mesh("ME_Default")->radius();
+
+    RM.newModel("M_BoundingSphere")->mesh("ME_BoundingSphere")->scale(glm::vec3(radius, radius, radius));
+    RM.newModel("M_TestCube")->shader("S_LightingMaterialTex");
+
+    RM.newTexture("T_Halo")->loadTexture("../Models/halo/LP_Dif.jpg");
+    RM.newTexture("T_HaloSpec")->loadTexture("../Models/halo/LP_Spec.jpg");
+    RM.loadMTL("../Models/halo/VK78.mtl");
+    RM.model(RM.loadModel("../Models/halo/VK78.obj", "Halo"))->shaders("S_LightingMaterialTex");
+
+    for (int i = 0; i < RM.model("Halo")->components().size(); i++) {
+        RM.model("Halo")->components()[i]->texture.diffuse("T_Halo");
+        RM.model("Halo")->components()[i]->texture.specular("T_HaloSpec");
+    }
+
+    // RM.newModel("M_BoundingSphereHalo")->mesh("ME_BoundingSphere")->scale(glm::vec3())
 
 
 
@@ -87,5 +108,8 @@ void sandbox() {
     RM.model("M_Hammer")->components()[0]->texture.diffuse("T_Hammer");
     RM.model("M_Hammer")->components()[0]->texture.specular("T_HammerSpecular");
     */
+
+   printf("\n%sSetup scene%s\n", strGreen.c_str(), strNoColor.c_str());
+   sandboxSetupTimer.print();
 }
 

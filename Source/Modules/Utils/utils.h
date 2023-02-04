@@ -9,6 +9,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 
 extern int maxLength(std::vector<float>);
@@ -21,10 +22,13 @@ extern bool readMTL(std::string, std::vector<std::string>*, std::vector<std::vec
 extern void polarToCartesian(float, float, float*, float*);
 extern int find(std::string, std::vector<std::string>);
 extern const char** stringVectorToCArray(std::vector<std::string>);
+extern glm::vec3 averageVector3f(std::vector<float>);
+extern float maxDistanceVector3f(glm::vec3, std::vector<float>);
 
 extern std::string strRed;
 extern std::string strGreen;
 extern std::string strBlue;
+extern std::string strYellow;
 extern std::string strNoColor;
 
 extern bool updateResolution;

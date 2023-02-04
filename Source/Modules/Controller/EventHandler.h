@@ -5,7 +5,7 @@
 #include "GLFW/glfw3.h"
 #include <glm/glm.hpp>
 
-#include "../global.h"
+#include "../Utils/global.h"
 
 #include "../View/Camera/Camera.h"
 #include "../Model/Entity.h"

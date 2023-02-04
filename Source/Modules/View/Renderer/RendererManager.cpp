@@ -67,6 +67,7 @@ void createAxis(Mesh* axis) {
 
 // CONSTRUCTOR
 RendererManager::RendererManager() {
+    Timer RMSetupTimer;
     // SETUP CAMERAS
     // initialize the default camera
     this->m_cameras["default"] = new Camera(glm::vec3(30.0f, 30.0f, 30.0f),   // position
@@ -101,7 +102,8 @@ RendererManager::RendererManager() {
     this->m_defaultModel = "M_Default";
     this->m_defaultMaterial = "MA_Default";
     // load the respective default components
-    this->newMesh(this->m_defaultMesh, "../Models/Default/box2.obj")->print();
+    this->newMesh(this->m_defaultMesh, "../Models/Default/box2.obj");
+
     this->newShader(this->m_defaultShader)->loadShader("../Shader/default/default.vert", "../Shader/default/default.frag");
     this->newTexture(this->m_defaultTexture)->loadTexture("../Textures/Default/default2.jpg");
     this->newMaterial(this->m_defaultMaterial);
@@ -153,15 +155,19 @@ RendererManager::RendererManager() {
     // create a new light model
     this->newModel("M_Light");
     // load the sphere model
-    this->newMesh("ME_Sphere", "../Models/Default/sphere7.obj")->print();
+    this->newMesh("ME_Sphere", "../Models/Default/sphere7.obj");
     // create a material for the light (this will interact with every light calculation)
     this->newMaterial("MA_Light");
     this->model("M_Light")->mesh("ME_Sphere")->material("MA_Light")->shader("S_White");
+
+    // this->newMesh("ME_BoundingSphere", "../Models/Default/boundingSphere.obj");
+    // this->model("M_BoundingSphere")->mesh("ME_BoundingSphere");
     
     // initialize the selected entity (none)
     this->m_selectedEntity = "";
 
-    printf("setup the renderer manager\n");
+    printf("\n%sSetup the renderer manager%s\n", strGreen.c_str(), strNoColor.c_str());
+    RMSetupTimer.print();
 }
 
 
@@ -380,53 +386,7 @@ Mesh* RendererManager::newMesh(std::string name, std::string filepath) {
     std::vector<float> n;
 
     if (readOBJMesh(filepath, &v, &t, &n)) {
-        std::vector<glm::vec3> in_v;
-        std::vector<glm::vec2> in_t;
-        std::vector<glm::vec3> in_n;
-
-        std::vector<unsigned short> out_indices;
-        std::vector<glm::vec3> out_v;
-        std::vector<glm::vec2> out_t;
-        std::vector<glm::vec3> out_n;
-
-        for (int i = 0; i < v.size() / 3; i++) {
-            in_v.push_back(glm::vec3(v[i * 3 + 0], v[i * 3 + 1], v[i * 3 + 2]));
-        }
-
-        for (int i = 0; i < t.size() / 2; i++) {
-            in_t.push_back(glm::vec2(t[i * 2 + 0], t[i * 2 + 1]));
-        }
-
-        for (int i = 0; i < n.size() / 3; i++) {
-            in_n.push_back(glm::vec3(n[i * 3 + 0], n[i * 3 + 1], n[i * 3 + 2]));
-        }
-
-        indexVBO_slow(in_v, in_t, in_n, out_indices, out_v, out_t, out_n);
-
-        v.clear();
-        for (int i = 0; i < out_v.size(); i++) {
-            v.push_back(out_v[i].x);
-            v.push_back(out_v[i].y);
-            v.push_back(out_v[i].z);
-        }
-
-        t.clear();
-        for (int i = 0; i < out_t.size(); i++) {
-            t.push_back(out_t[i].x);
-            t.push_back(out_t[i].y);
-        }
-
-        n.clear();
-        for (int i = 0; i < out_n.size(); i++) {
-            n.push_back(out_n[i].x);
-            n.push_back(out_n[i].y);
-            n.push_back(out_n[i].z);
-        }
-
-        std::vector<unsigned int> indices(std::begin(out_indices), std::end(out_indices));
-
-        this->newMesh(name)->vertices(v)->uvs(t)->normals(n)->indices(indices);
-
+        this->newMesh(name)->indices(v, t, n);
         return(this->m_meshBuffer[name]);
     } else {
         return(NULL);
@@ -566,7 +526,7 @@ void RendererManager::loadModel(std::string filepath) {
 
     for (int i = 0; i < v.size(); i++) {
         std::string fullName = filepath + "_" + std::to_string(i);
-        this->newMesh(fullName)->vertices(*v[i])->uvs(*t[i])->normals(*n[i]);
+        this->newMesh(fullName)->indices(*v[i], *t[i], *n[i]);
         
         if (m.size() != 0) {
             this->mesh(fullName)->expectedMaterial(m[i]);
@@ -590,9 +550,13 @@ std::string RendererManager::loadModel(std::string filepath, std::string name) {
     std::vector<std::string> meshes;
     std::vector<component_t*> components;
 
+    glm::vec3 center = glm::vec3(0);
+    float radius = 0.0f;
+
     for (int i = 0; i < v.size(); i++) {
         std::string fullName = name + "_" + std::to_string(i);
-        this->newMesh(fullName)->vertices(*v[i])->uvs(*t[i])->normals(*n[i]);
+        // this->newMesh(fullName)->vertices(*v[i])->uvs(*t[i])->normals(*n[i]);
+        center += this->newMesh(fullName)->indices(*v[i], *t[i], *n[i])->center();
 
         component_t* tmp = new component_t;
 
@@ -608,7 +572,32 @@ std::string RendererManager::loadModel(std::string filepath, std::string name) {
         components.push_back(tmp);
     }
 
-    this->newModel(name)->components(components);
+    printf("starting to calculate the center and radius\n");
+
+    center.x /= v.size();
+    center.y /= v.size();
+    center.z /= v.size();
+
+    float distance;
+
+    for (int i = 0; i < v.size(); i++) {
+        for (int j = 0; j < v[i]->size(); j += 3) {
+            // printf("(%d, %d)\n", i, j);
+            distance = sqrt(pow(center.x - (*v[i])[j], 2) + pow(center.y - (*v[i])[j + 1], 2) + pow(center.z - (*v[i])[j + 2], 2));
+            if (distance > radius) {
+                radius = distance;
+            }
+        }
+    }
+
+    printf("calculated radius\n");
+
+    printf("%lf, %lf, %lf\n", center.x, center.y, center.z);
+    printf("%lf\n", radius);
+
+    this->newModel(name)->components(components)->center(center)->radius(radius);
+
+    printf("stored center and radius\n");
 
     return(name);
 }

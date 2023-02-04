@@ -2,6 +2,8 @@
 
 // constructor method, sets up the renderer (reflection and post processing)
 Renderer::Renderer() {
+	Timer rendererSetupTimer;
+
 	this->Kernels = new Kernel();
 	this->m_postProcessingEffect = 0;
 
@@ -224,9 +226,11 @@ Renderer::Renderer() {
 
 	int maxSamples;
 	glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
-	printf("max samples: %d\n", maxSamples);
 
 	this->m_highlightedEntity = -1;
+
+	printf("\n%sSetup renderer%s\n", strGreen.c_str(), strNoColor.c_str());
+	rendererSetupTimer.print();
 }
 
 
@@ -267,6 +271,7 @@ void Renderer::render() {
 	glStencilFunc(GL_ALWAYS, 1, 255);
 	this->renderSkybox();
 	this->renderEntities(false);
+	this->drawBoundingSphere();
 
 	
 	// draw the bounding box for each entity
@@ -676,6 +681,33 @@ void Renderer::resizeScreen() {
 	updated = true;
 	// updateResolution = false;
 }
+
+void Renderer::drawBoundingSphere() {
+	std::vector<std::string> models = RM.modelNames();
+
+	for (int i = 0; i < models.size(); i++) {
+		if (models[i] != RM.skybox()) {
+
+			Model* currentM = RM.model(models[i]);
+			std::vector<component_t*> currentComponents = currentM->components();
+
+			// for (int j = 0; j < currentComponents.size(); j++) {
+			// 	Mesh* currentMesh = RM.mesh(currentComponents[j]->mesh);
+			// 	// printf("%s: x = %lf, y = %lf, z = %lf\n", models[j].c_str(), currentMesh->center().x, currentMesh->center().y, currentMesh->center().z);
+			// 	center += currentMesh->center();
+			// }
+
+			RM.model("M_BoundingSphere")->scale(glm::vec3(RM.model(models[i])->radius(), RM.model(models[i])->radius(), RM.model(models[i])->radius()))->position(RM.model(models[i])->center() + RM.model(models[i])->position());
+			this->renderEntity("M_BoundingSphere");
+		}
+	}
+}
+
+
+
+
+
+
 
 void Renderer::displayBoundingBox() {
 // 	for (int i = 0; i < entityBuffer.size(); i++) {

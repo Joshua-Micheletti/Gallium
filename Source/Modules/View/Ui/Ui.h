@@ -12,8 +12,9 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-#include "../../global.h"
-#include "../../utils.h"
+#include "../../Utils/global.h"
+#include "../../Utils/utils.h"
+#include "../../Utils/Timer.h"
 
 #include "../Renderer/Renderer.h"
 #include "../../Controller/EventHandler.h"

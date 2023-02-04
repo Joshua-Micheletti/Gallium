@@ -3,6 +3,7 @@ modules = $(source)/Modules
 view = $(modules)/View
 model = $(modules)/Model
 controller = $(modules)/Controller
+utils = $(modules)/Utils
 libs = ./Libs
 gladI = $(libs)/GLAD/include
 gladL = $(libs)/GLAD/src
@@ -61,7 +62,7 @@ extLibI = $(gladI) -I $(glfwI) -I $(glmI) -I $(imgui) -I $(imguiBE) -I $(stbimag
 flags = -w -std=c++11 -Ofast
 
 objectsPath = ./bin/objects
-objects = $(objectsPath)/main.o $(objectsPath)/Engine.o $(objectsPath)/sandbox.o $(objectsPath)/global.o $(objectsPath)/vboindexer.o $(objectsPath)/Window.o $(objectsPath)/utils.o $(objectsPath)/glad.o $(objectsPath)/Renderer.o $(objectsPath)/RendererManager.o $(objectsPath)/Model.o $(objectsPath)/Mesh.o $(objectsPath)/Material.o $(objectsPath)/Texture.o $(objectsPath)/RenderTexture.o $(objectsPath)/EventHandler.o $(objectsPath)/Ui.o $(objectsPath)/PhysicsWorld.o $(objectsPath)/PhysicsBody.o $(objectsPath)/Entity.o $(objectsPath)/Shader.o $(objectsPath)/Camera.o $(objectsPath)/Kernel.o $(objectsPath)/imgui.o $(objectsPath)/imgui_impl_glfw.o $(objectsPath)/imgui_impl_opengl3.o $(objectsPath)/imgui_demo.o $(objectsPath)/imgui_draw.o $(objectsPath)/imgui_widgets.o $(objectsPath)/imgui_tables.o
+objects = $(objectsPath)/main.o $(objectsPath)/Engine.o $(objectsPath)/sandbox.o $(objectsPath)/global.o $(objectsPath)/vboindexer.o $(objectsPath)/Timer.o $(objectsPath)/Window.o $(objectsPath)/utils.o $(objectsPath)/glad.o $(objectsPath)/Renderer.o $(objectsPath)/RendererManager.o $(objectsPath)/Model.o $(objectsPath)/Mesh.o $(objectsPath)/Material.o $(objectsPath)/Texture.o $(objectsPath)/RenderTexture.o $(objectsPath)/EventHandler.o $(objectsPath)/Ui.o $(objectsPath)/PhysicsWorld.o $(objectsPath)/PhysicsBody.o $(objectsPath)/Entity.o $(objectsPath)/Shader.o $(objectsPath)/Camera.o $(objectsPath)/Kernel.o $(objectsPath)/imgui.o $(objectsPath)/imgui_impl_glfw.o $(objectsPath)/imgui_impl_opengl3.o $(objectsPath)/imgui_demo.o $(objectsPath)/imgui_draw.o $(objectsPath)/imgui_widgets.o $(objectsPath)/imgui_tables.o
 
 # LINKING
 
@@ -90,20 +91,24 @@ $(objectsPath)/sandbox.o: $(modules)/Sandbox/sandbox.cpp $(modules)/Sandbox/sand
 	g++ -c -o $(objectsPath)/sandbox.o $(modules)/Sandbox/sandbox.cpp -I $(extLibI) $(flags) $(libraries)
 
 # UTILS
-$(objectsPath)/utils.o: $(modules)/utils.cpp $(modules)/utils.h $(makefile)
+$(objectsPath)/utils.o: $(utils)/utils.cpp $(utils)/utils.h $(makefile)
 	@echo $(marks)$(escape)[31m============= utils.cpp (source) =============$(noColor)$(marks)
-	g++ -c -o $(objectsPath)/utils.o $(modules)/utils.cpp -I $(extLibI) $(flags) $(libraries)
+	g++ -c -o $(objectsPath)/utils.o $(utils)/utils.cpp -I $(extLibI) $(flags) $(libraries)
 
 # GLOBAL
-$(objectsPath)/global.o: $(modules)/global.cpp $(modules)/global.h $(makefile)
+$(objectsPath)/global.o: $(utils)/global.cpp $(utils)/global.h $(makefile)
 	@echo $(marks)$(escape)[31m============= global.cpp (source) =============$(noColor)$(marks)
-	g++ -c -o $(objectsPath)/global.o $(modules)/global.cpp -I $(extLibI) $(flags) $(libraries)
+	g++ -c -o $(objectsPath)/global.o $(utils)/global.cpp -I $(extLibI) $(flags) $(libraries)
 
 # VBOINDEXER
-$(objectsPath)/vboindexer.o: $(modules)/vboindexer.cpp $(modules)/vboindexer.hpp $(makefile)
+$(objectsPath)/vboindexer.o: $(utils)/vboindexer.cpp $(utils)/vboindexer.hpp $(makefile)
 	@echo $(marks)$(escape)[31m============= vboindexer.cpp (source) =============$(noColor)$(marks)
-	g++ -c -o $(objectsPath)/vboindexer.o $(modules)/vboindexer.cpp -I $(extLibI) $(flags) $(libraries)
+	g++ -c -o $(objectsPath)/vboindexer.o $(utils)/vboindexer.cpp -I $(extLibI) $(flags) $(libraries)
 
+# TIMER
+$(objectsPath)/Timer.o: $(utils)/Timer.cpp $(utils)/Timer.h $(makefile)
+	@echo $(marks)$(escape)[31m============= Timer.cpp (source) =============$(noColor)$(marks)
+	g++ -c -o $(objectsPath)/Timer.o $(utils)/Timer.cpp -I $(extLibI) $(flags) $(libraries)
 
 # VIEW
 
@@ -232,7 +237,7 @@ $(objectsPath)/glad.o: $(libs)/GLAD/src/glad.c
 	g++ -c -o $(objectsPath)/glad.o $(libs)/GLAD/src/glad.c -I $(libs)/GLAD/include $(flags)
 
 run:
-	$(runCommand)
+	@$(runCommand)
 
 exec: main run
 

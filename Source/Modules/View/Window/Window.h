@@ -7,7 +7,7 @@
 #define GLFW_DLL
 #include <GLFW/glfw3.h>
 
-#include "../../utils.h"
+#include "../../Utils/utils.h"
 
 class Window {
     public:

@@ -1,5 +1,5 @@
 #define GLFW_DLL
-#include "Modules/include.h"
+#include "Modules/Utils/include.h"
 
 int main(void) {
 	Renderer renderer;
@@ -7,6 +7,9 @@ int main(void) {
 	UI interface(&renderer, &eventHandler);
 
 	sandbox();
+	
+	printf("\n%sTotal:\n", strGreen.c_str());
+	setupTimer.print();
 
 	while (!glfwWindowShouldClose(window.window())) {
 		eventHandler.routine();

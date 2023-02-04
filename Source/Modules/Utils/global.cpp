@@ -1,5 +1,7 @@
 #include "global.h"
 
+Timer setupTimer;
+
 Window window;
 RendererManager RM;
 PhysicsWorld PW;
