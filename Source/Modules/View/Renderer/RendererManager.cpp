@@ -610,29 +610,74 @@ void RendererManager::calculateBoundingSphere(std::string model) {
     float radius = 0.0f;
 
     // for (int i = 0; i < this->model(model)->components().size(); i++) {
-    //     center += this->mesh(this->model(model)->components()[i]->mesh)->center();
+    //     for (int j = 0; j < this->mesh(this->model(model)->components()[i]->mesh)->vertices().size(); j += 3) {
+    //         if (this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j] > max.x) {
+    //             max.x = this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j];
+    //         }
+
+    //         if (this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j] < min.x) {
+    //             min.x = this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j];
+    //         }
+
+
+    //         if (this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 1] > max.y) {
+    //             max.y = this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 1];
+    //         }
+
+    //         if (this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 1] < min.y) {
+    //             min.y = this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 1];
+    //         }
+
+
+    //         if (this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 2] > max.z) {
+    //             max.z = this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 2];
+    //         }
+
+    //         if (this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 2] < min.z) {
+    //             min.z = this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 2];
+    //         }
+    //     }
     // }
 
-    // center.x /= this->model(model)->components().size();
-    // center.y /= this->model(model)->components().size();
-    // center.z /= this->model(model)->components().size();
+    // center.x = (max.x + min.x) / 2.0f;
+    // center.y = (max.y + min.y) / 2.0f;
+    // center.z = (max.z + min.z) / 2.0f;
 
-    int vertices = 0;
+    glm::vec3 min = glm::vec3(0);
+    glm::vec3 max = glm::vec3(0);
 
     for (int i = 0; i < this->model(model)->components().size(); i++) {
-        for (int j = 0; j < this->mesh(this->model(model)->components()[i]->mesh)->vertices().size(); j += 3) {
-            center.x += this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j];
-            center.y += this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 1];
-            center.z += this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 2];
-            vertices++;
+        if (this->mesh(this->model(model)->components()[i]->mesh)->min().x < min.x) {
+            min.x = this->mesh(this->model(model)->components()[i]->mesh)->min().x;
+        }
+
+        if (this->mesh(this->model(model)->components()[i]->mesh)->max().x > max.x) {
+            max.x = this->mesh(this->model(model)->components()[i]->mesh)->max().x;
+        }
+
+        if (this->mesh(this->model(model)->components()[i]->mesh)->min().y < min.y) {
+            min.y = this->mesh(this->model(model)->components()[i]->mesh)->min().y;
+        }
+
+        if (this->mesh(this->model(model)->components()[i]->mesh)->max().y > max.y) {
+            max.y = this->mesh(this->model(model)->components()[i]->mesh)->max().y;
+        }
+
+        if (this->mesh(this->model(model)->components()[i]->mesh)->min().z < min.z) {
+            min.z = this->mesh(this->model(model)->components()[i]->mesh)->min().z;
+        }
+
+        if (this->mesh(this->model(model)->components()[i]->mesh)->max().z > max.z) {
+            max.z = this->mesh(this->model(model)->components()[i]->mesh)->max().z;
         }
     }
 
-    center.x /= vertices;
-    center.y /= vertices;
-    center.z /= vertices;
+    center.x = (max.x + min.x) / 2.0f;
+    center.y = (max.y + min.y) / 2.0f;
+    center.z = (max.z + min.z) / 2.0f;
 
-    printf("%s: %lf, %lf, %lf\n", model.c_str(), center.x, center.y, center.z);
+    // float distance = sqrt(pow(max.x - min.x, 2) + pow(max.y - min.y, 2) + pow(max.z - min.z, 2)) / 2.0f;
+    // printf("distance: %lf\n", distance);
 
     float distance;
 
@@ -644,8 +689,6 @@ void RendererManager::calculateBoundingSphere(std::string model) {
             }
         }
     }
-
-    printf("%s: %lf\n", model.c_str(), radius);
 
     this->model(model)->center(center)->radius(radius);
 }

@@ -16,8 +16,17 @@ std::vector<float> Mesh::vertices() {
 Mesh* Mesh::vertices(std::vector<float> v) {
     this->m_vertices = v;
 
-    this->m_center = averageVector3f(v);
-    this->m_radius = maxDistanceVector3f(this->m_center, v);
+    // this->m_center = averageVector3f(v);
+
+    findMinMaxVector3f(v, &this->m_max, &this->m_min);
+
+    this->m_center.x = (this->m_max.x + this->m_min.x) / 2.0f;
+    this->m_center.y = (this->m_max.y + this->m_min.y) / 2.0f;
+    this->m_center.z = (this->m_max.z + this->m_min.z) / 2.0f;
+
+    printf("%lf, %lf, %lf\n", this->m_center.x, this->m_center.y, this->m_center.z);
+
+    // this->m_radius = maxDistanceVector3f(this->m_center, v);
 
     createBuffer(this->m_vertices, &this->m_vertexBuffer);
     return(this);
@@ -119,6 +128,21 @@ Mesh* Mesh::radius(float radius) {
     return(this);
 }
 
+glm::vec3 Mesh::max() {
+    return(this->m_max);
+}
+Mesh* Mesh::max(glm::vec3 max) {
+    this->m_max = max;
+    return(this);
+}
+
+glm::vec3 Mesh::min() {
+    return(this->m_min);
+}
+Mesh* Mesh::min(glm::vec3 min) {
+    this->m_min = min;
+    return(this);
+}
 
 
 unsigned int Mesh::vertexBuffer() {

@@ -513,3 +513,34 @@ float maxDistanceVector3f(glm::vec3 center, std::vector<float> vertices) {
 
 	return(maxDistance);
 }
+
+void findMinMaxVector3f(std::vector<float> vertices, glm::vec3 *min, glm::vec3 *max) {
+	*min = glm::vec3(0);
+	*max = glm::vec3(0);
+
+	for (int i = 0; i < vertices.size(); i += 3) {
+		if (vertices[i] > max->x) {
+			max->x = vertices[i];
+		}
+
+		if (vertices[i] < min->x) {
+			min->x = vertices[i];
+		}
+
+		if (vertices[i + 1] > max->y) {
+			max->y = vertices[i + 1];
+		}
+
+		if (vertices[i + 1] < min->y) {
+			min->y = vertices[i + 1];
+		}
+
+		if (vertices[i + 2] > max->z) {
+			max->z = vertices[i + 2];
+		}
+
+		if (vertices[i + 2] < min->z) {
+			min->z = vertices[i + 2];
+		}
+	}
+}

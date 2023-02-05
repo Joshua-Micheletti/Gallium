@@ -28,6 +28,11 @@ class Mesh {
         float radius();
         Mesh* radius(float);
 
+        glm::vec3 max();
+        Mesh* max(glm::vec3);
+        glm::vec3 min();
+        Mesh* min(glm::vec3);
+
         unsigned int vertexBuffer();
         unsigned int uvBuffer();
         unsigned int normalBuffer();
@@ -55,6 +60,8 @@ class Mesh {
 
         float m_radius;
         glm::vec3 m_center;
+        glm::vec3 m_max;
+        glm::vec3 m_min;
 
         unsigned int m_vertexBuffer;
         unsigned int m_uvBuffer;

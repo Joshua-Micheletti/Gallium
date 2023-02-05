@@ -14,7 +14,7 @@ void sandbox() {
     
     PW.newPhysicsBody("P_plane")->plane();
 
-    for (int i = 0; i < 0; i++) {
+    for (int i = 0; i < 500; i++) {
         float x = rand() % 1000 / 100 - 5;
         float y = rand() % 3000 / 100 + 1;
         float z = rand() % 1000 / 100 - 5;
@@ -24,7 +24,7 @@ void sandbox() {
         engine.link("P_sphere" + std::to_string(i), "M_Test" + std::to_string(i));
     }
 
-    for (int i = 0; i < 0; i++) {
+    for (int i = 0; i < 500; i++) {
         float x = rand() % 1000 / 100 - 5;
         float y = rand() % 3000 / 100 + 1;
         float z = rand() % 1000 / 100 - 5;
@@ -43,17 +43,17 @@ void sandbox() {
     float radius = RM.mesh("ME_Default")->radius();
 
     RM.newModel("M_BoundingSphere")->mesh("ME_BoundingSphere")->scale(glm::vec3(radius, radius, radius));
-    // RM.newModel("M_TestCube")->shader("S_LightingMaterialTex");
+    RM.newModel("M_TestCube")->shader("S_LightingMaterialTex");
 
-    // RM.newTexture("T_Halo")->loadTexture("../Models/halo/LP_Dif.jpg");
-    // RM.newTexture("T_HaloSpec")->loadTexture("../Models/halo/LP_Spec.jpg");
-    // RM.loadMTL("../Models/halo/VK78.mtl");
-    // RM.model(RM.loadModel("../Models/halo/VK78.obj", "Halo"))->shaders("S_LightingMaterialTex");
+    RM.newTexture("T_Halo")->loadTexture("../Models/halo/LP_Dif.jpg");
+    RM.newTexture("T_HaloSpec")->loadTexture("../Models/halo/LP_Spec.jpg");
+    RM.loadMTL("../Models/halo/VK78.mtl");
+    RM.model(RM.loadModel("../Models/halo/VK78.obj", "Halo"))->shaders("S_LightingMaterialTex");
 
-    // for (int i = 0; i < RM.model("Halo")->components().size(); i++) {
-    //     RM.model("Halo")->components()[i]->texture.diffuse("T_Halo");
-    //     RM.model("Halo")->components()[i]->texture.specular("T_HaloSpec");
-    // }
+    for (int i = 0; i < RM.model("Halo")->components().size(); i++) {
+        RM.model("Halo")->components()[i]->texture.diffuse("T_Halo");
+        RM.model("Halo")->components()[i]->texture.specular("T_HaloSpec");
+    }
 
     // RM.newModel("M_BoundingSphereHalo")->mesh("ME_BoundingSphere")->scale(glm::vec3())
 

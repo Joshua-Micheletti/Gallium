@@ -24,6 +24,7 @@ extern int find(std::string, std::vector<std::string>);
 extern const char** stringVectorToCArray(std::vector<std::string>);
 extern glm::vec3 averageVector3f(std::vector<float>);
 extern float maxDistanceVector3f(glm::vec3, std::vector<float>);
+extern void findMinMaxVector3f(std::vector<float>, glm::vec3*, glm::vec3*);
 
 extern std::string strRed;
 extern std::string strGreen;
