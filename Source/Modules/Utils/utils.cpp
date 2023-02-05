@@ -6,6 +6,7 @@
 	std::string strGreen = "[0;32m";
 	std::string strBlue = "[0;34m";
 	std::string strYellow = "[0;33m";
+	std::string strPink = "[0;35m";
 	std::string strNoColor = "[0m";
 #endif
 
@@ -14,6 +15,7 @@
 	std::string strGreen = "\033[0;32m";
 	std::string strBlue = "\033[0;34m";
 	std::string strYellow = "\033[0;33m";
+	std::string strPink = "\033[0;35m";
 	std::string strNoColor = "\033[0m";
 #endif
 

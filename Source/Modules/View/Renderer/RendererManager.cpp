@@ -68,6 +68,9 @@ void createAxis(Mesh* axis) {
 // CONSTRUCTOR
 RendererManager::RendererManager() {
     Timer RMSetupTimer;
+
+    debugger.printRM("DEBUGGING RENDERER MANAGER");
+
     // SETUP CAMERAS
     // initialize the default camera
     this->m_cameras["default"] = new Camera(glm::vec3(30.0f, 30.0f, 30.0f),   // position
@@ -80,6 +83,8 @@ RendererManager::RendererManager() {
     // set the current camera to the default one
     this->m_currentCamera = "default";
 
+    debugger.printRM("SETUP CAMERAS");
+
     // SETUP PROJECTIONS
     // initialize the default projection
     this->m_projections["default"] = glm::perspective(glm::radians(45.0f), (float)1280 / (float)720, 0.1f, 10000.0f);
@@ -88,11 +93,15 @@ RendererManager::RendererManager() {
     // set the current projection to the default one
     this->m_currentProjection = "default";
 
+    debugger.printRM("SETUP PROJECTIONS");
+
     // SETUP RENDER
     // initialize the samples for multisampling
     this->m_samples = 1;
     // disable the depth buffer view
     this->m_depth = false;
+
+    debugger.printRM("SETUP VARIABLES");
 
     // SETUP DEFAULTS
     // these values will be used when the called component is not found or when a model is initialized
@@ -101,12 +110,17 @@ RendererManager::RendererManager() {
     this->m_defaultShader = "S_Default";
     this->m_defaultModel = "M_Default";
     this->m_defaultMaterial = "MA_Default";
+
+    debugger.printRM("SETUP DEFAULT COMPONENT NAMES");
+
     // load the respective default components
     this->newMesh(this->m_defaultMesh, "../Models/Default/box2.obj");
 
     this->newShader(this->m_defaultShader)->loadShader("../Shader/default/default.vert", "../Shader/default/default.frag");
     this->newTexture(this->m_defaultTexture)->loadTexture("../Textures/Default/default2.jpg");
     this->newMaterial(this->m_defaultMaterial);
+
+    debugger.printRM("LOADED DEFAULT COMPONENTS");
 
     // SETUP GLOBAL ENTITIES
     // shader for rendering a model's outline when selected
@@ -120,11 +134,15 @@ RendererManager::RendererManager() {
     // skybox model
     this->m_skybox = "M_Skybox";
 
+    debugger.printRM("SETUP GLOBAL ENTITIES");
+
     // load the built-in shaders
     this->newShader("S_White")->loadShader("../Shader/white/white.vert", "../Shader/white/white.frag");
     this->newShader("S_Highlight")->loadShader("../Shader/highlight/highlight.vert", "../Shader/highlight/highlight.frag");
     this->newShader("S_Outline")->loadShader("../Shader/outline/outline.vert", "../Shader/outline/outline.frag");
     
+    debugger.printRM("LOADED NECESSARY SHADERS");
+
     // SETUP SKYBOX
     // load the skybox shader
     this->newShader("S_Skybox")->loadShader("../Shader/skybox/skybox.vert", "../Shader/skybox/skybox.frag");
@@ -139,8 +157,13 @@ RendererManager::RendererManager() {
 	faces.push_back(location + directory + "/front.png"); //front
 	faces.push_back(location + directory + "/back.png");  //back
     this->newTexture("T_Skybox")->loadCubemap(faces);
+    
+    debugger.printRM("LOADED SKYBOX CUBEMAP");
+
     // create the skybox model
     this->newModel("M_Skybox")->shader("S_Skybox")->texture("T_Skybox");
+
+    debugger.printRM("SETUP SKYBOX");
 
     // SETUP AXIS
     // create a new axis model
@@ -151,6 +174,8 @@ RendererManager::RendererManager() {
     // RENDERING THE AXIS WITH LINES IS REALLY SLOW FOR SOME REASON
     this->model("M_Axis")->mesh("ME_Axis")->shader("S_Color")->drawingMode(GL_LINES);
 
+    debugger.printRM("SETUP AXIS");
+
     // SETUP LIGHT
     // create a new light model
     this->newModel("M_Light");
@@ -159,6 +184,8 @@ RendererManager::RendererManager() {
     // create a material for the light (this will interact with every light calculation)
     this->newMaterial("MA_Light");
     this->model("M_Light")->mesh("ME_Sphere")->material("MA_Light")->shader("S_White");
+
+    debugger.printRM("SETUP LIGHT ENTITY");
 
     // this->newMesh("ME_BoundingSphere", "../Models/Default/boundingSphere.obj");
     // this->model("M_BoundingSphere")->mesh("ME_BoundingSphere");
@@ -257,6 +284,7 @@ std::string RendererManager::model(Model *m) {
 Model* RendererManager::newModel(std::string name) {
     Model* m = new Model();
     this->m_modelBuffer[name] = m;
+    this->calculateBoundingSphere(name);
     return(this->m_modelBuffer[name]);
 }
 std::vector<Model*> RendererManager::models() {
@@ -550,13 +578,9 @@ std::string RendererManager::loadModel(std::string filepath, std::string name) {
     std::vector<std::string> meshes;
     std::vector<component_t*> components;
 
-    glm::vec3 center = glm::vec3(0);
-    float radius = 0.0f;
-
     for (int i = 0; i < v.size(); i++) {
         std::string fullName = name + "_" + std::to_string(i);
-        // this->newMesh(fullName)->vertices(*v[i])->uvs(*t[i])->normals(*n[i]);
-        center += this->newMesh(fullName)->indices(*v[i], *t[i], *n[i])->center();
+        this->newMesh(fullName)->indices(*v[i], *t[i], *n[i]);
 
         component_t* tmp = new component_t;
 
@@ -572,36 +596,59 @@ std::string RendererManager::loadModel(std::string filepath, std::string name) {
         components.push_back(tmp);
     }
 
-    printf("starting to calculate the center and radius\n");
 
-    center.x /= v.size();
-    center.y /= v.size();
-    center.z /= v.size();
+    this->newModel(name)->components(components);
+
+    this->calculateBoundingSphere(name);
+
+    return(name);
+}
+
+
+void RendererManager::calculateBoundingSphere(std::string model) {
+    glm::vec3 center = glm::vec3(0);
+    float radius = 0.0f;
+
+    // for (int i = 0; i < this->model(model)->components().size(); i++) {
+    //     center += this->mesh(this->model(model)->components()[i]->mesh)->center();
+    // }
+
+    // center.x /= this->model(model)->components().size();
+    // center.y /= this->model(model)->components().size();
+    // center.z /= this->model(model)->components().size();
+
+    int vertices = 0;
+
+    for (int i = 0; i < this->model(model)->components().size(); i++) {
+        for (int j = 0; j < this->mesh(this->model(model)->components()[i]->mesh)->vertices().size(); j += 3) {
+            center.x += this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j];
+            center.y += this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 1];
+            center.z += this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 2];
+            vertices++;
+        }
+    }
+
+    center.x /= vertices;
+    center.y /= vertices;
+    center.z /= vertices;
+
+    printf("%s: %lf, %lf, %lf\n", model.c_str(), center.x, center.y, center.z);
 
     float distance;
 
-    for (int i = 0; i < v.size(); i++) {
-        for (int j = 0; j < v[i]->size(); j += 3) {
-            // printf("(%d, %d)\n", i, j);
-            distance = sqrt(pow(center.x - (*v[i])[j], 2) + pow(center.y - (*v[i])[j + 1], 2) + pow(center.z - (*v[i])[j + 2], 2));
+    for (int i = 0; i < this->model(model)->components().size(); i++) {
+        for (int j = 0; j < this->mesh(this->model(model)->components()[i]->mesh)->vertices().size(); j += 3) {
+            distance = sqrt(pow(center.x - this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j], 2) + pow(center.y - this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 1], 2) + pow(center.z - this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 2], 2));
             if (distance > radius) {
                 radius = distance;
             }
         }
     }
 
-    printf("calculated radius\n");
+    printf("%s: %lf\n", model.c_str(), radius);
 
-    printf("%lf, %lf, %lf\n", center.x, center.y, center.z);
-    printf("%lf\n", radius);
-
-    this->newModel(name)->components(components)->center(center)->radius(radius);
-
-    printf("stored center and radius\n");
-
-    return(name);
+    this->model(model)->center(center)->radius(radius);
 }
-
 
 // PRINTS
 /*

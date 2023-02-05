@@ -271,11 +271,10 @@ void Renderer::render() {
 	glStencilFunc(GL_ALWAYS, 1, 255);
 	this->renderSkybox();
 	this->renderEntities(false);
-	this->drawBoundingSphere();
 
-	
-	// draw the bounding box for each entity
-	// this->displayBoundingBox();
+	if (debugger.displayBoundingSpheres()) {
+		this->drawBoundingSphere();
+	}
 
 	this->m_forwardRenderTime = glfwGetTime() - this->m_forwardRenderTime;
 

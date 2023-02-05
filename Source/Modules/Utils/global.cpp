@@ -7,8 +7,8 @@ RendererManager RM;
 PhysicsWorld PW;
 Engine engine;
 
-bool displayInfo = false;
-bool vsync = false;
+bool displayInfo = true;
+bool vsync = true;
 
 bool freeMouse = false;
 bool drawOBB = false;

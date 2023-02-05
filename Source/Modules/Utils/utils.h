@@ -29,6 +29,7 @@ extern std::string strRed;
 extern std::string strGreen;
 extern std::string strBlue;
 extern std::string strYellow;
+extern std::string strPink;
 extern std::string strNoColor;
 
 extern bool updateResolution;

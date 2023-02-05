@@ -1,7 +1,10 @@
 #ifndef __GLOBAL__
 #define __GLOBAL__
 
+#include <stdio.h>
+
 #include "Timer.h"
+#include "Debugger.h"
 
 #include "../Engine/Engine.h"
 #include "../View/Window/Window.h"

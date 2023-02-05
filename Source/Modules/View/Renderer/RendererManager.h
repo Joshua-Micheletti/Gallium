@@ -14,6 +14,7 @@
 #include "../../Utils/utils.h"
 #include "../../Utils/vboindexer.hpp"
 #include "../../Utils/Timer.h"
+#include "../../Utils/Debugger.h"
 
 #include "../Model/Model.h"
 #include "../Model/Material/Material.h"
@@ -125,9 +126,13 @@ class RendererManager {
         void loadModel(std::string);
         std::string loadModel(std::string, std::string);
 
+        void calculateBoundingSphere(std::string);
 
         void material(std::string, std::string);
         void applyMaterials(std::vector<std::string>, std::vector<std::string>);
+
+        bool debug();
+        void debug(bool);
 
     private:
         std::map<std::string, Model*> m_modelBuffer;
@@ -159,6 +164,8 @@ class RendererManager {
 
         int m_samples;
         bool m_depth;
+
+        bool m_debug;
 };
 
 #endif

@@ -73,7 +73,7 @@ Mesh* Mesh::indices(std::vector<float> v, std::vector<float> t, std::vector<floa
         in_n.push_back(glm::vec3(n[i * 3 + 0], n[i * 3 + 1], n[i * 3 + 2]));
     }
 
-    indexVBO_slow(in_v, in_t, in_n, out_indices, out_v, out_t, out_n);
+    indexVBO(in_v, in_t, in_n, out_indices, out_v, out_t, out_n);
 
     v.clear();
     for (int i = 0; i < out_v.size(); i++) {
