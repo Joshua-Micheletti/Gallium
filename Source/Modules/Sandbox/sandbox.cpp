@@ -14,7 +14,7 @@ void sandbox() {
     
     PW.newPhysicsBody("P_plane")->plane();
 
-    for (int i = 0; i < 500; i++) {
+    for (int i = 0; i < 1000; i++) {
         float x = rand() % 1000 / 100 - 5;
         float y = rand() % 3000 / 100 + 1;
         float z = rand() % 1000 / 100 - 5;
@@ -24,7 +24,7 @@ void sandbox() {
         engine.link("P_sphere" + std::to_string(i), "M_Test" + std::to_string(i));
     }
 
-    for (int i = 0; i < 500; i++) {
+    for (int i = 0; i < 1000; i++) {
         float x = rand() % 1000 / 100 - 5;
         float y = rand() % 3000 / 100 + 1;
         float z = rand() % 1000 / 100 - 5;
@@ -34,31 +34,54 @@ void sandbox() {
         engine.link("P_Box" + std::to_string(i), "M_Box" + std::to_string(i));
     }
 
-    // RM.newModel("M_Plane")->scale(glm::vec3(20.0f, 0.00001f, 20.0f))->shader("S_Lighting");
+    RM.newModel("M_Plane")->scale(glm::vec3(20.0f, 0.00001f, 20.0f))->shader("S_Lighting");
     
     PW.newPhysicsBody("P_Camera")->sphere();
 
-    RM.newMesh("ME_BoundingSphere", "../Models/Default/boundingSphere.obj");
+    // RM.newMesh("ME_BoundingSphere", "../Models/Default/boundingSphere.obj");
 
-    float radius = RM.mesh("ME_Default")->radius();
+    // float radius = RM.mesh("ME_Default")->radius();
 
-    RM.newModel("M_BoundingSphere")->mesh("ME_BoundingSphere")->scale(glm::vec3(radius, radius, radius));
-    RM.newModel("M_TestCube")->shader("S_LightingMaterialTex");
+    // RM.newModel("M_BoundingSphere")->mesh("ME_BoundingSphere")->scale(glm::vec3(radius, radius, radius));
+    // // RM.newModel("M_TestCube")->shader("S_LightingMaterialTex");
 
-    RM.newTexture("T_Halo")->loadTexture("../Models/halo/LP_Dif.jpg");
-    RM.newTexture("T_HaloSpec")->loadTexture("../Models/halo/LP_Spec.jpg");
-    RM.loadMTL("../Models/halo/VK78.mtl");
-    RM.model(RM.loadModel("../Models/halo/VK78.obj", "Halo"))->shaders("S_LightingMaterialTex");
+    // RM.newTexture("T_Halo")->loadTexture("../Models/halo/LP_Dif.jpg");
+    // RM.newTexture("T_HaloSpec")->loadTexture("../Models/halo/LP_Spec.jpg");
+    // RM.loadMTL("../Models/halo/VK78.mtl");
+    // RM.model(RM.loadModel("../Models/halo/VK78.obj", "Halo"))->shaders("S_LightingMaterialTex");
 
-    for (int i = 0; i < RM.model("Halo")->components().size(); i++) {
-        RM.model("Halo")->components()[i]->texture.diffuse("T_Halo");
-        RM.model("Halo")->components()[i]->texture.specular("T_HaloSpec");
-    }
+    // for (int i = 0; i < RM.model("Halo")->components().size(); i++) {
+    //     RM.model("Halo")->components()[i]->texture.diffuse("T_Halo");
+    //     RM.model("Halo")->components()[i]->texture.specular("T_HaloSpec");
+    // }
 
-    // RM.newModel("M_BoundingSphereHalo")->mesh("ME_BoundingSphere")->scale(glm::vec3())
+    // // RM.newModel("M_BoundingSphereHalo")->mesh("ME_BoundingSphere")->scale(glm::vec3())
 
-    RM.loadMTL("../Models/skull/skull3.mtl");
-    RM.model(RM.loadModel("../Models/skull/skull3.obj", "M_Skull"))->shaders("S_Lighting");
+    // RM.loadMTL("../Models/skull/skull3.mtl");
+    // RM.model(RM.loadModel("../Models/skull/skull3.obj", "M_Skull"))->shaders("S_Lighting");
+
+    // RM.newTexture("T_Revolver")->loadTexture("../Models/revolver/textures/BaseColor.jpg");
+    // RM.newTexture("T_RevolverSpec")->loadTexture("../Models/revolver/textures/Metallic.jpg");
+
+    // RM.loadMTL("../Models/revolver/source/untitled.mtl");
+    // RM.model(RM.loadModel("../Models/revolver/source/untitled.obj", "M_Revolver"))->shaders("S_LightingMaterialTex");
+
+    // for (int i = 0; i < RM.model("M_Revolver")->components().size(); i++) {
+    //     RM.model("M_Revolver")->components()[i]->texture.diffuse("T_Revolver");
+    //     RM.model("M_Revolver")->components()[i]->texture.specular("T_RevolverSpec");
+    // }
+
+
+    // RM.newTexture("T_Rifle")->loadTexture("../Models/rifle/blender/textures/Sniper_KSR_29_Col.jpg");
+    // RM.newTexture("T_RifleSpec")->loadTexture("../Models/rifle/blender/textures/Sniper_KSR_29_spec.jpg");
+
+    // RM.loadMTL("../Models/rifle/sniper.mtl");
+    // RM.model(RM.loadModel("../Models/rifle/sniper.obj", "M_Rifle"))->shaders("S_LightingMaterialTex");
+
+    // for (int i = 0; i < RM.model("M_Rifle")->components().size(); i++) {
+    //     RM.model("M_Rifle")->components()[i]->texture.diffuse("T_Rifle");
+    //     RM.model("M_Rifle")->components()[i]->texture.specular("T_RifleSpec");
+    // }
 
     // REMOVE
     PW.updateBodies();

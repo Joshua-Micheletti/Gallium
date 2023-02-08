@@ -4,8 +4,12 @@
 Renderer::Renderer() {
 	Timer rendererSetupTimer;
 
+	debugger.print("DEBUGGING RENDERER", "R");
+
 	this->Kernels = new Kernel();
 	this->m_postProcessingEffect = 0;
+
+	debugger.print("CREATED KERNEL OBJECT", "R");
 
 	// sets the color to clear the color buffer with
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -21,6 +25,9 @@ Renderer::Renderer() {
 	// which is usually the inside of the model, which doesn't need to be rendered
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
+
+	debugger.print("SETUP WORLD VARIABLES", "R");
+
 
 	// generate 1 generic buffer and assigns its ID to the variable m_tmpBuffer
 	glGenBuffers(1, &this->m_tmpBuffer);

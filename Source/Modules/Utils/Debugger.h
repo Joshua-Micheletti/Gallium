@@ -8,19 +8,23 @@
 class Debugger{
     public:
         Debugger();
+        
         Debugger* debugRendererManager(bool);
         Debugger* debugRenderer(bool);
+        Debugger* debugPhysicsWorld(bool);
         Debugger* displayBoundingSpheres(bool);
 
         bool debugRendererManager();
         bool debugRenderer();
+        bool debugPhysicsWorld();
         bool displayBoundingSpheres();
 
-        Debugger* printRM(std::string);
+        Debugger* print(std::string, std::string);
 
     private:
         bool m_debugRendererManager;
         bool m_debugRenderer;
+        bool m_debugPhysicsWorld;
         bool m_displayBoundingSpheres;
 };
 

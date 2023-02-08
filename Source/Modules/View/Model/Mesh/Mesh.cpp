@@ -16,17 +16,11 @@ std::vector<float> Mesh::vertices() {
 Mesh* Mesh::vertices(std::vector<float> v) {
     this->m_vertices = v;
 
-    // this->m_center = averageVector3f(v);
-
-    findMinMaxVector3f(v, &this->m_max, &this->m_min);
+    findMinMaxVector3f(v, &this->m_min, &this->m_max);
 
     this->m_center.x = (this->m_max.x + this->m_min.x) / 2.0f;
     this->m_center.y = (this->m_max.y + this->m_min.y) / 2.0f;
     this->m_center.z = (this->m_max.z + this->m_min.z) / 2.0f;
-
-    printf("%lf, %lf, %lf\n", this->m_center.x, this->m_center.y, this->m_center.z);
-
-    // this->m_radius = maxDistanceVector3f(this->m_center, v);
 
     createBuffer(this->m_vertices, &this->m_vertexBuffer);
     return(this);

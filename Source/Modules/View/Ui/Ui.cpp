@@ -504,16 +504,19 @@ void UI::drawRightColumn() {
 		RM.samples((int)pow(2, item_current));
 	}
 
-	// if (ImGui::CollapsingHeader("Bounding Box Display")) {
-	// 	if (ImGui::MenuItem("Object Bounding Box", NULL, &drawOBB));
-	// 	if (ImGui::MenuItem("External Axis Aligned Bounding Box", NULL, &drawAABB1));
-	// 	if (ImGui::MenuItem("Internal Axis Aligned Bounding Box", NULL, &drawAABB2));
-	// 	if (ImGui::MenuItem("Average Axis Aligned Bounding Box", NULL, &drawAABB3));
-	// 	if (ImGui::MenuItem("True Axis Aligned Bounding Box", NULL, &drawAABB4));
-	// 	if (ImGui::MenuItem("Internal Bounding Sphere", NULL, &drawBS));
-	// 	if (ImGui::MenuItem("External Bounding Sphere", NULL, &drawBS2));
-	// 	if (ImGui::MenuItem("True Bounding Sphere", NULL, &drawBS3));
-	// }
+	static bool drawBS = false;
+
+	if (ImGui::CollapsingHeader("Bounding Box Display")) {
+		if (ImGui::MenuItem("Bounding Sphere", NULL, &drawBS));
+		debugger.displayBoundingSpheres(drawBS);
+		// if (ImGui::MenuItem("External Axis Aligned Bounding Box", NULL, &drawAABB1));
+		// if (ImGui::MenuItem("Internal Axis Aligned Bounding Box", NULL, &drawAABB2));
+		// if (ImGui::MenuItem("Average Axis Aligned Bounding Box", NULL, &drawAABB3));
+		// if (ImGui::MenuItem("True Axis Aligned Bounding Box", NULL, &drawAABB4));
+		// if (ImGui::MenuItem("Internal Bounding Sphere", NULL, &drawBS));
+		// if (ImGui::MenuItem("External Bounding Sphere", NULL, &drawBS2));
+		// if (ImGui::MenuItem("True Bounding Sphere", NULL, &drawBS3));
+	}
 
 	if (ImGui::CollapsingHeader("Post Processing Effect")) {
 		static int selectedEffect = 0;

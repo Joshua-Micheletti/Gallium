@@ -69,7 +69,7 @@ void createAxis(Mesh* axis) {
 RendererManager::RendererManager() {
     Timer RMSetupTimer;
 
-    debugger.printRM("DEBUGGING RENDERER MANAGER");
+    debugger.print("DEBUGGING RENDERER MANAGER", "RM");
 
     // SETUP CAMERAS
     // initialize the default camera
@@ -83,7 +83,7 @@ RendererManager::RendererManager() {
     // set the current camera to the default one
     this->m_currentCamera = "default";
 
-    debugger.printRM("SETUP CAMERAS");
+    debugger.print("SETUP CAMERAS", "RM");
 
     // SETUP PROJECTIONS
     // initialize the default projection
@@ -93,7 +93,7 @@ RendererManager::RendererManager() {
     // set the current projection to the default one
     this->m_currentProjection = "default";
 
-    debugger.printRM("SETUP PROJECTIONS");
+    debugger.print("SETUP PROJECTIONS", "RM");
 
     // SETUP RENDER
     // initialize the samples for multisampling
@@ -101,7 +101,7 @@ RendererManager::RendererManager() {
     // disable the depth buffer view
     this->m_depth = false;
 
-    debugger.printRM("SETUP VARIABLES");
+    debugger.print("SETUP VARIABLES", "RM");
 
     // SETUP DEFAULTS
     // these values will be used when the called component is not found or when a model is initialized
@@ -111,7 +111,7 @@ RendererManager::RendererManager() {
     this->m_defaultModel = "M_Default";
     this->m_defaultMaterial = "MA_Default";
 
-    debugger.printRM("SETUP DEFAULT COMPONENT NAMES");
+    debugger.print("SETUP DEFAULT COMPONENT NAMES", "RM");
 
     // load the respective default components
     this->newMesh(this->m_defaultMesh, "../Models/Default/box2.obj");
@@ -120,7 +120,7 @@ RendererManager::RendererManager() {
     this->newTexture(this->m_defaultTexture)->loadTexture("../Textures/Default/default2.jpg");
     this->newMaterial(this->m_defaultMaterial);
 
-    debugger.printRM("LOADED DEFAULT COMPONENTS");
+    debugger.print("LOADED DEFAULT COMPONENTS", "RM");
 
     // SETUP GLOBAL ENTITIES
     // shader for rendering a model's outline when selected
@@ -134,14 +134,14 @@ RendererManager::RendererManager() {
     // skybox model
     this->m_skybox = "M_Skybox";
 
-    debugger.printRM("SETUP GLOBAL ENTITIES");
+    debugger.print("SETUP GLOBAL ENTITIES", "RM");
 
     // load the built-in shaders
     this->newShader("S_White")->loadShader("../Shader/white/white.vert", "../Shader/white/white.frag");
     this->newShader("S_Highlight")->loadShader("../Shader/highlight/highlight.vert", "../Shader/highlight/highlight.frag");
     this->newShader("S_Outline")->loadShader("../Shader/outline/outline.vert", "../Shader/outline/outline.frag");
     
-    debugger.printRM("LOADED NECESSARY SHADERS");
+    debugger.print("LOADED NECESSARY SHADERS", "RM");
 
     // SETUP SKYBOX
     // load the skybox shader
@@ -158,12 +158,12 @@ RendererManager::RendererManager() {
 	faces.push_back(location + directory + "/back.png");  //back
     this->newTexture("T_Skybox")->loadCubemap(faces);
     
-    debugger.printRM("LOADED SKYBOX CUBEMAP");
+    debugger.print("LOADED SKYBOX CUBEMAP", "RM");
 
     // create the skybox model
     this->newModel("M_Skybox")->shader("S_Skybox")->texture("T_Skybox");
 
-    debugger.printRM("SETUP SKYBOX");
+    debugger.print("SETUP SKYBOX", "RM");
 
     // SETUP AXIS
     // create a new axis model
@@ -174,7 +174,7 @@ RendererManager::RendererManager() {
     // RENDERING THE AXIS WITH LINES IS REALLY SLOW FOR SOME REASON
     this->model("M_Axis")->mesh("ME_Axis")->shader("S_Color")->drawingMode(GL_LINES);
 
-    debugger.printRM("SETUP AXIS");
+    debugger.print("SETUP AXIS", "RM");
 
     // SETUP LIGHT
     // create a new light model
@@ -185,7 +185,7 @@ RendererManager::RendererManager() {
     this->newMaterial("MA_Light");
     this->model("M_Light")->mesh("ME_Sphere")->material("MA_Light")->shader("S_White");
 
-    debugger.printRM("SETUP LIGHT ENTITY");
+    debugger.print("SETUP LIGHT ENTITY", "RM");
 
     // this->newMesh("ME_BoundingSphere", "../Models/Default/boundingSphere.obj");
     // this->model("M_BoundingSphere")->mesh("ME_BoundingSphere");
@@ -604,93 +604,64 @@ std::string RendererManager::loadModel(std::string filepath, std::string name) {
     return(name);
 }
 
-
+// REVISIT THIS CODE
 void RendererManager::calculateBoundingSphere(std::string model) {
     glm::vec3 center = glm::vec3(0);
     float radius = 0.0f;
 
-    // for (int i = 0; i < this->model(model)->components().size(); i++) {
-    //     for (int j = 0; j < this->mesh(this->model(model)->components()[i]->mesh)->vertices().size(); j += 3) {
-    //         if (this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j] > max.x) {
-    //             max.x = this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j];
-    //         }
+    Model *currentModel = this->model(model);
+    Mesh *currentMesh;
 
-    //         if (this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j] < min.x) {
-    //             min.x = this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j];
-    //         }
+    glm::vec3 min = glm::vec3(9999999);
+    glm::vec3 max = glm::vec3(-9999999);
 
+    float currentDistanceMax = 0.0f;
+    float currentDistanceMin = 0.0f;
 
-    //         if (this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 1] > max.y) {
-    //             max.y = this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 1];
-    //         }
+    float distance = 0.0f;
 
-    //         if (this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 1] < min.y) {
-    //             min.y = this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 1];
-    //         }
+    for (int i = 0; i < currentModel->components().size(); i++) {
+        currentMesh = this->mesh(currentModel->components()[i]->mesh);
 
-
-    //         if (this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 2] > max.z) {
-    //             max.z = this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 2];
-    //         }
-
-    //         if (this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 2] < min.z) {
-    //             min.z = this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 2];
-    //         }
-    //     }
-    // }
-
-    // center.x = (max.x + min.x) / 2.0f;
-    // center.y = (max.y + min.y) / 2.0f;
-    // center.z = (max.z + min.z) / 2.0f;
-
-    glm::vec3 min = glm::vec3(0);
-    glm::vec3 max = glm::vec3(0);
-
-    for (int i = 0; i < this->model(model)->components().size(); i++) {
-        if (this->mesh(this->model(model)->components()[i]->mesh)->min().x < min.x) {
-            min.x = this->mesh(this->model(model)->components()[i]->mesh)->min().x;
+        if (currentMesh->min().x < min.x) {
+            min.x = currentMesh->min().x;
         }
 
-        if (this->mesh(this->model(model)->components()[i]->mesh)->max().x > max.x) {
-            max.x = this->mesh(this->model(model)->components()[i]->mesh)->max().x;
+        if (currentMesh->max().x > max.x) {
+            max.x = currentMesh->max().x;
         }
 
-        if (this->mesh(this->model(model)->components()[i]->mesh)->min().y < min.y) {
-            min.y = this->mesh(this->model(model)->components()[i]->mesh)->min().y;
+        if (currentMesh->min().y < min.y) {
+            min.y = currentMesh->min().y;
         }
 
-        if (this->mesh(this->model(model)->components()[i]->mesh)->max().y > max.y) {
-            max.y = this->mesh(this->model(model)->components()[i]->mesh)->max().y;
+        if (currentMesh->max().y > max.y) {
+            max.y = currentMesh->max().y;
         }
 
-        if (this->mesh(this->model(model)->components()[i]->mesh)->min().z < min.z) {
-            min.z = this->mesh(this->model(model)->components()[i]->mesh)->min().z;
+        if (currentMesh->min().z < min.z) {
+            min.z = currentMesh->min().z;
         }
 
-        if (this->mesh(this->model(model)->components()[i]->mesh)->max().z > max.z) {
-            max.z = this->mesh(this->model(model)->components()[i]->mesh)->max().z;
+        if (currentMesh->max().z > max.z) {
+            max.z = currentMesh->max().z;
         }
-    }
 
-    center.x = (max.x + min.x) / 2.0f;
-    center.y = (max.y + min.y) / 2.0f;
-    center.z = (max.z + min.z) / 2.0f;
+        currentDistanceMax = sqrt(pow(max.x, 2) + pow(max.y, 2) + pow(max.z, 2));
+        currentDistanceMin = sqrt(pow(min.x, 2) + pow(min.y, 2) + pow(min.z, 2));
 
-    // float distance = sqrt(pow(max.x - min.x, 2) + pow(max.y - min.y, 2) + pow(max.z - min.z, 2)) / 2.0f;
-    // printf("distance: %lf\n", distance);
-
-    float distance;
-
-    for (int i = 0; i < this->model(model)->components().size(); i++) {
-        for (int j = 0; j < this->mesh(this->model(model)->components()[i]->mesh)->vertices().size(); j += 3) {
-            distance = sqrt(pow(center.x - this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j], 2) + pow(center.y - this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 1], 2) + pow(center.z - this->mesh(this->model(model)->components()[i]->mesh)->vertices()[j + 2], 2));
-            if (distance > radius) {
-                radius = distance;
+        if (currentDistanceMax > currentDistanceMin) {
+            if (currentDistanceMax > distance) {
+                distance = currentDistanceMax;
+            }
+        } else {
+            if (currentDistanceMin > distance) {
+                distance = currentDistanceMin;
             }
         }
     }
 
-    this->model(model)->center(center)->radius(radius);
+    this->model(model)->center(center)->radius(distance);
 }
 
 // PRINTS
