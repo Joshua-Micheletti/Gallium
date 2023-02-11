@@ -14,7 +14,7 @@ Camera::Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = 
 
   this->m_frostum = new Frostum();
 
-  calculateViewMatrix();
+  // calculateViewMatrix();
 }
 
 void Camera::position(glm::vec3 position) {
@@ -57,6 +57,7 @@ glm::vec3 Camera::up() {
 }
 
 glm::mat4 Camera::viewMatrix() {
+  this->createFrustumFromCamera(16.0f / 9.0f, 45.0f, 0.1, 10000.0);
   return(glm::lookAt(this->m_position, this->m_position + this->m_front, this->m_up));
 }
 
@@ -112,6 +113,8 @@ void Camera::updateVectors() {
 
     this->m_right = glm::normalize(glm::cross(this->m_front, this->m_worldUp));
     this->m_up = glm::normalize(glm::cross(this->m_right, this->m_front));
+
+    // this->createFrustumFromCamera(16.0f / 9.0f, 45.0f, 0.1, 10000.0);
 }
 
 
