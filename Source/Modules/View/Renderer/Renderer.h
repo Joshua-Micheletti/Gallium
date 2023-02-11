@@ -101,6 +101,8 @@ class Renderer {
 		void drawBoundingSphere(float, glm::vec3, glm::vec3);
 		void createCube(std::vector<float>*, std::vector<glm::vec3>);
 		void createSphere(glm::vec3, float, int, std::vector<float>*);
+
+		void drawCameraFrustum();
 };
 
 #endif

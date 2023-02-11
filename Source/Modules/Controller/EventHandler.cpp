@@ -139,8 +139,8 @@ void EventHandler::handleUserEvents() {
 		float offX = xpos - (screenWidth / 2);
 		float offY = (screenHeight / 2) - ypos;
 
-		RM.camera()->orientation(glm::vec3(RM.camera()->orientation().x, RM.camera()->orientation().y + offX * sensitivity, RM.camera()->orientation().z + offY * sensitivity));
-		
+		// RM.camera()->orientation(glm::vec3(RM.camera()->orientation().x, RM.camera()->orientation().y + offX * sensitivity, RM.camera()->orientation().z + offY * sensitivity));
+		RM.camera()->processMouseMovement(offX, offY, true);
 
 		/*sf::Mouse::setPosition(center);*/
 		glfwSetCursorPos(this->window, screenWidth / 2, screenHeight / 2);
@@ -153,27 +153,33 @@ void EventHandler::handleUserEvents() {
 	}
 
 	if (press.W == true) {
-		RM.camera()->position(RM.camera()->position() + RM.camera()->orientationCartesian() * cameraSpeed);
+		RM.camera()->processMovement(FORWARD, cameraSpeed);
+		// RM.camera()->position(RM.camera()->position() + RM.camera()->orientationCartesian() * cameraSpeed);
 	}
 
 	if (press.S == true) {
-		RM.camera()->position(RM.camera()->position() - RM.camera()->orientationCartesian() * cameraSpeed);
+		RM.camera()->processMovement(BACKWARD, cameraSpeed);
+		// RM.camera()->position(RM.camera()->position() - RM.camera()->orientationCartesian() * cameraSpeed);
 	}
 
 	if (press.A == true) {
-		RM.camera()->position(RM.camera()->position() - glm::normalize(glm::cross(RM.camera()->orientationCartesian(), RM.camera()->up())) * cameraSpeed);
+		RM.camera()->processMovement(LEFT, cameraSpeed);
+		// RM.camera()->position(RM.camera()->position() - glm::normalize(glm::cross(RM.camera()->orientationCartesian(), RM.camera()->up())) * cameraSpeed);
 	}
 			
 	if (press.D == true) {
-		RM.camera()->position(RM.camera()->position() + glm::normalize(glm::cross(RM.camera()->orientationCartesian(), RM.camera()->up())) * cameraSpeed);
+		RM.camera()->processMovement(RIGHT, cameraSpeed);
+		// RM.camera()->position(RM.camera()->position() + glm::normalize(glm::cross(RM.camera()->orientationCartesian(), RM.camera()->up())) * cameraSpeed);
 	}
 
 	if (press.SPACE == true) {
-		RM.camera()->position(RM.camera()->position() + RM.camera()->up() * cameraSpeed);
+		RM.camera()->processMovement(UP, cameraSpeed);
+		// RM.camera()->position(RM.camera()->position() + RM.camera()->up() * cameraSpeed);
 	}
 		
 	if (press.LCTRL == true) {
-		RM.camera()->position(RM.camera()->position() - RM.camera()->up() * cameraSpeed);
+		RM.camera()->processMovement(DOWN, cameraSpeed);
+		// RM.camera()->position(RM.camera()->position() - RM.camera()->up() * cameraSpeed);
 	}
 }
 

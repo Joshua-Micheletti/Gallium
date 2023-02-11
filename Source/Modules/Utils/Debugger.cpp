@@ -1,7 +1,7 @@
 #include "Debugger.h"
 
 Debugger::Debugger() {
-    this->m_debugRenderer = false;
+    this->m_debugRenderer = true;
     this->m_debugRendererManager = true;
     this->m_debugPhysicsWorld = false;
     this->m_displayBoundingSpheres = false;

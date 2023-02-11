@@ -84,6 +84,8 @@ class RendererManager {
 
         Camera* camera();
         RendererManager* camera(std::string);
+        Camera* getCamera(std::string);
+        
 
         glm::mat4 projection();
         RendererManager* projection(std::string);
@@ -127,6 +129,9 @@ class RendererManager {
         std::string loadModel(std::string, std::string);
 
         void calculateBoundingSphere(std::string);
+        
+        bool isOnFrostum(Model*);
+        bool isOnForwardPlane(glm::vec3, float, Plane);
 
         void material(std::string, std::string);
         void applyMaterials(std::vector<std::string>, std::vector<std::string>);

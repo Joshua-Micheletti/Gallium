@@ -62,7 +62,7 @@ extLibI = $(gladI) -I $(glfwI) -I $(glmI) -I $(imgui) -I $(imguiBE) -I $(stbimag
 flags = -w -std=c++11 -Ofast
 
 objectsPath = ./bin/objects
-objects = $(objectsPath)/main.o $(objectsPath)/Engine.o $(objectsPath)/sandbox.o $(objectsPath)/global.o $(objectsPath)/Debugger.o $(objectsPath)/vboindexer.o $(objectsPath)/Timer.o $(objectsPath)/Window.o $(objectsPath)/utils.o $(objectsPath)/glad.o $(objectsPath)/Renderer.o $(objectsPath)/RendererManager.o $(objectsPath)/Model.o $(objectsPath)/Mesh.o $(objectsPath)/Material.o $(objectsPath)/Texture.o $(objectsPath)/RenderTexture.o $(objectsPath)/EventHandler.o $(objectsPath)/Ui.o $(objectsPath)/PhysicsWorld.o $(objectsPath)/PhysicsBody.o $(objectsPath)/Entity.o $(objectsPath)/Shader.o $(objectsPath)/Camera.o $(objectsPath)/Kernel.o $(objectsPath)/imgui.o $(objectsPath)/imgui_impl_glfw.o $(objectsPath)/imgui_impl_opengl3.o $(objectsPath)/imgui_demo.o $(objectsPath)/imgui_draw.o $(objectsPath)/imgui_widgets.o $(objectsPath)/imgui_tables.o
+objects = $(objectsPath)/main.o $(objectsPath)/Engine.o $(objectsPath)/sandbox.o $(objectsPath)/global.o $(objectsPath)/Debugger.o $(objectsPath)/Plane.o $(objectsPath)/vboindexer.o $(objectsPath)/Timer.o $(objectsPath)/Window.o $(objectsPath)/utils.o $(objectsPath)/glad.o $(objectsPath)/Renderer.o $(objectsPath)/RendererManager.o $(objectsPath)/Model.o $(objectsPath)/Mesh.o $(objectsPath)/Material.o $(objectsPath)/Texture.o $(objectsPath)/RenderTexture.o $(objectsPath)/EventHandler.o $(objectsPath)/Ui.o $(objectsPath)/PhysicsWorld.o $(objectsPath)/PhysicsBody.o $(objectsPath)/Entity.o $(objectsPath)/Shader.o $(objectsPath)/Camera.o $(objectsPath)/Frostum.o $(objectsPath)/Kernel.o $(objectsPath)/imgui.o $(objectsPath)/imgui_impl_glfw.o $(objectsPath)/imgui_impl_opengl3.o $(objectsPath)/imgui_demo.o $(objectsPath)/imgui_draw.o $(objectsPath)/imgui_widgets.o $(objectsPath)/imgui_tables.o
 
 # LINKING
 
@@ -104,6 +104,11 @@ $(objectsPath)/global.o: $(utils)/global.cpp $(utils)/global.h $(makefile)
 $(objectsPath)/Debugger.o: $(utils)/Debugger.cpp $(utils)/Debugger.h $(makefile)
 	@echo $(marks)$(escape)[31m============= Debugger.cpp (source) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/Debugger.o $(utils)/Debugger.cpp -I $(extLibI) $(flags) $(libraries)
+
+# PLANE
+$(objectsPath)/Plane.o: $(utils)/Plane.cpp $(utils)/Plane.h $(makefile)
+	@echo $(marks)$(escape)[31m============= Plane.cpp (source) =============$(noColor)$(marks)
+	g++ -c -o $(objectsPath)/Plane.o $(utils)/Plane.cpp -I $(extLibI) $(flags) $(libraries)
 
 # VBOINDEXER
 $(objectsPath)/vboindexer.o: $(utils)/vboindexer.cpp $(utils)/vboindexer.hpp $(makefile)
@@ -171,6 +176,12 @@ $(objectsPath)/Shader.o: $(view)/Model/Shader/Shader.cpp $(view)/Model/Shader/Sh
 $(objectsPath)/Camera.o: $(view)/Camera/Camera.cpp $(view)/Camera/Camera.h $(makefile)
 	@echo $(marks)$(escape)[31m============= Camera.cpp (source) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/Camera.o $(view)/Camera/Camera.cpp -I $(extLibI) $(flags)
+
+# FROSTUM
+$(objectsPath)/Frostum.o: $(view)/Camera/Frostum.cpp $(view)/Camera/Frostum.h $(makefile)
+	@echo $(marks)$(escape)[31m============= Frostum.cpp (source) =============$(noColor)$(marks)
+	g++ -c -o $(objectsPath)/Frostum.o $(view)/Camera/Frostum.cpp -I $(extLibI) $(flags)
+
 
 # KERNEL
 $(objectsPath)/Kernel.o: $(view)/Renderer/Kernel/Kernel.cpp $(view)/Renderer/Kernel/Kernel.h $(makefile)

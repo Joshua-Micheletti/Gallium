@@ -73,13 +73,22 @@ RendererManager::RendererManager() {
 
     // SETUP CAMERAS
     // initialize the default camera
-    this->m_cameras["default"] = new Camera(glm::vec3(30.0f, 30.0f, 30.0f),   // position
-                                           glm::vec3(0.0f, 225.0f, -65.0f),  // direction
-                                           glm::vec3(0.0f, 1.0f, 0.0f));     // up
+    this->m_cameras["default"] = new Camera(glm::vec3(0.0f, 0.0f, 30.0f),   // position
+                                            glm::vec3(0.0f, 1.0f, 0.0f),
+                                            0.0f,
+                                            0.0f);
+
+    this->m_cameras["test"] = new Camera(glm::vec3(0.0f, 0.0f, 30.0f),   // position
+                                         glm::vec3(0.0f, 1.0f, 0.0f),
+                                         0.0f,
+                                         0.0f);
+
+
     // initialize the reflection camera
     this->m_cameras["reflection"] = new Camera(glm::vec3(0.0f, 0.0f, 0.0f),   // position
-                                              glm::vec3(0.0f, 0.0f, 0.0f),   // direction
-                                              glm::vec3(0.0f, -1.0f, 0.0f)); // up
+                                               glm::vec3(0.0f, 1.0f, 0.0f),
+                                               0.0f,
+                                               0.0f);
     // set the current camera to the default one
     this->m_currentCamera = "default";
 
@@ -435,6 +444,9 @@ RendererManager* RendererManager::camera(std::string s) {
     this->m_currentCamera = s;
     return(this);
 }
+Camera* RendererManager::getCamera(std::string name) {
+    return(this->m_cameras[name]);
+}
 
 
 glm::mat4 RendererManager::projection() {
@@ -663,6 +675,37 @@ void RendererManager::calculateBoundingSphere(std::string model) {
 
     this->model(model)->center(center)->radius(distance);
 }
+
+
+bool RendererManager::isOnFrostum(Model* model) {
+    glm::vec3 center = model->center() + model->position();
+    // printf("center: %lf, %lf, %lf\n", center.x, center.y, center.z);
+
+    float radius = model->radius();
+    // printf("radius: %lf\n", radius);
+
+    // printf("near plane: %lf, %lf, %lf | %lf\n", this->m_cameras["test"]->frostum()->nearPlane().normal().x, this->m_cameras["test"]->frostum()->nearPlane().normal().y, this->m_cameras["test"]->frostum()->nearPlane().normal().z, this->m_cameras["test"]->frostum()->nearPlane().distance());
+    // printf("far plane: %lf, %lf, %lf | %lf\n", this->m_cameras["test"]->frostum()->farPlane().normal().x, this->m_cameras["test"]->frostum()->farPlane().normal().y, this->m_cameras["test"]->frostum()->farPlane().normal().z, this->m_cameras["test"]->frostum()->farPlane().distance());
+    // printf("right plane: %lf, %lf, %lf | %lf\n", this->m_cameras["test"]->frostum()->right().normal().x, this->m_cameras["test"]->frostum()->right().normal().y, this->m_cameras["test"]->frostum()->right().normal().z, this->m_cameras["test"]->frostum()->right().distance());
+    // printf("left plane: %lf, %lf, %lf | %lf\n", this->m_cameras["test"]->frostum()->left().normal().x, this->m_cameras["test"]->frostum()->left().normal().y, this->m_cameras["test"]->frostum()->left().normal().z, this->m_cameras["test"]->frostum()->left().distance());
+    // printf("top plane: %lf, %lf, %lf | %lf\n", this->m_cameras["test"]->frostum()->top().normal().x, this->m_cameras["test"]->frostum()->top().normal().y, this->m_cameras["test"]->frostum()->top().normal().z, this->m_cameras["test"]->frostum()->top().distance());
+    // printf("bottom plane: %lf, %lf, %lf | %lf\n", this->m_cameras["test"]->frostum()->bottom().normal().x, this->m_cameras["test"]->frostum()->bottom().normal().y, this->m_cameras["test"]->frostum()->bottom().normal().z, this->m_cameras["test"]->frostum()->bottom().distance());
+    // printf("camera direction: %lf, %lf, %lf\n", this->m_cameras["test"]->orientationCartesian().x, this->m_cameras["test"]->orientationCartesian().y, this->m_cameras["test"]->orientationCartesian().z);
+
+    std::string targetCam = "Default";
+
+    return (this->isOnForwardPlane(center, radius, this->m_cameras["default"]->frostum()->left()) &&
+            this->isOnForwardPlane(center, radius, this->m_cameras["default"]->frostum()->right()) &&
+            this->isOnForwardPlane(center, radius, this->m_cameras["default"]->frostum()->top()) &&
+            this->isOnForwardPlane(center, radius, this->m_cameras["default"]->frostum()->bottom()) &&
+            this->isOnForwardPlane(center, radius, this->m_cameras["default"]->frostum()->nearPlane()) &&
+            this->isOnForwardPlane(center, radius, this->m_cameras["default"]->frostum()->farPlane()));
+}
+
+bool RendererManager::isOnForwardPlane(glm::vec3 center, float radius, Plane plane) {
+    return(plane.getSignedDistanceToPlane(center) > -radius);
+}
+
 
 // PRINTS
 /*
