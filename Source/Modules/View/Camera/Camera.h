@@ -22,19 +22,20 @@ class Camera {
   public:
     Camera(glm::vec3, glm::vec3, float, float);
 
-    void position(glm::vec3);
-    void orientation(glm::vec3);
-    void up(glm::vec3);
-
+    Camera* position(glm::vec3);
     glm::vec3 position();
-    glm::vec3 orientation();
-    glm::vec3 orientationCartesian();
+
+    glm::mat4 viewMatrix();
+    glm::mat4 projection();
+    Camera* projection(glm::mat4);
+    Camera* projection(float, float, float, float);
 
     glm::vec3 up();
-    glm::mat4 viewMatrix();
-
     glm::vec3 front();
     glm::vec3 right();
+
+    Camera* yaw(float);
+    Camera* pitch(float);
 
     void createFrustumFromCamera(float, float, float, float);
     Frostum* frostum();
@@ -57,14 +58,12 @@ class Camera {
     float m_sensitivity;
     float m_zoom;
 
-
     glm::mat4 m_viewMatrix;
+    glm::mat4 m_projection;
 
     Frostum* m_frostum;
     
-    void calculateViewMatrix();
     glm::vec3 polarToCartesian(glm::vec3);
-
     void updateVectors();
 };
 

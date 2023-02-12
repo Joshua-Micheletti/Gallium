@@ -16,6 +16,8 @@ class Plane {
 
         float getSignedDistanceToPlane(glm::vec3);
 
+        bool isOnForwardPlane(glm::vec3, float);
+
     private:
         glm::vec3 m_normal;
         float m_distance;

@@ -12,11 +12,13 @@ class Debugger{
         Debugger* debugRendererManager(bool);
         Debugger* debugRenderer(bool);
         Debugger* debugPhysicsWorld(bool);
+        Debugger* debugMain(bool);
         Debugger* displayBoundingSpheres(bool);
-
+        
         bool debugRendererManager();
         bool debugRenderer();
         bool debugPhysicsWorld();
+        bool debugMain();
         bool displayBoundingSpheres();
 
         Debugger* print(std::string, std::string);
@@ -25,6 +27,7 @@ class Debugger{
         bool m_debugRendererManager;
         bool m_debugRenderer;
         bool m_debugPhysicsWorld;
+        bool m_debugMain;
         bool m_displayBoundingSpheres;
 };
 

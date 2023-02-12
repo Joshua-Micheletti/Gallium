@@ -288,12 +288,13 @@ void UI::drawLeftColumn() {
 					}
 					const char** meshItems = meshVector.data();
 
-					static int selectedMesh = find(RM.model(RM.selectedEntity())->components()[i]->mesh, meshes);
+					int selectedMesh = find(RM.model(RM.selectedEntity())->components()[i]->mesh, meshes);
 
 					ImGui::Text("Mesh");
 					ImGui::SameLine();
 					ImGui::Combo(std::string("###MeshDropdown" + std::to_string(i)).c_str(), &selectedMesh, meshItems, meshes.size());
-					RM.model(RM.selectedEntity())->mesh(std::string(meshItems[selectedMesh]));
+					// RM.model(RM.selectedEntity())->mesh(std::string(meshItems[selectedMesh]));
+					RM.model(RM.selectedEntity())->components()[i]->mesh = meshItems[selectedMesh];
 					
 					std::vector<std::string> materials = RM.materialNames();
 					std::vector<const char*> materialVector;
@@ -302,12 +303,13 @@ void UI::drawLeftColumn() {
 					}
 					const char** materialItems = materialVector.data();
 					// const char** materialItems = stringVectorToCArray(materials);
-					static int selectedMaterial = find(RM.model(RM.selectedEntity())->components()[i]->material, materials);
+					int selectedMaterial = find(RM.model(RM.selectedEntity())->components()[i]->material, materials);
 					ImGui::Text("Material");
 					ImGui::SameLine();
 					ImGui::Combo(std::string("###MaterialDropdown" + std::to_string(i)).c_str(), &selectedMaterial, materialItems, materials.size());
 
-					RM.model(RM.selectedEntity())->material(std::string(materialItems[selectedMaterial]));
+					// RM.model(RM.selectedEntity())->material(std::string(materialItems[selectedMaterial]));
+					RM.model(RM.selectedEntity())->components()[i]->material = materialItems[selectedMaterial];
 
 					
 					std::vector<std::string> shaders = RM.shaderNames();
@@ -317,12 +319,13 @@ void UI::drawLeftColumn() {
 					}
 					const char** shaderItems = shaderVector.data();
 					// const char** shaderItems = stringVectorToCArray(shaders);
-					static int selectedShader = find(RM.model(RM.selectedEntity())->components()[i]->shader, shaders);
+					int selectedShader = find(RM.model(RM.selectedEntity())->components()[i]->shader, shaders);
 					ImGui::Text("Shader");
 					ImGui::SameLine();
 					ImGui::Combo(std::string("###ShaderDropdown" + std::to_string(i)).c_str(), &selectedShader, shaderItems, shaders.size());
 
-					RM.model(RM.selectedEntity())->shader(std::string(shaderItems[selectedShader]));
+					// RM.model(RM.selectedEntity())->shader(std::string(shaderItems[selectedShader]));
+					RM.model(RM.selectedEntity())->components()[i]->shader = shaderItems[selectedShader];
 
 					
 					std::vector<std::string> textures = RM.textureNames();
@@ -332,13 +335,13 @@ void UI::drawLeftColumn() {
 					}
 					const char** textureItems = textureVector.data();
 					// const char** textureItems = stringVectorToCArray(textures);
-					static int selectedTexture = find(RM.model(RM.selectedEntity())->components()[i]->texture.general(), textures);
+					int selectedTexture = find(RM.model(RM.selectedEntity())->components()[i]->texture.general(), textures);
 					ImGui::Text("Texture");
 					ImGui::SameLine();
 					ImGui::Combo(std::string("###TextureDropdown" + std::to_string(i)).c_str(), &selectedTexture, textureItems, textures.size());
 					
 					RM.model(RM.selectedEntity())->texture(std::string(textureItems[selectedTexture]));
-					
+					RM.model(RM.selectedEntity())->components()[i]->texture.general(textureItems[selectedTexture]);
 					
 					ImGui::TreePop();
 				}

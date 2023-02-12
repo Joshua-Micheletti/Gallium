@@ -31,3 +31,7 @@ float Plane::distance() {
 float Plane::getSignedDistanceToPlane(glm::vec3 point) {
     return(glm::dot(this->m_normal, point) - this->m_distance);
 }
+
+bool Plane::isOnForwardPlane(glm::vec3 center, float radius) {
+    return(this->getSignedDistanceToPlane(center) > -radius);
+}

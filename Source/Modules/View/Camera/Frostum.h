@@ -21,6 +21,8 @@ class Frostum {
         Frostum* left(Plane);
         Frostum* right(Plane);
 
+        bool isOnFrustum(glm::vec3, float);
+
     private:
         Plane m_top;
         Plane m_bottom;

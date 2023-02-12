@@ -10,46 +10,20 @@ Camera::Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = 
 
   this->updateVectors();
 
+  this->m_projection = glm::perspective(glm::radians(45.0f), (float)1280 / (float)720, 0.1f, 10000.0f);
+
   this->m_sensitivity = 0.08f;
 
   this->m_frostum = new Frostum();
-
-  // calculateViewMatrix();
 }
 
-void Camera::position(glm::vec3 position) {
+Camera* Camera::position(glm::vec3 position) {
   this->m_position = position;
-  calculateViewMatrix();
-}
-
-void Camera::orientation(glm::vec3 orientation) {
-  this->m_orientation = orientation;
-  if (this->m_orientation.z > 89.0f) {
-    this->m_orientation.z = 89.0f;
-  }
-
-  if (this->m_orientation.z < -89.0f) {
-    this->m_orientation.z = -89.0f;
-  }
-  
-  calculateViewMatrix();
-}
-
-void Camera::up(glm::vec3 up) {
-  this->m_up = up;
-  calculateViewMatrix();
+  return(this);
 }
 
 glm::vec3 Camera::position() {
   return(this->m_position);
-}
-
-glm::vec3 Camera::orientation() {
-  return(this->m_orientation);
-}
-
-glm::vec3 Camera::orientationCartesian() {
-  return(this->polarToCartesian(this->m_orientation));
 }
 
 glm::vec3 Camera::up() {
@@ -57,14 +31,19 @@ glm::vec3 Camera::up() {
 }
 
 glm::mat4 Camera::viewMatrix() {
-  this->createFrustumFromCamera(16.0f / 9.0f, 45.0f, 0.1, 10000.0);
   return(glm::lookAt(this->m_position, this->m_position + this->m_front, this->m_up));
 }
 
-void Camera::calculateViewMatrix() {
-  this->m_viewMatrix = glm::lookAt(this->m_position, this->polarToCartesian(this->m_orientation) + this->m_position, this->m_up);
-  
-  this->createFrustumFromCamera(16.0f / 9.0f, 45.0f, 0.1, 10000.0);
+glm::mat4 Camera::projection() {
+  return(this->m_projection);
+}
+Camera* Camera::projection(glm::mat4 p) {
+  this->m_projection = p;
+  return(this);
+}
+Camera* Camera::projection(float fov, float aspect, float nearZ, float farZ) {
+  this->m_projection = glm::perspective(glm::radians(fov), aspect, nearZ, farZ);
+  return(this);
 }
 
 glm::vec3 Camera::front() {
@@ -72,7 +51,6 @@ glm::vec3 Camera::front() {
 }
 
 glm::vec3 Camera::right() {
-  // return(glm::normalize(glm::cross(this->m_up, this->front())));
   return(this->m_right);
 }
 
@@ -101,6 +79,7 @@ void Camera::createFrustumFromCamera(float aspect, float fovY, float zNear, floa
 }
 
 Frostum* Camera::frostum() {
+  this->createFrustumFromCamera(16.0f / 9.0f, 45.0f, 0.1, 10000.0);
   return(this->m_frostum);
 }
 
@@ -117,6 +96,18 @@ void Camera::updateVectors() {
     // this->createFrustumFromCamera(16.0f / 9.0f, 45.0f, 0.1, 10000.0);
 }
 
+
+Camera* Camera::yaw(float yaw) {
+  this->m_yaw = yaw;
+  this->updateVectors();
+  return(this);
+}
+
+Camera* Camera::pitch(float pitch) {
+  this->m_pitch = pitch;
+  this->updateVectors();
+  return(this);
+}
 
 void Camera::processMovement(CameraMovement direction, float distance) {
   if (direction == FORWARD) {

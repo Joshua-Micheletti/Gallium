@@ -188,6 +188,7 @@ glm::mat4 Model::modelMatrix() {
 Model* Model::modelMatrix(float *m) {
     this->m_modelMatrix = glm::make_mat4(m);
     this->m_modelMatrix *= this->m_scaleMatrix;
+    this->m_position = glm::vec3(m[12], m[13], m[14]);
     return(this);
 }
 

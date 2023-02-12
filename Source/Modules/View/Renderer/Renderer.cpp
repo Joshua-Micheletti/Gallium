@@ -38,7 +38,7 @@ Renderer::Renderer() {
 	/*--------------------------------------------------------------------------*/
 
 	// defines the resolution of the reflection cubemap
-	this->m_reflectionRes = 2048;
+	this->m_reflectionRes = 4096;
 
 	// generate the framebuffer that is gonna store the view from the reflection camera
 	glGenFramebuffers(1, &this->m_reflectionFBO);
@@ -315,7 +315,6 @@ void Renderer::render() {
 // render the cubemap view from the reflection camera to later calculate reflections on
 void Renderer::renderReflectionCubemap() {
 	RM.camera("reflection");
-	RM.projection("reflection");
 
 	// set the viewport to fit the reflection texture resolution
 	glViewport(0, 0, m_reflectionRes, m_reflectionRes);
@@ -326,17 +325,17 @@ void Renderer::renderReflectionCubemap() {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, this->m_reflectionCubemap, 0);
 		// aim the camera to face the correct direction
 		if (i == 0)      // FRONT
-			RM.camera()->orientation(glm::vec3(0.0, 0.0, 0.0));
+			RM.camera()->yaw(0)->pitch(0);
 		else if (i == 1) // BACK
-			RM.camera()->orientation(glm::vec3(0.0, 180.0, 0.0));
+			RM.camera()->yaw(180)->pitch(0);
 		else if (i == 2) // TOP
-			RM.camera()->orientation(glm::vec3(0.0, 90.0, 90.0));
+			RM.camera()->yaw(90)->pitch(90);
 		else if (i == 3) // BOTTOM
-			RM.camera()->orientation(glm::vec3(0.0, 90.0, -90.0));
+			RM.camera()->yaw(90)->pitch(-90);
 		else if (i == 4) // RIGHT
-			RM.camera()->orientation(glm::vec3(0.0, 90.0, 0.0));
+			RM.camera()->yaw(90)->pitch(0);
 		else             // LEFT
-			RM.camera()->orientation(glm::vec3(0.0, 270.0, 0.0));
+			RM.camera()->yaw(270)->pitch(0);
 
 		this->renderSkybox();
 		this->renderEntities(true);
@@ -349,21 +348,23 @@ void Renderer::renderReflectionCubemap() {
 
 	// set the render camera to the default camera
 	RM.camera("default");
-	RM.projection("default");
 }
 
 // render all entities with their corresponding shader (forward rendering)
 void Renderer::renderEntities(bool reflection) {
 	std::vector<std::string> models = RM.modelNames(); 
 
+	int renders = 0;
+
 	// render entities
 	for (int i = 0; i < models.size(); i++) {
-		// printf("model: %s\n", models[i].c_str());
-		if (models[i] != RM.skybox() && models[i] != RM.selectedEntity() && RM.isOnFrostum(RM.model(models[i]))) {
-		// if (models[i] != RM.skybox() && models[i] != RM.selectedEntity()) {
+		if (models[i] != RM.skybox() && models[i] != RM.selectedEntity() && RM.camera()->frostum()->isOnFrustum(RM.model(models[i])->center() + RM.model(models[i])->position(), RM.model(models[i])->radius())) {
 			this->renderEntity(models[i]);
+			renders++;
 		}
 	}
+
+	printf("renders: %d\n", renders);
 	
 	if (RM.selectedEntity().size() != 0 && reflection == false) {
 		glStencilFunc(GL_ALWAYS, 1, 255);
@@ -688,8 +689,9 @@ void Renderer::resizeScreen() {
 	// glViewport(0, 0, window.width(), window.height());
 
 	// projectionBuffer[0] = glm::perspective(glm::radians(45.0f), (float)screenWidth / (float)screenHeight, 0.1f, 10000.0f);
-	RM.setProjection("default", glm::perspective(glm::radians(45.0f), (float)window.framebufferWidth() / (float)window.framebufferHeight(), 0.1f, 10000.0f));
-	RM.setProjection("reflection", glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10000.0f));
+	RM.camera()->projection(45.0f, (float)window.framebufferHeight() / (float)window.framebufferWidth(), 0.1f, 10000.0f);
+	// RM.setProjection("default", glm::perspective(glm::radians(45.0f), (float)window.framebufferWidth() / (float)window.framebufferHeight(), 0.1f, 10000.0f));
+	// RM.setProjection("reflection", glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10000.0f));
 	// RM.projection(glm::perspective(glm::radians(45.0f), (float)window.framebufferWidth() / (float)window.framebufferHeight(), 0.1f, 10000.0f));
 	updated = true;
 	// updateResolution = false;
@@ -702,17 +704,11 @@ void Renderer::drawBoundingSphere() {
 		if (models[i] != RM.skybox()) {
 			Model* currentM = RM.model(models[i]);
 			std::vector<component_t*> currentComponents = currentM->components();
-
 			RM.model("M_BoundingSphere")->scale(glm::vec3(RM.model(models[i])->radius(), RM.model(models[i])->radius(), RM.model(models[i])->radius()))->position(RM.model(models[i])->center() + RM.model(models[i])->position());
 			this->renderEntity("M_BoundingSphere");
 		}
 	}
 }
-
-
-
-
-
 
 
 void Renderer::displayBoundingBox() {
@@ -822,7 +818,7 @@ void Renderer::attachUniforms(Model* entity, Material* material, RenderTexture t
 
 		// if the uniform is "projectionMatrix", set it to the main camera projection matrix in the projectionBuffer
 		else if (strcmp(uniformBuffer[i].name, "projectionMatrix") == 0) {
-			glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(RM.projection()[0][0]));
+			glUniformMatrix4fv(uniformBuffer[i].id, 1, GL_FALSE, &(RM.camera()->projection()[0][0]));
 		}
 
 		// if the uniform is "lightPosition", pass the light position (x, y, z)

@@ -48,3 +48,13 @@ Frostum* Frostum::right(Plane plane) {
     this->m_right = plane;
     return(this);
 }
+
+
+bool Frostum::isOnFrustum(glm::vec3 center, float radius) {
+    return (this->m_left.isOnForwardPlane(center, radius) &&
+            this->m_right.isOnForwardPlane(center, radius) &&
+            this->m_top.isOnForwardPlane(center, radius) &&
+            this->m_bottom.isOnForwardPlane(center, radius) &&
+            this->m_near.isOnForwardPlane(center, radius) &&
+            this->m_far.isOnForwardPlane(center, radius));
+}
