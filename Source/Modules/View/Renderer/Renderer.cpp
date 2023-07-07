@@ -363,8 +363,6 @@ void Renderer::renderEntities(bool reflection) {
 			renders++;
 		}
 	}
-
-	printf("renders: %d\n", renders);
 	
 	if (RM.selectedEntity().size() != 0 && reflection == false) {
 		glStencilFunc(GL_ALWAYS, 1, 255);
@@ -383,21 +381,6 @@ void Renderer::renderEntities(bool reflection) {
 		RM.model(RM.selectedEntity())->shaders(previousShaders);
 
 		glEnable(GL_DEPTH_TEST);
-
-		// wireframe outline implementation
-		// if (outlineType == 2) {
-		// 	glDisable(GL_DEPTH_TEST);
-		// 	glPolygonMode(GL_FRONT, GL_LINE);
-		// 	glLineWidth(10.0f);
-		// 	int previousShader = entityBuffer[this->m_highlightedEntity]->getShader();
-		// 	entityBuffer[this->m_highlightedEntity]->setShader(11);
-		// 	this->renderEntity(entityBuffer[this->m_highlightedEntity]);
-		// 	entityBuffer[this->m_highlightedEntity]->setShader(previousShader);
-		// 	glLineWidth(1.0f);
-		// 	glPolygonMode(GL_FRONT, GL_FILL);
-		// 	glEnable(GL_DEPTH_TEST);
-		// }
-
 	}
 }
 

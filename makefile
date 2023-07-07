@@ -62,7 +62,7 @@ extLibI = $(gladI) -I $(glfwI) -I $(glmI) -I $(imgui) -I $(imguiBE) -I $(stbimag
 flags = -w -std=c++11 -Ofast
 
 objectsPath = ./bin/objects
-objects = $(objectsPath)/main.o $(objectsPath)/Engine.o $(objectsPath)/sandbox.o $(objectsPath)/global.o $(objectsPath)/Debugger.o $(objectsPath)/Plane.o $(objectsPath)/vboindexer.o $(objectsPath)/Timer.o $(objectsPath)/Window.o $(objectsPath)/utils.o $(objectsPath)/glad.o $(objectsPath)/Renderer.o $(objectsPath)/RendererManager.o $(objectsPath)/Model.o $(objectsPath)/Mesh.o $(objectsPath)/Material.o $(objectsPath)/Texture.o $(objectsPath)/RenderTexture.o $(objectsPath)/EventHandler.o $(objectsPath)/Ui.o $(objectsPath)/PhysicsWorld.o $(objectsPath)/PhysicsBody.o $(objectsPath)/Entity.o $(objectsPath)/Shader.o $(objectsPath)/Camera.o $(objectsPath)/Frostum.o $(objectsPath)/Kernel.o $(objectsPath)/imgui.o $(objectsPath)/imgui_impl_glfw.o $(objectsPath)/imgui_impl_opengl3.o $(objectsPath)/imgui_demo.o $(objectsPath)/imgui_draw.o $(objectsPath)/imgui_widgets.o $(objectsPath)/imgui_tables.o
+objects = $(objectsPath)/main.o $(objectsPath)/Engine.o $(objectsPath)/sandbox.o $(objectsPath)/global.o $(objectsPath)/Debugger.o $(objectsPath)/Plane.o $(objectsPath)/vboindexer.o $(objectsPath)/Timer.o $(objectsPath)/Window.o $(objectsPath)/utils.o $(objectsPath)/glad.o $(objectsPath)/Renderer.o $(objectsPath)/PathTraceRenderer.o $(objectsPath)/RendererManager.o $(objectsPath)/Model.o $(objectsPath)/Mesh.o $(objectsPath)/Sphere.o $(objectsPath)/Material.o $(objectsPath)/Texture.o $(objectsPath)/RenderTexture.o $(objectsPath)/EventHandler.o $(objectsPath)/Ui.o $(objectsPath)/PhysicsWorld.o $(objectsPath)/PhysicsBody.o $(objectsPath)/Entity.o $(objectsPath)/Shader.o $(objectsPath)/Camera.o $(objectsPath)/Frostum.o $(objectsPath)/Kernel.o $(objectsPath)/imgui.o $(objectsPath)/imgui_impl_glfw.o $(objectsPath)/imgui_impl_opengl3.o $(objectsPath)/imgui_demo.o $(objectsPath)/imgui_draw.o $(objectsPath)/imgui_widgets.o $(objectsPath)/imgui_tables.o
 
 # LINKING
 
@@ -105,11 +105,6 @@ $(objectsPath)/Debugger.o: $(utils)/Debugger.cpp $(utils)/Debugger.h $(makefile)
 	@echo $(marks)$(escape)[31m============= Debugger.cpp (source) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/Debugger.o $(utils)/Debugger.cpp -I $(extLibI) $(flags) $(libraries)
 
-# PLANE
-$(objectsPath)/Plane.o: $(utils)/Plane.cpp $(utils)/Plane.h $(makefile)
-	@echo $(marks)$(escape)[31m============= Plane.cpp (source) =============$(noColor)$(marks)
-	g++ -c -o $(objectsPath)/Plane.o $(utils)/Plane.cpp -I $(extLibI) $(flags) $(libraries)
-
 # VBOINDEXER
 $(objectsPath)/vboindexer.o: $(utils)/vboindexer.cpp $(utils)/vboindexer.hpp $(makefile)
 	@echo $(marks)$(escape)[31m============= vboindexer.cpp (source) =============$(noColor)$(marks)
@@ -131,6 +126,11 @@ $(objectsPath)/Window.o: $(view)/Window/Window.cpp $(view)/Window/Window.h $(mak
 $(objectsPath)/Renderer.o: $(view)/Renderer/Renderer.cpp $(view)/Renderer/Renderer.h $(makefile)
 	@echo $(marks)$(escape)[31m============= Renderer.cpp (source) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/Renderer.o $(view)/Renderer/Renderer.cpp -I $(extLibI) $(flags)
+
+# RENDERER
+$(objectsPath)/PathTraceRenderer.o: $(view)/Renderer/PathTraceRenderer.cpp $(view)/Renderer/PathTraceRenderer.hpp $(makefile)
+	@echo $(marks)$(escape)[31m============= PathTraceRenderer.cpp (source) =============$(noColor)$(marks)
+	g++ -c -o $(objectsPath)/PathTraceRenderer.o $(view)/Renderer/PathTraceRenderer.cpp -I $(extLibI) $(flags)
 
 # RENDERERMANAGER
 $(objectsPath)/RendererManager.o: $(view)/Renderer/RendererManager.cpp $(view)/Renderer/RendererManager.h $(makefile)
@@ -161,6 +161,16 @@ $(objectsPath)/Texture.o: $(view)/Model/Texture/Texture.cpp $(view)/Model/Textur
 $(objectsPath)/RenderTexture.o: $(view)/Model/Texture/RenderTexture.cpp $(view)/Model/Texture/RenderTexture.h $(makefile)
 	@echo $(marks)$(escape)[31m============= RenderTexture.cpp (source) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/RenderTexture.o $(view)/Model/Texture/RenderTexture.cpp -I $(extLibI) $(flags)
+
+# SPHERE
+$(objectsPath)/Sphere.o: $(view)/Model/Sphere/Sphere.cpp $(view)/Model/Sphere/Sphere.hpp $(makefile)
+	@echo $(marks)$(escape)[31m============= Sphere.cpp (source) =============$(noColor)$(marks)
+	g++ -c -o $(objectsPath)/Sphere.o $(view)/Model/Sphere/Sphere.cpp -I $(extLibI) $(flags)
+
+# PLANE
+$(objectsPath)/Plane.o: $(view)/Model/Plane/Plane.cpp $(view)/Model/Plane/Plane.h $(makefile)
+	@echo $(marks)$(escape)[31m============= Plane.cpp (source) =============$(noColor)$(marks)
+	g++ -c -o $(objectsPath)/Plane.o $(view)/Model/Plane/Plane.cpp -I $(extLibI) $(flags) $(libraries)
 
 # UI
 $(objectsPath)/Ui.o: $(view)/Ui/Ui.cpp $(view)/Ui/Ui.h $(makefile)
@@ -247,7 +257,7 @@ $(objectsPath)/imgui_tables.o: $(imgui)/imgui_tables.cpp
 	@echo $(marks)$(escape)[31m============= imgui_tables.cpp (extLib) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/imgui_tables.o $(imgui)/imgui_tables.cpp -I $(extLibI) $(flags)
 
-# GLAD
+# GLAD_
 $(objectsPath)/glad.o: $(libs)/GLAD/src/glad.c
 	@echo $(marks)$(escape)[31m============ glad.c (extLib) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/glad.o $(libs)/GLAD/src/glad.c -I $(libs)/GLAD/include $(flags)

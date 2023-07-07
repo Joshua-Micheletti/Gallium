@@ -20,6 +20,8 @@
 #include "../Model/Material/Material.h"
 #include "../Model/Shader/Shader.h"
 #include "../Model/Texture/Texture.h"
+#include "../Model/Sphere/Sphere.hpp"
+#include "../Model/Plane/Plane.h"
 #include "../Camera/Camera.h"
 
 class RendererManager {
@@ -33,6 +35,11 @@ class RendererManager {
         std::map<std::string, Shader*> shaderBuffer();
         std::map<std::string, Texture*> textureBuffer();
         std::map<std::string, Mesh*> meshBuffer();
+        
+        std::vector<float> spheres();
+        std::vector<float> planes();
+        // std::vector<float> materials();
+
 
         // getters for the various lists
         std::vector<Model*> models();
@@ -47,6 +54,8 @@ class RendererManager {
         std::vector<std::string> shaderNames();
         std::vector<std::string> textureNames();
         std::vector<std::string> meshNames();
+
+        std::vector<float> materialValues();
 
         // getters for singular elements
         Model* model(std::string);
@@ -63,6 +72,9 @@ class RendererManager {
         Mesh* newMesh(std::string);
         // method for creating a new mesh loaded from an obj file
         Mesh* newMesh(std::string, std::string);
+
+        Sphere* newSphere(std::string, glm::vec3, float);
+        Plane* newPlane(std::string, glm::vec3, glm::vec3);
 
         // getters for element names starting from the object itself
         std::string model(Model*);
@@ -131,12 +143,21 @@ class RendererManager {
         bool debug();
         void debug(bool);
 
+        bool accumulate();
+        RendererManager* accumulate(bool);
+
+        bool denoise();
+        RendererManager* denoise(bool);
+
     private:
         std::map<std::string, Model*> m_modelBuffer;
         std::map<std::string, Material*> m_materialBuffer;
         std::map<std::string, Shader*> m_shaderBuffer;
         std::map<std::string, Texture*> m_textureBuffer;
         std::map<std::string, Mesh*> m_meshBuffer;
+
+        std::map<std::string, Sphere*> m_spheres;
+        std::map<std::string, Plane*> m_planes;
 
         std::map<std::string, Camera*> m_cameras;
 
@@ -159,6 +180,8 @@ class RendererManager {
         std::string m_boundingSphere;
 
         int m_samples;
+        bool m_accumulate;
+        bool m_denoise;
         bool m_depth;
 
         bool m_debug;

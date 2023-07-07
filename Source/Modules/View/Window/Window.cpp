@@ -28,6 +28,17 @@ Window::Window() {
 	gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
 	glfwSetInputMode(this->m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	gladLoadGL();
+
+	GLint version = 0;
+	
+	glGetIntegerv(GL_MAJOR_VERSION, &version);
+
+	printf("%d\n", version);
+
+	glGetIntegerv(GL_MINOR_VERSION, &version);
+
+	printf("%d\n", version);
+
 	glEnable(GL_MULTISAMPLE);
 	glfwSetWindowSizeCallback(this->m_window, resizeCallback);
     glfwSetErrorCallback(errorCallback);

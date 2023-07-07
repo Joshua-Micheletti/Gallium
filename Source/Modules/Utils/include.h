@@ -13,6 +13,7 @@
 #include "Timer.h"
 
 #include "View/Renderer/Renderer.h"
+#include "View/Renderer/PathTraceRenderer.hpp"
 #include "View/Model/Model.h"
 #include "Controller/EventHandler.h"
 #include "View/Ui/Ui.h"

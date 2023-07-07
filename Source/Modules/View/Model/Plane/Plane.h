@@ -11,6 +11,12 @@ class Plane {
         Plane* normal(glm::vec3);
         glm::vec3 normal();
 
+        Plane* center(glm::vec3);
+        glm::vec3 center();
+
+        Plane* materialIndex(int);
+        int materialIndex();
+
         Plane* distance(float);
         float distance();
 
@@ -20,6 +26,8 @@ class Plane {
 
     private:
         glm::vec3 m_normal;
+        glm::vec3 m_center;
+        int m_materialIndex;
         float m_distance;
 };
 

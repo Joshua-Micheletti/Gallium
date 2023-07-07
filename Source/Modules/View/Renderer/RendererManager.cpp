@@ -73,7 +73,7 @@ RendererManager::RendererManager() {
 
     // SETUP CAMERAS
     // initialize the default camera
-    this->m_cameras["default"] = new Camera(glm::vec3(0.0f, 0.0f, 30.0f),   // position
+    this->m_cameras["default"] = new Camera(glm::vec3(0.0f, 0.0f, 0.0f),   // position
                                             glm::vec3(0.0f, 1.0f, 0.0f),
                                             0.0f,
                                             0.0f);
@@ -138,6 +138,7 @@ RendererManager::RendererManager() {
     this->newShader("S_White")->loadShader("../Shader/white/white.vert", "../Shader/white/white.frag");
     this->newShader("S_Highlight")->loadShader("../Shader/highlight/highlight.vert", "../Shader/highlight/highlight.frag");
     this->newShader("S_Outline")->loadShader("../Shader/outline/outline.vert", "../Shader/outline/outline.frag");
+    this->newShader("S_Accum")->loadShader("../Shader/pathTracer/accumVert.glsl", "../Shader/pathTracer/accumFrag.glsl");
     
     debugger.print("LOADED NECESSARY SHADERS", "RM");
 
@@ -190,6 +191,7 @@ RendererManager::RendererManager() {
     
     // initialize the selected entity (none)
     this->m_selectedEntity = "";
+    this->m_accumulate = false;
 
     printf("\n%sSetup the renderer manager%s\n", strGreen.c_str(), strNoColor.c_str());
     RMSetupTimer.print();
@@ -292,6 +294,52 @@ std::vector<std::string> RendererManager::modelNames() {
     return(extractKeys(this->m_modelBuffer));
 }
 
+std::vector<float> RendererManager::spheres() {
+    std::vector<Sphere*> sphereObjects = extractValues(this->m_spheres);
+
+    std::vector<float> values;
+
+    for (Sphere* sphere : sphereObjects) {
+        values.push_back(sphere->center().x);
+        values.push_back(sphere->center().y);
+        values.push_back(sphere->center().z);
+        values.push_back(sphere->radius());
+        values.push_back(sphere->materialIndex());
+    }
+
+    return(values);
+}
+
+Sphere* RendererManager::newSphere(std::string name, glm::vec3 center, float radius) {
+    Sphere* s = new Sphere(center, radius);
+    this->m_spheres[name] = s;
+    return(this->m_spheres[name]);
+}
+
+Plane* RendererManager::newPlane(std::string name, glm::vec3 center, glm::vec3 normal) {
+    Plane* p = new Plane(center, normal);
+    this->m_planes[name] = p;
+    return(this->m_planes[name]);
+}
+
+std::vector<float> RendererManager::planes() {
+    std::vector<Plane*> planeObjects = extractValues(this->m_planes);
+
+    std::vector<float> values;
+
+    for (Plane* plane : planeObjects) {
+        values.push_back(plane->center().x);
+        values.push_back(plane->center().y);
+        values.push_back(plane->center().z);
+        values.push_back(plane->normal().x);
+        values.push_back(plane->normal().y);
+        values.push_back(plane->normal().z);
+        values.push_back(plane->materialIndex());
+    }
+
+    return(values);
+}
+
 
 // MATERIAL
 Material* RendererManager::material(std::string name) {
@@ -320,6 +368,28 @@ std::vector<Material*> RendererManager::materials() {
 }
 std::vector<std::string> RendererManager::materialNames() {
     return(extractKeys(this->m_materialBuffer));
+}
+std::vector<float> RendererManager::materialValues() {
+    std::vector<Material*> materialObjects = extractValues(this->m_materialBuffer);
+
+    std::vector<float> values;
+
+    for (Material* material : materialObjects) {
+        values.push_back(material->diffuse().x);
+        values.push_back(material->diffuse().y);
+        values.push_back(material->diffuse().z);
+        values.push_back(material->emissive().x);
+        values.push_back(material->emissive().y);
+        values.push_back(material->emissive().z);
+        values.push_back(material->emissivness());
+        values.push_back(material->reflectivness());
+        values.push_back(material->specular().x);
+        values.push_back(material->specular().y);
+        values.push_back(material->specular().z);
+        values.push_back(material->albedo());
+    }
+
+    return(values);
 }
 
 
@@ -651,6 +721,28 @@ void RendererManager::calculateBoundingSphere(std::string model) {
 
     this->model(model)->center(center)->radius(distance);
 }
+
+
+bool RendererManager::accumulate() {
+    return(this->m_accumulate);
+}
+RendererManager* RendererManager::accumulate(bool a) {
+    this->m_accumulate = a;
+    return(this);
+}
+
+bool RendererManager::denoise() {
+    return(this->m_denoise);
+}
+RendererManager* RendererManager::denoise(bool d) {
+    this->m_denoise = d;
+    return(this);
+}
+
+
+
+
+
 
 
 // PRINTS

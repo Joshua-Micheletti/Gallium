@@ -21,8 +21,22 @@ class Material {
         glm::vec3 specular();
         Material* specular(glm::vec3);
 
+        glm::vec3 emissive();
+        Material* emissive(glm::vec3);
+
+        float emissivness();
+        Material* emissivness(float);
+
         float shininess();
         Material* shininess(float);
+
+        float reflectivness();
+        Material* reflectivness(float);
+    
+        float albedo();
+        Material* albedo(float);
+
+
 
         void printFull();
 
@@ -30,7 +44,11 @@ class Material {
         glm::vec3 m_ambient;
         glm::vec3 m_diffuse;
         glm::vec3 m_specular;
+        glm::vec3 m_emissive;
+        float m_emissivness;
         float m_shininess;
+        float m_reflectivness;
+        float m_albedo;
 };
 
 

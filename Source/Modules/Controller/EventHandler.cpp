@@ -93,6 +93,31 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 	else if (key == GLFW_KEY_LEFT_ALT && action == GLFW_RELEASE) {
 		press.LALT = false;
 	}
+
+
+	if (key == GLFW_KEY_R && action == GLFW_PRESS && press.R == false) {
+		press.R = true;
+
+		if (RM.accumulate()) {
+			RM.accumulate(false);
+		} else {
+			RM.accumulate(true);
+		}
+	} else if (key == GLFW_KEY_R && action == GLFW_RELEASE) {
+		press.R = false;
+	}
+
+	if (key == GLFW_KEY_P && action == GLFW_PRESS && press.P == false) {
+		press.P = true;
+
+		if (RM.denoise()) {
+			RM.denoise(false);
+		} else {
+			RM.denoise(true);
+		}
+	} else if (key == GLFW_KEY_P && action == GLFW_RELEASE) {
+		press.P = false;
+	}
 }
 
 EventHandler::EventHandler(GLFWwindow* window) {
@@ -127,7 +152,7 @@ void EventHandler::updateEntities() {
 }
 
 void EventHandler::handleUserEvents() {
-	float cameraSpeed = 0.02f;
+	float cameraSpeed = 0.01f;
 	float sensitivity = 0.08f;
 
 	// look movement

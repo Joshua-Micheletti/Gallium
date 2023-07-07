@@ -1,7 +1,7 @@
 #ifndef __FROSTUM__
 #define __FROSTUM__
 
-#include "../../Utils/Plane.h"
+#include "../Model/Plane/Plane.h"
 
 class Frostum {
     public:

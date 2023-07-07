@@ -27,6 +27,7 @@ class Camera {
 
     glm::mat4 viewMatrix();
     glm::mat4 projection();
+    glm::mat4 inverseViewProjectionMatrix();
     Camera* projection(glm::mat4);
     Camera* projection(float, float, float, float);
 

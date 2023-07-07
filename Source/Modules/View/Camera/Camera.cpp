@@ -37,6 +37,11 @@ glm::mat4 Camera::viewMatrix() {
 glm::mat4 Camera::projection() {
   return(this->m_projection);
 }
+
+glm::mat4 Camera::inverseViewProjectionMatrix() {
+  return(glm::inverse(this->projection() * this->viewMatrix()));
+}
+
 Camera* Camera::projection(glm::mat4 p) {
   this->m_projection = p;
   return(this);
