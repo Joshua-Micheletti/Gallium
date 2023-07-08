@@ -4,6 +4,10 @@ PathTraceRenderer::PathTraceRenderer() {
     glClearColor(0.1, 0.1, 0.1, 1.0);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_MULTISAMPLE);
+    glDisable(GL_STENCIL_TEST);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
 
     glGenBuffers(1, &this->m_vertices);
     glGenBuffers(1, &this->m_modelMatrices);
@@ -148,26 +152,12 @@ PathTraceRenderer::PathTraceRenderer() {
 void PathTraceRenderer::render() {
     double start = glfwGetTime();
 
-    if (this->m_firstDraw) {
-        this->m_firstDraw = false;
+    // if (this->m_firstDraw) {
+    //     this->m_firstDraw = false;
+    //     // data = (GLfloat * len(mesh_mat_i))(*mesh_mat_i)
+    // }
 
-        // data = (GLfloat * len(mesh_mat_i))(*mesh_mat_i)
-        glBindBuffer(GL_UNIFORM_BUFFER, this->m_spheres);
-        glBufferData(GL_UNIFORM_BUFFER, RM.spheres().size() * sizeof(float), &RM.spheres().front(), GL_STATIC_DRAW);
-        glBindBufferBase(GL_UNIFORM_BUFFER, 5, this->m_spheres);
-        glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-        glBindBuffer(GL_UNIFORM_BUFFER, this->m_planes);
-        glBufferData(GL_UNIFORM_BUFFER, RM.planes().size() * sizeof(float), &RM.planes().front(), GL_STATIC_DRAW);
-        glBindBufferBase(GL_UNIFORM_BUFFER, 6, this->m_planes);
-        glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-        // std::vector<float> materials = {1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0};
-        glBindBuffer(GL_UNIFORM_BUFFER, this->m_materials);
-        glBufferData(GL_UNIFORM_BUFFER, RM.materialValues().size() * sizeof(float), &RM.materialValues().front(), GL_STATIC_DRAW);
-        glBindBufferBase(GL_UNIFORM_BUFFER, 9, this->m_materials);
-        glBindBuffer(GL_UNIFORM_BUFFER, 0);
-    }
+    this->updateBuffers();
 
 
     glActiveTexture(GL_TEXTURE0);
@@ -221,4 +211,25 @@ void PathTraceRenderer::render() {
     printf("samples: %lf\n", this->m_samples);
     printf("Render: %lf\n", (end - start) * 1000);
 
+}
+
+
+void PathTraceRenderer::updateBuffers() {
+    glBindBuffer(GL_UNIFORM_BUFFER, this->m_spheres);
+    glBufferData(GL_UNIFORM_BUFFER, RM.spheres().size() * sizeof(float), &RM.spheres().front(), GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 5, this->m_spheres);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+    glBindBuffer(GL_UNIFORM_BUFFER, this->m_planes);
+    glBufferData(GL_UNIFORM_BUFFER, RM.planes().size() * sizeof(float), &RM.planes().front(), GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 6, this->m_planes);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+    // std::vector<float> materials = {1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0};
+    glBindBuffer(GL_UNIFORM_BUFFER, this->m_materials);
+    glBufferData(GL_UNIFORM_BUFFER, RM.materialValues().size() * sizeof(float), &RM.materialValues().front(), GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 9, this->m_materials);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+    // RM.updated();
 }

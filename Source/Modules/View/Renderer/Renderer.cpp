@@ -33,9 +33,9 @@ Renderer::Renderer() {
 	glGenBuffers(1, &this->m_tmpBuffer);
 
 
-	/*--------------------------------------------------------------------------*/
-	/*                             REFLECTION SETUP                             */
-	/*--------------------------------------------------------------------------*/
+	// /*--------------------------------------------------------------------------*/
+	// /*                             REFLECTION SETUP                             */
+	// /*--------------------------------------------------------------------------*/
 
 	// defines the resolution of the reflection cubemap
 	this->m_reflectionRes = 4096;
@@ -86,6 +86,7 @@ Renderer::Renderer() {
 
 	// set back the renderbuffer to the default renderbuffer
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	debugger.print("SETUP REFLECTION", "R");
 
@@ -235,6 +236,8 @@ Renderer::Renderer() {
 
 	int maxSamples;
 	glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	this->m_highlightedEntity = -1;
 

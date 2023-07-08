@@ -192,6 +192,7 @@ RendererManager::RendererManager() {
     // initialize the selected entity (none)
     this->m_selectedEntity = "";
     this->m_accumulate = false;
+    this->m_toUpdate = true;
 
     printf("\n%sSetup the renderer manager%s\n", strGreen.c_str(), strNoColor.c_str());
     RMSetupTimer.print();
@@ -285,6 +286,7 @@ Model* RendererManager::newModel(std::string name) {
     Model* m = new Model();
     this->m_modelBuffer[name] = m;
     this->calculateBoundingSphere(name);
+    this->m_toUpdate = true;
     return(this->m_modelBuffer[name]);
 }
 std::vector<Model*> RendererManager::models() {
@@ -313,12 +315,14 @@ std::vector<float> RendererManager::spheres() {
 Sphere* RendererManager::newSphere(std::string name, glm::vec3 center, float radius) {
     Sphere* s = new Sphere(center, radius);
     this->m_spheres[name] = s;
+    this->m_toUpdate = true;
     return(this->m_spheres[name]);
 }
 
 Plane* RendererManager::newPlane(std::string name, glm::vec3 center, glm::vec3 normal) {
     Plane* p = new Plane(center, normal);
     this->m_planes[name] = p;
+    this->m_toUpdate = true;
     return(this->m_planes[name]);
 }
 
@@ -361,6 +365,7 @@ std::string RendererManager::material(Material *ma) {
 Material* RendererManager::newMaterial(std::string name) {
     Material* ma = new Material();
     this->m_materialBuffer[name] = ma;
+    this->m_toUpdate = true;
     return(this->m_materialBuffer[name]);
 }
 std::vector<Material*> RendererManager::materials() {
@@ -414,6 +419,7 @@ std::string RendererManager::shader(Shader *s) {
 Shader* RendererManager::newShader(std::string name) {
     Shader* s = new Shader();
     this->m_shaderBuffer[name] = s;
+    this->m_toUpdate = true;
     return(this->m_shaderBuffer[name]);
 }
 std::vector<Shader*> RendererManager::shaders() {
@@ -444,6 +450,7 @@ std::string RendererManager::texture(Texture *t) {
 Texture* RendererManager::newTexture(std::string name) {
     Texture* s = new Texture();
     this->m_textureBuffer[name] = s;
+    this->m_toUpdate = true;
     return(this->m_textureBuffer[name]);
 }
 std::vector<Texture*> RendererManager::textures() {
@@ -474,6 +481,7 @@ std::string RendererManager::mesh(Mesh *t) {
 Mesh* RendererManager::newMesh(std::string name) {
     Mesh* m = new Mesh();
     this->m_meshBuffer[name] = m;
+    this->m_toUpdate = true;
     return(this->m_meshBuffer[name]);
 }
 Mesh* RendererManager::newMesh(std::string name, std::string filepath) {
@@ -483,6 +491,7 @@ Mesh* RendererManager::newMesh(std::string name, std::string filepath) {
 
     if (readOBJMesh(filepath, &v, &t, &n)) {
         this->newMesh(name)->indices(v, t, n);
+        this->m_toUpdate = true;
         return(this->m_meshBuffer[name]);
     } else {
         return(NULL);
@@ -737,6 +746,10 @@ bool RendererManager::denoise() {
 RendererManager* RendererManager::denoise(bool d) {
     this->m_denoise = d;
     return(this);
+}
+
+void RendererManager::updated() {
+    this->m_toUpdate = false;
 }
 
 

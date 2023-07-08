@@ -149,6 +149,8 @@ class RendererManager {
         bool denoise();
         RendererManager* denoise(bool);
 
+        void updated();
+
     private:
         std::map<std::string, Model*> m_modelBuffer;
         std::map<std::string, Material*> m_materialBuffer;
@@ -183,6 +185,7 @@ class RendererManager {
         bool m_accumulate;
         bool m_denoise;
         bool m_depth;
+        bool m_toUpdate;
 
         bool m_debug;
 };

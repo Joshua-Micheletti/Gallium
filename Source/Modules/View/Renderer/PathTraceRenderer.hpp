@@ -42,6 +42,8 @@ class PathTraceRenderer {
 
         bool m_firstDraw;
         float m_samples;
+
+        void updateBuffers();
 };
 
 

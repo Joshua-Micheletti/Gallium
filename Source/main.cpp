@@ -2,10 +2,10 @@
 #include "Modules/Utils/include.h"
 
 int main(void) {
-	// Renderer renderer;
+	Renderer renderer;
 	PathTraceRenderer PTRenderer;
 	EventHandler eventHandler(window.window());
-	// UI interface(&renderer, &eventHandler);
+	UI interface(&renderer, &eventHandler);
 
 	sandbox();
 	
@@ -23,7 +23,7 @@ int main(void) {
 		debugger.print("UPDATED THE ENGINE", "M");
 		PTRenderer.render();
 		debugger.print("RENDERED THE FRAME", "M");
-		// interface.drawInfo();
+		interface.drawInfo();
 		debugger.print("DRAWN THE UI", "M");
 		glfwPollEvents();
 		glfwSwapBuffers(window.window());

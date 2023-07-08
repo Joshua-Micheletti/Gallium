@@ -74,7 +74,7 @@ void sandbox() {
     RM.newMaterial("l1MA_Red_Opaque")    ->diffuse(glm::vec3(1.0, 0.2, 0.2))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(0.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.0); // 11
     RM.newMaterial("m2MA_Blue_Opaque")   ->diffuse(glm::vec3(0.2, 0.2, 1.0))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(0.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.0); // 12
     RM.newMaterial("n3MA_Green_Opaque")  ->diffuse(glm::vec3(0.2, 1.0, 0.2))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(0.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.0); // 13
-    RM.newMaterial("o4MA_White_Emit")    ->diffuse(glm::vec3(1.0, 1.0, 1.0))->emissive(glm::vec3(1.0, 1.0, 1.0))->emissivness(2.0)->reflectivness(0.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.0); // 14
+    RM.newMaterial("o4MA_White_Emit")    ->diffuse(glm::vec3(1.0, 1.0, 1.0))->emissive(glm::vec3(1.0, 1.0, 1.0))->emissivness(5.0)->reflectivness(0.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.0); // 14
 
     for (std::string name : RM.materialNames()) {
         printf("%s\n", name.c_str());

@@ -693,32 +693,32 @@ void UI::drawBottomRow() {
 
 		ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
 		if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags)) {
-			if (ImGui::BeginTabItem("Textures")) {
-				float imageWidth = (float)window.width() / (float)window.height() * height;
-				float imageHeight = (float)height;
+			// if (ImGui::BeginTabItem("Textures")) {
+			// 	float imageWidth = (float)window.width() / (float)window.height() * height;
+			// 	float imageHeight = (float)height;
 
-				this->drawImage(this->m_renderer->getOutlineMaskTexture(), imageWidth, imageHeight);
-				ImGui::SameLine();
+			// 	this->drawImage(this->m_renderer->getOutlineMaskTexture(), imageWidth, imageHeight);
+			// 	ImGui::SameLine();
 
-				this->drawImage(this->m_renderer->getDepthBufferTexture(), imageWidth, imageHeight);
-				std::vector<std::string> textureNames = RM.textureNames();
+			// 	this->drawImage(this->m_renderer->getDepthBufferTexture(), imageWidth, imageHeight);
+			// 	std::vector<std::string> textureNames = RM.textureNames();
 
-				int newLineIndex = (int)(ImGui::GetWindowSize().x / imageWidth);
-				if (newLineIndex == 0) {
-					newLineIndex = 1;
-				}
+			// 	int newLineIndex = (int)(ImGui::GetWindowSize().x / imageWidth);
+			// 	if (newLineIndex == 0) {
+			// 		newLineIndex = 1;
+			// 	}
 				
-				for (int i = 0; i < textureNames.size(); i++) {
-					if (RM.texture(textureNames[i])->type() == GL_TEXTURE_2D) {
-						if (i % newLineIndex != 0) {
-							ImGui::SameLine();
-						}
+			// 	for (int i = 0; i < textureNames.size(); i++) {
+			// 		if (RM.texture(textureNames[i])->type() == GL_TEXTURE_2D) {
+			// 			if (i % newLineIndex != 0) {
+			// 				ImGui::SameLine();
+			// 			}
 
-						this->drawImage(RM.texture(textureNames[i])->id(), imageWidth, imageHeight);
-					}			
-				}
-				ImGui::EndTabItem();
-			}
+			// 			this->drawImage(RM.texture(textureNames[i])->id(), imageWidth, imageHeight);
+			// 		}			
+			// 	}
+			// 	ImGui::EndTabItem();
+			// }
 			
 			if (ImGui::BeginTabItem("Materials")) {
 				ImGui::Separator();
@@ -776,6 +776,29 @@ void UI::drawBottomRow() {
 				ImGui::ColorEdit3("Specular", specular);
 
 				RM.material(materialNames[currentMaterial])->specular(glm::vec3(specular[0], specular[1], specular[2]));
+
+
+				static float emissive[3] = {1.0, 1.0, 1.0};
+
+				emissive[0] = RM.material(materialNames[currentMaterial])->emissive().x;
+				emissive[1] = RM.material(materialNames[currentMaterial])->emissive().y;
+				emissive[2] = RM.material(materialNames[currentMaterial])->emissive().z;
+
+				ImGui::ColorEdit3("Emissive", emissive);
+
+				RM.material(materialNames[currentMaterial])->emissive(glm::vec3(emissive[0], emissive[1], emissive[2]));
+
+				float emissivness = RM.material(materialNames[currentMaterial])->emissivness();
+				ImGui::DragFloat("Emissivness", &emissivness, 0.005f);
+				RM.material(materialNames[currentMaterial])->emissivness(emissivness);
+
+				float reflectivness = RM.material(materialNames[currentMaterial])->reflectivness();
+				ImGui::DragFloat("Reflectivness", &reflectivness, 0.005f);
+				RM.material(materialNames[currentMaterial])->reflectivness(reflectivness);
+
+				float albedo = RM.material(materialNames[currentMaterial])->albedo();
+				ImGui::DragFloat("Albedo", &albedo, 0.005f);
+				RM.material(materialNames[currentMaterial])->albedo(albedo);
 
 
 				ImGui::EndTabItem();
@@ -1031,7 +1054,7 @@ void UI::drawImGui() {
 
 	this->drawFPSWindow();
 
-	this->drawCrosshair();
+	// this->drawCrosshair();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
