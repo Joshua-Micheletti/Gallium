@@ -254,6 +254,8 @@ void Renderer::render() {
 		this->resizeScreen();
 	}
 
+	glEnable(GL_DEPTH_TEST);
+
 
 	// ------------------------------ REFLECTION FRAMEBUFFER RENDERING ------------------------------ //
 
@@ -355,6 +357,11 @@ void Renderer::renderReflectionCubemap() {
 
 // render all entities with their corresponding shader (forward rendering)
 void Renderer::renderEntities(bool reflection) {
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_MULTISAMPLE);
+    glEnable(GL_STENCIL_TEST);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
 	std::vector<std::string> models = RM.modelNames(); 
 
 	int renders = 0;

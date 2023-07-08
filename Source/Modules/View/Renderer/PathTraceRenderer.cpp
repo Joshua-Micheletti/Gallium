@@ -3,7 +3,7 @@
 PathTraceRenderer::PathTraceRenderer() {
     glClearColor(0.1, 0.1, 0.1, 1.0);
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_MULTISAMPLE);
     glDisable(GL_STENCIL_TEST);
     glDisable(GL_DEPTH_TEST);
@@ -145,24 +145,27 @@ PathTraceRenderer::PathTraceRenderer() {
 
     this->m_firstDraw = true;
     this->m_samples = 0.0;
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
 
 void PathTraceRenderer::render() {
     double start = glfwGetTime();
-
-    // if (this->m_firstDraw) {
-    //     this->m_firstDraw = false;
-    //     // data = (GLfloat * len(mesh_mat_i))(*mesh_mat_i)
-    // }
-
+    glDisable(GL_DEPTH_TEST);
     this->updateBuffers();
 
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, this->m_accumulationTexture);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, this->m_renderResultTexture);
     glBindImageTexture(0, this->m_renderResultTexture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
+
 
     glUseProgram(this->m_computeProgram);
 
@@ -210,6 +213,9 @@ void PathTraceRenderer::render() {
 
     printf("samples: %lf\n", this->m_samples);
     printf("Render: %lf\n", (end - start) * 1000);
+
+    glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 
 }
 

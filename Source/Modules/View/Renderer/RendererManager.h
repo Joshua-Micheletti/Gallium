@@ -150,6 +150,8 @@ class RendererManager {
         RendererManager* denoise(bool);
 
         void updated();
+        bool pathTrace();
+        RendererManager* pathTrace(bool);
 
     private:
         std::map<std::string, Model*> m_modelBuffer;
@@ -188,6 +190,7 @@ class RendererManager {
         bool m_toUpdate;
 
         bool m_debug;
+        bool m_pathTrace;
 };
 
 #endif

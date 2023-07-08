@@ -193,6 +193,7 @@ RendererManager::RendererManager() {
     this->m_selectedEntity = "";
     this->m_accumulate = false;
     this->m_toUpdate = true;
+    this->m_pathTrace = true;
 
     printf("\n%sSetup the renderer manager%s\n", strGreen.c_str(), strNoColor.c_str());
     RMSetupTimer.print();
@@ -750,6 +751,15 @@ RendererManager* RendererManager::denoise(bool d) {
 
 void RendererManager::updated() {
     this->m_toUpdate = false;
+}
+
+bool RendererManager::pathTrace() {
+    return(this->m_pathTrace);
+}
+
+RendererManager* RendererManager::pathTrace(bool pt) {
+    this->m_pathTrace = pt;
+    return(this);
 }
 
 

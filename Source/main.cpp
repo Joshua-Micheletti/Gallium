@@ -21,7 +21,15 @@ int main(void) {
 		debugger.print("STEPPED PHYSICS", "M");
 		// engine.update(RM, PW);
 		debugger.print("UPDATED THE ENGINE", "M");
-		PTRenderer.render();
+
+		if (RM.pathTrace()) {
+			PTRenderer.render();
+		} else {
+			renderer.render();
+		}
+		// renderer.render();
+		
+		// renderer.render();
 		debugger.print("RENDERED THE FRAME", "M");
 		interface.drawInfo();
 		debugger.print("DRAWN THE UI", "M");

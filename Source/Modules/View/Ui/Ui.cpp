@@ -472,9 +472,13 @@ void UI::drawRightColumn() {
 	ImGui::Begin("Right Column", NULL, rightColumnWindowFlags);
 	static bool antialiasing = true;
 	static int item_current = 0;
+	static bool pathTrace = RM.pathTrace();
+
 	if (ImGui::CollapsingHeader("Rendering Options")) {
 		bool tmp = vsync;
 		
+		if (ImGui::MenuItem("Path Trace", NULL, &pathTrace));
+		RM.pathTrace(pathTrace);
 		if (ImGui::MenuItem("Pause", NULL, &this->m_pauseFlag));
 		if (ImGui::MenuItem("Render Real Time Reflections", NULL, &doReflection));
 		if (ImGui::MenuItem("VSync", NULL, &vsync)) {
@@ -693,14 +697,14 @@ void UI::drawBottomRow() {
 
 		ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
 		if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags)) {
-			// if (ImGui::BeginTabItem("Textures")) {
-			// 	float imageWidth = (float)window.width() / (float)window.height() * height;
-			// 	float imageHeight = (float)height;
+			if (ImGui::BeginTabItem("Textures")) {
+				float imageWidth = (float)window.width() / (float)window.height() * height;
+				float imageHeight = (float)height;
 
-			// 	this->drawImage(this->m_renderer->getOutlineMaskTexture(), imageWidth, imageHeight);
-			// 	ImGui::SameLine();
+				this->drawImage(this->m_renderer->getOutlineMaskTexture(), imageWidth, imageHeight);
+				ImGui::SameLine();
 
-			// 	this->drawImage(this->m_renderer->getDepthBufferTexture(), imageWidth, imageHeight);
+				this->drawImage(this->m_renderer->getDepthBufferTexture(), imageWidth, imageHeight);
 			// 	std::vector<std::string> textureNames = RM.textureNames();
 
 			// 	int newLineIndex = (int)(ImGui::GetWindowSize().x / imageWidth);
@@ -717,8 +721,8 @@ void UI::drawBottomRow() {
 			// 			this->drawImage(RM.texture(textureNames[i])->id(), imageWidth, imageHeight);
 			// 		}			
 			// 	}
-			// 	ImGui::EndTabItem();
-			// }
+				ImGui::EndTabItem();
+			}
 			
 			if (ImGui::BeginTabItem("Materials")) {
 				ImGui::Separator();
