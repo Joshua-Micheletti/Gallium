@@ -102,7 +102,7 @@ class Model {
         Model* print();
 
 
-    private:
+    protected:
         std::string m_source;
         // turn it into a map eventually
         // list of all the components in the model

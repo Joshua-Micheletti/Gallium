@@ -169,7 +169,7 @@ void PathTraceRenderer::render() {
 
     glUseProgram(this->m_computeProgram);
 
-    // YOU STOPPED HERE, IMPLEMENT INVERSE VIEW PROJECTION MATRIX FOR CAMERA
+
     glUniformMatrix4fv(glGetUniformLocation(this->m_computeProgram, "inverse_view_projection"), 1, GL_FALSE, &(RM.camera()->inverseViewProjectionMatrix()[0][0]));
     glUniform3f(glGetUniformLocation(this->m_computeProgram, "eye"), RM.camera()->position().x, RM.camera()->position().y, RM.camera()->position().z);
     glUniform1f(glGetUniformLocation(this->m_computeProgram, "time"), glfwGetTime());

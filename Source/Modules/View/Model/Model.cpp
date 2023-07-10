@@ -19,6 +19,11 @@ std::vector<TK> extractKeys(std::map<TK, TV> const& input_map) {
     return retval;
 }
 
+template<typename Base, typename T>
+inline bool instanceof(const T *ptr) {
+    return dynamic_cast<const Base*>(ptr) != nullptr;
+}
+
 
 // CONSTRUCTOR
 Model::Model() {

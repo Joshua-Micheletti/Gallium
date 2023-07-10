@@ -9,9 +9,25 @@ void sandbox() {
     RM.newShader("S_Lighting")->loadShader("../Shader/lighting/lighting.vert", "../Shader/lighting/lighting.frag");
     RM.newShader("S_LightingTex")->loadShader("../Shader/lightingTex/lightingTex.vert", "../Shader/lightingTex/lightingTex.frag");
     RM.newShader("S_LightingMaterialTex")->loadShader("../Shader/lightingTex/lightingMaterialTex.vert", "../Shader/lightingTex/lightingMaterialTex.frag");
-
     RM.newShader("S_Reflection")->loadShader("../Shader/reflection/reflection.vert", "../Shader/reflection/reflection.frag");
-    
+    RM.newMaterial("aMA_White_Opaque")  ->diffuse(glm::vec3(1.0))->emissive(glm::vec3(0.0))->emissivness(0.0)->reflectivness(0.0)->specular(glm::vec3(1.0))->albedo(0.0); // 0
+    RM.newMaterial("bMA_Red_0.2shine")  ->diffuse(glm::vec3(1.0, 0.2, 0.2))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(0.2)->specular(glm::vec3(1.0, 0.2, 0.2))->albedo(1.0); // 1
+    RM.newMaterial("cMA_Green_0.4shine")->diffuse(glm::vec3(0.2, 1.0, 0.2))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(0.4)->specular(glm::vec3(0.2, 1.0, 0.2))->albedo(1.0); // 2
+    RM.newMaterial("dMA_Blue_0.8shine") ->diffuse(glm::vec3(0.2, 0.2, 1.0))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(0.6)->specular(glm::vec3(0.2, 0.2, 1.0))->albedo(1.0); // 3
+    RM.newMaterial("eMA_White_0.8shine")->diffuse(glm::vec3(1.0, 1.0, 1.0))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(0.8)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(1.0); // 4
+    RM.newMaterial("fMA_White_1.0shine")->diffuse(glm::vec3(0.0, 0.0, 0.0))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(1.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(1.0); // 5
+    RM.newMaterial("gMA_Red_0.2albedo") ->diffuse(glm::vec3(1.0, 0.2, 0.2))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(1.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.2); // 6
+    RM.newMaterial("hMA_Green0.5albedo")->diffuse(glm::vec3(0.2, 1.0, 0.2))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(1.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.5); // 7
+    RM.newMaterial("iMA_Blue1.0albedo") ->diffuse(glm::vec3(0.2, 0.2, 1.0))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(1.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(1.0); // 8
+    RM.newMaterial("jMA_Red_Emit")      ->diffuse(glm::vec3(1.0, 1.0, 1.0))->emissive(glm::vec3(1.0, 0.2, 0.2))->emissivness(1.0)->reflectivness(0.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.0); // 9
+    RM.newMaterial("k0MA_Green_Emit")    ->diffuse(glm::vec3(1.0, 1.0, 1.0))->emissive(glm::vec3(0.2, 1.0, 0.2))->emissivness(1.0)->reflectivness(0.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.0); // 10
+    RM.newMaterial("l1MA_Red_Opaque")    ->diffuse(glm::vec3(1.0, 0.2, 0.2))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(0.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.0); // 11
+    RM.newMaterial("m2MA_Blue_Opaque")   ->diffuse(glm::vec3(0.2, 0.2, 1.0))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(0.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.0); // 12
+    RM.newMaterial("n3MA_Green_Opaque")  ->diffuse(glm::vec3(0.2, 1.0, 0.2))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(0.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.0); // 13
+    RM.newMaterial("o4MA_White_Emit")    ->diffuse(glm::vec3(1.0, 1.0, 1.0))->emissive(glm::vec3(1.0, 1.0, 1.0))->emissivness(5.0)->reflectivness(0.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.0); // 14
+
+
+
     // PW.newPhysicsBody("P_plane")->plane();
 
     // for (int i = 0; i < 200; i++) {
@@ -44,9 +60,6 @@ void sandbox() {
 
     // RM.newModel("M_BoundingSphere")->mesh("ME_BoundingSphere")->scale(glm::vec3(radius, radius, radius));
 
-
-    // RM.newSphere("SP_1", glm::vec3(0.5, 0.5, 0.5), 0.25)->materialIndex(0 + 2);
-    // RM.newSphere("SP_light", glm::vec3(1, 1, 1), 0.25)->materialIndex(14 + 2);
     RM.newSphere("SP_0",  glm::vec3(-0.80, 1,   -0.80), 0.15)->material("aMA_White_Opaque");
     RM.newSphere("SP_1",  glm::vec3(-0.80, 1,   -0.40), 0.15)->material("bMA_Red_0.2shine");
     RM.newSphere("SP_2",  glm::vec3(-0.80, 1,   -0.00), 0.15)->material("cMA_Green_0.4shine");
@@ -60,18 +73,6 @@ void sandbox() {
     RM.newSphere("SP_10", glm::vec3(-0.60, 0.75,-0.00), 0.15)->material("k0MA_Green_Emit");
     RM.newSphere("SP_11", glm::vec3(0, 3.95,-0.00), 2)->material("o4MA_White_Emit");
 
-
-    // RM.newModel("M_Test" + std::to_string(0))->scale(glm::vec3(0.3, 0.3, 0.3))->position(glm::vec3(-0.80, 1,    -0.80))->mesh("ME_Sphere")->shader("S_Lighting")->material("aMA_White_Opaque");
-    // RM.newModel("M_Test" + std::to_string(1))->scale(glm::vec3(0.3, 0.3, 0.3))->position(glm::vec3(-0.80, 1,    -0.40))->mesh("ME_Sphere")->shader("S_Lighting")->material("bMA_Red_0.2shine");
-    // RM.newModel("M_Test" + std::to_string(2))->scale(glm::vec3(0.3, 0.3, 0.3))->position(glm::vec3(-0.80, 1,    -0.00))->mesh("ME_Sphere")->shader("S_Lighting")->material("cMA_Green_0.4shine");
-    // RM.newModel("M_Test" + std::to_string(3))->scale(glm::vec3(0.3, 0.3, 0.3))->position(glm::vec3(-0.80, 1,     0.40))->mesh("ME_Sphere")->shader("S_Lighting")->material("dMA_Blue_0.8shine");
-    // RM.newModel("M_Test" + std::to_string(4))->scale(glm::vec3(0.3, 0.3, 0.3))->position(glm::vec3(-0.80, 1,     0.80))->mesh("ME_Sphere")->shader("S_Lighting")->material("eMA_White_0.8shine");
-    // RM.newModel("M_Test" + std::to_string(5))->scale(glm::vec3(0.3, 0.3, 0.3))->position(glm::vec3(-0.40, 0.5,  -0.80))->mesh("ME_Sphere")->shader("S_Reflection")->material("fMA_White_1.0shine");
-    // RM.newModel("M_Test" + std::to_string(6))->scale(glm::vec3(0.3, 0.3, 0.3))->position(glm::vec3(-0.40, 0.5,  -0.40))->mesh("ME_Sphere")->shader("S_Lighting")->material("gMA_Red_0.2albedo");
-    // RM.newModel("M_Test" + std::to_string(7))->scale(glm::vec3(0.3, 0.3, 0.3))->position(glm::vec3(-0.40, 0.5,  -0.00))->mesh("ME_Sphere")->shader("S_Lighting")->material("hMA_Green0.5albedo");
-    // RM.newModel("M_Test" + std::to_string(8))->scale(glm::vec3(0.3, 0.3, 0.3))->position(glm::vec3(-0.40, 0.5,   0.40))->mesh("ME_Sphere")->shader("S_Lighting")->material("iMA_Blue1.0albedo");
-    // RM.newModel("M_Test" + std::to_string(9))->scale(glm::vec3(0.3, 0.3, 0.3))->position(glm::vec3(-0.40, 0.5,   0.80))->mesh("ME_Sphere")->shader("S_Lighting")->material("jMA_Red_Emit");
-    // RM.newModel("M_Test" + std::to_string(10))->scale(glm::vec3(0.3, 0.3, 0.3))->position(glm::vec3(-0.60, 0.75, -0.00))->mesh("ME_Sphere")->shader("S_Lighting")->material("k0MA_Green_Emit");
     RM.newModel("M_PlaneBack")->scale(glm::vec3(0.01, 1.0, 1.0))->position(glm::vec3(-1, 1, 0))->shader("S_Lighting")->material("aMA_White_Opaque");
     RM.newModel("M_PlaneRight")->scale(glm::vec3(1.0, 1.0, 0.01))->position(glm::vec3(0, 1, -1))->shader("S_Lighting")->material("l1MA_Red_Opaque");
     RM.newModel("M_PlaneLeft")->scale(glm::vec3(1.0, 1.0, 0.01))->position(glm::vec3(0, 1, 1))->shader("S_Lighting")->material("m2MA_Blue_Opaque");
@@ -80,29 +81,6 @@ void sandbox() {
 
     RM.model("M_Light")->scale(glm::vec3(4.0, 4.0, 4.0))->position(glm::vec3(0, 3.95, 0));
     // RM.newModel("M_Test" + std::to_string(0))->scale(glm::vec3(0.3, 0.3, 0.3))->position(glm::vec3(-0.80, 1, -0.80))->mesh("ME_Sphere")->shader("S_Lighting");
-
-
-
-
-    RM.newMaterial("aMA_White_Opaque")  ->diffuse(glm::vec3(1.0))->emissive(glm::vec3(0.0))->emissivness(0.0)->reflectivness(0.0)->specular(glm::vec3(1.0))->albedo(0.0); // 0
-    RM.newMaterial("bMA_Red_0.2shine")  ->diffuse(glm::vec3(1.0, 0.2, 0.2))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(0.2)->specular(glm::vec3(1.0, 0.2, 0.2))->albedo(1.0); // 1
-    RM.newMaterial("cMA_Green_0.4shine")->diffuse(glm::vec3(0.2, 1.0, 0.2))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(0.4)->specular(glm::vec3(0.2, 1.0, 0.2))->albedo(1.0); // 2
-    RM.newMaterial("dMA_Blue_0.8shine") ->diffuse(glm::vec3(0.2, 0.2, 1.0))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(0.6)->specular(glm::vec3(0.2, 0.2, 1.0))->albedo(1.0); // 3
-    RM.newMaterial("eMA_White_0.8shine")->diffuse(glm::vec3(1.0, 1.0, 1.0))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(0.8)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(1.0); // 4
-    RM.newMaterial("fMA_White_1.0shine")->diffuse(glm::vec3(0.0, 0.0, 0.0))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(1.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(1.0); // 5
-    RM.newMaterial("gMA_Red_0.2albedo") ->diffuse(glm::vec3(1.0, 0.2, 0.2))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(1.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.2); // 6
-    RM.newMaterial("hMA_Green0.5albedo")->diffuse(glm::vec3(0.2, 1.0, 0.2))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(1.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.5); // 7
-    RM.newMaterial("iMA_Blue1.0albedo") ->diffuse(glm::vec3(0.2, 0.2, 1.0))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(1.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(1.0); // 8
-    RM.newMaterial("jMA_Red_Emit")      ->diffuse(glm::vec3(1.0, 1.0, 1.0))->emissive(glm::vec3(1.0, 0.2, 0.2))->emissivness(1.0)->reflectivness(0.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.0); // 9
-    RM.newMaterial("k0MA_Green_Emit")    ->diffuse(glm::vec3(1.0, 1.0, 1.0))->emissive(glm::vec3(0.2, 1.0, 0.2))->emissivness(1.0)->reflectivness(0.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.0); // 10
-    RM.newMaterial("l1MA_Red_Opaque")    ->diffuse(glm::vec3(1.0, 0.2, 0.2))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(0.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.0); // 11
-    RM.newMaterial("m2MA_Blue_Opaque")   ->diffuse(glm::vec3(0.2, 0.2, 1.0))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(0.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.0); // 12
-    RM.newMaterial("n3MA_Green_Opaque")  ->diffuse(glm::vec3(0.2, 1.0, 0.2))->emissive(glm::vec3(0.0, 0.0, 0.0))->emissivness(1.0)->reflectivness(0.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.0); // 13
-    RM.newMaterial("o4MA_White_Emit")    ->diffuse(glm::vec3(1.0, 1.0, 1.0))->emissive(glm::vec3(1.0, 1.0, 1.0))->emissivness(5.0)->reflectivness(0.0)->specular(glm::vec3(1.0, 1.0, 1.0))->albedo(0.0); // 14
-
-    for (std::string name : RM.materialNames()) {
-        printf("%s\n", name.c_str());
-    }
 
     RM.newPlane("P_Back", glm::vec3(0, 1, -1), glm::vec3(0, 0, 1))->materialIndex(11 + 2);
     RM.newPlane("P_Front", glm::vec3(0, 1, 1), glm::vec3(0, 0, -1))->materialIndex(12 + 2);

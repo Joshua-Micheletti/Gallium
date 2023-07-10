@@ -1,5 +1,11 @@
 #include "Ui.h"
 
+template<typename Base, typename T>
+inline bool instanceof(const T *ptr) {
+    return dynamic_cast<const Base*>(ptr) != nullptr;
+}
+
+
 
 // initialize the fields and formats the texts styles
 UI::UI(Renderer* m_renderer, EventHandler* m_eventHandler) {
@@ -196,14 +202,22 @@ void UI::drawLeftColumn() {
 			}
 			
 			if (ImGui::TreeNode("Scale")) {
-				float x = RM.model(RM.selectedEntity())->scale().x;
-				if (ImGui::DragFloat("X", &x, 0.005f));
-				float y = RM.model(RM.selectedEntity())->scale().y;
-				if (ImGui::DragFloat("Y", &y, 0.005f));
-				float z = RM.model(RM.selectedEntity())->scale().z;
-				if (ImGui::DragFloat("Z", &z, 0.005f));
+				if (instanceof<Sphere>(RM.model(RM.selectedEntity()))) {
+					float x = RM.model(RM.selectedEntity())->scale().x;
+					if (ImGui::DragFloat("Radius", &x, 0.005f));
 
-				RM.model(RM.selectedEntity())->scale(glm::vec3(x, y, z));
+					Sphere* selectedSphere = (Sphere*)RM.model(RM.selectedEntity());
+					selectedSphere->scale(glm::vec3(x));
+				} else {
+					float x = RM.model(RM.selectedEntity())->scale().x;
+					if (ImGui::DragFloat("X", &x, 0.005f));
+					float y = RM.model(RM.selectedEntity())->scale().y;
+					if (ImGui::DragFloat("Y", &y, 0.005f));
+					float z = RM.model(RM.selectedEntity())->scale().z;
+					if (ImGui::DragFloat("Z", &z, 0.005f));
+					RM.model(RM.selectedEntity())->scale(glm::vec3(x, y, z));
+				}
+				
 
 				ImGui::TreePop();
 			}

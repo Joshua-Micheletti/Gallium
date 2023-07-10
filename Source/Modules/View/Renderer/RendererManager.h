@@ -57,6 +57,8 @@ class RendererManager {
 
         std::vector<float> materialValues();
 
+        std::vector<glm::mat4> modelMats();
+
         // getters for singular elements
         Model* model(std::string);
         Material* material(std::string);

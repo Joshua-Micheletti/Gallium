@@ -305,18 +305,6 @@ std::vector<std::string> RendererManager::modelNames() {
 }
 
 std::vector<float> RendererManager::spheres() {
-    // std::vector<Sphere*> sphereObjects = extractValues(this->m_spheres);
-
-    // std::vector<float> values;
-
-    // for (Sphere* sphere : sphereObjects) {
-    //     values.push_back(sphere->center().x);
-    //     values.push_back(sphere->center().y);
-    //     values.push_back(sphere->center().z);
-    //     values.push_back(sphere->radius());
-    //     values.push_back(sphere->materialIndex());
-    // }
-
     std::vector<Model*> models = extractValues(this->m_modelBuffer);
     
     std::vector<std::string> materials = extractKeys(this->m_materialBuffer);
@@ -326,11 +314,12 @@ std::vector<float> RendererManager::spheres() {
     for (Model* model : models) {
         if (instanceof<Sphere>(model)) {
             Sphere* sphere = (Sphere*)model;
-            values.push_back(sphere->center().x);
-            values.push_back(sphere->center().y);
-            values.push_back(sphere->center().z);
-            values.push_back(sphere->radius());
-            
+            values.push_back(sphere->position().x);
+            values.push_back(sphere->position().y);
+            values.push_back(sphere->position().z);
+            // values.push_back(std::max(std::max(sphere->scale().x, sphere->scale().y), sphere->scale().z) / 2);
+            values.push_back(sphere->scale().x / 2);
+
             int materialIndex = 0;
 
             for (int i = 0; i < materials.size(); i++) {
@@ -340,8 +329,6 @@ std::vector<float> RendererManager::spheres() {
             }
 
             values.push_back(materialIndex);
-
-            // values.push_back(sphere->materialIndex());
         }
     }
 
