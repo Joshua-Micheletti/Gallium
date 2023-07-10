@@ -32,6 +32,8 @@ class Model {
     public:
         // CONSTRUCTOR
         Model();
+        // DESTRUCTOR
+        virtual ~Model();
 
         // getter for drawing mode
         GLenum drawingMode();
@@ -101,10 +103,10 @@ class Model {
 
 
     private:
-        std::string source_;
+        std::string m_source;
         // turn it into a map eventually
         // list of all the components in the model
-        std::vector<component_t*> components_;
+        std::vector<component_t*> m_components;
 
         // model matrix (S * R * T)
         glm::mat4 m_modelMatrix;

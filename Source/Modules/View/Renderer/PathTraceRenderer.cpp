@@ -231,11 +231,8 @@ void PathTraceRenderer::updateBuffers() {
     glBindBufferBase(GL_UNIFORM_BUFFER, 6, this->m_planes);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-    // std::vector<float> materials = {1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0};
     glBindBuffer(GL_UNIFORM_BUFFER, this->m_materials);
     glBufferData(GL_UNIFORM_BUFFER, RM.materialValues().size() * sizeof(float), &RM.materialValues().front(), GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 9, this->m_materials);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-    // RM.updated();
 }

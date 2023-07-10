@@ -19,6 +19,13 @@ std::vector<TK> extractKeys(std::map<TK, TV> const& input_map) {
     return retval;
 }
 
+template<typename Base, typename T>
+inline bool instanceof(const T *ptr) {
+    return dynamic_cast<const Base*>(ptr) != nullptr;
+}
+
+
+
 void createAxis(Mesh* axis) {
 	std::vector<float> axisColor;
 	axisColor.push_back(1.0f);
@@ -298,16 +305,44 @@ std::vector<std::string> RendererManager::modelNames() {
 }
 
 std::vector<float> RendererManager::spheres() {
-    std::vector<Sphere*> sphereObjects = extractValues(this->m_spheres);
+    // std::vector<Sphere*> sphereObjects = extractValues(this->m_spheres);
+
+    // std::vector<float> values;
+
+    // for (Sphere* sphere : sphereObjects) {
+    //     values.push_back(sphere->center().x);
+    //     values.push_back(sphere->center().y);
+    //     values.push_back(sphere->center().z);
+    //     values.push_back(sphere->radius());
+    //     values.push_back(sphere->materialIndex());
+    // }
+
+    std::vector<Model*> models = extractValues(this->m_modelBuffer);
+    
+    std::vector<std::string> materials = extractKeys(this->m_materialBuffer);
 
     std::vector<float> values;
 
-    for (Sphere* sphere : sphereObjects) {
-        values.push_back(sphere->center().x);
-        values.push_back(sphere->center().y);
-        values.push_back(sphere->center().z);
-        values.push_back(sphere->radius());
-        values.push_back(sphere->materialIndex());
+    for (Model* model : models) {
+        if (instanceof<Sphere>(model)) {
+            Sphere* sphere = (Sphere*)model;
+            values.push_back(sphere->center().x);
+            values.push_back(sphere->center().y);
+            values.push_back(sphere->center().z);
+            values.push_back(sphere->radius());
+            
+            int materialIndex = 0;
+
+            for (int i = 0; i < materials.size(); i++) {
+                if (materials[i] == sphere->material()) {
+                    materialIndex = i;
+                }
+            }
+
+            values.push_back(materialIndex);
+
+            // values.push_back(sphere->materialIndex());
+        }
     }
 
     return(values);
@@ -316,6 +351,8 @@ std::vector<float> RendererManager::spheres() {
 Sphere* RendererManager::newSphere(std::string name, glm::vec3 center, float radius) {
     Sphere* s = new Sphere(center, radius);
     this->m_spheres[name] = s;
+    this->m_modelBuffer[name] = s;
+    this->m_modelBuffer[name]->scale(glm::vec3(radius * 2))->shader("S_Lighting");
     this->m_toUpdate = true;
     return(this->m_spheres[name]);
 }

@@ -33,7 +33,11 @@ Model::Model() {
     this->m_scale = glm::vec3(1);
 
     component_t* options = new component_t;
-    this->components_.push_back(options);
+    this->m_components.push_back(options);
+}
+
+Model::~Model() {
+
 }
 
 GLenum Model::drawingMode() {
@@ -46,107 +50,107 @@ Model* Model::drawingMode(GLenum mode) {
 
 
 std::vector<component_t*> Model::components() {
-    return(this->components_);
+    return(this->m_components);
 }
 component_t* Model::component(int index) {
-    return(this->components_[index]);
+    return(this->m_components[index]);
 }
 Model* Model::components(std::vector<component_t*> c) {
-    this->components_ = c;
+    this->m_components = c;
     return(this);
 }
 
 Model* Model::meshes(std::vector<std::string> m) {
-    this->components_.clear();
+    this->m_components.clear();
 
     for (int i = 0; i < m.size(); i++) {
         component_t* options = new component_t;
         options->mesh = m[i];
-        this->components_.push_back(options);
+        this->m_components.push_back(options);
     }
     
     return(this);
 }
 Model* Model::mesh(std::string m) {
-    this->components_[0]->mesh = m;
+    this->m_components[0]->mesh = m;
     return(this);
 }
 
 
 // Model* Model::texture(std::string t) {
-//     this->components_[0]->texture_ = t;
+//     this->m_components[0]->texture_ = t;
 //     return(this);
 // }
 
 Model* Model::shader(std::string s) {
-    this->components_[0]->shader = s;
+    this->m_components[0]->shader = s;
     return(this);
 }
 std::vector<std::string> Model::shaders(std::string s) {
     std::vector<std::string> shaders;
-    for (int i = 0; i < this->components_.size(); i++) {
-        shaders.push_back(this->components_[i]->shader);
-        this->components_[i]->shader = s;
+    for (int i = 0; i < this->m_components.size(); i++) {
+        shaders.push_back(this->m_components[i]->shader);
+        this->m_components[i]->shader = s;
     }
 
     return(shaders);
 }
 std::vector<std::string> Model::shaders(std::vector<std::string> s) {
     std::vector<std::string> shaders;
-    for (int i = 0; i < this->components_.size(); i++) {
-        shaders.push_back(this->components_[i]->shader);
-        this->components_[i]->shader = s[i];
+    for (int i = 0; i < this->m_components.size(); i++) {
+        shaders.push_back(this->m_components[i]->shader);
+        this->m_components[i]->shader = s[i];
     }
 
     return(shaders);
 }
 
 Model* Model::material(std::string m) {
-    this->components_[0]->material = m;
+    this->m_components[0]->material = m;
     return(this);
 }
 std::string Model::material() {
-    return(this->components_[0]->material);
+    return(this->m_components[0]->material);
 }
 
 
 Model* Model::texture(std::string t) {
-    this->components_[0]->texture.general(t);
+    this->m_components[0]->texture.general(t);
     return(this);
 }
 std::string Model::texture() {
-    return(this->components_[0]->texture.general());
+    return(this->m_components[0]->texture.general());
 }
 
 
 
 /*
 std::string Model::texture(std::string mesh) {
-    return(this->components_[mesh].texture);
+    return(this->m_components[mesh].texture);
 }
 Model* Model::texture(std::string texture, std::string mesh) {
-    this->components_[mesh].texture = texture;
+    this->m_components[mesh].texture = texture;
     return(this);
 }
 
 
 std::string Model::material(std::string mesh) {
-    return(this->components_[mesh].material);
+    return(this->m_components[mesh].material);
 }
 std::string Model::material() {
-    return(this->components_[0].material);
+    return(this->m_components[0].material);
 }
 Model* Model::material(std::string material, std::string mesh) {
-    this->components_[mesh].material = material;
+    this->m_components[mesh].material = material;
     return(this);
 }
 
 
 std::string Model::shader(std::string mesh) {
-    return(this->components_[mesh].shader);
+    return(this->m_components[mesh].shader);
 }
 Model* Model::shader(std::string shader, std::string mesh) {
-    this->components_[mesh].shader = shader;
+    this->m_components[mesh].shader = shader;
     return(this);
 }
 */

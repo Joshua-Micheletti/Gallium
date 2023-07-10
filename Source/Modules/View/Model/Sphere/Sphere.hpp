@@ -2,8 +2,9 @@
 #define __SPHERE__
 
 #include <glm/glm.hpp>
+#include "../Model.h"
 
-class Sphere {
+class Sphere: public Model {
     public:
         Sphere();
         Sphere(glm::vec3, float);

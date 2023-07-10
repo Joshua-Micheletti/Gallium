@@ -4,18 +4,29 @@ Sphere::Sphere() {
     this->m_center = glm::vec3(0.0);
     this->m_radius = 1.0;
     this->m_materialIndex = 0;
+    // this->mesh("ME_Sphere");
+    // this->position(this->m_center);
+    // this->scale(glm::vec3(this->m_radius / 2));
 }
 
 Sphere::Sphere(glm::vec3 center, float radius) {
     this->m_center = center;
     this->m_radius = radius;
     this->m_materialIndex = 0;
+
+    this->mesh("ME_Sphere");
+    this->position(this->m_center);
+    this->scale(glm::vec3(this->m_radius / 2));
 }
 
 Sphere::Sphere(glm::vec3 center, float radius, int materialIndex) {
     this->m_center = center;
     this->m_radius = radius;
     this->m_materialIndex = 0;
+
+    // this->mesh("ME_Sphere");
+    // this->position(this->m_center);
+    // this->scale(glm::vec3(this->m_radius / 2));
 }
 
 
