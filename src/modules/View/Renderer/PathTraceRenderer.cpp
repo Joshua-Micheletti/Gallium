@@ -173,7 +173,10 @@ void PathTraceRenderer::render() {
     glUniformMatrix4fv(glGetUniformLocation(this->m_computeProgram, "inverse_view_projection"), 1, GL_FALSE, &(RM.camera()->inverseViewProjectionMatrix()[0][0]));
     glUniform3f(glGetUniformLocation(this->m_computeProgram, "eye"), RM.camera()->position().x, RM.camera()->position().y, RM.camera()->position().z);
     glUniform1f(glGetUniformLocation(this->m_computeProgram, "time"), glfwGetTime());
-    glUniform1f(glGetUniformLocation(this->m_computeProgram, "bounces"), 10);
+    glUniform1f(glGetUniformLocation(this->m_computeProgram, "bounces"), 4);
+    glUniform1f(glGetUniformLocation(this->m_computeProgram, "sphere_count"), RM.spheres().size());
+    glUniform1f(glGetUniformLocation(this->m_computeProgram, "plane_count"), RM.planes().size());
+    glUniform1f(glGetUniformLocation(this->m_computeProgram, "box_count"), 0.0);
 
     glDispatchCompute((int)(1280 / 8), (int)(720 / 4), 1);
     glMemoryBarrier(GL_ALL_BARRIER_BITS);

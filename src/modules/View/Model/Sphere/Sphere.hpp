@@ -10,7 +10,6 @@ class Sphere: public Model {
     public:
         Sphere();
         Sphere(glm::vec3, float);
-        Sphere(glm::vec3, float, int);
 
         glm::vec3 center();
         Sphere* center(glm::vec3);

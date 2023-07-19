@@ -8,36 +8,38 @@ layout (local_size_x = 8, local_size_y = 4, local_size_z = 1) in;
 // texture to write to
 layout (rgba32f, binding = 0) uniform image2D img_output;
 
+#define SIZE 100
+
 // SSBOs and UBOs
 layout (std430, binding = 1) buffer vertex { 
     float[] vertices;
 };
 layout (std140, binding = 2) uniform model {
-    mat4[100] model_mats;
+    mat4[SIZE] model_mats;
 };
 layout (binding = 3) uniform index {
-    float[100] indices;
+    float[SIZE] indices;
 };
 layout (binding = 4) uniform normal {
-    float[100] mesh_normals;
+    float[SIZE] mesh_normals;
 };
 layout (binding = 5) uniform sphere {
-    float[100] spheres;
+    float[1024] spheres;
 };
 layout (binding = 6) uniform plane {
-    float[100] planes;
+    float[SIZE] planes;
 };
 layout (binding = 7) uniform box {
-    float[100] boxes;
+    float[SIZE] boxes;
 };
 layout (binding = 8) uniform bounding_box {
-    float[100] bounding_boxes;
+    float[SIZE] bounding_boxes;
 };
 layout (binding = 9) uniform material {
-    float[100] materials;
+    float[SIZE] materials;
 };
 layout (binding = 10) uniform mesh_material_index {
-    float[100] mesh_material_indices;
+    float[SIZE] mesh_material_indices;
 };
 
 // uniforms
@@ -48,6 +50,8 @@ uniform float bounces;
 uniform vec3 camera_up;
 uniform vec3 camera_right;
 uniform vec3 camera_forward;
+uniform float sphere_count;
+uniform float plane_count;
 
 // constants
 // ------------------------------------------------------- //
@@ -473,7 +477,7 @@ hit_t calculate_planes(vec3 ray_origin, vec3 ray_direction, bool shadow, float m
     nearest_hit.exists = false;
     nearest_hit.t = 9999999;
 
-    for (int i = 0; i <= planes.length(); i += 7) {
+    for (int i = 0; i <= plane_count; i += 7) {
         vec3 position = vec3(planes[i], planes[i + 1], planes[i + 2]);
         vec3 normal = vec3(planes[i + 3], planes[i + 4], planes[i + 5]);
 
@@ -544,7 +548,7 @@ hit_t calculate_spheres(vec3 ray_origin, vec3 ray_direction, bool shadow, float 
 
     // float radius = 0.5;
 
-    for (int i = 0; i <= spheres.length(); i += 5) {
+    for (int i = 0; i <= sphere_count; i += 5) {
         vec3 center = vec3(spheres[i], spheres[i + 1], spheres[i + 2]);
         float radius = spheres[i + 3];
 

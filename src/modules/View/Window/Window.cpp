@@ -1,4 +1,4 @@
-#include "Window.h"
+#include "Window.hpp"
 
 void errorCallback(int error, const char* description) {
     fprintf(stderr, "Error: %s\n", description);
@@ -14,32 +14,32 @@ void resizeCallback(GLFWwindow* windowObj, int x, int y) {
 	updateResolution = true;
 }
 
-Window::Window() {
+// window constructor method
+Window::Window(int width, int height, std::string title) {
+	// try to initialize glfw
     if (!glfwInit()) {
         printf("%sError initializing GLFW%s\n", strRed.c_str(), strNoColor.c_str());
     }
 
-	this->m_width = 1280;
-	this->m_height = 720;
+	// initial window size
+	this->m_width = width;
+	this->m_height = height;
 
-	this->m_window = glfwCreateWindow(this->m_width, this->m_height, "3DEngine", NULL, NULL);
+	// create the glfw window object
+	this->m_window = glfwCreateWindow(this->m_width, this->m_height, title.c_str(), NULL, NULL);
 	
+	// intialize the OpenGL context for glfw
 	glfwMakeContextCurrent(this->m_window);
-	gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
+	// disable the cursor in the glfw window
 	glfwSetInputMode(this->m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	// load opengl functions
+	gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
 	gladLoadGL();
 
-	GLint version = 0;
-	
-	glGetIntegerv(GL_MAJOR_VERSION, &version);
+	// enable multisampling
+	// glEnable(GL_MULTISAMPLE);
 
-	printf("%d\n", version);
-
-	glGetIntegerv(GL_MINOR_VERSION, &version);
-
-	printf("%d\n", version);
-
-	glEnable(GL_MULTISAMPLE);
+	// set callback functions
 	glfwSetWindowSizeCallback(this->m_window, resizeCallback);
     glfwSetErrorCallback(errorCallback);
 }
@@ -53,29 +53,27 @@ int Window::width() {
 	updateWindowSize();
 	return(this->m_width);
 }
+Window* Window::width(int width) {
+	this->m_width = width;
+	return(this);
+} 
 
 int Window::height() {
 	updateWindowSize();
 	return(this->m_height);
+}
+Window* Window::height(int height) {
+	this->m_height = height;
+	return(this);
 }
 
 int Window::framebufferWidth() {
 	updateFramebufferSize();
 	return(this->m_framebufferWidth);
 }
-
 int Window::framebufferHeight() {
 	updateFramebufferSize();
 	return(this->m_framebufferHeight);
-}
-
-
-void Window::width(int width) {
-	this->m_width = width;
-} 
-
-void Window::height(int height) {
-	this->m_height = height;
 }
 
 
@@ -88,7 +86,7 @@ void Window::updateFramebufferSize() {
 }
 
 
-void Window::fullscreen(bool f) {
+Window* Window::fullscreen(bool f) {
 	if (this->m_fullscreen != f) {
 		if (f == true) {
 			GLFWmonitor* monitor = glfwGetPrimaryMonitor();
@@ -112,6 +110,8 @@ void Window::fullscreen(bool f) {
 	}
 
 	this->m_fullscreen = f;
+	
+	return(this);
 }
 
 bool Window::fullscreen() {

@@ -24,8 +24,6 @@ inline bool instanceof(const T *ptr) {
     return dynamic_cast<const Base*>(ptr) != nullptr;
 }
 
-
-
 void createAxis(Mesh* axis) {
 	std::vector<float> axisColor;
 	axisColor.push_back(1.0f);
@@ -72,135 +70,17 @@ void createAxis(Mesh* axis) {
 	axis->vertices(axisVertices);
 }
 
+
+
 // CONSTRUCTOR
 RendererManager::RendererManager() {
     Timer RMSetupTimer;
 
     debugger.print("DEBUGGING RENDERER MANAGER", "RM");
 
-    // SETUP CAMERAS
-    // initialize the default camera
-    this->m_cameras["default"] = new Camera(glm::vec3(0.0f, 0.0f, 0.0f),   // position
-                                            glm::vec3(0.0f, 1.0f, 0.0f),
-                                            0.0f,
-                                            0.0f);
-
-
-    // initialize the reflection camera
-    this->m_cameras["reflection"] = new Camera(glm::vec3(0.0f, 0.0f, 0.0f),   // position
-                                               glm::vec3(0.0f, -1.0f, 0.0f),
-                                               0.0f,
-                                               0.0f);
-
-    this->m_cameras["default"]->projection(45.0f, (float)1280 / (float)720, 0.1f, 10000.0f);
-    this->m_cameras["reflection"]->projection(90.0f, 1.0f, 0.1f, 10000.0f);
-
-    // set the current camera to the default one
-    this->m_currentCamera = "default";
-
-    debugger.print("SETUP CAMERAS", "RM");
-
-    // SETUP RENDER
-    // initialize the samples for multisampling
-    this->m_samples = 1;
-    // disable the depth buffer view
-    this->m_depth = false;
-
-    debugger.print("SETUP VARIABLES", "RM");
-
-    // SETUP DEFAULTS
-    // these values will be used when the called component is not found or when a model is initialized
-    this->m_defaultMesh = "ME_Default";
-    this->m_defaultTexture = "T_Default";
-    this->m_defaultShader = "S_Default";
-    this->m_defaultModel = "M_Default";
-    this->m_defaultMaterial = "MA_Default";
-
-    debugger.print("SETUP DEFAULT COMPONENT NAMES", "RM");
-
-    // load the respective default components
-    this->newMesh(this->m_defaultMesh, "../Models/Default/box2.obj");
-
-    this->newShader(this->m_defaultShader)->loadShader("../Shader/default/default.vert", "../Shader/default/default.frag");
-    this->newTexture(this->m_defaultTexture)->loadTexture("../Textures/Default/default2.jpg");
-    this->newMaterial(this->m_defaultMaterial);
-
-    debugger.print("LOADED DEFAULT COMPONENTS", "RM");
-
-    // SETUP GLOBAL ENTITIES
-    // shader for rendering a model's outline when selected
-    this->m_outlineShader = "S_Outline";
-    // shader for rendering a model's geometry through other models when selected
-    this->m_highlightShader = "S_Highlight";
-    // shader for rendering white objects (used for stencil mask and for light)
-    this->m_whiteShader = "S_White";
-    // main light model
-    this->m_mainLight = "M_Light";
-    // skybox model
-    this->m_skybox = "M_Skybox";
-
-    debugger.print("SETUP GLOBAL ENTITIES", "RM");
-
-    // load the built-in shaders
-    this->newShader("S_White")->loadShader("../Shader/white/white.vert", "../Shader/white/white.frag");
-    this->newShader("S_Highlight")->loadShader("../Shader/highlight/highlight.vert", "../Shader/highlight/highlight.frag");
-    this->newShader("S_Outline")->loadShader("../Shader/outline/outline.vert", "../Shader/outline/outline.frag");
-    this->newShader("S_Accum")->loadShader("../Shader/pathTracer/accumVert.glsl", "../Shader/pathTracer/accumFrag.glsl");
-    
-    debugger.print("LOADED NECESSARY SHADERS", "RM");
-
-    // SETUP SKYBOX
-    // load the skybox shader
-    this->newShader("S_Skybox")->loadShader("../Shader/skybox/skybox.vert", "../Shader/skybox/skybox.frag");
-    // load a cubemap with the textures coming from the skybox location
-    std::vector<std::string> faces;
-	std::string directory = "Epic_BlueSunset";
-    std::string location = "../Textures/Default/";
-	faces.push_back(location + directory + "/right.png"); //right
-	faces.push_back(location + directory + "/left.png");  //left
-	faces.push_back(location + directory + "/top.png");   //top
-	faces.push_back(location + directory + "/bottom.png");//bottom
-	faces.push_back(location + directory + "/front.png"); //front
-	faces.push_back(location + directory + "/back.png");  //back
-    this->newTexture("T_Skybox")->loadCubemap(faces);
-    
-    debugger.print("LOADED SKYBOX CUBEMAP", "RM");
-
-    // create the skybox model
-    this->newModel("M_Skybox")->shader("S_Skybox")->texture("T_Skybox");
-
-    debugger.print("SETUP SKYBOX", "RM");
-
-    // SETUP AXIS
-    // create a new axis model
-    this->newModel("M_Axis");
-    createAxis(this->newMesh("ME_Axis"));
-    // load the shader to render the axis
-    this->newShader("S_Color")->loadShader("../Shader/color/color.vert", "../Shader/color/color.frag");
-    // RENDERING THE AXIS WITH LINES IS REALLY SLOW FOR SOME REASON
-    this->model("M_Axis")->mesh("ME_Axis")->shader("S_Color")->drawingMode(GL_LINES);
-
-    debugger.print("SETUP AXIS", "RM");
-
-    // SETUP LIGHT
-    // create a new light model
-    this->newModel("M_Light");
-    // load the sphere model
-    this->newMesh("ME_Sphere", "../Models/Default/sphere7.obj");
-    // create a material for the light (this will interact with every light calculation)
-    this->newMaterial("MA_Light");
-    this->model("M_Light")->mesh("ME_Sphere")->material("MA_Light")->shader("S_White");
-
-    debugger.print("SETUP LIGHT ENTITY", "RM");
-
-    // this->newMesh("ME_BoundingSphere", "../Models/Default/boundingSphere.obj");
-    // this->model("M_BoundingSphere")->mesh("ME_BoundingSphere");
-    
-    // initialize the selected entity (none)
-    this->m_selectedEntity = "";
-    this->m_accumulate = false;
-    this->m_toUpdate = true;
-    this->m_pathTrace = true;
+    this->setupVariables();
+    this->setupDefaults();
+    this->setupRenderingObjects();    
 
     printf("\n%sSetup the renderer manager%s\n", strGreen.c_str(), strNoColor.c_str());
     RMSetupTimer.print();
@@ -317,7 +197,6 @@ std::vector<float> RendererManager::spheres() {
             values.push_back(sphere->position().x);
             values.push_back(sphere->position().y);
             values.push_back(sphere->position().z);
-            // values.push_back(std::max(std::max(sphere->scale().x, sphere->scale().y), sphere->scale().z) / 2);
             values.push_back(sphere->scale().x / 2);
 
             int materialIndex = 0;
@@ -337,16 +216,15 @@ std::vector<float> RendererManager::spheres() {
 
 Sphere* RendererManager::newSphere(std::string name, glm::vec3 center, float radius) {
     Sphere* s = new Sphere(center, radius);
-    this->m_spheres[name] = s;
     this->m_modelBuffer[name] = s;
     this->m_modelBuffer[name]->scale(glm::vec3(radius * 2))->shader("S_Lighting");
-    this->m_toUpdate = true;
-    return(this->m_spheres[name]);
+    return((Sphere*)this->m_modelBuffer[name]);
 }
 
 Plane* RendererManager::newPlane(std::string name, glm::vec3 center, glm::vec3 normal) {
     Plane* p = new Plane(center, normal);
     this->m_planes[name] = p;
+    // this->m_modelBuffer[name] = p;
     this->m_toUpdate = true;
     return(this->m_planes[name]);
 }
@@ -788,7 +666,134 @@ RendererManager* RendererManager::pathTrace(bool pt) {
 
 
 
+void RendererManager::setupVariables() {
+    // SETUP RENDER
+    // initialize the samples for multisampling
+    this->m_samples = 1;
+    // disable the depth buffer view
+    this->m_depth = false;
 
+    this->m_selectedEntity = "";
+    this->m_accumulate = false;
+    this->m_toUpdate = true;
+    this->m_pathTrace = true;
+
+    debugger.print("SETUP VARIABLES", "RM");
+}
+
+
+void RendererManager::setupDefaults() {
+    // SETUP DEFAULTS
+    // these values will be used when the called component is not found or when a model is initialized
+    this->m_defaultMesh = "ME_PrimitiveBox";
+    this->m_defaultTexture = "T_Default";
+    this->m_defaultShader = "S_Default";
+    this->m_defaultModel = "M_Default";
+    this->m_defaultMaterial = "MA_Default";
+
+    this->m_primitiveBox = "ME_PrimitiveBox";
+    this->m_primitiveSphere = "ME_PrimitiveSphere";
+    this->m_primitiveQuad = "ME_PrimitiveQuad";
+
+    
+    // shader for rendering a model's outline when selected
+    this->m_outlineShader = "S_Outline";
+    // shader for rendering a model's geometry through other models when selected
+    this->m_highlightShader = "S_Highlight";
+    // shader for rendering white objects (used for stencil mask and for light)
+    this->m_whiteShader = "S_White";
+    // main light model
+    this->m_mainLight = "M_Light";
+    // skybox model
+    this->m_skybox = "M_Skybox";
+
+    debugger.print("SETUP DEFAULT STRINGS", "RM");
+}
+
+
+void RendererManager::setupRenderingObjects() {
+    // SETUP CAMERAS
+    this->m_cameras["default"] = new Camera(glm::vec3(0.0f, 0.0f, 0.0f),   // position
+                                            glm::vec3(0.0f, 1.0f, 0.0f),
+                                            0.0f,
+                                            0.0f);
+
+
+    // initialize the reflection camera
+    this->m_cameras["reflection"] = new Camera(glm::vec3(0.0f, 0.0f, 0.0f),   // position
+                                               glm::vec3(0.0f, -1.0f, 0.0f),
+                                               0.0f,
+                                               0.0f);
+
+    this->m_cameras["default"]->projection(45.0f, (float)1280 / (float)720, 0.1f, 10000.0f);
+    this->m_cameras["reflection"]->projection(90.0f, 1.0f, 0.1f, 10000.0f);    
+
+    this->m_currentCamera = "default";
+
+    debugger.print("SETUP CAMERAS", "RM");
+
+    // load the respective default components
+    this->newMesh(this->m_primitiveBox, "../Models/Default/box.obj");
+    this->newMesh(this->m_primitiveSphere, "../Models/Default/sphere.obj");
+    this->newMesh(this->m_primitiveQuad, "../Models/Default/quad.obj");
+
+    this->newShader(this->m_defaultShader)->loadShader("../Shader/default/default.vert", "../Shader/default/default.frag");
+    this->newTexture(this->m_defaultTexture)->loadTexture("../Textures/Default/default2.jpg");
+    this->newMaterial(this->m_defaultMaterial);
+
+    debugger.print("LOADED DEFAULT COMPONENTS", "RM");
+
+
+    // load the built-in shaders
+    this->newShader("S_White")->loadShader("../Shader/white/white.vert", "../Shader/white/white.frag");
+    this->newShader("S_Highlight")->loadShader("../Shader/highlight/highlight.vert", "../Shader/highlight/highlight.frag");
+    this->newShader("S_Outline")->loadShader("../Shader/outline/outline.vert", "../Shader/outline/outline.frag");
+    this->newShader("S_Accum")->loadShader("../Shader/pathTracer/accumVert.glsl", "../Shader/pathTracer/accumFrag.glsl");
+    
+    debugger.print("LOADED NECESSARY SHADERS", "RM");
+
+    // SETUP SKYBOX
+    // load the skybox shader
+    this->newShader("S_Skybox")->loadShader("../Shader/skybox/skybox.vert", "../Shader/skybox/skybox.frag");
+    // load a cubemap with the textures coming from the skybox location
+    std::vector<std::string> faces;
+	std::string directory = "Epic_BlueSunset";
+    std::string location = "../Textures/Default/";
+	faces.push_back(location + directory + "/right.png"); //right
+	faces.push_back(location + directory + "/left.png");  //left
+	faces.push_back(location + directory + "/top.png");   //top
+	faces.push_back(location + directory + "/bottom.png");//bottom
+	faces.push_back(location + directory + "/front.png"); //front
+	faces.push_back(location + directory + "/back.png");  //back
+    this->newTexture("T_Skybox")->loadCubemap(faces);
+    
+    debugger.print("LOADED SKYBOX CUBEMAP", "RM");
+
+    // create the skybox model
+    this->newModel("M_Skybox")->shader("S_Skybox")->texture("T_Skybox");
+
+    debugger.print("SETUP SKYBOX", "RM");
+
+    // SETUP AXIS
+    // create a new axis model
+    this->newModel("M_Axis");
+    createAxis(this->newMesh("ME_Axis"));
+    // load the shader to render the axis
+    this->newShader("S_Color")->loadShader("../Shader/color/color.vert", "../Shader/color/color.frag");
+    // RENDERING THE AXIS WITH LINES IS REALLY SLOW FOR SOME REASON
+    this->model("M_Axis")->mesh("ME_Axis")->shader("S_Color")->drawingMode(GL_LINES);
+
+    debugger.print("SETUP AXIS", "RM");
+
+    // SETUP LIGHT
+    // create a new light model
+    this->newModel("M_Light");
+    // create a material for the light (this will interact with every light calculation)
+    this->newMaterial("MA_Light");
+    this->model("M_Light")->mesh("ME_PrimitiveSphere")->material("MA_Light")->shader("S_White");
+
+    debugger.print("SETUP LIGHT ENTITY", "RM");
+}
 
 
 

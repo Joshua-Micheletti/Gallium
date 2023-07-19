@@ -7,7 +7,7 @@
 #include "Debugger.h"
 
 #include "../Engine/Engine.h"
-#include "../View/Window/Window.h"
+#include "../View/Window/Window.hpp"
 #include "../View/Renderer/RendererManager.h"
 #include "../Model/Physics/PhysicsWorld.h"
 

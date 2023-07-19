@@ -17,5 +17,5 @@
 #include "View/Model/Model.h"
 #include "Controller/EventHandler.h"
 #include "View/Ui/Ui.h"
-#include "View/Window/Window.h"
+#include "View/Window/Window.hpp"
 #include "Sandbox/sandbox.h"

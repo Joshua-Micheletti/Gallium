@@ -2,7 +2,7 @@
 
 Timer setupTimer;
 
-Window window;
+Window window = Window();
 RendererManager RM;
 PhysicsWorld PW;
 Engine engine;

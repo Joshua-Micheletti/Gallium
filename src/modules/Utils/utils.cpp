@@ -547,7 +547,3 @@ void findMinMaxVector3f(std::vector<float> vertices, glm::vec3 *min, glm::vec3 *
 
 
 
-template<typename Base, typename T>
-inline bool instanceof(const T *ptr) {
-    return dynamic_cast<const Base*>(ptr) != nullptr;
-}

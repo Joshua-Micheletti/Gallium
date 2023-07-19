@@ -20,7 +20,7 @@
 #include "../Model/Shader/Shader.h"
 #include "../Model/Mesh/Mesh.h"
 #include "Kernel/Kernel.h"
-#include "../Camera/Camera.h"
+#include "../Camera/Camera.hpp"
 
 
 // class for rendering entities using shaders (mainly openGL)

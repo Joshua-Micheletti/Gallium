@@ -1,45 +1,45 @@
-#include "Camera.h"
+#include "Camera.hpp"
 
 
-Camera::Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = 0.0f, float pitch = 0.0f) {
-  this->m_position = position;
-  this->m_worldUp = up;
+Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) {
+    this->m_position = position;
+    this->m_worldUp = up;
 
-  this->m_yaw = yaw;
-  this->m_pitch = pitch;
+    this->m_yaw = yaw;
+    this->m_pitch = pitch;
 
-  this->updateVectors();
+    this->updateVectors();
 
-  this->m_projection = glm::perspective(glm::radians(45.0f), (float)1280 / (float)720, 0.1f, 10000.0f);
+    this->m_projection = glm::perspective(glm::radians(45.0f), (float)1280 / (float)720, 0.1f, 10000.0f);
 
-  this->m_sensitivity = 0.08f;
+    this->m_sensitivity = 0.08f;
 
-  this->m_frostum = new Frostum();
+    this->m_frostum = new Frostum();
 }
 
 Camera* Camera::position(glm::vec3 position) {
-  this->m_position = position;
-  return(this);
+    this->m_position = position;
+    return(this);
 }
 
 glm::vec3 Camera::position() {
-  return(this->m_position);
+    return(this->m_position);
 }
 
 glm::vec3 Camera::up() {
-  return(this->m_up);
+    return(this->m_up);
 }
 
 glm::mat4 Camera::viewMatrix() {
-  return(glm::lookAt(this->m_position, this->m_position + this->m_front, this->m_up));
+    return(glm::lookAt(this->m_position, this->m_position + this->m_front, this->m_up));
 }
 
 glm::mat4 Camera::projection() {
-  return(this->m_projection);
+    return(this->m_projection);
 }
 
 glm::mat4 Camera::inverseViewProjectionMatrix() {
-  return(glm::inverse(this->projection() * this->viewMatrix()));
+    return(glm::inverse(this->projection() * this->viewMatrix()));
 }
 
 Camera* Camera::projection(glm::mat4 p) {
@@ -57,12 +57,6 @@ glm::vec3 Camera::front() {
 
 glm::vec3 Camera::right() {
   return(this->m_right);
-}
-
-glm::vec3 Camera::polarToCartesian(glm::vec3 polar) {
-  return(glm::normalize(glm::vec3(cos(glm::radians(polar.y)) * cos(glm::radians(polar.z)),
-  sin(glm::radians(polar.z)),
-  sin(glm::radians(polar.y)) * cos(glm::radians(polar.z)))));
 }
 
 
@@ -128,10 +122,10 @@ void Camera::processMovement(CameraMovement direction, float distance) {
     this->m_position += this->m_right * distance;
   }
   if (direction == UP) {
-    this->m_position += this->m_up * distance;
+    this->m_position += this->m_worldUp * distance;
   }
   if (direction == DOWN) {
-    this->m_position -= this->m_up * distance;
+    this->m_position -= this->m_worldUp * distance;
   }
 }
 

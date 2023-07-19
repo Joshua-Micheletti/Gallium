@@ -22,7 +22,7 @@
 #include "../Model/Texture/Texture.h"
 #include "../Model/Sphere/Sphere.hpp"
 #include "../Model/Plane/Plane.h"
-#include "../Camera/Camera.h"
+#include "../Camera/Camera.hpp"
 
 class RendererManager {
     public:
@@ -162,7 +162,7 @@ class RendererManager {
         std::map<std::string, Texture*> m_textureBuffer;
         std::map<std::string, Mesh*> m_meshBuffer;
 
-        std::map<std::string, Sphere*> m_spheres;
+        // std::map<std::string, Sphere*> m_spheres;
         std::map<std::string, Plane*> m_planes;
 
         std::map<std::string, Camera*> m_cameras;
@@ -191,8 +191,16 @@ class RendererManager {
         bool m_depth;
         bool m_toUpdate;
 
+        std::string m_primitiveBox;
+        std::string m_primitiveSphere;
+        std::string m_primitiveQuad;
+
         bool m_debug;
         bool m_pathTrace;
+
+        void setupVariables();
+        void setupDefaults();
+        void setupRenderingObjects();
 };
 
 #endif

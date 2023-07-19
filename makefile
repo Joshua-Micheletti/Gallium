@@ -1,5 +1,5 @@
-source = ./Source
-modules = $(source)/Modules
+source = ./src
+modules = $(source)/modules
 view = $(modules)/View
 model = $(modules)/Model
 controller = $(modules)/Controller
@@ -27,6 +27,8 @@ ifeq ($(OS),Windows_NT)
 	escape = 
 	noColor = $(escape)[0m
 	env = 
+	remove = del
+	slash = \\
 else
 	extLibL = $(glmI) -L $(imgui) -L $(stbimage) $(bulletL)
 	libraries = -lGL -lglfw3 -ldl -lm -lGLU -lX11 -lpthread -lGLEW
@@ -51,6 +53,9 @@ else
 	LINEARMATH = -L $(bulletLibrary)/LinearMath/ -lLinearMath
 
 	bulletL = $(COLLISION3) $(COMMON3) $(DYNAMICS3) $(GEOMETRY3) $(OPENCL3) $(SERIALIZE2) $(COLLISION) $(DYNAMICS) $(INVERSEDYNAMICS) $(SOFTBODY) $(LINEARMATH)
+
+	remove = rm
+	slash = /
 endif
 
 
@@ -118,7 +123,7 @@ $(objectsPath)/Timer.o: $(utils)/Timer.cpp $(utils)/Timer.h $(makefile)
 # VIEW
 
 # WINDOW
-$(objectsPath)/Window.o: $(view)/Window/Window.cpp $(view)/Window/Window.h $(makefile)
+$(objectsPath)/Window.o: $(view)/Window/Window.cpp $(view)/Window/Window.hpp $(makefile)
 	@echo $(marks)$(escape)[31m============= Window.cpp (source) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/Window.o $(view)/Window/Window.cpp -I $(extLibI) $(flags)
 
@@ -183,7 +188,7 @@ $(objectsPath)/Shader.o: $(view)/Model/Shader/Shader.cpp $(view)/Model/Shader/Sh
 	g++ -c -o $(objectsPath)/Shader.o $(view)/Model/Shader/Shader.cpp -I $(extLibI) $(flags)
 
 # CAMERA
-$(objectsPath)/Camera.o: $(view)/Camera/Camera.cpp $(view)/Camera/Camera.h $(makefile)
+$(objectsPath)/Camera.o: $(view)/Camera/Camera.cpp $(view)/Camera/Camera.hpp $(makefile)
 	@echo $(marks)$(escape)[31m============= Camera.cpp (source) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/Camera.o $(view)/Camera/Camera.cpp -I $(extLibI) $(flags)
 
@@ -268,4 +273,4 @@ run:
 exec: main run
 
 clean:
-	rm ./bin/objects/*.o
+	del .$(slash)bin$(slash)objects$(slash)*.o

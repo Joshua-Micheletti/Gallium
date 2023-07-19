@@ -2,6 +2,7 @@
 #define __PLANE__
 
 #include <glm/glm.hpp>
+#include "../Model.h"
 
 class Plane {
     public:

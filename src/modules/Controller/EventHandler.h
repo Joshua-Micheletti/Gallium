@@ -7,7 +7,7 @@
 
 #include "../Utils/global.h"
 
-#include "../View/Camera/Camera.h"
+#include "../View/Camera/Camera.hpp"
 #include "../Model/Entity.h"
 
 // class for handling keyboard, window and entity events
