@@ -116,7 +116,7 @@ $(objectsPath)/vboindexer.o: $(utils)/vboindexer.cpp $(utils)/vboindexer.hpp $(m
 	g++ -c -o $(objectsPath)/vboindexer.o $(utils)/vboindexer.cpp -I $(extLibI) $(flags) $(libraries)
 
 # TIMER
-$(objectsPath)/Timer.o: $(utils)/Timer.cpp $(utils)/Timer.h $(makefile)
+$(objectsPath)/Timer.o: $(utils)/Timer.cpp $(utils)/Timer.hpp $(makefile)
 	@echo $(marks)$(escape)[31m============= Timer.cpp (source) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/Timer.o $(utils)/Timer.cpp -I $(extLibI) $(flags) $(libraries)
 
@@ -193,7 +193,7 @@ $(objectsPath)/Camera.o: $(view)/Camera/Camera.cpp $(view)/Camera/Camera.hpp $(m
 	g++ -c -o $(objectsPath)/Camera.o $(view)/Camera/Camera.cpp -I $(extLibI) $(flags)
 
 # FROSTUM
-$(objectsPath)/Frostum.o: $(view)/Camera/Frostum.cpp $(view)/Camera/Frostum.h $(makefile)
+$(objectsPath)/Frostum.o: $(view)/Camera/Frostum.cpp $(view)/Camera/Frostum.hpp $(makefile)
 	@echo $(marks)$(escape)[31m============= Frostum.cpp (source) =============$(noColor)$(marks)
 	g++ -c -o $(objectsPath)/Frostum.o $(view)/Camera/Frostum.cpp -I $(extLibI) $(flags)
 

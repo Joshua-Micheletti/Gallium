@@ -7,7 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Frostum.h"
+#include "Frostum.hpp"
 
 // enumeration type to define the movement of the camera
 enum CameraMovement {

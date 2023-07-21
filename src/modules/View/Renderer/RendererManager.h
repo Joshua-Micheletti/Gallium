@@ -13,7 +13,7 @@
 
 #include "../../Utils/utils.h"
 #include "../../Utils/vboindexer.hpp"
-#include "../../Utils/Timer.h"
+#include "../../Utils/Timer.hpp"
 #include "../../Utils/Debugger.h"
 
 #include "../Model/Model.h"

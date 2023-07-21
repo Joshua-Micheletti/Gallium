@@ -14,7 +14,7 @@
 #include <glm/gtx/string_cast.hpp>
 
 #include "../../Utils/global.h"
-#include "../../Utils/Timer.h"
+#include "../../Utils/Timer.hpp"
 
 #include "../../Model/Entity.h"
 #include "../Model/Shader/Shader.h"

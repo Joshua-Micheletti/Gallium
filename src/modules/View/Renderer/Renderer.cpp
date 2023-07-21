@@ -368,7 +368,7 @@ void Renderer::renderEntities(bool reflection) {
 
 	// render entities
 	for (int i = 0; i < models.size(); i++) {
-		if (models[i] != RM.skybox() && models[i] != RM.selectedEntity() && RM.camera()->frostum()->isOnFrustum(RM.model(models[i])->center() + RM.model(models[i])->position(), RM.model(models[i])->radius())) {
+		if (models[i] != RM.skybox() && models[i] != RM.selectedEntity() && RM.camera()->frostum()->isOnFrostum(RM.model(models[i])->center() + RM.model(models[i])->position(), RM.model(models[i])->radius())) {
 			this->renderEntity(models[i]);
 			renders++;
 		}

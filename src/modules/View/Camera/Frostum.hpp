@@ -3,10 +3,13 @@
 
 #include "../Model/Plane/Plane.h"
 
+// class for a frostum model (used for camera frostum culling)
 class Frostum {
     public:
+        // constructor
         Frostum();
         
+        // getters for the planes that make up the frostum
         Plane nearPlane();
         Plane farPlane();
         Plane top();
@@ -14,6 +17,7 @@ class Frostum {
         Plane left();
         Plane right();
 
+        // setters for the planes that make up the frostum
         Frostum* nearPlane(Plane);
         Frostum* farPlane(Plane);
         Frostum* top(Plane);
@@ -21,9 +25,11 @@ class Frostum {
         Frostum* left(Plane);
         Frostum* right(Plane);
 
-        bool isOnFrustum(glm::vec3, float);
+        // method for checking if a mesh is inside the frostum
+        bool isOnFrostum(glm::vec3, float);
 
     private:
+        // planes that make up the frostum
         Plane m_top;
         Plane m_bottom;
         Plane m_right;

@@ -14,7 +14,7 @@
 
 #include "../../Utils/global.h"
 #include "../../Utils/utils.h"
-#include "../../Utils/Timer.h"
+#include "../../Utils/Timer.hpp"
 
 #include "../Renderer/Renderer.h"
 #include "../../Controller/EventHandler.h"

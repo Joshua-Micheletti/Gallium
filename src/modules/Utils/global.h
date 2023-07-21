@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include "Timer.h"
+#include "Timer.hpp"
 #include "Debugger.h"
 
 #include "../Engine/Engine.h"

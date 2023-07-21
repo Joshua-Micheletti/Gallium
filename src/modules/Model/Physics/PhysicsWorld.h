@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 #include "../../Utils/utils.h"
-#include "../../Utils/Timer.h"
+#include "../../Utils/Timer.hpp"
 
 #include <glm/glm.hpp>
 #include "btBulletDynamicsCommon.h"

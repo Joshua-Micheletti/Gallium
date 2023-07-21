@@ -24,11 +24,14 @@
 bool updateResolution = false;
 bool updated = true;
 
+
+// function to get the maximum length of a number in a vector of floats
 int maxLength(std::vector<float> vector) {
     int maxLength = 0;
 
     // find max length
     for (int i = 0; i < vector.size(); i++) {
+		// transform the value into a string and check the length of the string? dunno what this is for
         std::string value = std::to_string(vector[i]);
         
         if (value.size() > maxLength) {

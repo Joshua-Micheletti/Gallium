@@ -1,4 +1,4 @@
-#include "Frostum.h"
+#include "Frostum.hpp"
 
 Frostum::Frostum() {
 }
@@ -50,7 +50,7 @@ Frostum* Frostum::right(Plane plane) {
 }
 
 
-bool Frostum::isOnFrustum(glm::vec3 center, float radius) {
+bool Frostum::isOnFrostum(glm::vec3 center, float radius) {
     return (this->m_left.isOnForwardPlane(center, radius) &&
             this->m_right.isOnForwardPlane(center, radius) &&
             this->m_top.isOnForwardPlane(center, radius) &&

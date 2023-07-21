@@ -10,7 +10,7 @@
 
 #include "utils.h"
 #include "global.h"
-#include "Timer.h"
+#include "Timer.hpp"
 
 #include "View/Renderer/Renderer.h"
 #include "View/Renderer/PathTraceRenderer.hpp"
